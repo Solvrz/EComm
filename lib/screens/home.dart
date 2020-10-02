@@ -20,15 +20,18 @@ class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
 
   final List<Map<String, dynamic>> tabs = [
-    {"name": "Office Supplies", "image": "assets/images/Office.png"},
-    {"name": "School & Collage Supplies", "image": "assets/images/School.png"},
+    {"name": "Office \nSupplies", "image": "assets/images/Office.png"},
+    {
+      "name": "School & Collage \nSupplies",
+      "image": "assets/images/School.png"
+    },
     {"name": "Shagun", "image": "assets/images/Shagun.png"},
-    {"name": "Computer Accessories", "image": "assets/images/Computer.png"},
+    {"name": "Computer \nAccessories", "image": "assets/images/Computer.png"},
     {"name": "Printing", "image": "assets/images/Printing.png"},
     {"name": "Photo Copy", "image": "assets/images/Copy.png"},
     {"name": "Lamination", "image": "assets/images/Lamination.png"},
     {"name": "Binding", "image": "assets/images/Binding.png"},
-    {"name": "Projects & Thesis", "image": "assets/images/Projects.png"},
+    {"name": "Projects & \nThesis", "image": "assets/images/Projects.png"},
   ];
 
   final List<String> imgs = [
@@ -172,11 +175,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       height: 40, width: 40),
                               SizedBox(height: 4),
                               Marquee(
+                                backDuration: Duration(seconds: 2),
                                 child: Text(
-                                  data["name"],
-                                  style: TextStyle(
-                                      color: kUIDarkText, fontSize: 16),
-                                ),
+                                data["name"],
+                                textAlign: TextAlign.center,
+                                style:
+                                    TextStyle(color: kUIDarkText, fontSize: 16),
+                              ),
                               ),
                             ],
                           ),
