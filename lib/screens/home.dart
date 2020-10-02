@@ -20,12 +20,15 @@ class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
 
   final List<Map<String, dynamic>> tabs = [
-    {"name": "Notebooks", "icon": Icons.menu_book_outlined},
-    {"name": "Pens", "icon": Icons.edit_outlined},
-    {"name": "Pencil", "icon": Icons.create},
-    {"name": "Markers", "icon": Icons.done_all},
-    {"name": "Organisers", "icon": Icons.all_inbox},
-    {"name": "Office", "icon": Icons.apartment},
+    {"name": "Office Supplies", "image": "assets/images/Office.png"},
+    {"name": "School & Collage Supplies", "image": "assets/images/School.png"},
+    {"name": "Shagun", "image": "assets/images/Shagun.png"},
+    {"name": "Computer Accessories", "image": "assets/images/Computer.png"},
+    {"name": "Printing", "image": "assets/images/Printing.png"},
+    {"name": "Photo Copy", "image": "assets/images/Copy.png"},
+    {"name": "Lamination", "image": "assets/images/Lamination.png"},
+    {"name": "Binding", "image": "assets/images/Binding.png"},
+    {"name": "Projects & Thesis", "image": "assets/images/Projects.png"},
   ];
 
   final List<String> imgs = [
