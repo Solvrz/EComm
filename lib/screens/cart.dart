@@ -16,12 +16,6 @@ class _CartScreenState extends State<CartScreen> {
           "https://images-na.ssl-images-amazon.com/images/I/51OCvyegJcL._SX466_.jpg",
       "price": "99"
     },
-    {
-      "name": "Parker",
-      "img":
-          "https://images-na.ssl-images-amazon.com/images/I/51OCvyegJcL._SX466_.jpg",
-      "price": "99"
-    },
   ];
 
   final TextEditingController name = TextEditingController();

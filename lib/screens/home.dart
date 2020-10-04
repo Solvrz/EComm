@@ -3,13 +3,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:suneel_printer/components/marquee.dart';
+import 'package:suneel_printer/components/category_grid.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/screens/category.dart';
-
-export 'home.dart';
-export 'splash.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -19,25 +15,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
 
-  final List<Map<String, dynamic>> tabs = [
-    {"name": "Office \nSupplies", "image": "assets/images/Office.png"},
-    {
-      "name": "School & Collage \nSupplies",
-      "image": "assets/images/School.png"
-    },
-    {"name": "Shagun", "image": "assets/images/Shagun.png"},
-    {"name": "Computer \nAccessories", "image": "assets/images/Computer.png"},
-    {"name": "Printing", "image": "assets/images/Printing.png"},
-    {"name": "Photo Copy", "image": "assets/images/Copy.png"},
-    {"name": "Lamination", "image": "assets/images/Lamination.png"},
-    {"name": "Binding", "image": "assets/images/Binding.png"},
-    {"name": "Projects & \nThesis", "image": "assets/images/Projects.png"},
-  ];
-
   final List<String> imgs = [
-    'https://5.imimg.com/data5/OP/RO/MY-5737969/all-stationary-supplier-500x500.png',
-    'https://previews.123rf.com/images/len44ik/len44ik1302/len44ik130200251/17981189-school-and-office-stationary-isolated-on-white-back-to-school-concept.jpg',
-    'https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg'
+    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg"
   ];
 
   @override
@@ -153,43 +132,37 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 25,
                       color: kUIDarkText),
                 ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(40, 40, 30, 0),
-                    child: GridView.count(
-                      crossAxisCount: 3,
-                      children: List.generate(tabs.length, (int index) {
-                        Map<String, dynamic> data = tabs[index];
-                        return GestureDetector(
-                          onTap: () => Navigator.pushNamed(context, "/category",
-                              arguments: CategoryArguments(data["name"])),
-                          child: Column(
-                            children: [
-                              data["icon"] != null
-                                  ? Icon(
-                                      data["icon"],
-                                      color: kUIAccent,
-                                      size: 42,
-                                    )
-                                  : Image.asset(data["image"],
-                                      height: 40, width: 40),
-                              SizedBox(height: 4),
-                              Marquee(
-                                backDuration: Duration(seconds: 2),
-                                child: Text(
-                                data["name"],
-                                textAlign: TextAlign.center,
-                                style:
-                                    TextStyle(color: kUIDarkText, fontSize: 16),
-                              ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
+                CategoryGrid(tabs: [
+                  {
+                    "name": "Office \nBooks",
+                    "image": "assets/images/Office.png",
+                  },
+                  {
+                    "name": "Stationery",
+                    "image": "assets/images/Stationery.png",
+                  },
+                  {
+                    "name": "Shagun",
+                    "image": "assets/images/Shagun.png",
+                  },
+                  {
+                    "name": "Computer \nAccessories",
+                    "image": "assets/images/Computer.png",
+                  },
+                  {
+                    "name": "Printing",
+                    "image": "assets/images/Printing.png",
+                  },
+                  {
+                    "name": "Photo Copy",
+                    "image": "assets/images/Copy.png",
+                  },
+                  {
+                    "name": "Binding",
+                    "image": "assets/images/Binding.png",
+                  },
+                  // {"name": "Projects & \nThesis", "image": "assets/images/Projects.png"},
+                ]),
               ]),
             )
           ]),
