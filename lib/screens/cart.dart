@@ -1,3 +1,4 @@
+import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
@@ -9,18 +10,11 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  final List<Map<String, dynamic>> products = [
-    {
-      "name": "Parker",
-      "img":
-          "https://images-na.ssl-images-amazon.com/images/I/51OCvyegJcL._SX466_.jpg",
-      "price": "99"
-    },
-  ];
+  final List<Map<String, dynamic>> products = [];
 
   final TextEditingController name = TextEditingController();
   final TextEditingController phone = TextEditingController();
-  final TextEditingController adderess = TextEditingController();
+  final TextEditingController address = TextEditingController();
 
   int price = 0;
 
@@ -55,7 +49,8 @@ class _CartScreenState extends State<CartScreen> {
                                     arguments: ProductArguments(
                                         products[index]["name"],
                                         products[index]["img"],
-                                        products[index]["price"])),
+                                        products[index]["price"],
+                                        products[index]["bgColor"])),
                                 child: Container(
                                   padding: EdgeInsets.all(8),
                                   child: ListTile(
@@ -173,7 +168,7 @@ class _CartScreenState extends State<CartScreen> {
                                                 ),
                                                 Container(
                                                   child: TextField(
-                                                    controller: adderess,
+                                                    controller: address,
                                                     maxLines: 3,
                                                     minLines: 1,
                                                     keyboardType:
@@ -210,11 +205,11 @@ class _CartScreenState extends State<CartScreen> {
                                                         print(name.text != "");
                                                         if (name.text != "" ||
                                                             phone.text != "" ||
-                                                            adderess.text !=
+                                                            address.text !=
                                                                 "") {
                                                           name.clear();
                                                           phone.clear();
-                                                          adderess.clear();
+                                                          address.clear();
 
                                                           Navigator.pop(
                                                               context);
@@ -247,7 +242,7 @@ class _CartScreenState extends State<CartScreen> {
                                                         } else {
                                                           name.clear();
                                                           phone.clear();
-                                                          adderess.clear();
+                                                          address.clear();
 
                                                           Navigator.pop(
                                                               context);
@@ -294,8 +289,13 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               )
             : Center(
-                child: Text("The cart is empty \nAdd products",
-                    textAlign: TextAlign.center),
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 1.25,
+                  child: EmptyListWidget(
+                    title: "No Items",
+                    subTitle: "Shop and add more items",
+                  ),
+                ),
               ),
       ),
     );

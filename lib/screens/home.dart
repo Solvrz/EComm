@@ -15,8 +15,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
 
-  final List<String> imgs = [
-    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg"
+  final List<String> carouselImages = [
+    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
   ];
 
   @override
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
               child: CarouselSlider(
-                items: imgs
+                items: carouselImages
                     .map((item) => Container(
                           child: Container(
                             margin: EdgeInsets.all(5.0),
@@ -106,39 +106,134 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: imgs.map((url) {
-                int index = imgs.indexOf(url);
-                return Container(
-                  width: 8.0,
-                  height: 8.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _current == index
-                        ? Color.fromRGBO(0, 0, 0, 0.9)
-                        : Color.fromRGBO(0, 0, 0, 0.4),
-                  ),
-                );
-              }).toList(),
-            ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                    carouselImages.length,
+                    (int index) => Container(
+                          width: 8.0,
+                          height: 8.0,
+                          margin: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 2.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _current == index
+                                ? Color.fromRGBO(0, 0, 0, 0.9)
+                                : Color.fromRGBO(0, 0, 0, 0.4),
+                          ),
+                        ))),
             SizedBox(height: 16),
             Expanded(
               child: Column(children: [
                 Text(
-                  "Catergories",
+                  "Categories",
                   style: TextStyle(
                       fontFamily: "sans-serif-condensed",
                       fontSize: 25,
                       color: kUIDarkText),
                 ),
-                CategoryGrid(tabs: [
+                CategoryGrid(categories: [
                   {
-                    "name": "Office \nBooks",
+                    "name": "Office\nBooks",
                     "image": "assets/images/Office.png",
+                    "tabs": [
+                      {
+                        "name": "Accounts\nBooks",
+                        "image": "assets/images/Office.png",
+                        "products": [
+                          {
+                            "uId": "acbcr88",
+                            "name": "Classmate Register",
+                            "price": "25.00",
+                            "img":
+                                "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                          "bgColor": Colors.amber[300]
+                          },
+                          {
+                            "uId": "acbcr88",
+                            "name": "Classmate Register",
+                            "price": "25.00",
+                            "img":
+                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                            "bgColor": Color(0xffebedf2),
+                          },
+                          {
+                            "uId": "acbcr88",
+                            "name": "Classmate Register",
+                            "price": "25.00",
+                            "img":
+                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                            "bgColor": Colors.amber[300]
+                          },
+                          {
+                            "uId": "acbcr88",
+                            "name": "Classmate Register",
+                            "price": "25.00",
+                            "img":
+                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                            "bgColor": Color(0xffebedf2),
+                          },
+                          {
+                            "uId": "acbcr88",
+                            "name": "Classmate Register",
+                            "price": "25.00",
+                            "img":
+                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                            "bgColor": Colors.amber[300]
+                          },
+                          {
+                            "uId": "acbcr88",
+                            "name": "Classmate Register",
+                            "price": "25.00",
+                            "img":
+                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                            "bgColor": Color(0xffebedf2),
+                          },
+                          {
+                            "uId": "acbcr88",
+                            "name": "Classmate Register",
+                            "price": "25.00",
+                            "img":
+                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                            "bgColor": Colors.amber[300]
+                          },
+                          {
+                            "uId": "acbcr88",
+                            "name": "Classmate Register",
+                            "price": "25.00",
+                            "img":
+                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                            "bgColor": Color(0xffebedf2),
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Loose Leaf\nSheets & Binders",
+                        "image": "assets/images/Stationery.png",
+                      },
+                      {
+                        "name": "GST Register &\nForms",
+                        "image": "assets/images/Shagun.png",
+                      },
+                      {
+                        "name": "Computer\nPapers",
+                        "image": "assets/images/Computer.png",
+                      },
+                      {
+                        "name": "Factory ACT\nForms & Register",
+                        "image": "assets/images/Printing.png",
+                      },
+                      {
+                        "name": "ESI Forms",
+                        "image": "assets/images/Copy.png",
+                      },
+                      {
+                        "name": "Vouchers",
+                        "image": "assets/images/Binding.png",
+                      },
+                    ],
                   },
                   {
-                    "name": "Stationery",
+                    "name": "Stationary",
                     "image": "assets/images/Stationery.png",
                   },
                   {
@@ -161,7 +256,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     "name": "Binding",
                     "image": "assets/images/Binding.png",
                   },
-                  // {"name": "Projects & \nThesis", "image": "assets/images/Projects.png"},
                 ]),
               ]),
             )

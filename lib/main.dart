@@ -26,12 +26,13 @@ class SuneelPrinter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme:
           ThemeData(primaryColor: kUIAccent, highlightColor: Colors.blueGrey),
       builder: (BuildContext context, Widget child) {
         return NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (overscroll) {
-              overscroll.disallowGlow();
+            onNotification: (overScroll) {
+              overScroll.disallowGlow();
               return;
             },
             child: child);
