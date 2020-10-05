@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/components/marquee.dart';
 import 'package:suneel_printer/constant.dart';
@@ -24,13 +25,29 @@ class CategoryGrid extends StatelessWidget {
           children: List.generate(categories.length, (int index) {
             Map<String, dynamic> data = categories[index];
             return GestureDetector(
-              onTap: () {
-                if (data["tabs"] != null) {
-                  return Navigator.pushNamed(context, "/category",
-                  arguments: CategoryArguments(data["name"].split("\n").join(" "), data["tabs"]));
-                } else {
-                  return Navigator.pushNamed(context, "/product", arguments: ProductArguments("Product", "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg", "99.99", Colors.blueAccent));
-                }
+              onTap: () async {
+                QuerySnapshot docs =
+                    await database.collection("categories").get();
+                docs.docs.forEach((element) async {
+                  if (element.get("uId") == data["uId"]) {
+                    QuerySnapshot tabs =
+                        await element.reference.collection("tabs").get();
+                    if (tabs.docs.isNotEmpty) {
+                      return Navigator.pushNamed(context, "/category",
+                          arguments: CategoryArguments(
+                              data["name"].split("\n").join(" "),
+                              tabs.docs.map((e) => e.data()).toList(),
+                              element.reference));
+                    } else {
+                      return Navigator.pushNamed(context, "/product",
+                          arguments: ProductArguments(
+                              "Product",
+                              "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
+                              "99.99",
+                              Colors.blueAccent));
+                    }
+                  }
+                });
               },
               child: Column(
                 children: [

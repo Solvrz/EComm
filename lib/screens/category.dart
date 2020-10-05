@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/constant.dart';
@@ -40,48 +41,49 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         child: Icon(Icons.arrow_back_ios, color: kUIDarkText),
                       ),
                     ),
-                    ...List.generate(
-                        args.tabs.length,
-                        (int index) => RotatedBox(
-                              quarterTurns: 3,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 24),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    if (index == _currentTab) return;
-                                    setState(() {
-                                      _currentTab = index;
-                                    });
-                                  },
-                                  child: Row(
-                                    children: [
-                                      if (index == _currentTab)
-                                        Container(
-                                            margin: EdgeInsets.only(right: 8),
-                                            height: 2,
-                                            width: 15,
-                                            color: kUIAccent),
-                                      AnimatedDefaultTextStyle(
-                                        child: Text(
-                                          args.tabs[index]["name"],
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        duration: Duration(milliseconds: 100),
-                                        style: TextStyle(
-                                            fontSize:
-                                                index == _currentTab ? 16 : 14,
-                                            fontWeight: index == _currentTab
-                                                ? FontWeight.w600
-                                                : FontWeight.normal,
-                                            color: index == _currentTab
-                                                ? Colors.black
-                                                : Colors.grey[600]),
-                                      )
-                                    ],
+                    ...List.generate(args.tabs.length, (int index) {
+                      return RotatedBox(
+                        quarterTurns: 3,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 24),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (index == _currentTab) return;
+                              setState(() {
+                                _currentTab = index;
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                if (index == _currentTab)
+                                  Container(
+                                      margin: EdgeInsets.only(right: 8),
+                                      height: 2,
+                                      width: 15,
+                                      color: kUIAccent),
+                                AnimatedDefaultTextStyle(
+                                  child: Text(
+                                    args.tabs[index]["name"]
+                                        .split("\\n")
+                                        .join("\n"),
+                                    textAlign: TextAlign.center,
                                   ),
-                                ),
-                              ),
-                            ))
+                                  duration: Duration(milliseconds: 100),
+                                  style: TextStyle(
+                                      fontSize: index == _currentTab ? 16 : 14,
+                                      fontWeight: index == _currentTab
+                                          ? FontWeight.w600
+                                          : FontWeight.normal,
+                                      color: index == _currentTab
+                                          ? Colors.black
+                                          : Colors.grey[600]),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    })
                   ],
                 ),
               ),
@@ -115,20 +117,56 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ),
                     ),
                     SizedBox(height: 54),
-                    (args.tabs[_currentTab]["products"] ?? []).isNotEmpty
-                        ? Expanded(
-                            child: ProductList(
-                                products: args.tabs[_currentTab]["products"]))
-                        : Center(
-                            child: Container(
+                    FutureBuilder<QuerySnapshot>(
+                      future: args.docRef.collection("tabs").get(),
+                      builder: (context, future) {
+                        if (future.hasData) {
+                          return FutureBuilder<QuerySnapshot>(
+                              future: future.data.docs[_currentTab].reference
+                                  .collection("products")
+                                  .get(),
+                              builder: (context, productFuture) {
+                                if (productFuture.hasData) {
+                                  if (productFuture.data.docs.isNotEmpty) {
+                                    return Expanded(
+                                        child: ProductList(
+                                            products: productFuture.data.docs
+                                                .map((e) => e.data())
+                                                .toList()));
+                                  } else {
+                                    return Center(
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                1.5,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.5,
+                                        child: EmptyListWidget(
+                                          title: "No Product",
+                                          subTitle: "No Product Available Yet",
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  return Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              1.5,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
+                                      child: Center(child: Text("Loading...")));
+                                }
+                              });
+                        } else {
+                          return Container(
                               height: MediaQuery.of(context).size.height / 1.5,
-                              width: MediaQuery.of(context).size.width / 1.5,
-                              child: EmptyListWidget(
-                                title: "No Product",
-                                subTitle: "No Product Available Yet",
-                              ),
-                            ),
-                          )
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Center(child: Text("Loading...")));
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -209,14 +247,13 @@ class ProductList extends StatelessWidget {
                           height: height / 2,
                           width: width - 12,
                           decoration: BoxDecoration(
-                              color: products[index]["bgColor"],
                               borderRadius: BorderRadius.circular(10),
                               gradient: LinearGradient(
                                   begin: Alignment.bottomLeft,
                                   end: Alignment.topRight,
                                   colors: [
-                                    products[index]["bgColor"],
-                                    products[index]["bgColor"].withOpacity(0.6)
+                                    Color(int.parse("0xff${products[index]["bgColor"]}")),
+                                    Color(int.parse("0xff${products[index]["bgColor"]}")).withOpacity(0.6)
                                   ],
                                   stops: [
                                     0.4,
@@ -242,6 +279,7 @@ class ProductList extends StatelessWidget {
 class CategoryArguments {
   final String title;
   final List<Map> tabs;
+  final DocumentReference docRef;
 
-  CategoryArguments(this.title, this.tabs);
+  CategoryArguments(this.title, this.tabs, this.docRef);
 }
