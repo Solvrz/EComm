@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "434456011105",
+    "firebase_url": "https://suneelprinters37.firebaseio.com",
+    "project_id": "suneelprinters37",
+    "storage_bucket": "suneelprinters37.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:434456011105:android:17f2aa751867b8885ea520",
+        "android_client_info": {
+          "package_name": "com.suneel37.suneel_printer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "434456011105-3r9cjrdlv2jbs25d1q147s56feeo82a3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhEh5oVCtFD-9MOfnP-Xr04UoZo2tGx18"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "434456011105-3r9cjrdlv2jbs25d1q147s56feeo82a3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

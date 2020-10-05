@@ -27,9 +27,15 @@ class CategoryGrid extends StatelessWidget {
               onTap: () {
                 if (data["tabs"] != null) {
                   return Navigator.pushNamed(context, "/category",
-                  arguments: CategoryArguments(data["name"].split("\n").join(" "), data["tabs"]));
+                      arguments: CategoryArguments(
+                          data["name"].split("\n").join(" "), data["tabs"]));
                 } else {
-                  return Navigator.pushNamed(context, "/product", arguments: ProductArguments("Product", "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg", "99.99", Colors.blueAccent));
+                  return Navigator.pushNamed(context, "/product",
+                      arguments: ProductArguments(
+                          "Product",
+                          "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
+                          "99.99",
+                          Colors.blueAccent));
                 }
               },
               child: Column(

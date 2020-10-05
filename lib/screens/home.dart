@@ -146,22 +146,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             "price": "25.00",
                             "img":
                                 "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
-                          "bgColor": Colors.amber[300]
-                          },
-                          {
-                            "uId": "acbcr88",
-                            "name": "Classmate Register",
-                            "price": "25.00",
-                            "img":
-                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
-                            "bgColor": Color(0xffebedf2),
-                          },
-                          {
-                            "uId": "acbcr88",
-                            "name": "Classmate Register",
-                            "price": "25.00",
-                            "img":
-                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
                             "bgColor": Colors.amber[300]
                           },
                           {
@@ -169,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             "name": "Classmate Register",
                             "price": "25.00",
                             "img":
-                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                                "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
                             "bgColor": Color(0xffebedf2),
                           },
                           {
@@ -177,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             "name": "Classmate Register",
                             "price": "25.00",
                             "img":
-                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                                "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
                             "bgColor": Colors.amber[300]
                           },
                           {
@@ -185,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             "name": "Classmate Register",
                             "price": "25.00",
                             "img":
-                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                                "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
                             "bgColor": Color(0xffebedf2),
                           },
                           {
@@ -193,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             "name": "Classmate Register",
                             "price": "25.00",
                             "img":
-                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                                "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
                             "bgColor": Colors.amber[300]
                           },
                           {
@@ -201,7 +185,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             "name": "Classmate Register",
                             "price": "25.00",
                             "img":
-                            "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                                "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                            "bgColor": Color(0xffebedf2),
+                          },
+                          {
+                            "uId": "acbcr88",
+                            "name": "Classmate Register",
+                            "price": "25.00",
+                            "img":
+                                "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
+                            "bgColor": Colors.amber[300]
+                          },
+                          {
+                            "uId": "acbcr88",
+                            "name": "Classmate Register",
+                            "price": "25.00",
+                            "img":
+                                "https://firebasestorage.googleapis.com/v0/b/ividya37.appspot.com/o/school%2F6a%2FBooks%2Fimages-removebg-preview.png?alt=media&token=c4c23168-4787-4eea-874e-6eb914400100",
                             "bgColor": Color(0xffebedf2),
                           }
                         ]
