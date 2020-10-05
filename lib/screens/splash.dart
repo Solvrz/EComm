@@ -15,6 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      cart.load();
       Timer(Duration(milliseconds: 800),
           () => Navigator.pushReplacementNamed(context, "/home"));
     });

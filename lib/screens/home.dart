@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 CategoryGrid(categories: [
                   {
-                    "uId": "OfficeBooks",
+                    "uId": "1",
                     "name": "Office\nBooks",
                     "image": "assets/images/Office.png"
                   },

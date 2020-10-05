@@ -29,7 +29,7 @@ class CategoryGrid extends StatelessWidget {
                 QuerySnapshot docs =
                     await database.collection("categories").get();
                 docs.docs.forEach((element) async {
-                  if (element.get("uId") == data["uId"]) {
+                  if (element.get("uId").toString() == data["uId"]) {
                     QuerySnapshot tabs =
                         await element.reference.collection("tabs").get();
                     if (tabs.docs.isNotEmpty) {
@@ -37,14 +37,8 @@ class CategoryGrid extends StatelessWidget {
                           arguments: CategoryArguments(
                               data["name"].split("\n").join(" "),
                               tabs.docs.map((e) => e.data()).toList(),
+                              tabs.docs.map((e) => e.reference).toList(),
                               element.reference));
-                    } else {
-                      return Navigator.pushNamed(context, "/product",
-                          arguments: ProductArguments(
-                              "Product",
-                              "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
-                              "99.99",
-                              Colors.blueAccent));
                     }
                   }
                 });

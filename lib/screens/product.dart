@@ -9,11 +9,13 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  bool added = false;
+  bool added;
 
   @override
   Widget build(BuildContext context) {
     ProductArguments args = ModalRoute.of(context).settings.arguments;
+
+    if (added == null) added = cart.containsProduct(args.data["uId"]);
 
     return SafeArea(
       child: Scaffold(
@@ -54,7 +56,7 @@ class _ProductScreenState extends State<ProductScreen> {
             Container(
               margin: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
               child: Text(
-                args.title,
+                args.data["name"],
                 style: TextStyle(
                     fontSize: 28,
                     fontFamily: "sans-serif-condensed",
@@ -72,14 +74,21 @@ class _ProductScreenState extends State<ProductScreen> {
                         gradient: LinearGradient(
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
-                            colors: [args.bgColor.withOpacity(0.6), kUIColor],
-                            stops: [0.5, 0.9])),
+                            colors: [
+                          Color(int.parse("0xff${args.data["bgColor"]}"))
+                              .withOpacity(0.6),
+                          kUIColor
+                        ],
+                            stops: [
+                          0.5,
+                          0.9
+                        ])),
                     child: Row(
                       children: [
                         Container(
                             height: MediaQuery.of(context).size.height / 3,
                             child: Image.network(
-                              args.img,
+                              args.data["img"],
                               fit: BoxFit.fill,
                             )),
                         Expanded(
@@ -93,7 +102,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       color: Colors.grey[600],
                                     )),
                                 SizedBox(height: 4),
-                                Text("₹ ${args.price}",
+                                Text("₹ ${args.data["price"]}",
                                     style: TextStyle(
                                       fontSize: 24,
                                       fontFamily: "sans-serif-condensed",
@@ -148,6 +157,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       onPressed: () {
                         setState(() {
                           added = true;
+                          cart.addItem(args.data);
                         });
                       },
                       color: !added ? kUIAccent : Colors.grey,
@@ -163,14 +173,32 @@ class _ProductScreenState extends State<ProductScreen> {
                         ],
                       )),
                 ),
-                SizedBox(width: 24),
-                Column(
-                  children: [
-                    Text("+", style: TextStyle(fontSize: 24)),
-                    Text("1", style: TextStyle(fontSize: 24)),
-                    Text("-", style: TextStyle(fontSize: 26)),
-                  ],
-                )
+                if (added) ...[
+                  SizedBox(width: 24),
+                  Column(
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            cart.increaseQuantity(args.data["uId"]);
+                            setState(() {});
+                          },
+                          child: Text("+", style: TextStyle(fontSize: 24))),
+                      Text(
+                          cart
+                              .productInfo(args.data["uId"])["quantity"]
+                              .toString(),
+                          style: TextStyle(fontSize: 24)),
+                        GestureDetector(
+                            onTap: () {
+                              cart.decreaseQuantity(args.data["uId"]);
+                              setState(() {
+                                if (cart.productInfo(args.data["uId"]) == null) added = false;
+                              });
+                            },
+                            child: Text("-", style: TextStyle(fontSize: 26))),
+                    ],
+                  )
+                ]
               ],
             )
           ],
@@ -181,10 +209,7 @@ class _ProductScreenState extends State<ProductScreen> {
 }
 
 class ProductArguments {
-  final String title;
-  final String img;
-  final String price;
-  final Color bgColor;
+  final Map data;
 
-  ProductArguments(this.title, this.img, this.price, this.bgColor);
+  ProductArguments(this.data);
 }

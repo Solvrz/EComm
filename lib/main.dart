@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/screens/cart.dart';
+import 'package:suneel_printer/screens/cart_screen.dart';
 import 'package:suneel_printer/screens/category.dart';
 import 'package:suneel_printer/screens/home.dart';
 import 'package:suneel_printer/screens/product.dart';
