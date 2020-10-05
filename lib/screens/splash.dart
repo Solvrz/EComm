@@ -43,9 +43,11 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: Center(
                       child: Text(
                         "Suneel Printers",
-                        style:
-                            TextStyle(fontFamily: "Kalam-Bold", fontSize: 50, color: kUIDarkText),
-                            textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: "Kalam-Bold",
+                            fontSize: 50,
+                            color: kUIDarkText),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
