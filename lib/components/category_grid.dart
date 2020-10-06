@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:suneel_printer/components/marquee.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/category.dart';
-import 'package:suneel_printer/screens/product.dart';
 
 class CategoryGrid extends StatelessWidget {
   final List<Map<String, dynamic>> categories;
