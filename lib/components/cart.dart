@@ -1,10 +1,54 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class Wishlist {
+  List<Map<String, dynamic>> _products = [];
+
+  List<Map<String, dynamic>> get products => _products;
+
+  void addItem(Map<String, dynamic> itemData) {
+    _products.add(itemData);
+    _save();
+  }
+
+  void removeItem(String uId) {
+    _products.removeWhere((element) => element["uId"] == uId);
+    _save();
+  }
+
+  void clear() {
+    _products.clear();
+  }
+
+  bool containsProduct(String uId) {
+    bool contains;
+    _products.forEach((element) {
+      if (element["uId"] == uId) contains = true;
+    });
+
+    return contains ?? false;
+  }
+
+  void _save() async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setStringList("wishlist", _products.map((e) => jsonEncode(e)).toList());
+  }
+
+  void load() async {
+    final preferences = await SharedPreferences.getInstance();
+    final List<String> wishlistData = preferences.getStringList("wishlist");
+
+    if (wishlistData != null) _products = wishlistData.map<Map<String, dynamic>>((element) => jsonDecode(element)).toList();
+  }
+}
+
 class Cart {
   List<Map<String, dynamic>> _products = [];
 
   List<Map<String, dynamic>> get products => _products;
+
+  bool get isEmpty => !(_products.length > 0);
+  bool get isNotEmpty => _products.length > 0;
 
   void addItem(Map<String, dynamic> itemData) {
     itemData["quantity"] = 1;
@@ -67,8 +111,8 @@ class Cart {
 
   void load() async {
     final preferences = await SharedPreferences.getInstance();
-    final List<String> data = preferences.getStringList("cart");
+    final List<String> cartData = preferences.getStringList("cart");
 
-    if (data != null) _products = data.map<Map<String, dynamic>>((element) => jsonDecode(element)).toList();
+    if (cartData != null) _products = cartData.map<Map<String, dynamic>>((element) => jsonDecode(element)).toList();
   }
 }
