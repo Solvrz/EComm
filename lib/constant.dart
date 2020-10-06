@@ -10,3 +10,4 @@ const kUIDarkText = Color(0xff031715);
 FirebaseFirestore database = FirebaseFirestore.instance;
 
 Cart cart = Cart();
+Wishlist wishlist = Wishlist();

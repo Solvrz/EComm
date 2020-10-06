@@ -31,7 +31,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.arrow_back_ios, color: kUIDarkText, size: 26),
+                      child: Icon(Icons.arrow_back_ios,
+                          color: kUIDarkText, size: 26),
                     ),
                   ),
                   Expanded(
@@ -75,32 +76,22 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               _currentTab = index;
                             });
                           },
-                          child: Row(
-                            children: [
-                              if (index == _currentTab)
-                                Container(
-                                    margin: EdgeInsets.only(right: 8),
-                                    height: 2,
-                                    width: 15,
-                                    color: kUIAccent),
-                              AnimatedDefaultTextStyle(
-                                child: Text(
-                                  args.tabsData[index]["name"]
-                                      .split("\\n")
-                                      .join("\n"),
-                                  textAlign: TextAlign.center,
-                                ),
-                                duration: Duration(milliseconds: 100),
-                                style: TextStyle(
-                                    fontSize: index == _currentTab ? 16 : 14,
-                                    fontWeight: index == _currentTab
-                                        ? FontWeight.w600
-                                        : FontWeight.normal,
-                                    color: index == _currentTab
-                                        ? Colors.black
-                                        : Colors.grey[600]),
-                              )
-                            ],
+                          child: AnimatedDefaultTextStyle(
+                            child: Text(
+                              args.tabsData[index]["name"]
+                                  .split("\\n")
+                                  .join("\n"),
+                              textAlign: TextAlign.center,
+                            ),
+                            duration: Duration(milliseconds: 150),
+                            style: TextStyle(
+                                fontSize: index == _currentTab ? 16 : 14,
+                                fontWeight: index == _currentTab
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                                color: index == _currentTab
+                                    ? Colors.black
+                                    : Colors.grey[600]),
                           ),
                         ),
                       );
@@ -117,7 +108,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     return Expanded(
                         child: ProductList(
                             products: future.data.docs
-                                .map<Map<String, dynamic>>((DocumentSnapshot e) => e.data())
+                                .map<Map<String, dynamic>>(
+                                    (DocumentSnapshot e) => e.data())
                                 .toList()));
                   } else {
                     return Center(
@@ -156,126 +148,185 @@ class ProductList extends StatefulWidget {
 class _ProductListState extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width / 2;
-    final double height = width / 0.8;
-
     return GridView.count(
       shrinkWrap: true,
       crossAxisCount: 2,
       childAspectRatio: 0.8,
-      children: List.generate(
-          widget.products.length,
-          (index) => GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, "/product",
-                      arguments: ProductArguments(widget.products[index]));
-                },
-                child: Container(
-                    decoration: BoxDecoration(
-                        border:
-                            Border.all(color: Colors.grey[400], width: 0.5)),
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Icon(Icons.favorite_outline),
-                                ),
-                                Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Container(
-                                        decoration: BoxDecoration(boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.grey[600],
-                                              blurRadius: 20,
-                                              offset: Offset(2, 2))
-                                        ]),
-                                        child: Image.network(
-                                            widget.products[index]["img"],
-                                            height: height / 2)),
-                                  ),
-                                ),
-                                SizedBox(height: 12),
-                                Text("₹ ${widget.products[index]["price"]}",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "sans-serif-condensed")),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 30.0),
-                                  child: Text(widget.products[index]["name"],
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          letterSpacing: 0.2,
-                                          fontFamily: "sans-serif-condensed")),
-                                ),
-                              ]),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
+      children: List.generate(widget.products.length,
+          (index) => ProductCard(widget.products[index])),
+    );
+  }
+}
+
+class ProductCard extends StatefulWidget {
+  final Map<String, dynamic> product;
+
+  ProductCard(this.product);
+
+  @override
+  _ProductCardState createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard>
+    with SingleTickerProviderStateMixin {
+  Animation<double> animation;
+  AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200))
+          ..addListener(() {
+            setState(() {});
+          });
+    animation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(animationController);
+
+    if (cart.containsProduct(widget.product["uId"]))
+      animationController.value = 1.0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width / 2;
+    final double height = width / 0.8;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, "/product",
+            arguments: ProductArguments(widget.product));
+      },
+      child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[400], width: 0.5)),
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                            onTap: () {
+                              if (wishlist
+                                  .containsProduct(widget.product["uId"])) {
+                                wishlist.removeItem(widget.product["uId"]);
+                              } else {
+                                wishlist.addItem(widget.product);
+                              }
+                              setState(() {});
+                            },
+                            child: Icon(
+                              wishlist.containsProduct(widget.product["uId"])
+                                  ? Icons.favorite
+                                  : Icons.favorite_outline,
+                              color: wishlist
+                                      .containsProduct(widget.product["uId"])
+                                  ? kUIAccent
+                                  : kUIDarkText,
+                            )),
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
                           child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey[900],
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20))),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (cart.containsProduct(
-                                    widget.products[index]["uId"])) ...[
-                                  GestureDetector(
-                                    onTap: () {
-                                      cart.decreaseQuantity(
-                                          widget.products[index]["uId"]);
-                                      setState(() {});
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Icon(Icons.remove,
-                                          color: kUIColor, size: 20),
-                                    ),
-                                  ),
-                                  Text(
-                                      cart
-                                          .productInfo(widget.products[index]
-                                              ["uId"])["quantity"]
-                                          .toString(),
-                                      style: TextStyle(
-                                          color: kUIColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500))
-                                ],
-                                GestureDetector(
-                                  onTap: () async {
-                                    if (cart.containsProduct(widget.products[index]["uId"])) {
-                                      cart.increaseQuantity(
-                                        widget.products[index]["uId"]);
-                                    } else {
-                                      cart.addItem(widget.products[index]);
-                                    }
-                                    setState(() {});
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Icon(
-                                      Icons.add,
-                                      color: kUIColor,
-                                      size: 20,
-                                    ),
-                                  ),
+                              decoration: BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey[600],
+                                    blurRadius: 20,
+                                    offset: Offset(2, 2))
+                              ]),
+                              child: Image.network(widget.product["img"],
+                                  height: height / 2)),
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Text("₹ ${widget.product["price"]}",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "sans-serif-condensed")),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 30.0),
+                        child: Text(widget.product["name"],
+                            style: TextStyle(
+                                fontSize: 16,
+                                letterSpacing: 0.2,
+                                fontFamily: "sans-serif-condensed")),
+                      ),
+                    ]),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  width: 40,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[900],
+                      borderRadius:
+                          BorderRadius.only(topLeft: Radius.circular(20))),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (cart.containsProduct(widget.product["uId"]) ||
+                          animationController.isAnimating)
+                        SizeTransition(
+                          sizeFactor: animation,
+                          child: Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  if (cart.productInfo(
+                                          widget.product["uId"])["quantity"] ==
+                                      1) animationController.reverse();
+                                  cart.decreaseQuantity(widget.product["uId"]);
+                                  setState(() {});
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Icon(Icons.remove,
+                                      color: kUIColor, size: 20),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Text(
+                                  ((cart.productInfo(widget.product["uId"]) ??
+                                              {})["quantity"] ??
+                                          "0")
+                                      .toString(),
+                                  style: TextStyle(
+                                      color: kUIColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500))
+                            ],
                           ),
-                        )
-                      ],
-                    )),
-              )),
+                        ),
+                      GestureDetector(
+                        onTap: () async {
+                          if (cart.containsProduct(widget.product["uId"])) {
+                            cart.increaseQuantity(widget.product["uId"]);
+                          } else {
+                            cart.addItem(widget.product);
+                            animationController.forward();
+                          }
+                          setState(() {});
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Icon(
+                            Icons.add,
+                            color: kUIColor,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )),
     );
   }
 }

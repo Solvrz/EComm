@@ -31,7 +31,7 @@ class CategoryGrid extends StatelessWidget {
                 docs.docs.forEach((element) async {
                   if (element.get("uId").toString() == data["uId"]) {
                     QuerySnapshot tabs =
-                        await element.reference.collection("tabs").get();
+                        await element.reference.collection("tabs").orderBy("uId").get();
                     if (tabs.docs.isNotEmpty) {
                       return Navigator.pushNamed(context, "/category",
                           arguments: CategoryArguments(

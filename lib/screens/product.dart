@@ -153,7 +153,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   width: MediaQuery.of(context).size.width * 0.75,
                   child: FlatButton(
                       onPressed: () {
-                        setState(() {
+                        if (!added) setState(() {
                           added = true;
                           cart.addItem(args.data);
                         });

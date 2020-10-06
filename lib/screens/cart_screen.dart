@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/product.dart';
@@ -11,6 +14,8 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     double price = 0.0;
@@ -29,14 +34,8 @@ class _CartScreenState extends State<CartScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(25), topRight: Radius.circular(25))),
-          height: MediaQuery
-              .of(context)
-              .size
-              .height * 0.1,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
+          height: MediaQuery.of(context).size.height * 0.1,
+          width: MediaQuery.of(context).size.width,
           child: Row(
             children: [
               Expanded(
@@ -50,7 +49,7 @@ class _CartScreenState extends State<CartScreen> {
                         fontFamily: "sans-serif-condensed",
                       ),
                     ),
-                    Text(price.toString(),
+                    Text(price - price.toInt() == 0 ? price.toInt().toString() : price.toStringAsFixed(2),
                         style: TextStyle(
                             fontSize: 34,
                             fontWeight: FontWeight.bold,
@@ -81,12 +80,8 @@ class _CartScreenState extends State<CartScreen> {
 
                   return showBottomSheet(
                       context: context,
-                      builder: (_) =>
-                          Container(
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height - 300,
+                      builder: (_) => Container(
+                            height: MediaQuery.of(context).size.height - 300,
                             margin: EdgeInsets.only(top: 50),
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -118,7 +113,7 @@ class _CartScreenState extends State<CartScreen> {
                                           border: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide:
-                                            BorderSide(color: Colors.grey),
+                                                BorderSide(color: Colors.grey),
                                           ),
                                         ),
                                       ),
@@ -134,7 +129,7 @@ class _CartScreenState extends State<CartScreen> {
                                           border: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide:
-                                            BorderSide(color: Colors.grey),
+                                                BorderSide(color: Colors.grey),
                                           ),
                                         ),
                                       ),
@@ -150,7 +145,7 @@ class _CartScreenState extends State<CartScreen> {
                                           border: InputBorder.none,
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide:
-                                            BorderSide(color: Colors.grey),
+                                                BorderSide(color: Colors.grey),
                                           ),
                                         ),
                                       ),
@@ -164,7 +159,7 @@ class _CartScreenState extends State<CartScreen> {
                                           textColor: kUILightText,
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               Icon(Icons.store),
                                               SizedBox(width: 8),
@@ -185,25 +180,24 @@ class _CartScreenState extends State<CartScreen> {
                                                 context: context,
                                                 builder: (_) =>
                                                     RoundedAlertDialog(
-                                                      title:
+                                                  title:
                                                       "Your Order has been placed.",
-                                                      buttonsList: [
-                                                        FlatButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: Text(
-                                                            "Ok",
-                                                            style: TextStyle(
-                                                                color: kUIAccent,
-                                                                fontWeight:
+                                                  buttonsList: [
+                                                    FlatButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text(
+                                                        "Ok",
+                                                        style: TextStyle(
+                                                            color: kUIAccent,
+                                                            fontWeight:
                                                                 FontWeight
                                                                     .bold),
-                                                          ),
-                                                        ),
-                                                      ],
+                                                      ),
                                                     ),
+                                                  ],
+                                                ),
                                               );
                                             } else {
                                               name.clear();
@@ -245,7 +239,7 @@ class _CartScreenState extends State<CartScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.popUntil(context, ModalRoute.withName("/home"));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(8),
@@ -266,16 +260,17 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: cart.isNotEmpty ? () {
                       cart.clear();
-                    },
+                      setState(() {});
+                    } : null,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Icon(
+                      child: cart.isNotEmpty ? Icon(
                         Icons.delete,
                         size: 26,
                         color: kUIDarkText.withOpacity(0.6),
-                      ),
+                      ) : null,
                     ),
                   )
                 ],
@@ -283,144 +278,164 @@ class _CartScreenState extends State<CartScreen> {
             ),
             cart.products.isNotEmpty
                 ? Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 24.0),
-              child: Scrollbar(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: cart.products.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () =>
-                            Navigator.pushNamed(context, "/product",
-                                arguments:
-                                ProductArguments(cart.products[index])),
-                        child: Container(
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height / 6,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              color: Colors.white),
-                          child: Row(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 24.0),
+                    child: Scrollbar(
+                        child: AnimatedList(
+                      shrinkWrap: true,
+                      key: _listKey,
+                      initialItemCount: cart.products.length,
+                      itemBuilder: (BuildContext context, int index,
+                              Animation<double> animation) =>
+                          _buildItem(context, index, animation),
+                    )),
+                  )
+                : Expanded(
+                    child: Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 1.25,
+                        child: EmptyListWidget(
+                          packageImage: PackageImage.Image_2,
+                          title: "No Items",
+                          subTitle: "Shop and add more items",
+                        ),
+                      ),
+                    ),
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildItem(
+      BuildContext context, int index, Animation<double> animation) {
+    return SizeTransition(
+      sizeFactor: animation,
+      child: Slidable(
+        key: ObjectKey(cart.products[index]),
+        actionPane: SlidableDrawerActionPane(),
+        child: GestureDetector(
+          onTap: () => Navigator.pushNamed(context, "/product",
+              arguments: ProductArguments(cart.products[index])),
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 8),
+            height: MediaQuery.of(context).size.height / 6,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25), color: Colors.white),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                    child: Row(
+                      children: [
+                        Image.network(cart.products[index]["img"]),
+                        SizedBox(width: 24),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 24, vertical: 18),
-                                  child: Row(
-                                    children: [
-                                      Image.network(cart.products[index]["img"]),
-                                      SizedBox(width: 24),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              cart.products[index]["name"],
-                                              style: TextStyle(
-                                                  fontSize: 22,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily:
-                                                  "sans-serif-condensed",
-                                                  letterSpacing: -0.4),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 8, vertical: 4),
-                                              child: Text(
-                                                "₹ ${cart.products[index]["price"]}",
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w600,
-                                                    letterSpacing: -1,
-                                                    fontFamily:
-                                                    "sans-serif-condensed"),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              Text(
+                                cart.products[index]["name"],
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "sans-serif-condensed",
+                                    letterSpacing: -0.4),
                               ),
-                              Container(
-                                height: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height / 6,
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[900],
-                                    borderRadius: BorderRadius.circular(10)
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        cart.decreaseQuantity(
-                                            cart.products[index]["uId"]);
-                                        setState(() {});
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Icon(Icons.remove,
-                                            color: kUIColor, size: 20),
-                                      ),
-                                    ),
-                                    Text(
-                                        cart
-                                            .productInfo(cart.products[index]
-                                        ["uId"])["quantity"]
-                                            .toString(),
-                                        style: TextStyle(
-                                            color: kUIColor,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500)),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        cart.increaseQuantity(
-                                            cart.products[index]["uId"]);
-                                        setState(() {});
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Icon(
-                                          Icons.add,
-                                          color: kUIColor,
-                                          size: 20,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                child: Text(
+                                  "₹ ${cart.products[index]["price"]}",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: -1,
+                                      fontFamily: "sans-serif-condensed"),
                                 ),
                               )
                             ],
                           ),
                         ),
-                      );
-                    },
-                  )),
-            )
-                : Center(
-              child: Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width / 1.25,
-                child: EmptyListWidget(
-                  title: "No Items",
-                  subTitle: "Shop and add more items",
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                Container(
+                  height: MediaQuery.of(context).size.height / 6,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[900],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (cart.productInfo(
+                                  cart.products[index]["uId"])["quantity"] >
+                              1)
+                            cart.decreaseQuantity(cart.products[index]["uId"]);
+                          setState(() {});
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Icon(Icons.remove, color: kUIColor, size: 20),
+                        ),
+                      ),
+                      Text(
+                          cart
+                              .productInfo(
+                                  cart.products[index]["uId"])["quantity"]
+                              .toString(),
+                          style: TextStyle(
+                              color: kUIColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500)),
+                      GestureDetector(
+                        onTap: () async {
+                          cart.increaseQuantity(cart.products[index]["uId"]);
+                          setState(() {});
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Icon(
+                            Icons.add,
+                            color: kUIColor,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
-          ],
+          ),
         ),
+        secondaryActions: [
+          GestureDetector(
+            onTap: () {
+              Timer(Duration(milliseconds: 200),
+                  () {
+                    cart.removeItem(cart.products[index]["uId"]);
+                    setState(() {});
+                  });
+              _listKey.currentState.removeItem(index,
+                  (context, animation) => _buildItem(context, index, animation),
+                  duration: Duration(milliseconds: 200));
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 12),
+              height: MediaQuery.of(context).size.height / 6,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25), color: kUIAccent),
+              child: Icon(Icons.delete, color: kUILightText, size: 32),
+            ),
+          )
+        ],
       ),
     );
   }
