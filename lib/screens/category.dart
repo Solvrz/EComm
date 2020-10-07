@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:file_picker/file_picker.dart';
@@ -267,9 +268,6 @@ class _CategoryScreenState extends State<CategoryScreen>
                                                     format: CompressFormat.jpeg,
                                                   );
 
-                                                  // TODO: Ask Why This Exists!!!
-
-                                                  bool converted = false;
                                                   String ext = result
                                                       .files.first.extension;
 
@@ -322,15 +320,20 @@ class _CategoryScreenState extends State<CategoryScreen>
                                                     final String url =
                                                         await snapshot.ref
                                                             .getDownloadURL();
-                                                    if (converted)
-                                                      file.delete();
+                                                    file.delete();
+
+                                                    QuerySnapshot query =
+                                                        await args
+                                                            .tabs[_currentTab]
+                                                            .collection(
+                                                                "products")
+                                                            .get();
 
                                                     await args.tabs[_currentTab]
                                                         .collection("products")
                                                         .add({
-                                                      // TODO: UID Genrator & Deal with BG Color
-                                                      "uId": "1/1/4",
-                                                      "bgColor": "FFD54F",
+                                                      "uId":
+                                                          "1/1/${query.docs.length + 1}",
                                                       "img": url,
                                                       "price":
                                                           double.parse(fPrice),
@@ -495,7 +498,7 @@ class _CategoryScreenState extends State<CategoryScreen>
                                   ? FontWeight.w600
                                   : FontWeight.normal,
                               color: index == _currentTab
-                                  ? Colors.black
+                                  ? kUIDarkText
                                   : Colors.grey[600]),
                         ),
                       ),
@@ -638,15 +641,21 @@ class _ProductCardState extends State<ProductCard>
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: Container(
-                              decoration: BoxDecoration(boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey[600],
-                                    blurRadius: 20,
-                                    offset: Offset(2, 2))
-                              ]),
-                              child: Image.network(widget.product["img"],
-                                  height: height / 2)),
+                          child: widget.product["img"] != null &&
+                                  widget.product["img"] != ""
+                              ? Container(
+                                  decoration: BoxDecoration(boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey[600],
+                                        blurRadius: 12,
+                                        offset: Offset(2, 2))
+                                  ]),
+                                  child: Image.network(widget.product["img"],
+                                      height: height / 2))
+                              : Container(
+                                  height: height / 2,
+                                  child:
+                                      Center(child: Text("No Image Provided"))),
                         ),
                       ),
                       SizedBox(height: 12),
@@ -656,8 +665,11 @@ class _ProductCardState extends State<ProductCard>
                               fontWeight: FontWeight.bold,
                               fontFamily: "sans-serif-condensed")),
                       Padding(
-                        padding: const EdgeInsets.only(right: 30.0),
-                        child: Text(widget.product["name"],
+                        padding: const EdgeInsets.only(right: 32.0),
+                        child: AutoSizeText(widget.product["name"],
+                            maxLines: 2,
+                            minFontSize: 16,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 16,
                                 letterSpacing: 0.2,

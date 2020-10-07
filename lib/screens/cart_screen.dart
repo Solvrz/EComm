@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -43,18 +44,21 @@ class _CartScreenState extends State<CartScreen> {
                     Text(
                       "₹ ",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: kUIDarkText,
                         fontSize: 16,
                         fontFamily: "sans-serif-condensed",
                       ),
                     ),
-                    Text(price - price.toInt() == 0 ? price.toInt().toString() : price.toStringAsFixed(2),
+                    Text(
+                        price - price.toInt() == 0
+                            ? price.toInt().toString()
+                            : price.toStringAsFixed(2),
                         style: TextStyle(
                             fontSize: 34,
                             fontWeight: FontWeight.bold,
                             fontFamily: "sans-serif-condensed",
                             letterSpacing: -2,
-                            color: Colors.black))
+                            color: kUIDarkText))
                   ],
                 ),
               ),
@@ -73,158 +77,11 @@ class _CartScreenState extends State<CartScreen> {
                   ],
                 ),
                 onPressed: () {
-                  final TextEditingController name = TextEditingController();
-                  final TextEditingController phone = TextEditingController();
-                  final TextEditingController address = TextEditingController();
-
-                  return showBottomSheet(
+                  return showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
                       context: context,
-                      builder: (_) => Container(
-                            height: MediaQuery.of(context).size.height - 300,
-                            margin: EdgeInsets.only(top: 50),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey[600],
-                                    blurRadius: 12,
-                                    offset: Offset(0, -2))
-                              ],
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(25),
-                                topLeft: Radius.circular(25),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(16),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      child: TextField(
-                                        controller: name,
-                                        maxLines: 3,
-                                        minLines: 1,
-                                        keyboardType: TextInputType.multiline,
-                                        decoration: InputDecoration(
-                                          hintText: "Name *",
-                                          border: InputBorder.none,
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.grey),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      child: TextField(
-                                        controller: phone,
-                                        maxLines: 3,
-                                        minLines: 1,
-                                        keyboardType: TextInputType.multiline,
-                                        decoration: InputDecoration(
-                                          hintText: "Phone *",
-                                          border: InputBorder.none,
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.grey),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      child: TextField(
-                                        controller: address,
-                                        maxLines: 3,
-                                        minLines: 1,
-                                        keyboardType: TextInputType.multiline,
-                                        decoration: InputDecoration(
-                                          hintText: "Adderess *",
-                                          border: InputBorder.none,
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.grey),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 100),
-                                    Container(
-                                      height: 60,
-                                      width: 300,
-                                      child: FlatButton(
-                                          color: kUIAccent,
-                                          textColor: kUILightText,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(Icons.store),
-                                              SizedBox(width: 8),
-                                              Text("Place Order"),
-                                            ],
-                                          ),
-                                          onPressed: () {
-                                            if (name.text != "" ||
-                                                phone.text != "" ||
-                                                address.text != "") {
-                                              name.clear();
-                                              phone.clear();
-                                              address.clear();
-
-                                              Navigator.pop(context);
-
-                                              showDialog(
-                                                context: context,
-                                                builder: (_) =>
-                                                    RoundedAlertDialog(
-                                                  title:
-                                                      "Your Order has been placed.",
-                                                  buttonsList: [
-                                                    FlatButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text(
-                                                        "Ok",
-                                                        style: TextStyle(
-                                                            color: kUIAccent,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            } else {
-                                              name.clear();
-                                              phone.clear();
-                                              address.clear();
-
-                                              Navigator.pop(context);
-                                              FocusScope.of(context).unfocus();
-
-                                              Scaffold.of(context)
-                                                  .removeCurrentSnackBar();
-                                              Scaffold.of(context).showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    "Details can't be empty",
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  backgroundColor: kUIAccent,
-                                                ),
-                                              );
-                                            }
-                                          }),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ));
+                      builder: (_) => CheckOutSheet(price));
                 },
               )
             ],
@@ -259,17 +116,21 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: cart.isNotEmpty ? () {
-                      cart.clear();
-                      setState(() {});
-                    } : null,
+                    onTap: cart.isNotEmpty
+                        ? () {
+                            cart.clear();
+                            setState(() {});
+                          }
+                        : null,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: cart.isNotEmpty ? Icon(
-                        Icons.delete,
-                        size: 26,
-                        color: kUIDarkText.withOpacity(0.6),
-                      ) : null,
+                      child: cart.isNotEmpty
+                          ? Icon(
+                              Icons.delete,
+                              size: 26,
+                              color: kUIDarkText.withOpacity(0.6),
+                            )
+                          : null,
                     ),
                   )
                 ],
@@ -329,20 +190,26 @@ class _CartScreenState extends State<CartScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                     child: Row(
                       children: [
-                        Image.network(cart.products[index]["img"]),
+                        cart.products[index]["img"] != null &&
+                                cart.products[index]["img"] != ""
+                            ? Image.network(cart.products[index]["img"])
+                            : Text("No Image Provided"),
                         SizedBox(width: 24),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                cart.products[index]["name"],
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: "sans-serif-condensed",
-                                    letterSpacing: -0.4),
+                              Expanded(
+                                child: AutoSizeText(
+                                  cart.products[index]["name"],
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: "sans-serif-condensed",
+                                      letterSpacing: -0.4),
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -417,11 +284,10 @@ class _CartScreenState extends State<CartScreen> {
         secondaryActions: [
           GestureDetector(
             onTap: () {
-              Timer(Duration(milliseconds: 200),
-                  () {
-                    cart.removeItem(cart.products[index]["uId"]);
-                    setState(() {});
-                  });
+              Timer(Duration(milliseconds: 200), () {
+                cart.removeItem(cart.products[index]["uId"]);
+                setState(() {});
+              });
               _listKey.currentState.removeItem(index,
                   (context, animation) => _buildItem(context, index, animation),
                   duration: Duration(milliseconds: 200));
@@ -434,6 +300,273 @@ class _CartScreenState extends State<CartScreen> {
               child: Icon(Icons.delete, color: kUILightText, size: 32),
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class CheckOutSheet extends StatefulWidget {
+  final double price;
+
+  CheckOutSheet(this.price);
+
+  @override
+  _CheckOutSheetState createState() => _CheckOutSheetState();
+}
+
+class _CheckOutSheetState extends State<CheckOutSheet> {
+  String name = "Your name";
+  String phone = "Your phone number";
+  String address = "Your address";
+  String editing = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+        color: Colors.white,
+      ),
+      padding: EdgeInsets.only(top: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Icon(Icons.close, color: kUIDarkText),
+                ),
+              ),
+              Text("Check Out",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
+            ],
+          ),
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text("Name",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            editing = "name";
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.edit_outlined,
+                              color: Colors.grey[500]),
+                        ),
+                      )
+                    ],
+                  ),
+                  editing == "name"
+                      ? TextField(
+                          decoration: InputDecoration(
+                              focusedBorder: InputBorder.none,
+                              border: InputBorder.none),
+                          controller: TextEditingController(text: name),
+                          autofocus: true,
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500),
+                          onChanged: (String value) {
+                            name = value;
+                          },
+                          onEditingComplete: () {
+                            setState(() {
+                              editing = "";
+                            });
+                          },
+                        )
+                      : Text(name,
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500)),
+                  SizedBox(height: 12),
+                  Divider(
+                    height: 20,
+                    thickness: 2,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text("Phone Number",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            editing = "phone";
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.edit_outlined,
+                              color: Colors.grey[500]),
+                        ),
+                      )
+                    ],
+                  ),
+                  editing == "phone"
+                      ? TextField(
+                          scrollPadding: EdgeInsets.zero,
+                          decoration: InputDecoration(
+                              focusedBorder: InputBorder.none,
+                              border: InputBorder.none),
+                          controller: TextEditingController(text: phone),
+                          autofocus: true,
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500),
+                          onChanged: (String value) {
+                            phone = value;
+                          },
+                          onEditingComplete: () {
+                            setState(() {
+                              editing = "";
+                            });
+                          },
+                        )
+                      : Text(phone,
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500)),
+                  SizedBox(height: 12),
+                  Divider(
+                    height: 20,
+                    thickness: 2,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text("Shipping Address",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            editing = "address";
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.edit_outlined,
+                              color: Colors.grey[500]),
+                        ),
+                      )
+                    ],
+                  ),
+                  editing == "address"
+                      ? TextField(
+                          maxLines: 4,
+                          minLines: 1,
+                          decoration: InputDecoration(
+                              focusedBorder: InputBorder.none,
+                              border: InputBorder.none),
+                          controller: TextEditingController(text: address),
+                          autofocus: true,
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500),
+                          onChanged: (String value) {
+                            address = value;
+                          },
+                          onEditingComplete: () {
+                            setState(() {
+                              editing = "";
+                            });
+                          },
+                        )
+                      : Text(address,
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500)),
+                  SizedBox(height: 12),
+                  Divider(
+                    height: 36,
+                    thickness: 2,
+                  ),
+                  Text("${cart.products.length} Items",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600])),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text("Total:",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontFamily: "sans-serif-condensed",
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Text("₹ ",
+                          style: TextStyle(
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          )),
+                      Text(
+                          widget.price - widget.price.toInt() == 0
+                              ? widget.price.toInt().toString()
+                              : widget.price.toStringAsFixed(2),
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ],
+                  ),
+                  SizedBox(height: 32),
+                  Center(
+                    child: MaterialButton(
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      onPressed: () {
+                        //TODO: Implement Proceed To Buy
+                      },
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      color: kUIAccent,
+                      child: Text("Proceed To Buy",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: "sans-serif-condensed",
+                              fontWeight: FontWeight.w600,
+                              color: kUILightText)),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

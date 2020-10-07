@@ -68,19 +68,6 @@ class _ProductScreenState extends State<ProductScreen> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 18, vertical: 32),
                     height: MediaQuery.of(context).size.height / 2.25,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [
-                          Color(int.parse("0xff${args.data["bgColor"]}"))
-                              .withOpacity(0.6),
-                          kUIColor
-                        ],
-                            stops: [
-                          0.5,
-                          0.9
-                        ])),
                     child: Row(
                       children: [
                         Container(
