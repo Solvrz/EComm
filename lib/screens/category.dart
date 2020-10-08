@@ -13,6 +13,8 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/product.dart';
 
+bool editMode = false;
+
 class CategoryScreen extends StatefulWidget {
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
@@ -168,11 +170,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                 .collection("products")
                                                 .get();
 
+                                            int maxId = 0;
+
+                                            query.docs.forEach((element) {
+                                              int currId = int.parse(element.data()["uId"].split("/").last);
+                                              if (currId > maxId) maxId = currId;
+                                            });
+
                                             await args.tabs[_currentTab]
                                                 .collection("products")
                                                 .add({
                                               "uId":
-                                                  "1/1/${query.docs.length + 1}",
+                                                  "1/1/${maxId + 1}",
                                               "img": url,
                                               "price": double.parse(fPrice),
                                               "name": fName
@@ -253,10 +262,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, "/cart"),
+                  onTap: admin
+                      ? () => setState(() => editMode = !editMode)
+                      : () => Navigator.pushNamed(context, "/cart"),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.shopping_cart_outlined, size: 26),
+                    child: Icon(
+                        admin
+                            ? Icons.edit_outlined
+                            : Icons.shopping_cart_outlined,
+                        size: 26),
                   ),
                 )
               ],
@@ -307,8 +322,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ),
             ),
           ),
-          FutureBuilder<QuerySnapshot>(
-            future: args.tabs[_currentTab].collection("products").get(),
+          StreamBuilder<QuerySnapshot>(
+            stream: args.tabs[_currentTab].collection("products").snapshots(),
             builder: (context, future) {
               if (future.hasData) {
                 if (future.data.docs.isNotEmpty) {
@@ -414,28 +429,108 @@ class _ProductCardState extends State<ProductCard>
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                            onTap: () {
-                              if (wishlist
-                                  .containsProduct(widget.product)) {
-                                wishlist.removeItem(widget.product);
-                              } else {
-                                wishlist.addItem(widget.product);
-                              }
-                              setState(() {});
-                            },
-                            child: Icon(
-                              wishlist.containsProduct(widget.product)
-                                  ? Icons.favorite
-                                  : Icons.favorite_outline,
-                              color:
-                                  wishlist.containsProduct(widget.product)
-                                      ? kUIAccent
-                                      : kUIDarkText,
-                            )),
-                      ),
+                      admin
+                          ? Align(
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                onTap: editMode
+                                    ? () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) => RoundedAlertDialog(
+                                            title:
+                                                "Do you want to delete this Product?",
+                                            buttonsList: [
+                                              FlatButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                textColor: kUIAccent,
+                                                child: Text("No"),
+                                              ),
+                                              FlatButton(
+                                                onPressed: () async {
+                                                  Navigator.pop(context);
+
+                                                  List<String> uIds = widget
+                                                      .product.uId
+                                                      .split("/");
+
+                                                   FirebaseStorage.instance
+                                                       .getReferenceFromUrl(
+                                                           widget.product.img.url)
+                                                       .then((value) =>
+                                                           value.delete());
+
+                                                  QuerySnapshot category =
+                                                      await database
+                                                          .collection(
+                                                              "categories")
+                                                          .where("uId",
+                                                              isEqualTo:
+                                                                  int.parse(
+                                                                      uIds[0]))
+                                                          .get();
+
+                                                  QuerySnapshot tab =
+                                                      await category
+                                                          .docs.first.reference
+                                                          .collection("tabs")
+                                                          .where(
+                                                              "uId",
+                                                              isEqualTo:
+                                                                  int.parse(
+                                                                      uIds[1]))
+                                                          .get();
+
+                                                  QuerySnapshot product =
+                                                      await tab
+                                                          .docs.first.reference
+                                                          .collection(
+                                                              "products")
+                                                          .where("uId",
+                                                              isEqualTo: widget
+                                                                  .product.uId)
+                                                          .get();
+
+                                                  product.docs.first.reference
+                                                      .delete();
+                                                },
+                                                textColor: kUIAccent,
+                                                child: Text("Yes"),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    : () {},
+                                child: Icon(
+                                  editMode ? Icons.delete : null,
+                                  color: kUIDarkText.withOpacity(0.7),
+                                ),
+                              ),
+                            )
+                          : Align(
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                  onTap: () {
+                                    if (wishlist
+                                        .containsProduct(widget.product)) {
+                                      wishlist.removeItem(widget.product);
+                                    } else {
+                                      wishlist.addItem(widget.product);
+                                    }
+                                    setState(() {});
+                                  },
+                                  child: Icon(
+                                    wishlist.containsProduct(widget.product)
+                                        ? Icons.favorite
+                                        : Icons.favorite_outline,
+                                    color:
+                                        wishlist.containsProduct(widget.product)
+                                            ? kUIAccent
+                                            : kUIDarkText,
+                                  )),
+                            ),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
@@ -451,90 +546,98 @@ class _ProductCardState extends State<ProductCard>
                                   child: Image(image: widget.product.img))
                               : Container(
                                   height: height / 2,
-                                  child:
-                                      Center(child: Text("No Image Provided"))),
+                                  child: Center(
+                                    child: Text("No Image Provided"),
+                                  ),
+                                ),
                         ),
                       ),
                       SizedBox(height: 12),
-                      Text("₹ ${widget.product.price}",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "sans-serif-condensed")),
+                      Text(
+                        "₹ ${widget.product.price}",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "sans-serif-condensed"),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(right: 32.0),
-                        child: AutoSizeText(widget.product.name,
-                            maxLines: 2,
-                            minFontSize: 16,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 16,
-                                letterSpacing: 0.2,
-                                fontFamily: "sans-serif-condensed")),
+                        child: AutoSizeText(
+                          widget.product.name,
+                          maxLines: 2,
+                          minFontSize: 16,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 16,
+                              letterSpacing: 0.2,
+                              fontFamily: "sans-serif-condensed"),
+                        ),
                       ),
                     ]),
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  width: 40,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[900],
-                      borderRadius:
-                          BorderRadius.only(topLeft: Radius.circular(20))),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (cart.containsProduct(widget.product) ||
-                          animationController.isAnimating)
-                        SizeTransition(
-                          sizeFactor: animation,
-                          child: Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (cart.getQuantity(widget.product) == 1)
-                                    animationController.reverse();
-                                  cart.decreaseQuantity(widget.product);
-                                  setState(() {});
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Icon(Icons.remove,
-                                      color: kUIColor, size: 20),
+              if (!admin)
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    width: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        borderRadius:
+                            BorderRadius.only(topLeft: Radius.circular(20))),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (cart.containsProduct(widget.product) ||
+                            animationController.isAnimating)
+                          SizeTransition(
+                            sizeFactor: animation,
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if (cart.getQuantity(widget.product) == 1)
+                                      animationController.reverse();
+                                    cart.decreaseQuantity(widget.product);
+                                    setState(() {});
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Icon(Icons.remove,
+                                        color: kUIColor, size: 20),
+                                  ),
                                 ),
-                              ),
-                              Text(cart.getQuantity(widget.product).toString(),
-                                  style: TextStyle(
-                                      color: kUIColor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500))
-                            ],
+                                Text(
+                                    cart.getQuantity(widget.product).toString(),
+                                    style: TextStyle(
+                                        color: kUIColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500))
+                              ],
+                            ),
+                          ),
+                        GestureDetector(
+                          onTap: () async {
+                            if (cart.containsProduct(widget.product)) {
+                              cart.increaseQuantity(widget.product);
+                            } else {
+                              cart.addItem(widget.product);
+                              animationController.forward();
+                            }
+                            setState(() {});
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Icon(
+                              Icons.add,
+                              color: kUIColor,
+                              size: 20,
+                            ),
                           ),
                         ),
-                      GestureDetector(
-                        onTap: () async {
-                          if (cart.containsProduct(widget.product)) {
-                            cart.increaseQuantity(widget.product);
-                          } else {
-                            cart.addItem(widget.product);
-                            animationController.forward();
-                          }
-                          setState(() {});
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Icon(
-                            Icons.add,
-                            color: kUIColor,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )
+                )
             ],
           )),
     );

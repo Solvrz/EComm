@@ -8,6 +8,9 @@ class Wishlist {
 
   List<Product> get products => _products;
 
+  bool get hasProducts => _products.length > 0;
+  bool get hasNoProducts => !(_products.length > 0);
+
   void addItem(Product product) {
     _products.add(product);
     _save();

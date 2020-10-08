@@ -64,7 +64,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               MaterialButton(
-                color: kUIAccent,
+                color: cart.hasProducts ? kUIAccent : kUIDarkText.withOpacity(0.5),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
@@ -78,7 +78,7 @@ class _CartScreenState extends State<CartScreen> {
                   ],
                 ),
                 onPressed: () {
-                  return showModalBottomSheet(
+                  if (cart.hasProducts) showModalBottomSheet(
                       isScrollControlled: true,
                       backgroundColor: Colors.transparent,
                       context: context,
@@ -95,9 +95,7 @@ class _CartScreenState extends State<CartScreen> {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Navigator.popUntil(context, ModalRoute.withName("/home"));
-                    },
+                    onTap: () => Navigator.pop(context),
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Icon(
@@ -117,21 +115,19 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: cart.isNotEmpty
+                    onTap: cart.hasProducts
                         ? () {
                             cart.clear();
                             setState(() {});
                           }
-                        : null,
+                        : () {},
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: cart.isNotEmpty
-                          ? Icon(
-                              Icons.delete,
-                              size: 26,
-                              color: kUIDarkText.withOpacity(0.6),
-                            )
-                          : null,
+                      child: Icon(
+                        cart.hasProducts ? Icons.delete : null,
+                        size: 26,
+                        color: kUIDarkText.withOpacity(0.6),
+                      ),
                     ),
                   )
                 ],

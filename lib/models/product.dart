@@ -35,7 +35,7 @@ class Product {
       uId: data["uId"],
       name: data["name"],
       img: data["img"],
-      price: data["price"],
+      price: data["price"].toString(),
       bgColor: data["bgColor"],
     );
   }

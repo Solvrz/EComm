@@ -22,8 +22,8 @@ class Cart {
 
   List<CartItem> get products => _products;
 
-  bool get isEmpty => !(_products.length > 0);
-  bool get isNotEmpty => _products.length > 0;
+  bool get hasNoProducts => !(_products.length > 0);
+  bool get hasProducts => _products.length > 0;
 
   void addItem(Product product) {
     _products.add(CartItem(product, 1));
