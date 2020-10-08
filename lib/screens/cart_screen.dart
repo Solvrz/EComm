@@ -4,7 +4,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/product.dart';
 
@@ -94,9 +93,7 @@ class _CartScreenState extends State<CartScreen> {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Navigator.popUntil(context, ModalRoute.withName("/home"));
-                    },
+                    onTap: () => Navigator.pop(context),
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Icon(
@@ -121,16 +118,14 @@ class _CartScreenState extends State<CartScreen> {
                             cart.clear();
                             setState(() {});
                           }
-                        : null,
+                        : () {},
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: cart.isNotEmpty
-                          ? Icon(
-                              Icons.delete,
-                              size: 26,
-                              color: kUIDarkText.withOpacity(0.6),
-                            )
-                          : null,
+                      child: Icon(
+                        cart.isNotEmpty ? Icons.delete : null,
+                        size: 26,
+                        color: kUIDarkText.withOpacity(0.6),
+                      ),
                     ),
                   )
                 ],
@@ -548,7 +543,8 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                   SizedBox(height: 32),
                   Center(
                     child: MaterialButton(
-                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                       onPressed: () {
                         //TODO: Implement Proceed To Buy
                       },

@@ -12,6 +12,8 @@ import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/product.dart';
 
+bool editMode = false;
+
 class CategoryScreen extends StatefulWidget {
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
@@ -119,9 +121,12 @@ class _CategoryScreenState extends State<CategoryScreen>
                                           onPressed: () async {
                                             FocusScope.of(context).unfocus();
 
-                                            // ignore: unused_local_variable
                                             String fName = name.text;
                                             name.clear();
+
+                                            args.docRef
+                                                .collection("tabs")
+                                                .get();
 
                                             // TODO: Figure Out rest of the code and how to deal with \n and how to refresh page
 
@@ -454,10 +459,16 @@ class _CategoryScreenState extends State<CategoryScreen>
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, "/cart"),
+                  onTap: admin
+                      ? () => setState(() => editMode = !editMode)
+                      : () => Navigator.pushNamed(context, "/cart"),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.shopping_cart_outlined, size: 26),
+                    child: Icon(
+                        admin
+                            ? Icons.edit_outlined
+                            : Icons.shopping_cart_outlined,
+                        size: 26),
                   ),
                 )
               ],
@@ -616,28 +627,76 @@ class _ProductCardState extends State<ProductCard>
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                            onTap: () {
-                              if (wishlist
-                                  .containsProduct(widget.product["uId"])) {
-                                wishlist.removeItem(widget.product["uId"]);
-                              } else {
-                                wishlist.addItem(widget.product);
-                              }
-                              setState(() {});
-                            },
-                            child: Icon(
-                              wishlist.containsProduct(widget.product["uId"])
-                                  ? Icons.favorite
-                                  : Icons.favorite_outline,
-                              color: wishlist
-                                      .containsProduct(widget.product["uId"])
-                                  ? kUIAccent
-                                  : kUIDarkText,
-                            )),
-                      ),
+                      admin
+                          ? Align(
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                onTap: editMode
+                                    ? () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) => RoundedAlertDialog(
+                                            title:
+                                                "Do you want to delete this Product?",
+                                            buttonsList: [
+                                              FlatButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                textColor: kUIAccent,
+                                                child: Text("No"),
+                                              ),
+                                              FlatButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+
+                                                  List<String> uIds = widget
+                                                      .product["uId"]
+                                                      .split("/");
+
+                                                  // FirebaseStorage.instance
+                                                  //     .getReferenceFromUrl(
+                                                  //         widget.product["img"])
+                                                  //     .then((value) =>
+                                                  //         value.delete());
+                                                },
+                                                textColor: kUIAccent,
+                                                child: Text("Yes"),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    : () {},
+                                child: Icon(
+                                  editMode ? Icons.delete : null,
+                                  color: kUIDarkText,
+                                ),
+                              ),
+                            )
+                          : Align(
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                  onTap: () {
+                                    if (wishlist.containsProduct(
+                                        widget.product["uId"])) {
+                                      wishlist
+                                          .removeItem(widget.product["uId"]);
+                                    } else {
+                                      wishlist.addItem(widget.product);
+                                    }
+                                    setState(() {});
+                                  },
+                                  child: Icon(
+                                    wishlist.containsProduct(
+                                            widget.product["uId"])
+                                        ? Icons.favorite
+                                        : Icons.favorite_outline,
+                                    color: wishlist.containsProduct(
+                                            widget.product["uId"])
+                                        ? kUIAccent
+                                        : kUIDarkText,
+                                  )),
+                            ),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
@@ -654,95 +713,103 @@ class _ProductCardState extends State<ProductCard>
                                       height: height / 2))
                               : Container(
                                   height: height / 2,
-                                  child:
-                                      Center(child: Text("No Image Provided"))),
+                                  child: Center(
+                                    child: Text("No Image Provided"),
+                                  ),
+                                ),
                         ),
                       ),
                       SizedBox(height: 12),
-                      Text("₹ ${widget.product["price"]}",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "sans-serif-condensed")),
+                      Text(
+                        "₹ ${widget.product["price"]}",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "sans-serif-condensed"),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(right: 32.0),
-                        child: AutoSizeText(widget.product["name"],
-                            maxLines: 2,
-                            minFontSize: 16,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 16,
-                                letterSpacing: 0.2,
-                                fontFamily: "sans-serif-condensed")),
+                        child: AutoSizeText(
+                          widget.product["name"],
+                          maxLines: 2,
+                          minFontSize: 16,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 16,
+                              letterSpacing: 0.2,
+                              fontFamily: "sans-serif-condensed"),
+                        ),
                       ),
                     ]),
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  width: 40,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[900],
-                      borderRadius:
-                          BorderRadius.only(topLeft: Radius.circular(20))),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (cart.containsProduct(widget.product["uId"]) ||
-                          animationController.isAnimating)
-                        SizeTransition(
-                          sizeFactor: animation,
-                          child: Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (cart.productInfo(
-                                          widget.product["uId"])["quantity"] ==
-                                      1) animationController.reverse();
-                                  cart.decreaseQuantity(widget.product["uId"]);
-                                  setState(() {});
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Icon(Icons.remove,
-                                      color: kUIColor, size: 20),
+              if (!admin)
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    width: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        borderRadius:
+                            BorderRadius.only(topLeft: Radius.circular(20))),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (cart.containsProduct(widget.product["uId"]) ||
+                            animationController.isAnimating)
+                          SizeTransition(
+                            sizeFactor: animation,
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if (cart.productInfo(widget.product["uId"])[
+                                            "quantity"] ==
+                                        1) animationController.reverse();
+                                    cart.decreaseQuantity(
+                                        widget.product["uId"]);
+                                    setState(() {});
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Icon(Icons.remove,
+                                        color: kUIColor, size: 20),
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                  ((cart.productInfo(widget.product["uId"]) ??
-                                              {})["quantity"] ??
-                                          "0")
-                                      .toString(),
-                                  style: TextStyle(
-                                      color: kUIColor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500))
-                            ],
+                                Text(
+                                    ((cart.productInfo(widget.product["uId"]) ??
+                                                {})["quantity"] ??
+                                            "0")
+                                        .toString(),
+                                    style: TextStyle(
+                                        color: kUIColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500))
+                              ],
+                            ),
+                          ),
+                        GestureDetector(
+                          onTap: () async {
+                            if (cart.containsProduct(widget.product["uId"])) {
+                              cart.increaseQuantity(widget.product["uId"]);
+                            } else {
+                              cart.addItem(widget.product);
+                              animationController.forward();
+                            }
+                            setState(() {});
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Icon(
+                              Icons.add,
+                              color: kUIColor,
+                              size: 20,
+                            ),
                           ),
                         ),
-                      GestureDetector(
-                        onTap: () async {
-                          if (cart.containsProduct(widget.product["uId"])) {
-                            cart.increaseQuantity(widget.product["uId"]);
-                          } else {
-                            cart.addItem(widget.product);
-                            animationController.forward();
-                          }
-                          setState(() {});
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Icon(
-                            Icons.add,
-                            color: kUIColor,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )
+                )
             ],
           )),
     );
