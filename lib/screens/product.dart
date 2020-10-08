@@ -138,10 +138,11 @@ class _ProductScreenState extends State<ProductScreen> {
                   width: MediaQuery.of(context).size.width * 0.75,
                   child: FlatButton(
                       onPressed: () {
-                        if (!added) setState(() {
-                          added = true;
-                          cart.addItem(args.product);
-                        });
+                        if (!added)
+                          setState(() {
+                            added = true;
+                            cart.addItem(args.product);
+                          });
                       },
                       color: !added ? kUIAccent : Colors.grey,
                       textColor: kUILightText,
@@ -166,19 +167,17 @@ class _ProductScreenState extends State<ProductScreen> {
                             setState(() {});
                           },
                           child: Text("+", style: TextStyle(fontSize: 24))),
-                      Text(
-                          cart
-                              .getQuantity(args.product)
-                              .toString(),
+                      Text(cart.getQuantity(args.product).toString(),
                           style: TextStyle(fontSize: 24)),
-                        GestureDetector(
-                            onTap: () {
-                              cart.decreaseQuantity(args.product);
-                              setState(() {
-                                if (cart.getQuantity(args.product) == null) added = false;
-                              });
-                            },
-                            child: Text("-", style: TextStyle(fontSize: 26))),
+                      GestureDetector(
+                          onTap: () {
+                            cart.decreaseQuantity(args.product);
+                            setState(() {
+                              if (cart.getQuantity(args.product) == null)
+                                added = false;
+                            });
+                          },
+                          child: Text("-", style: TextStyle(fontSize: 26))),
                     ],
                   )
                 ]

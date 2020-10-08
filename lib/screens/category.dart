@@ -173,15 +173,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                             int maxId = 0;
 
                                             query.docs.forEach((element) {
-                                              int currId = int.parse(element.data()["uId"].split("/").last);
-                                              if (currId > maxId) maxId = currId;
+                                              int currId = int.parse(element
+                                                  .data()["uId"]
+                                                  .split("/")
+                                                  .last);
+                                              if (currId > maxId)
+                                                maxId = currId;
                                             });
 
                                             await args.tabs[_currentTab]
                                                 .collection("products")
                                                 .add({
-                                              "uId":
-                                                  "1/1/${maxId + 1}",
+                                              "uId": "1/1/${maxId + 1}",
                                               "img": url,
                                               "price": double.parse(fPrice),
                                               "name": fName
@@ -455,11 +458,12 @@ class _ProductCardState extends State<ProductCard>
                                                       .product.uId
                                                       .split("/");
 
-                                                   FirebaseStorage.instance
-                                                       .getReferenceFromUrl(
-                                                           widget.product.img.url)
-                                                       .then((value) =>
-                                                           value.delete());
+                                                  FirebaseStorage.instance
+                                                      .getReferenceFromUrl(
+                                                          widget
+                                                              .product.img.url)
+                                                      .then((value) =>
+                                                          value.delete());
 
                                                   QuerySnapshot category =
                                                       await database

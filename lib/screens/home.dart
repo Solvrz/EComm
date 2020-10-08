@@ -55,10 +55,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           backgroundColor: kUIColor,
           resizeToAvoidBottomInset: false,
-          floatingActionButton: FloatingActionButton(
-              onPressed: () => Navigator.pushNamed(context, "/cart"),
-              child: Icon(Icons.shopping_cart),
-              backgroundColor: kUIAccent),
+          floatingActionButton: admin
+              ? null
+              : FloatingActionButton(
+                  onPressed: () => Navigator.pushNamed(context, "/cart"),
+                  child: Icon(Icons.shopping_cart),
+                  backgroundColor: kUIAccent),
           appBar: AppBar(
             title: Hero(
               tag: "logo",

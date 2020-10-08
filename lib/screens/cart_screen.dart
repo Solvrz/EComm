@@ -64,7 +64,8 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               MaterialButton(
-                color: cart.hasProducts ? kUIAccent : kUIDarkText.withOpacity(0.5),
+                color:
+                    cart.hasProducts ? kUIAccent : kUIDarkText.withOpacity(0.5),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
@@ -78,11 +79,12 @@ class _CartScreenState extends State<CartScreen> {
                   ],
                 ),
                 onPressed: () {
-                  if (cart.hasProducts) showModalBottomSheet(
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (_) => CheckOutSheet(price));
+                  if (cart.hasProducts)
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (_) => CheckOutSheet(price));
                 },
               )
             ],

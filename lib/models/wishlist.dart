@@ -39,13 +39,17 @@ class Wishlist {
 
   void _save() async {
     final preferences = await SharedPreferences.getInstance();
-    await preferences.setStringList("wishlist", _products.map((Product e) => jsonEncode(e.toJson())).toList());
+    await preferences.setStringList("wishlist",
+        _products.map((Product e) => jsonEncode(e.toJson())).toList());
   }
 
   void load() async {
     final preferences = await SharedPreferences.getInstance();
     final List<String> wishlistData = preferences.getStringList("wishlist");
 
-    if (wishlistData != null) _products = wishlistData.map<Product>((element) => Product.fromJson(jsonDecode(element))).toList();
+    if (wishlistData != null)
+      _products = wishlistData
+          .map<Product>((element) => Product.fromJson(jsonDecode(element)))
+          .toList();
   }
 }
