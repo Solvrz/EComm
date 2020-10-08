@@ -10,6 +10,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:suneel_printer/components/alert_button.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/product.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -17,28 +18,8 @@ class CategoryScreen extends StatefulWidget {
   _CategoryScreenState createState() => _CategoryScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen>
-    with SingleTickerProviderStateMixin {
+class _CategoryScreenState extends State<CategoryScreen> {
   int _currentTab = 0;
-
-  AnimationController _animationController;
-  Animation<double> _animation;
-  Animation<double> _rotationAnimation;
-
-  @override
-  void initState() {
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-    );
-    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
-    _rotationAnimation =
-        Tween<double>(begin: 0, end: 315).animate(_animationController);
-    super.initState();
-    _animationController.addListener(() {
-      setState(() {});
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,80 +31,152 @@ class _CategoryScreenState extends State<CategoryScreen>
         resizeToAvoidBottomInset: false,
         floatingActionButton: admin
             ? Builder(
-                builder: (BuildContext context) =>
-                    Stack(alignment: Alignment.bottomRight, children: [
-                  IgnorePointer(
-                    child: Container(
-                      height: 170,
-                      width: 60,
-                    ),
-                  ),
-                  Transform(
-                    transform: Matrix4.translationValues(
-                        65 - (_animation.value * 70),
-                        _animation.value * -125,
-                        0)
-                      ..scale(_animation.value),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Subcategory"),
-                        Container(
-                          margin: EdgeInsets.only(left: 8),
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 6,
-                                offset: Offset(3, 3),
-                              ),
-                            ],
-                            color: Colors.white,
-                          ),
-                          child: IconButton(
-                            enableFeedback: true,
-                            highlightColor: Colors.transparent,
-                            icon: Icon(Icons.view_column, color: kUIAccent),
-                            iconSize: 20,
-                            onPressed: () async {
-                              final TextEditingController name =
-                                  TextEditingController();
+                builder: (BuildContext context) => FloatingActionButton(
+                      elevation: 10,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.add, color: kUIAccent, size: 30),
+                      onPressed: () async {
+                        final TextEditingController name =
+                            TextEditingController();
+                        final TextEditingController price =
+                            TextEditingController();
 
-                              await showDialog(
-                                context: context,
-                                builder: (_) => RoundedAlertDialog(
-                                    titleSize: 22,
-                                    title: "Add Subcategory",
-                                    centerTitle: true,
-                                    isExpanded: false,
-                                    otherWidgets: [
-                                      Container(
-                                        margin: EdgeInsets.only(bottom: 8),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: TextField(
-                                          maxLines: 2,
-                                          minLines: 1,
-                                          controller: name,
-                                          decoration: kInputDialogDecoration
-                                              .copyWith(hintText: "Name"),
-                                        ),
-                                      ),
-                                    ],
-                                    buttonsList: [
-                                      AlertButton(
-                                          title: "Add",
-                                          onPressed: () async {
-                                            FocusScope.of(context).unfocus();
+                        await showDialog(
+                          context: context,
+                          builder: (_) => RoundedAlertDialog(
+                              titleSize: 22,
+                              title: "Add Product",
+                              centerTitle: true,
+                              isExpanded: false,
+                              otherWidgets: [
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 8),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: TextField(
+                                    maxLines: 2,
+                                    minLines: 1,
+                                    controller: name,
+                                    decoration: kInputDialogDecoration.copyWith(
+                                        hintText: "Name"),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 8),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: TextField(
+                                    maxLines: 1,
+                                    minLines: 1,
+                                    keyboardType: TextInputType.number,
+                                    controller: price,
+                                    decoration: kInputDialogDecoration.copyWith(
+                                        hintText: "Price"),
+                                  ),
+                                ),
+                              ],
+                              buttonsList: [
+                                AlertButton(
+                                    title: "Add Image",
+                                    onPressed: () async {
+                                      FocusScope.of(context).unfocus();
 
-                                            // ignore: unused_local_variable
-                                            String fName = name.text;
-                                            name.clear();
+                                      String fName = name.text;
+                                      String fPrice = price.text;
 
-                                            // TODO: Figure Out rest of the code and how to deal with \n and how to refresh page
+                                      name.clear();
+                                      price.clear();
+
+                                      if (fName != "" && fPrice != "") {
+                                        Navigator.pop(context);
+
+                                        FilePickerResult result =
+                                            await FilePicker.platform.pickFiles(
+                                                type: FileType.custom,
+                                                allowedExtensions: [
+                                              "png",
+                                              "jpg"
+                                            ]);
+
+                                        if (result != null) {
+                                          File file =
+                                              File(result.files.single.path);
+                                          List<String> splits =
+                                              file.absolute.path.split("/");
+
+                                          file = await FlutterImageCompress
+                                              .compressAndGetFile(
+                                            file.absolute.path,
+                                            splits
+                                                    .getRange(
+                                                        0, splits.length - 1)
+                                                    .join("/") +
+                                                "/Compressed" +
+                                                Timestamp.now()
+                                                    .toDate()
+                                                    .toString() +
+                                                ".jpeg",
+                                            format: CompressFormat.jpeg,
+                                          );
+
+                                          String ext =
+                                              result.files.first.extension;
+
+                                          if (!["jpg", "png"].contains(ext)) {
+                                            Scaffold.of(context)
+                                                .removeCurrentSnackBar();
+                                            Scaffold.of(context).showSnackBar(
+                                              SnackBar(
+                                                elevation: 10,
+                                                backgroundColor: kUIAccent,
+                                                content: Text(
+                                                  "This image can't be uploaded, Pick another",
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            );
+                                            return;
+                                          }
+
+                                          Scaffold.of(context)
+                                              .removeCurrentSnackBar();
+                                          Scaffold.of(context)
+                                              .showSnackBar(SnackBar(
+                                            elevation: 10,
+                                            backgroundColor: kUIAccent,
+                                            content: Text(
+                                              "Uploading...",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ));
+
+                                          final StorageReference
+                                              storageReference =
+                                              FirebaseStorage.instance.ref().child(
+                                                  "Products/${args.title}/${args.tabsData[_currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf");
+                                          final StorageTaskSnapshot snapshot =
+                                              await storageReference
+                                                  .putFile(file)
+                                                  .onComplete;
+
+                                          if (snapshot.error == null) {
+                                            final String url = await snapshot
+                                                .ref
+                                                .getDownloadURL();
+                                            file.delete();
+
+                                            QuerySnapshot query = await args
+                                                .tabs[_currentTab]
+                                                .collection("products")
+                                                .get();
+
+                                            await args.tabs[_currentTab]
+                                                .collection("products")
+                                                .add({
+                                              "uId":
+                                                  "1/1/${query.docs.length + 1}",
+                                              "img": url,
+                                              "price": double.parse(fPrice),
+                                              "name": fName
+                                            });
 
                                             Scaffold.of(context)
                                                 .removeCurrentSnackBar();
@@ -132,302 +185,48 @@ class _CategoryScreenState extends State<CategoryScreen>
                                                 elevation: 10,
                                                 backgroundColor: kUIAccent,
                                                 content: Text(
-                                                  "Subcategory added successfully",
+                                                  "Product added successfully",
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ),
                                             );
-                                          })
-                                    ]),
-                              );
+                                          } else {
+                                            Scaffold.of(context)
+                                                .removeCurrentSnackBar();
+                                            Scaffold.of(context).showSnackBar(
+                                              SnackBar(
+                                                elevation: 10,
+                                                backgroundColor: kUIAccent,
+                                                content: Text(
+                                                  "Sorry, The product couldn't be added",
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      } else {
+                                        FocusScope.of(context).unfocus();
+                                        Navigator.pop(context);
 
-                              _animationController.reverse();
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Transform(
-                    transform: Matrix4.translationValues(
-                        55 - (_animation.value * 60), _animation.value * -70, 0)
-                      ..scale(_animation.value),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Product"),
-                        Container(
-                          margin: EdgeInsets.only(left: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 6,
-                                offset: Offset(3, 3),
-                              ),
-                            ],
-                            color: Colors.white,
-                          ),
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            child: IconButton(
-                              enableFeedback: true,
-                              highlightColor: Colors.transparent,
-                              icon: Icon(Icons.article_outlined,
-                                  color: kUIAccent),
-                              iconSize: 20,
-                              onPressed: () async {
-                                final TextEditingController name =
-                                    TextEditingController();
-                                final TextEditingController price =
-                                    TextEditingController();
-
-                                await showDialog(
-                                  context: context,
-                                  builder: (_) => RoundedAlertDialog(
-                                      titleSize: 22,
-                                      title: "Add Product",
-                                      centerTitle: true,
-                                      isExpanded: false,
-                                      otherWidgets: [
-                                        Container(
-                                          margin: EdgeInsets.only(bottom: 8),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: TextField(
-                                            maxLines: 2,
-                                            minLines: 1,
-                                            controller: name,
-                                            decoration: kInputDialogDecoration
-                                                .copyWith(hintText: "Name"),
+                                        Scaffold.of(context)
+                                            .removeCurrentSnackBar();
+                                        Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                            elevation: 10,
+                                            backgroundColor: kUIAccent,
+                                            content: Text(
+                                              "Enter a Name & Price",
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(bottom: 8),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: TextField(
-                                            maxLines: 1,
-                                            minLines: 1,
-                                            keyboardType: TextInputType.number,
-                                            controller: price,
-                                            decoration: kInputDialogDecoration
-                                                .copyWith(hintText: "Price"),
-                                          ),
-                                        ),
-                                      ],
-                                      buttonsList: [
-                                        AlertButton(
-                                            title: "Add Image",
-                                            onPressed: () async {
-                                              FocusScope.of(context).unfocus();
-
-                                              String fName = name.text;
-                                              String fPrice = price.text;
-
-                                              name.clear();
-                                              price.clear();
-
-                                              if (fName != "" && fPrice != "") {
-                                                Navigator.pop(context);
-
-                                                FilePickerResult result =
-                                                    await FilePicker.platform
-                                                        .pickFiles(
-                                                            type:
-                                                                FileType.custom,
-                                                            allowedExtensions: [
-                                                      "png",
-                                                      "jpg"
-                                                    ]);
-
-                                                if (result != null) {
-                                                  File file = File(
-                                                      result.files.single.path);
-                                                  List<String> splits = file
-                                                      .absolute.path
-                                                      .split("/");
-
-                                                  file =
-                                                      await FlutterImageCompress
-                                                          .compressAndGetFile(
-                                                    file.absolute.path,
-                                                    splits
-                                                            .getRange(
-                                                                0,
-                                                                splits.length -
-                                                                    1)
-                                                            .join("/") +
-                                                        "/Compressed" +
-                                                        Timestamp.now()
-                                                            .toDate()
-                                                            .toString() +
-                                                        ".jpeg",
-                                                    format: CompressFormat.jpeg,
-                                                  );
-
-                                                  String ext = result
-                                                      .files.first.extension;
-
-                                                  if (!["jpg", "png"]
-                                                      .contains(ext)) {
-                                                    Scaffold.of(context)
-                                                        .removeCurrentSnackBar();
-                                                    Scaffold.of(context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        elevation: 10,
-                                                        backgroundColor:
-                                                            kUIAccent,
-                                                        content: Text(
-                                                          "This image can't be uploaded, Pick another",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                      ),
-                                                    );
-                                                    return;
-                                                  }
-
-                                                  Scaffold.of(context)
-                                                      .removeCurrentSnackBar();
-                                                  Scaffold.of(context)
-                                                      .showSnackBar(SnackBar(
-                                                    elevation: 10,
-                                                    backgroundColor: kUIAccent,
-                                                    content: Text(
-                                                      "Uploading...",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ));
-
-                                                  final StorageReference
-                                                      storageReference =
-                                                      FirebaseStorage.instance
-                                                          .ref()
-                                                          .child(
-                                                              "Products/${args.title}/${args.tabsData[_currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf");
-                                                  final StorageTaskSnapshot
-                                                      snapshot =
-                                                      await storageReference
-                                                          .putFile(file)
-                                                          .onComplete;
-
-                                                  if (snapshot.error == null) {
-                                                    final String url =
-                                                        await snapshot.ref
-                                                            .getDownloadURL();
-                                                    file.delete();
-
-                                                    QuerySnapshot query =
-                                                        await args
-                                                            .tabs[_currentTab]
-                                                            .collection(
-                                                                "products")
-                                                            .get();
-
-                                                    await args.tabs[_currentTab]
-                                                        .collection("products")
-                                                        .add({
-                                                      "uId":
-                                                          "1/1/${query.docs.length + 1}",
-                                                      "img": url,
-                                                      "price":
-                                                          double.parse(fPrice),
-                                                      "name": fName
-                                                    });
-
-                                                    Scaffold.of(context)
-                                                        .removeCurrentSnackBar();
-                                                    Scaffold.of(context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        elevation: 10,
-                                                        backgroundColor:
-                                                            kUIAccent,
-                                                        content: Text(
-                                                          "Product added successfully",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    Scaffold.of(context)
-                                                        .removeCurrentSnackBar();
-                                                    Scaffold.of(context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        elevation: 10,
-                                                        backgroundColor:
-                                                            kUIAccent,
-                                                        content: Text(
-                                                          "Sorry, The product couldn't be added",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                }
-                                              } else {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                Navigator.pop(context);
-
-                                                Scaffold.of(context)
-                                                    .removeCurrentSnackBar();
-                                                Scaffold.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    elevation: 10,
-                                                    backgroundColor: kUIAccent,
-                                                    content: Text(
-                                                      "Enter a Name & Price",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            })
-                                      ]),
-                                );
-
-                                _animationController.reverse();
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Theme(
-                    data: Theme.of(context)
-                        .copyWith(highlightColor: Colors.transparent),
-                    child: FloatingActionButton(
-                      elevation: 10,
-                      backgroundColor: Colors.white,
-                      child: Transform(
-                        transform: Matrix4.rotationZ(
-                            _rotationAnimation.value / 57.295779513),
-                        alignment: Alignment.center,
-                        child: Icon(Icons.add, color: kUIAccent, size: 30),
-                      ),
-                      onPressed: () {
-                        if (_animationController.isCompleted) {
-                          _animationController.reverse();
-                        } else {
-                          _animationController.forward();
-                        }
+                                        );
+                                      }
+                                    })
+                              ]),
+                        );
                       },
-                    ),
-                  )
-                ]),
-              )
+                    ))
             : null,
         body: Column(children: [
           Padding(
@@ -516,8 +315,8 @@ class _CategoryScreenState extends State<CategoryScreen>
                   return Expanded(
                       child: ProductList(
                           products: future.data.docs
-                              .map<Map<String, dynamic>>(
-                                  (DocumentSnapshot e) => e.data())
+                              .map<Product>((DocumentSnapshot e) =>
+                                  Product.fromJson(e.data()))
                               .toList()));
                 } else {
                   return Center(
@@ -548,7 +347,7 @@ class _CategoryScreenState extends State<CategoryScreen>
 class ProductList extends StatefulWidget {
   ProductList({@required this.products});
 
-  final List<Map> products;
+  final List<Product> products;
 
   @override
   _ProductListState createState() => _ProductListState();
@@ -568,7 +367,7 @@ class _ProductListState extends State<ProductList> {
 }
 
 class ProductCard extends StatefulWidget {
-  final Map<String, dynamic> product;
+  final Product product;
 
   ProductCard(this.product);
 
@@ -592,8 +391,7 @@ class _ProductCardState extends State<ProductCard>
     animation =
         Tween<double>(begin: 0.0, end: 1.0).animate(animationController);
 
-    if (cart.containsProduct(widget.product["uId"]))
-      animationController.value = 1.0;
+    if (cart.containsProduct(widget.product)) animationController.value = 1.0;
   }
 
   @override
@@ -621,37 +419,36 @@ class _ProductCardState extends State<ProductCard>
                         child: GestureDetector(
                             onTap: () {
                               if (wishlist
-                                  .containsProduct(widget.product["uId"])) {
-                                wishlist.removeItem(widget.product["uId"]);
+                                  .containsProduct(widget.product)) {
+                                wishlist.removeItem(widget.product);
                               } else {
                                 wishlist.addItem(widget.product);
                               }
                               setState(() {});
                             },
                             child: Icon(
-                              wishlist.containsProduct(widget.product["uId"])
+                              wishlist.containsProduct(widget.product)
                                   ? Icons.favorite
                                   : Icons.favorite_outline,
-                              color: wishlist
-                                      .containsProduct(widget.product["uId"])
-                                  ? kUIAccent
-                                  : kUIDarkText,
+                              color:
+                                  wishlist.containsProduct(widget.product)
+                                      ? kUIAccent
+                                      : kUIDarkText,
                             )),
                       ),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: widget.product["img"] != null &&
-                                  widget.product["img"] != ""
+                          child: widget.product.img != null
                               ? Container(
+                                  height: height / 2,
                                   decoration: BoxDecoration(boxShadow: [
                                     BoxShadow(
                                         color: Colors.grey[600],
                                         blurRadius: 12,
                                         offset: Offset(2, 2))
                                   ]),
-                                  child: Image.network(widget.product["img"],
-                                      height: height / 2))
+                                  child: Image(image: widget.product.img))
                               : Container(
                                   height: height / 2,
                                   child:
@@ -659,14 +456,14 @@ class _ProductCardState extends State<ProductCard>
                         ),
                       ),
                       SizedBox(height: 12),
-                      Text("₹ ${widget.product["price"]}",
+                      Text("₹ ${widget.product.price}",
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: "sans-serif-condensed")),
                       Padding(
                         padding: const EdgeInsets.only(right: 32.0),
-                        child: AutoSizeText(widget.product["name"],
+                        child: AutoSizeText(widget.product.name,
                             maxLines: 2,
                             minFontSize: 16,
                             overflow: TextOverflow.ellipsis,
@@ -688,7 +485,7 @@ class _ProductCardState extends State<ProductCard>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (cart.containsProduct(widget.product["uId"]) ||
+                      if (cart.containsProduct(widget.product) ||
                           animationController.isAnimating)
                         SizeTransition(
                           sizeFactor: animation,
@@ -696,10 +493,9 @@ class _ProductCardState extends State<ProductCard>
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  if (cart.productInfo(
-                                          widget.product["uId"])["quantity"] ==
-                                      1) animationController.reverse();
-                                  cart.decreaseQuantity(widget.product["uId"]);
+                                  if (cart.getQuantity(widget.product) == 1)
+                                    animationController.reverse();
+                                  cart.decreaseQuantity(widget.product);
                                   setState(() {});
                                 },
                                 child: Padding(
@@ -708,11 +504,7 @@ class _ProductCardState extends State<ProductCard>
                                       color: kUIColor, size: 20),
                                 ),
                               ),
-                              Text(
-                                  ((cart.productInfo(widget.product["uId"]) ??
-                                              {})["quantity"] ??
-                                          "0")
-                                      .toString(),
+                              Text(cart.getQuantity(widget.product).toString(),
                                   style: TextStyle(
                                       color: kUIColor,
                                       fontSize: 18,
@@ -722,8 +514,8 @@ class _ProductCardState extends State<ProductCard>
                         ),
                       GestureDetector(
                         onTap: () async {
-                          if (cart.containsProduct(widget.product["uId"])) {
-                            cart.increaseQuantity(widget.product["uId"]);
+                          if (cart.containsProduct(widget.product)) {
+                            cart.increaseQuantity(widget.product);
                           } else {
                             cart.addItem(widget.product);
                             animationController.forward();

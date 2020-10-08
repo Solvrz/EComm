@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:suneel_printer/components/cart.dart';
+import 'package:suneel_printer/models/cart.dart';
+import 'package:suneel_printer/models/wishlist.dart';
 
 bool admin = true;
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/models/product.dart';
 
 class ProductScreen extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     ProductArguments args = ModalRoute.of(context).settings.arguments;
 
-    if (added == null) added = cart.containsProduct(args.data["uId"]);
+    if (added == null) added = cart.containsProduct(args.product);
 
     return SafeArea(
       child: Scaffold(
@@ -54,7 +55,7 @@ class _ProductScreenState extends State<ProductScreen> {
             Container(
               margin: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
               child: Text(
-                args.data["name"],
+                args.product.name,
                 style: TextStyle(
                     fontSize: 28,
                     fontFamily: "sans-serif-condensed",
@@ -72,10 +73,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       children: [
                         Container(
                             height: MediaQuery.of(context).size.height / 3,
-                            child: Image.network(
-                              args.data["img"],
-                              fit: BoxFit.fill,
-                            )),
+                            child: Image(image: args.product.img)),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(right: 32.0),
@@ -87,7 +85,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       color: Colors.grey[600],
                                     )),
                                 SizedBox(height: 4),
-                                Text("₹ ${args.data["price"]}",
+                                Text("₹ ${args.product.price}",
                                     style: TextStyle(
                                       fontSize: 24,
                                       fontFamily: "sans-serif-condensed",
@@ -142,7 +140,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       onPressed: () {
                         if (!added) setState(() {
                           added = true;
-                          cart.addItem(args.data);
+                          cart.addItem(args.product);
                         });
                       },
                       color: !added ? kUIAccent : Colors.grey,
@@ -164,20 +162,20 @@ class _ProductScreenState extends State<ProductScreen> {
                     children: [
                       GestureDetector(
                           onTap: () {
-                            cart.increaseQuantity(args.data["uId"]);
+                            cart.increaseQuantity(args.product);
                             setState(() {});
                           },
                           child: Text("+", style: TextStyle(fontSize: 24))),
                       Text(
                           cart
-                              .productInfo(args.data["uId"])["quantity"]
+                              .getQuantity(args.product)
                               .toString(),
                           style: TextStyle(fontSize: 24)),
                         GestureDetector(
                             onTap: () {
-                              cart.decreaseQuantity(args.data["uId"]);
+                              cart.decreaseQuantity(args.product);
                               setState(() {
-                                if (cart.productInfo(args.data["uId"]) == null) added = false;
+                                if (cart.getQuantity(args.product) == null) added = false;
                               });
                             },
                             child: Text("-", style: TextStyle(fontSize: 26))),
@@ -194,7 +192,7 @@ class _ProductScreenState extends State<ProductScreen> {
 }
 
 class ProductArguments {
-  final Map data;
+  final Product product;
 
-  ProductArguments(this.data);
+  ProductArguments(this.product);
 }

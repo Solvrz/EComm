@@ -4,8 +4,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/models/cart.dart';
+import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/product.dart';
 
 class CartScreen extends StatefulWidget {
@@ -20,8 +21,8 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     double price = 0.0;
 
-    cart.products.forEach((element) {
-      price += double.parse(element["price"]) * element["quantity"];
+    cart.products.forEach((CartItem cartItem) {
+      price += double.parse(cartItem.product.price) * cartItem.quantity;
     });
 
     return SafeArea(
@@ -136,22 +137,21 @@ class _CartScreenState extends State<CartScreen> {
                 ],
               ),
             ),
-            cart.products.isNotEmpty
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 24.0),
-                    child: Scrollbar(
-                        child: AnimatedList(
-                      shrinkWrap: true,
-                      key: _listKey,
-                      initialItemCount: cart.products.length,
-                      itemBuilder: (BuildContext context, int index,
-                              Animation<double> animation) =>
-                          _buildItem(context, index, animation),
-                    )),
-                  )
-                : Expanded(
-                    child: Center(
+            Expanded(
+              child: cart.products.isNotEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 24.0),
+                      child: AnimatedList(
+                        shrinkWrap: true,
+                        key: _listKey,
+                        initialItemCount: cart.products.length,
+                        itemBuilder: (BuildContext context, int index,
+                                Animation<double> animation) =>
+                            _buildItem(context, index, animation),
+                      ),
+                    )
+                  : Center(
                       child: Container(
                         width: MediaQuery.of(context).size.width / 1.25,
                         child: EmptyListWidget(
@@ -161,7 +161,7 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ),
                     ),
-                  ),
+            ),
           ],
         ),
       ),
@@ -170,6 +170,8 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
+    final Product product = cart.products[index].product;
+
     return SizeTransition(
       sizeFactor: animation,
       child: Slidable(
@@ -177,7 +179,7 @@ class _CartScreenState extends State<CartScreen> {
         actionPane: SlidableDrawerActionPane(),
         child: GestureDetector(
           onTap: () => Navigator.pushNamed(context, "/product",
-              arguments: ProductArguments(cart.products[index])),
+              arguments: ProductArguments(cart.products[index].product)),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8),
             height: MediaQuery.of(context).size.height / 6,
@@ -190,9 +192,8 @@ class _CartScreenState extends State<CartScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                     child: Row(
                       children: [
-                        cart.products[index]["img"] != null &&
-                                cart.products[index]["img"] != ""
-                            ? Image.network(cart.products[index]["img"])
+                        product.img != null
+                            ? Image(image: product.img)
                             : Text("No Image Provided"),
                         SizedBox(width: 24),
                         Expanded(
@@ -202,7 +203,7 @@ class _CartScreenState extends State<CartScreen> {
                             children: [
                               Expanded(
                                 child: AutoSizeText(
-                                  cart.products[index]["name"],
+                                  product.name,
                                   maxLines: 3,
                                   style: TextStyle(
                                       fontSize: 22,
@@ -215,7 +216,7 @@ class _CartScreenState extends State<CartScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 4),
                                 child: Text(
-                                  "₹ ${cart.products[index]["price"]}",
+                                  "₹ ${product.price}",
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600,
@@ -240,10 +241,8 @@ class _CartScreenState extends State<CartScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          if (cart.productInfo(
-                                  cart.products[index]["uId"])["quantity"] >
-                              1)
-                            cart.decreaseQuantity(cart.products[index]["uId"]);
+                          if (cart.getQuantity(product) > 1)
+                            cart.decreaseQuantity(product);
                           setState(() {});
                         },
                         child: Padding(
@@ -251,18 +250,14 @@ class _CartScreenState extends State<CartScreen> {
                           child: Icon(Icons.remove, color: kUIColor, size: 20),
                         ),
                       ),
-                      Text(
-                          cart
-                              .productInfo(
-                                  cart.products[index]["uId"])["quantity"]
-                              .toString(),
+                      Text(cart.getQuantity(product).toString(),
                           style: TextStyle(
                               color: kUIColor,
                               fontSize: 18,
                               fontWeight: FontWeight.w500)),
                       GestureDetector(
                         onTap: () async {
-                          cart.increaseQuantity(cart.products[index]["uId"]);
+                          cart.increaseQuantity(product);
                           setState(() {});
                         },
                         child: Padding(
@@ -285,7 +280,7 @@ class _CartScreenState extends State<CartScreen> {
           GestureDetector(
             onTap: () {
               Timer(Duration(milliseconds: 200), () {
-                cart.removeItem(cart.products[index]["uId"]);
+                cart.removeItem(product);
                 setState(() {});
               });
               _listKey.currentState.removeItem(index,
@@ -548,7 +543,8 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                   SizedBox(height: 32),
                   Center(
                     child: MaterialButton(
-                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                       onPressed: () {
                         //TODO: Implement Proceed To Buy
                       },
