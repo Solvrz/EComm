@@ -4,6 +4,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
+import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/cart.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -64,7 +67,8 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               MaterialButton(
-                color: cart.hasProducts ? kUIAccent : kUIDarkText.withOpacity(0.5),
+                color:
+                    cart.hasProducts ? kUIAccent : kUIDarkText.withOpacity(0.5),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
@@ -78,11 +82,15 @@ class _CartScreenState extends State<CartScreen> {
                   ],
                 ),
                 onPressed: () {
-                  if (cart.hasProducts) showModalBottomSheet(
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (_) => CheckOutSheet(price));
+                  if (cart.hasProducts)
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (_) => Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: CheckOutSheet(price),
+                            ));
                 },
               )
             ],
@@ -307,203 +315,136 @@ class CheckOutSheet extends StatefulWidget {
 }
 
 class _CheckOutSheetState extends State<CheckOutSheet> {
-  String name = "Your name";
-  String phone = "Your phone number";
-  String address = "Your address";
-  String editing = "";
+  String name = "";
+  String phone = "";
+  String address = "";
+
+  Map<String, bool> error = {"name": false, "phone": false, "address": false};
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        color: Colors.white,
-      ),
-      padding: EdgeInsets.only(top: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Icon(Icons.close, color: kUIDarkText),
-                ),
-              ),
-              Text("Check Out",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
-            ],
+    return SingleChildScrollView(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
-          SingleChildScrollView(
-            child: Padding(
+          color: Colors.white,
+        ),
+        padding: EdgeInsets.only(top: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Icon(Icons.close, color: kUIDarkText),
+                  ),
+                ),
+                Text("Check Out",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
+              ],
+            ),
+            Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text("Name",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            editing = "name";
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.edit_outlined,
-                              color: Colors.grey[500]),
-                        ),
-                      )
-                    ],
+                  Text("Name",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  TextField(
+                    decoration: InputDecoration(
+                        focusedBorder: InputBorder.none,
+                        border: InputBorder.none,
+                        hintText: name.trim() == "" ? "Your name" : null),
+                    controller: TextEditingController(text: name),
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w500),
+                    onChanged: (String value) {
+                      name = value;
+                    },
                   ),
-                  editing == "name"
-                      ? TextField(
-                          decoration: InputDecoration(
-                              focusedBorder: InputBorder.none,
-                              border: InputBorder.none),
-                          controller: TextEditingController(text: name),
-                          autofocus: true,
-                          style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500),
-                          onChanged: (String value) {
-                            name = value;
-                          },
-                          onEditingComplete: () {
-                            setState(() {
-                              editing = "";
-                            });
-                          },
-                        )
-                      : Text(name,
-                          style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500)),
-                  SizedBox(height: 12),
+                  if (error["name"]) ...[
+                    Text("Please provide a valid name",
+                        style:
+                            TextStyle(fontSize: 15, color: Colors.redAccent)),
+                    SizedBox(height: 8)
+                  ],
                   Divider(
-                    height: 20,
+                    height: 8,
                     thickness: 2,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text("Phone Number",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            editing = "phone";
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.edit_outlined,
-                              color: Colors.grey[500]),
-                        ),
-                      )
-                    ],
-                  ),
-                  editing == "phone"
-                      ? TextField(
-                          scrollPadding: EdgeInsets.zero,
-                          decoration: InputDecoration(
-                              focusedBorder: InputBorder.none,
-                              border: InputBorder.none),
-                          controller: TextEditingController(text: phone),
-                          autofocus: true,
-                          style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500),
-                          onChanged: (String value) {
-                            phone = value;
-                          },
-                          onEditingComplete: () {
-                            setState(() {
-                              editing = "";
-                            });
-                          },
-                        )
-                      : Text(phone,
-                          style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500)),
                   SizedBox(height: 12),
+                  Text("Phone Number",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  TextField(
+                    scrollPadding: EdgeInsets.zero,
+                    decoration: InputDecoration(
+                        focusedBorder: InputBorder.none,
+                        border: InputBorder.none,
+                        hintText:
+                            phone.trim() == "" ? "Your phone number" : null),
+                    controller: TextEditingController(text: phone),
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w500),
+                    onChanged: (String value) {
+                      phone = value;
+                    },
+                  ),
+                  if (error["phone"]) ...[
+                    Text("Please provide a valid phone number",
+                        style:
+                            TextStyle(fontSize: 15, color: Colors.redAccent)),
+                    SizedBox(height: 8)
+                  ],
                   Divider(
-                    height: 20,
+                    height: 8,
                     thickness: 2,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text("Shipping Address",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            editing = "address";
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.edit_outlined,
-                              color: Colors.grey[500]),
-                        ),
-                      )
-                    ],
-                  ),
-                  editing == "address"
-                      ? TextField(
-                          maxLines: 4,
-                          minLines: 1,
-                          decoration: InputDecoration(
-                              focusedBorder: InputBorder.none,
-                              border: InputBorder.none),
-                          controller: TextEditingController(text: address),
-                          autofocus: true,
-                          style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500),
-                          onChanged: (String value) {
-                            address = value;
-                          },
-                          onEditingComplete: () {
-                            setState(() {
-                              editing = "";
-                            });
-                          },
-                        )
-                      : Text(address,
-                          style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500)),
                   SizedBox(height: 12),
+                  Text("Shipping Address",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  TextField(
+                    maxLines: 4,
+                    minLines: 1,
+                    decoration: InputDecoration(
+                        focusedBorder: InputBorder.none,
+                        border: InputBorder.none,
+                        hintText: address.trim() == "" ? "Your address" : null),
+                    controller: TextEditingController(text: address),
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w500),
+                    onChanged: (String value) {
+                      address = value;
+                    },
+                  ),
+                  if (error["address"]) ...[
+                    Text("Please provide a valid address",
+                        style:
+                            TextStyle(fontSize: 15, color: Colors.redAccent)),
+                    SizedBox(height: 8)
+                  ],
                   Divider(
-                    height: 36,
+                    height: 8,
                     thickness: 2,
                   ),
+                  SizedBox(height: 12),
                   Text("${cart.products.length} Items",
                       style: TextStyle(
                           fontSize: 16,
@@ -541,8 +482,72 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                     child: MaterialButton(
                       padding:
                           EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                      onPressed: () {
-                        //TODO: Implement Proceed To Buy
+                      onPressed: () async {
+                        FocusScope.of(context).unfocus();
+                        if (name.trim() == "")
+                          error["name"] = true;
+                        else
+                          error["name"] = false;
+                        if (!(phone.trim().length == 10) &&
+                            !(phone.trim().length > 10 &&
+                                phone.startsWith("+")))
+                          error["phone"] = true;
+                        else
+                          error["phone"] = false;
+                        if (address.trim() == "")
+                          error["address"] = true;
+                        else
+                          error["address"] = false;
+
+                        if (!error.values.contains(true)) {
+                          final smtpServer = gmail(
+                              "aditya05.mgg@gmail.com", "vrdretbdjwfivaem");
+                          final message = Message()
+                            ..from = Address(
+                                "aditya05.mgg@gmail.com", 'Aditya Taggar')
+                            ..recipients.add('yugthapar37@gmail.com')
+                            ..subject = 'An Order was Placed'
+                            ..html = """<p>Name: $name</p></break>
+                                <p>Phone Number: $phone</p></break>
+                                <p>Shipping Address: $address</p></break></break>
+                                <p>Total Amount: ${widget.price}</p>
+                                <p>Products:</p>
+                                <table style='text-align: left; padding: 5px; border: 1px solid black; border-collapse: collapse;'>
+                                  <tr>
+                                    <th style='padding: 5px; border: 1px solid black;'>Product Name</th>
+                                    <th style='padding: 5px; border: 1px solid black;'>Quantity</th>
+                                  </tr>
+                                  ${cart.products.map((CartItem cartItem) => "<tr><td style='padding: 5px; border: 1px solid black;'>${cartItem.product.name}</td><td style='padding: 5px; border: 1px solid black;'>${cartItem.quantity}</td>").toList().join("")}
+                                </table>
+                                """;
+
+                          try {
+                            send(message, smtpServer).then((value) async {
+                              print('Message sent: ' + value.toString());
+                              await showDialog(
+                                  context: context,
+                                  builder: (_) => RoundedAlertDialog(
+                                        title: "Your Order was placed!",
+                                        buttonsList: [
+                                          FlatButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("Okay"))
+                                        ],
+                                      ));
+                              cart.clear();
+                              Navigator.popUntil(context, ModalRoute.withName("/home"));
+                            });
+                          } on MailerException catch (e) {
+                            print('Message not sent.');
+                            for (var p in e.problems) {
+                              print('Problem: ${p.code}: ${p.msg}');
+                            }
+                          }
+                          //TODO: Implement Proceed To Buy Firebase
+                        }
+                        setState(() {});
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
@@ -558,8 +563,8 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
