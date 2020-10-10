@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:empty_widget/empty_widget.dart';
@@ -10,6 +11,7 @@ import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/cart.dart';
 import 'package:suneel_printer/models/product.dart';
+import 'package:suneel_printer/screens/mail-template.dart';
 import 'package:suneel_printer/screens/product.dart';
 
 class CartScreen extends StatefulWidget {
@@ -505,21 +507,9 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                           final message = Message()
                             ..from = Address(
                                 "aditya05.mgg@gmail.com", 'Aditya Taggar')
-                            ..recipients.add('yugthapar37@gmail.com')
+                            ..recipients.add('adityak.mgg@gmail.com')
                             ..subject = 'An Order was Placed'
-                            ..html = """<p>Name: $name</p></break>
-                                <p>Phone Number: $phone</p></break>
-                                <p>Shipping Address: $address</p></break></break>
-                                <p>Total Amount: ${widget.price}</p>
-                                <p>Products:</p>
-                                <table style='text-align: left; padding: 5px; border: 1px solid black; border-collapse: collapse;'>
-                                  <tr>
-                                    <th style='padding: 5px; border: 1px solid black;'>Product Name</th>
-                                    <th style='padding: 5px; border: 1px solid black;'>Quantity</th>
-                                  </tr>
-                                  ${cart.products.map((CartItem cartItem) => "<tr><td style='padding: 5px; border: 1px solid black;'>${cartItem.product.name}</td><td style='padding: 5px; border: 1px solid black;'>${cartItem.quantity}</td>").toList().join("")}
-                                </table>
-                                """;
+                            ..html = mailTemplate(name, phone, address, widget.price);
 
                           try {
                             send(message, smtpServer).then((value) async {
@@ -536,8 +526,8 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                                               child: Text("Okay"))
                                         ],
                                       ));
-                              cart.clear();
-                              Navigator.popUntil(context, ModalRoute.withName("/home"));
+//                              cart.clear();
+//                              Navigator.popUntil(context, ModalRoute.withName("/home"));
                             });
                           } on MailerException catch (e) {
                             print('Message not sent.');

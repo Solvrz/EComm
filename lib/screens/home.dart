@@ -17,6 +17,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<String> carouselImages = [
     "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
+    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
+    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
+    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
+    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
   ];
 
   @override
