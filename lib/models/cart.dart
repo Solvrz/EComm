@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/models/product.dart';
 
@@ -13,7 +14,8 @@ class CartItem {
   }
 
   static CartItem fromString(String data) {
-    return CartItem(Product.fromJson(jsonDecode(data.split("\n")[0])), int.parse(data.split("\n")[1]));
+    return CartItem(Product.fromJson(jsonDecode(data.split("\n")[0])),
+        int.parse(data.split("\n")[1]));
   }
 }
 
@@ -87,13 +89,17 @@ class Cart {
 
   void _save() async {
     final preferences = await SharedPreferences.getInstance();
-    await preferences.setStringList("cart", _products.map((CartItem cartItem) => cartItem.toString()).toList());
+    await preferences.setStringList("cart",
+        _products.map((CartItem cartItem) => cartItem.toString()).toList());
   }
 
   void load() async {
     final preferences = await SharedPreferences.getInstance();
     final List<String> cartData = preferences.getStringList("cart");
 
-    if (cartData != null) _products = cartData.map<CartItem>((String data) => CartItem.fromString(data)).toList();
+    if (cartData != null)
+      _products = cartData
+          .map<CartItem>((String data) => CartItem.fromString(data))
+          .toList();
   }
 }

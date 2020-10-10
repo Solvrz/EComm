@@ -51,7 +51,12 @@ class Product {
   }
 
   @override
-  bool operator==(other) {
-    return uId == other.uId && name == other.name && img == other.img && price == other.price && bgColor == other.bgColor;
+  // ignore: hash_and_equals
+  bool operator ==(other) {
+    return uId == other.uId &&
+        name == other.name &&
+        img == other.img &&
+        price == other.price &&
+        bgColor == other.bgColor;
   }
 }
