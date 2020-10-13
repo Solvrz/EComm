@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/components/product_components.dart';
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/models/variation.dart';
 import 'package:suneel_printer/models/product.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -9,20 +10,34 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  bool added;
+  Product product;
+  List<OptionRadioTile> variations;
 
   @override
   Widget build(BuildContext context) {
     ProductArguments args = ModalRoute.of(context).settings.arguments;
 
-    if (added == null) added = cart.containsProduct(args.product);
+    if (product == null) {
+      product = args.product;
+      variations = List.generate(
+          args.product.variations.length,
+          (index) => OptionRadioTile(
+                onChanged: (option) {
+                  product.select(args.product.variations[index].name, option);
+                  setState(() {});
+                },
+                variation: args.product.variations[index],
+                currIndex: args.product.variations[index].options.indexOf(
+                    product.selected[args.product.variations[index].name]),
+              ));
+    }
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: kUIColor,
         resizeToAvoidBottomInset: false,
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
@@ -108,38 +123,62 @@ class _ProductScreenState extends State<ProductScreen> {
               ),
             ),
             Divider(thickness: 2, height: 12),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  OptionRadioTile(
-                      label: Text("Color",
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "sans-serif-condensed",
-                              letterSpacing: 0.2)),
-                      options: [
-                        Option(name: "Amber", color: Colors.amber),
-                        Option(name: "Red", color: Colors.red),
-                        Option(name: "Blue", color: Colors.blue),
-                      ]),
-                  OptionRadioTile(
-                      label: Text("Size",
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "sans-serif-condensed",
-                              letterSpacing: 0.2)),
-                      options: [
-                        Option(name: "Small",),
-                        Option(name: "Medium",),
-                        Option(name: "Large",),
-                      ])
-                ],
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(children: [
+                    ...variations,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text("Price",
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "sans-serif-condensed",
+                                    letterSpacing: 0.2)),
+                          ),
+                          Text("₹ ${args.product.price}",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: "sans-serif-condensed",
+                                  letterSpacing: -0.4))
+                        ],
+                      ),
+                    ),
+                  ]),
+                ),
               ),
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 40),
+              child: MaterialButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)),
+                color: cart.containsProduct(product)
+                    ? Colors.grey[600]
+                    : kUIAccent,
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                    cart.containsProduct(product) ? "IN CART" : "ADD TO CART",
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
+                onPressed: () {
+                  if (!cart.containsProduct(product)) {
+                    cart.addItem(product);
+                  } else {
+                    cart.removeItem(product);
+                  }
+                  setState(() {});
+                },
+              ),
+            ),
           ],
         ),
       ),

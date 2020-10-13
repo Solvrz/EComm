@@ -3,10 +3,10 @@ import 'dart:ui' as ui;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/cart_screen.dart';
 import 'package:suneel_printer/screens/category.dart';
@@ -39,6 +39,8 @@ void main() async {
       });
     });
   });
+
+  preferences = await SharedPreferences.getInstance();
 }
 
 class SuneelPrinter extends StatelessWidget {

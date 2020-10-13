@@ -84,7 +84,7 @@ String mailTemplate(String name, String phone, String address, double price) =>
             <th class="righty">QUANTITY</th>
             <th class="righty" width="40%">PRICE</th>
         </tr>
-        ${cart.products.map((CartItem cartItem) {
+        ${cart.products.map<String>((CartItem cartItem) {
           Product product = cartItem.product;
 
           return '''

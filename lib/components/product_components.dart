@@ -1,29 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/models/variation.dart';
 
-class Option {
-  String _name;
-  Color _color;
-
-  String get name => _name;
-
-  Color get color => _color;
-
-  Option({String name, dynamic color}) {
-    _name = name;
-    _color = color is String ? Color(int.parse("0xff$color")) : color;
-  }
-}
-
+// ignore: must_be_immutable
 class OptionRadioTile extends StatefulWidget {
-  final Text label;
-  final List<Option> options;
+  final Variation variation;
+  final Function onChanged;
   final double size;
   final double margin;
+  int currIndex;
 
   OptionRadioTile(
-      {@required this.label,
-      @required this.options,
+      {@required this.variation,
+      @required this.onChanged,
+      this.currIndex = 0,
       this.size = 10,
       this.margin = 6});
 
@@ -32,38 +22,44 @@ class OptionRadioTile extends StatefulWidget {
 }
 
 class _OptionRadioTileState extends State<OptionRadioTile> {
-  int _currIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      height: (widget.size + widget.margin) * 2 + 44,
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
           Expanded(
-            child: widget.label,
+            child: Text(widget.variation.name,
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: "sans-serif-condensed",
+                    letterSpacing: 0.2)),
           ),
           Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(
-                  widget.options.length,
+                  widget.variation.options.length,
                   (index) => GestureDetector(
                         onTap: () {
-                          if (_currIndex != index)
+                          if (widget.currIndex != index)
                             setState(() {
-                              _currIndex = index;
+                              widget.currIndex = index;
                             });
+                          widget.onChanged(index);
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
+                            AnimatedContainer(
+                              duration: Duration(milliseconds: 200),
                               margin: EdgeInsets.fromLTRB(2, 0, 2, 4),
                               width: (widget.size + widget.margin) * 2,
                               height: (widget.size + widget.margin) * 2,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border: _currIndex == index
+                                border: widget.currIndex == index
                                     ? Border.all(
                                         color: Colors.grey[400], width: 2)
                                     : null,
@@ -72,24 +68,31 @@ class _OptionRadioTileState extends State<OptionRadioTile> {
                                 child: CircleAvatar(
                                   radius: widget.size,
                                   backgroundColor:
-                                      widget.options[index].color ??
+                                      widget.variation.options[index].color ??
                                           Colors.grey[400],
-                                  child: widget.options[index].color == null
-                                      ? Text(
-                                          widget.options[index].name[0]
-                                              .toUpperCase(),
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: kUIDarkText))
-                                      : null,
+                                  child:
+                                      widget.variation.options[index].color ==
+                                              null
+                                          ? Text(
+                                              widget.variation.options[index]
+                                                  .label[0]
+                                                  .toUpperCase(),
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: kUIDarkText))
+                                          : null,
                                 ),
                               ),
                             ),
-                            if (_currIndex == index)
-                              Text(
-                                widget.options[index].name,
-                              ),
+                            AnimatedDefaultTextStyle(
+                              child:
+                                  Text(widget.variation.options[index].label),
+                              duration: Duration(milliseconds: 200),
+                              style: widget.currIndex == index
+                                  ? TextStyle(fontSize: 14, color: kUIDarkText)
+                                  : TextStyle(fontSize: 0),
+                            ),
                           ],
                         ),
                       )))

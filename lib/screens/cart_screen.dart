@@ -192,6 +192,7 @@ class _CartScreenState extends State<CartScreen> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25), color: Colors.white),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
                   child: Padding(
@@ -205,18 +206,16 @@ class _CartScreenState extends State<CartScreen> {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Expanded(
-                                child: AutoSizeText(
-                                  product.name,
-                                  maxLines: 3,
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: "sans-serif-condensed",
-                                      letterSpacing: -0.4),
-                                ),
+                              AutoSizeText(
+                                product.name,
+                                maxLines: 3,
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "sans-serif-condensed",
+                                    letterSpacing: -0.4),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -237,8 +236,39 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                 ),
+                if (product.selected.length > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12, left: 4, top: 18, bottom: 18),
+                    child: Column(
+                      children: List.generate(
+                          product.selected.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor: product.selected.values
+                                          .toList()[index]
+                                          .color ??
+                                      Colors.grey[400],
+                                  child: product.selected.values
+                                              .toList()[index]
+                                              .color ==
+                                          null
+                                      ? Text(
+                                          product.selected.values
+                                              .toList()[index]
+                                              .label[0]
+                                              .toUpperCase(),
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600,
+                                              color: kUIDarkText))
+                                      : null,
+                                ),
+                          )),
+                    ),
+                  ),
                 Container(
-                  height: MediaQuery.of(context).size.height / 6,
                   decoration: BoxDecoration(
                       color: Colors.grey[900],
                       borderRadius: BorderRadius.circular(10)),
@@ -509,7 +539,8 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                                 "aditya05.mgg@gmail.com", 'Aditya Taggar')
                             ..recipients.add('adityak.mgg@gmail.com')
                             ..subject = 'An Order was Placed'
-                            ..html = mailTemplate(name, phone, address, widget.price);
+                            ..html = mailTemplate(
+                                name, phone, address, widget.price);
 
                           try {
                             send(message, smtpServer).then((value) async {
@@ -526,8 +557,10 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                                               child: Text("Okay"))
                                         ],
                                       ));
-//                              cart.clear();
-//                              Navigator.popUntil(context, ModalRoute.withName("/home"));
+                              //TODO: Save orders in SharedPreferences
+                              cart.clear();
+                              Navigator.popUntil(
+                                  context, ModalRoute.withName("/home"));
                             });
                           } on MailerException catch (e) {
                             print('Message not sent.');

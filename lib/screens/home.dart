@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
               child: CarouselSlider(
                 items: carouselImages
-                    .map((item) => Container(
+                    .map<Widget>((String item) => Container(
                           child: Container(
                             margin: EdgeInsets.all(5.0),
                             child: ClipRRect(
