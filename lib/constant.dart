@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/models/cart.dart';
 import 'package:suneel_printer/models/wishlist.dart';
 
-bool admin = false;
+bool admin = true;
 
 const kUIAccent = Colors.redAccent;
 const kUIColor = Color(0xffeff5f5);

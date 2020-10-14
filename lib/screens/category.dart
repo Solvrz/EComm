@@ -413,68 +413,75 @@ class _ProductCardState extends State<ProductCard> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 if (admin)
                   Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: editMode
-                          ? () {
-                              showDialog(
-                                context: context,
-                                builder: (_) => RoundedAlertDialog(
-                                  title: "Do you want to delete this Product?",
-                                  buttonsList: [
-                                    FlatButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      textColor: kUIAccent,
-                                      child: Text("No"),
-                                    ),
-                                    FlatButton(
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-
-                                        List<String> uIds =
-                                            widget.product.uId.split("/");
-
-                                        FirebaseStorage.instance
-                                            .getReferenceFromUrl(
-                                                widget.product.img.url)
-                                            .then((value) => value.delete());
-
-                                        QuerySnapshot category = await database
-                                            .collection("categories")
-                                            .where("uId",
-                                                isEqualTo: int.parse(uIds[0]))
-                                            .get();
-
-                                        QuerySnapshot tab = await category
-                                            .docs.first.reference
-                                            .collection("tabs")
-                                            .where("uId",
-                                                isEqualTo: int.parse(uIds[1]))
-                                            .get();
-
-                                        QuerySnapshot product = await tab
-                                            .docs.first.reference
-                                            .collection("products")
-                                            .where("uId",
-                                                isEqualTo: widget.product.uId)
-                                            .get();
-
-                                        product.docs.first.reference.delete();
-                                      },
-                                      textColor: kUIAccent,
-                                      child: Text("Yes"),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }
-                          : () {},
-                      child: Icon(
-                        editMode ? Icons.delete : null,
-                        color: kUIDarkText.withOpacity(0.7),
-                      ),
-                    ),
-                  ),
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                          onTap: () {},
+                          child: AnimatedIcon(
+                            icon: AnimatedIcons.menu_close,
+                            progress: AlwaysStoppedAnimation<double>(0),
+                          ))),
+//                if (admin && editMode)
+//                  Align(
+//                    alignment: Alignment.centerRight,
+//                    child: GestureDetector(
+//                      onTap: () {
+//                              showDialog(
+//                                context: context,
+//                                builder: (_) => RoundedAlertDialog(
+//                                  title: "Do you want to delete this Product?",
+//                                  buttonsList: [
+//                                    FlatButton(
+//                                      onPressed: () => Navigator.pop(context),
+//                                      textColor: kUIAccent,
+//                                      child: Text("No"),
+//                                    ),
+//                                    FlatButton(
+//                                      onPressed: () async {
+//                                        Navigator.pop(context);
+//
+//                                        List<String> uIds =
+//                                            widget.product.uId.split("/");
+//
+//                                        FirebaseStorage.instance
+//                                            .getReferenceFromUrl(
+//                                                widget.product.img.url)
+//                                            .then((value) => value.delete());
+//
+//                                        QuerySnapshot category = await database
+//                                            .collection("categories")
+//                                            .where("uId",
+//                                                isEqualTo: int.parse(uIds[0]))
+//                                            .get();
+//
+//                                        QuerySnapshot tab = await category
+//                                            .docs.first.reference
+//                                            .collection("tabs")
+//                                            .where("uId",
+//                                                isEqualTo: int.parse(uIds[1]))
+//                                            .get();
+//
+//                                        QuerySnapshot product = await tab
+//                                            .docs.first.reference
+//                                            .collection("products")
+//                                            .where("uId",
+//                                                isEqualTo: widget.product.uId)
+//                                            .get();
+//
+//                                        product.docs.first.reference.delete();
+//                                      },
+//                                      textColor: kUIAccent,
+//                                      child: Text("Yes"),
+//                                    ),
+//                                  ],
+//                                ),
+//                              );
+//                            },
+//                      child: Icon(
+//                        Icons.delete,
+//                        color: kUIDarkText.withOpacity(0.7),
+//                      ),
+//                    ),
+//                  ),
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
@@ -512,8 +519,7 @@ class _ProductCardState extends State<ProductCard> {
                     minFontSize: 18,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        letterSpacing: 0.3,
-                        fontFamily: "sans-serif-condensed"),
+                        letterSpacing: 0.3, fontFamily: "sans-serif-condensed"),
                   ),
                 ),
               ]),
