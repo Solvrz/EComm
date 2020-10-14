@@ -61,7 +61,7 @@ String mailTemplate(String name, String phone, String address, double price) =>
       </style>
 </head>
 <body>
-<img src="https://firebasestorage.googleapis.com/v0/b/suneelprinters37.appspot.com/o/1601965887199_1-removebg-preview.png?alt=media&token=ba3a4023-f558-45cb-a947-82d95aa12244", class="center" width="12%">
+<img src="https://firebasestorage.googleapis.com/v0/b/suneelprinters37.appspot.com/o/Logo.png?alt=media&token=21acff59-dc39-411b-a881-f4dac1da5173", class="center" width="12%">
 <div id="card">
     <p style="font-size: 24px; font-weight: bold; text-align: center;">ORDER DETAILS</p>
     <table>
