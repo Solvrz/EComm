@@ -393,25 +393,7 @@ class ProductCard extends StatefulWidget {
   _ProductCardState createState() => _ProductCardState();
 }
 
-class _ProductCardState extends State<ProductCard>
-    with SingleTickerProviderStateMixin {
-  Animation<double> animation;
-  AnimationController animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 200))
-          ..addListener(() {
-            setState(() {});
-          });
-    animation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(animationController);
-
-    if (cart.containsProduct(widget.product)) animationController.value = 1.0;
-  }
-
+class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width / 2;
@@ -423,225 +405,118 @@ class _ProductCardState extends State<ProductCard>
             arguments: ProductArguments(widget.product));
       },
       child: Container(
+          padding: EdgeInsets.fromLTRB(12, 24, 12, 0),
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey[400], width: 0.5)),
-          child: Stack(
+          child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      admin
-                          ? Align(
-                              alignment: Alignment.centerRight,
-                              child: GestureDetector(
-                                onTap: editMode
-                                    ? () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (_) => RoundedAlertDialog(
-                                            title:
-                                                "Do you want to delete this Product?",
-                                            buttonsList: [
-                                              FlatButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                textColor: kUIAccent,
-                                                child: Text("No"),
-                                              ),
-                                              FlatButton(
-                                                onPressed: () async {
-                                                  Navigator.pop(context);
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                if (admin)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: editMode
+                          ? () {
+                              showDialog(
+                                context: context,
+                                builder: (_) => RoundedAlertDialog(
+                                  title: "Do you want to delete this Product?",
+                                  buttonsList: [
+                                    FlatButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      textColor: kUIAccent,
+                                      child: Text("No"),
+                                    ),
+                                    FlatButton(
+                                      onPressed: () async {
+                                        Navigator.pop(context);
 
-                                                  List<String> uIds = widget
-                                                      .product.uId
-                                                      .split("/");
+                                        List<String> uIds =
+                                            widget.product.uId.split("/");
 
-                                                  FirebaseStorage.instance
-                                                      .getReferenceFromUrl(
-                                                          widget
-                                                              .product.img.url)
-                                                      .then((value) =>
-                                                          value.delete());
+                                        FirebaseStorage.instance
+                                            .getReferenceFromUrl(
+                                                widget.product.img.url)
+                                            .then((value) => value.delete());
 
-                                                  QuerySnapshot category =
-                                                      await database
-                                                          .collection(
-                                                              "categories")
-                                                          .where("uId",
-                                                              isEqualTo:
-                                                                  int.parse(
-                                                                      uIds[0]))
-                                                          .get();
+                                        QuerySnapshot category = await database
+                                            .collection("categories")
+                                            .where("uId",
+                                                isEqualTo: int.parse(uIds[0]))
+                                            .get();
 
-                                                  QuerySnapshot tab =
-                                                      await category
-                                                          .docs.first.reference
-                                                          .collection("tabs")
-                                                          .where(
-                                                              "uId",
-                                                              isEqualTo:
-                                                                  int.parse(
-                                                                      uIds[1]))
-                                                          .get();
+                                        QuerySnapshot tab = await category
+                                            .docs.first.reference
+                                            .collection("tabs")
+                                            .where("uId",
+                                                isEqualTo: int.parse(uIds[1]))
+                                            .get();
 
-                                                  QuerySnapshot product =
-                                                      await tab
-                                                          .docs.first.reference
-                                                          .collection(
-                                                              "products")
-                                                          .where("uId",
-                                                              isEqualTo: widget
-                                                                  .product.uId)
-                                                          .get();
+                                        QuerySnapshot product = await tab
+                                            .docs.first.reference
+                                            .collection("products")
+                                            .where("uId",
+                                                isEqualTo: widget.product.uId)
+                                            .get();
 
-                                                  product.docs.first.reference
-                                                      .delete();
-                                                },
-                                                textColor: kUIAccent,
-                                                child: Text("Yes"),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                    : () {},
-                                child: Icon(
-                                  editMode ? Icons.delete : null,
-                                  color: kUIDarkText.withOpacity(0.7),
+                                        product.docs.first.reference.delete();
+                                      },
+                                      textColor: kUIAccent,
+                                      child: Text("Yes"),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            )
-                          : Align(
-                              alignment: Alignment.centerRight,
-                              child: GestureDetector(
-                                  onTap: () {
-                                    if (wishlist
-                                        .containsProduct(widget.product)) {
-                                      wishlist.removeItem(widget.product);
-                                    } else {
-                                      wishlist.addItem(widget.product);
-                                    }
-                                    setState(() {});
-                                  },
-                                  child: Icon(
-                                    wishlist.containsProduct(widget.product)
-                                        ? Icons.favorite
-                                        : Icons.favorite_outline,
-                                    color:
-                                        wishlist.containsProduct(widget.product)
-                                            ? kUIAccent
-                                            : kUIDarkText,
-                                  )),
-                            ),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: widget.product.img != null
-                              ? Container(
-                                  height: height / 2,
-                                  decoration: BoxDecoration(boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey[600],
-                                        blurRadius: 12,
-                                        offset: Offset(2, 2))
-                                  ]),
-                                  child: Image(image: widget.product.img))
-                              : Container(
-                                  height: height / 2,
-                                  child: Center(
-                                    child: Text("No Image Provided"),
-                                  ),
-                                ),
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        "₹ ${widget.product.price}",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "sans-serif-condensed"),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 32.0),
-                        child: AutoSizeText(
-                          widget.product.name,
-                          maxLines: 2,
-                          minFontSize: 16,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 16,
-                              letterSpacing: 0.2,
-                              fontFamily: "sans-serif-condensed"),
-                        ),
-                      ),
-                    ]),
-              ),
-              if (!admin)
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    width: 40,
-                    decoration: BoxDecoration(
-                        color: Colors.grey[900],
-                        borderRadius:
-                            BorderRadius.only(topLeft: Radius.circular(20))),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (cart.containsProduct(widget.product) ||
-                            animationController.isAnimating)
-                          SizeTransition(
-                            sizeFactor: animation,
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    if (cart.getQuantity(widget.product) == 1)
-                                      animationController.reverse();
-                                    cart.decreaseQuantity(widget.product);
-                                    setState(() {});
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Icon(Icons.remove,
-                                        color: kUIColor, size: 20),
-                                  ),
-                                ),
-                                Text(
-                                    cart.getQuantity(widget.product).toString(),
-                                    style: TextStyle(
-                                        color: kUIColor,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500))
-                              ],
-                            ),
-                          ),
-                        GestureDetector(
-                          onTap: () async {
-                            if (cart.containsProduct(widget.product)) {
-                              cart.increaseQuantity(widget.product);
-                            } else {
-                              cart.addItem(widget.product);
-                              animationController.forward();
+                              );
                             }
-                            setState(() {});
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Icon(
-                              Icons.add,
-                              color: kUIColor,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ],
+                          : () {},
+                      child: Icon(
+                        editMode ? Icons.delete : null,
+                        color: kUIDarkText.withOpacity(0.7),
+                      ),
                     ),
                   ),
-                )
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: widget.product.img != null
+                        ? Container(
+                            height: height / 1.8,
+                            decoration: BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey[600],
+                                  blurRadius: 12,
+                                  offset: Offset(2, 2))
+                            ]),
+                            child: Image(image: widget.product.img))
+                        : Container(
+                            height: height / 2,
+                            child: Center(
+                              child: Text("No Image Provided"),
+                            ),
+                          ),
+                  ),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "₹ ${widget.product.price}",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "sans-serif-condensed"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 32.0),
+                  child: AutoSizeText(
+                    widget.product.name,
+                    maxLines: 2,
+                    minFontSize: 18,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        letterSpacing: 0.3,
+                        fontFamily: "sans-serif-condensed"),
+                  ),
+                ),
+              ]),
             ],
           )),
     );
