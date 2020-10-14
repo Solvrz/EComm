@@ -37,8 +37,13 @@ class CategoryGrid extends StatelessWidget {
                       return Navigator.pushNamed(context, "/category",
                           arguments: CategoryArguments(
                               data["name"].split("\n").join(" "),
-                              tabs.docs.map<Map>((DocumentSnapshot e) => e.data()).toList(),
-                              tabs.docs.map<DocumentReference>((DocumentSnapshot e) => e.reference).toList(),
+                              tabs.docs
+                                  .map<Map>((DocumentSnapshot e) => e.data())
+                                  .toList(),
+                              tabs.docs
+                                  .map<DocumentReference>(
+                                      (DocumentSnapshot e) => e.reference)
+                                  .toList(),
                               element.reference));
                     }
                   }

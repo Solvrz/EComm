@@ -46,7 +46,9 @@ class Option {
   Map toJson() {
     return {
       "label": _label,
-      "color": _color != null ? _color.toString().substring(10, 16).toUpperCase() : null,
+      "color": _color != null
+          ? _color.toString().substring(10, 16).toUpperCase()
+          : null,
     };
   }
 

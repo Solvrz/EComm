@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/components/product_components.dart';
 import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/models/variation.dart';
 import 'package:suneel_printer/models/product.dart';
 
 class ProductScreen extends StatefulWidget {

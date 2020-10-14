@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:empty_widget/empty_widget.dart';
@@ -11,7 +10,7 @@ import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/cart.dart';
 import 'package:suneel_printer/models/product.dart';
-import 'package:suneel_printer/screens/mail-template.dart';
+import 'package:suneel_printer/components/mail-template.dart';
 import 'package:suneel_printer/screens/product.dart';
 
 class CartScreen extends StatefulWidget {
@@ -238,13 +237,14 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 if (product.selected.length > 0)
                   Padding(
-                    padding: const EdgeInsets.only(right: 12, left: 4, top: 18, bottom: 18),
+                    padding: const EdgeInsets.only(
+                        right: 12, left: 4, top: 18, bottom: 18),
                     child: Column(
                       children: List.generate(
                           product.selected.length,
                           (index) => Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: CircleAvatar(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: CircleAvatar(
                                   radius: 12,
                                   backgroundColor: product.selected.values
                                           .toList()[index]
@@ -265,7 +265,7 @@ class _CartScreenState extends State<CartScreen> {
                                               color: kUIDarkText))
                                       : null,
                                 ),
-                          )),
+                              )),
                     ),
                   ),
                 Container(
@@ -277,8 +277,10 @@ class _CartScreenState extends State<CartScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          if (cart.getQuantity(product) > 1)
+                          if (cart.getQuantity(product) > 1) {
+                            print("Me hua");
                             cart.decreaseQuantity(product);
+                          }
                           setState(() {});
                         },
                         child: Padding(

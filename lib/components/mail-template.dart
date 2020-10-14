@@ -67,15 +67,15 @@ String mailTemplate(String name, String phone, String address, double price) =>
     <table>
         <tr>
             <th class="lefty">Customer Name:</th>
-            <td class="righty">${name}</td>
+            <td class="righty">$name</td>
         </tr>
         <tr>
             <th class="lefty">Phone Number:</th>
-            <td class="righty">${phone}</td>
+            <td class="righty">$phone</td>
         </tr>
         <tr>
             <th class="lefty">Shipping Address:</th>
-            <td class="righty" width="50%">${address}</td>
+            <td class="righty" width="50%">$address</td>
         </tr>
     </table>
     <table class="product">

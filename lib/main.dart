@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +17,7 @@ import 'package:suneel_printer/screens/splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-//  GestureBinding.instance.resamplingEnabled = true;
+  GestureBinding.instance.resamplingEnabled = true;
 
   RenderErrorBox.backgroundColor = Colors.transparent;
   RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);

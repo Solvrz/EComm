@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:suneel_printer/models/product.dart';
+
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/models/product.dart';
 
 class CartItem {
   Product product;
@@ -88,8 +88,11 @@ class Cart {
   }
 
   void _save() async {
-    await preferences.setStringList("cart",
-        _products.map<String>((CartItem cartItem) => cartItem.toString()).toList());
+    await preferences.setStringList(
+        "cart",
+        _products
+            .map<String>((CartItem cartItem) => cartItem.toString())
+            .toList());
   }
 
   void load() async {
