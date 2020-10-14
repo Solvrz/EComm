@@ -505,7 +505,7 @@ class _ProductCardState extends State<ProductCard> {
                       fontFamily: "sans-serif-condensed"),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 32.0),
+                  padding: const EdgeInsets.only(right: 12.0),
                   child: AutoSizeText(
                     widget.product.name,
                     maxLines: 2,
