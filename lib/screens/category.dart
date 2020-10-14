@@ -90,22 +90,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       if (fName != "" && fPrice != "") {
                                         Navigator.pop(context);
 
+                                        List<String> urls = [];
                                         FilePickerResult result =
                                             await FilePicker.platform.pickFiles(
                                                 type: FileType.custom,
                                                 allowedExtensions: [
-                                              "png",
-                                              "jpg"
-                                            ]);
+                                                  "png",
+                                                  "jpg"
+                                                ],
+                                                allowMultiple: true);
 
-                                        if (result != null) {
-                                          File file =
-                                              File(result.files.single.path);
+                                        List<File> compFiles = [];
+
+                                        for (String path in result.paths) {
+                                          File file = File(path);
                                           List<String> splits =
                                               file.absolute.path.split("/");
 
-                                          file = await FlutterImageCompress
-                                              .compressAndGetFile(
+                                          compFiles.add(
+                                              await FlutterImageCompress
+                                                  .compressAndGetFile(
                                             file.absolute.path,
                                             splits
                                                     .getRange(
@@ -117,12 +121,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                     .toString() +
                                                 ".jpeg",
                                             format: CompressFormat.jpeg,
-                                          );
+                                          ));
+                                        }
 
-                                          String ext =
-                                              result.files.first.extension;
+                                        for (File file in compFiles) {
+                                          String ext = file.path
+                                              .split("/")
+                                              .last
+                                              .split(".")
+                                              .last;
 
-                                          if (!["jpg", "png"].contains(ext)) {
+                                          if (!["png", "jpg" "jpeg"]
+                                              .contains(ext)) {
                                             Scaffold.of(context)
                                                 .removeCurrentSnackBar();
                                             Scaffold.of(context).showSnackBar(
@@ -130,11 +140,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                 elevation: 10,
                                                 backgroundColor: kUIAccent,
                                                 content: Text(
-                                                  "This image can't be uploaded, Pick another",
+                                                  "This image couldn't be uploaded",
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ),
                                             );
+
                                             return;
                                           }
 
@@ -163,6 +174,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                             final String url = await snapshot
                                                 .ref
                                                 .getDownloadURL();
+
+                                            urls.add(url);
                                             file.delete();
 
                                             QuerySnapshot query = await args
@@ -185,7 +198,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                 .collection("products")
                                                 .add({
                                               "uId": "1/1/${maxId + 1}",
-                                              "img": url,
+                                              "imgs": urls,
                                               "price": double.parse(fPrice),
                                               "name": fName
                                             });

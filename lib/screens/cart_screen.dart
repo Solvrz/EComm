@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:suneel_printer/components/mail-template.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/cart.dart';
 import 'package:suneel_printer/models/product.dart';
-import 'package:suneel_printer/components/mail-template.dart';
 import 'package:suneel_printer/screens/product.dart';
 
 class CartScreen extends StatefulWidget {
@@ -276,7 +276,6 @@ class _CartScreenState extends State<CartScreen> {
                       GestureDetector(
                         onTap: () {
                           if (cart.getQuantity(product) > 1) {
-                            print("Me hua");
                             cart.decreaseQuantity(product);
                           }
                           setState(() {});
