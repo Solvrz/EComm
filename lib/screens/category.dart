@@ -13,8 +13,6 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/product.dart';
 
-bool editMode = false;
-
 class CategoryScreen extends StatefulWidget {
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
@@ -38,218 +36,219 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       backgroundColor: Colors.white,
                       child: Icon(Icons.add, color: kUIAccent, size: 30),
                       onPressed: () async {
-                        final TextEditingController name =
-                            TextEditingController();
-                        final TextEditingController price =
-                            TextEditingController();
-
-                        await showDialog(
-                          context: context,
-                          builder: (_) => RoundedAlertDialog(
-                              titleSize: 22,
-                              title: "Add Product",
-                              centerTitle: true,
-                              isExpanded: false,
-                              otherWidgets: [
-                                Container(
-                                  margin: EdgeInsets.only(bottom: 8),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: TextField(
-                                    maxLines: 2,
-                                    minLines: 1,
-                                    controller: name,
-                                    decoration: kInputDialogDecoration.copyWith(
-                                        hintText: "Name"),
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(bottom: 8),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: TextField(
-                                    maxLines: 1,
-                                    minLines: 1,
-                                    keyboardType: TextInputType.number,
-                                    controller: price,
-                                    decoration: kInputDialogDecoration.copyWith(
-                                        hintText: "Price"),
-                                  ),
-                                ),
-                              ],
-                              buttonsList: [
-                                AlertButton(
-                                    title: "Add Image",
-                                    onPressed: () async {
-                                      FocusScope.of(context).unfocus();
-
-                                      String fName = name.text;
-                                      String fPrice = price.text;
-
-                                      name.clear();
-                                      price.clear();
-
-                                      if (fName != "" && fPrice != "") {
-                                        Navigator.pop(context);
-
-                                        List<String> urls = [];
-                                        FilePickerResult result =
-                                            await FilePicker.platform.pickFiles(
-                                                type: FileType.custom,
-                                                allowedExtensions: [
-                                                  "png",
-                                                  "jpg"
-                                                ],
-                                                allowMultiple: true);
-
-                                        List<File> compFiles = [];
-
-                                        for (String path in result.paths) {
-                                          File file = File(path);
-                                          List<String> splits =
-                                              file.absolute.path.split("/");
-
-                                          compFiles.add(
-                                              await FlutterImageCompress
-                                                  .compressAndGetFile(
-                                            file.absolute.path,
-                                            splits
-                                                    .getRange(
-                                                        0, splits.length - 1)
-                                                    .join("/") +
-                                                "/Compressed" +
-                                                Timestamp.now()
-                                                    .toDate()
-                                                    .toString() +
-                                                ".jpeg",
-                                            format: CompressFormat.jpeg,
-                                          ));
-                                        }
-
-                                        for (File file in compFiles) {
-                                          String ext = file.path
-                                              .split("/")
-                                              .last
-                                              .split(".")
-                                              .last;
-
-                                          if (!["png", "jpg" "jpeg"]
-                                              .contains(ext)) {
-                                            Scaffold.of(context)
-                                                .removeCurrentSnackBar();
-                                            Scaffold.of(context).showSnackBar(
-                                              SnackBar(
-                                                elevation: 10,
-                                                backgroundColor: kUIAccent,
-                                                content: Text(
-                                                  "This image couldn't be uploaded",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            );
-
-                                            return;
-                                          }
-
-                                          Scaffold.of(context)
-                                              .removeCurrentSnackBar();
-                                          Scaffold.of(context)
-                                              .showSnackBar(SnackBar(
-                                            elevation: 10,
-                                            backgroundColor: kUIAccent,
-                                            content: Text(
-                                              "Uploading...",
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ));
-
-                                          final StorageReference
-                                              storageReference =
-                                              FirebaseStorage.instance.ref().child(
-                                                  "Products/${args.title}/${args.tabsData[_currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf");
-                                          final StorageTaskSnapshot snapshot =
-                                              await storageReference
-                                                  .putFile(file)
-                                                  .onComplete;
-
-                                          if (snapshot.error == null) {
-                                            final String url = await snapshot
-                                                .ref
-                                                .getDownloadURL();
-
-                                            urls.add(url);
-                                            file.delete();
-
-                                            QuerySnapshot query = await args
-                                                .tabs[_currentTab]
-                                                .collection("products")
-                                                .get();
-
-                                            int maxId = 0;
-
-                                            query.docs.forEach((element) {
-                                              int currId = int.parse(element
-                                                  .data()["uId"]
-                                                  .split("/")
-                                                  .last);
-                                              if (currId > maxId)
-                                                maxId = currId;
-                                            });
-
-                                            await args.tabs[_currentTab]
-                                                .collection("products")
-                                                .add({
-                                              "uId": "1/1/${maxId + 1}",
-                                              "imgs": urls,
-                                              "price": double.parse(fPrice),
-                                              "name": fName
-                                            });
-
-                                            Scaffold.of(context)
-                                                .removeCurrentSnackBar();
-                                            Scaffold.of(context).showSnackBar(
-                                              SnackBar(
-                                                elevation: 10,
-                                                backgroundColor: kUIAccent,
-                                                content: Text(
-                                                  "Product added successfully",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            );
-                                          } else {
-                                            Scaffold.of(context)
-                                                .removeCurrentSnackBar();
-                                            Scaffold.of(context).showSnackBar(
-                                              SnackBar(
-                                                elevation: 10,
-                                                backgroundColor: kUIAccent,
-                                                content: Text(
-                                                  "Sorry, The product couldn't be added",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        }
-                                      } else {
-                                        FocusScope.of(context).unfocus();
-                                        Navigator.pop(context);
-
-                                        Scaffold.of(context)
-                                            .removeCurrentSnackBar();
-                                        Scaffold.of(context).showSnackBar(
-                                          SnackBar(
-                                            elevation: 10,
-                                            backgroundColor: kUIAccent,
-                                            content: Text(
-                                              "Enter a Name & Price",
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    })
-                              ]),
-                        );
+                        Navigator.pushNamed(context, "/add");
+//                        final TextEditingController name =
+//                            TextEditingController();
+//                        final TextEditingController price =
+//                            TextEditingController();
+//
+//                        await showDialog(
+//                          context: context,
+//                          builder: (_) => RoundedAlertDialog(
+//                              titleSize: 22,
+//                              title: "Add Product",
+//                              centerTitle: true,
+//                              isExpanded: false,
+//                              otherWidgets: [
+//                                Container(
+//                                  margin: EdgeInsets.only(bottom: 8),
+//                                  width: MediaQuery.of(context).size.width,
+//                                  child: TextField(
+//                                    maxLines: 2,
+//                                    minLines: 1,
+//                                    controller: name,
+//                                    decoration: kInputDialogDecoration.copyWith(
+//                                        hintText: "Name"),
+//                                  ),
+//                                ),
+//                                Container(
+//                                  margin: EdgeInsets.only(bottom: 8),
+//                                  width: MediaQuery.of(context).size.width,
+//                                  child: TextField(
+//                                    maxLines: 1,
+//                                    minLines: 1,
+//                                    keyboardType: TextInputType.number,
+//                                    controller: price,
+//                                    decoration: kInputDialogDecoration.copyWith(
+//                                        hintText: "Price"),
+//                                  ),
+//                                ),
+//                              ],
+//                              buttonsList: [
+//                                AlertButton(
+//                                    title: "Add Image",
+//                                    onPressed: () async {
+//                                      FocusScope.of(context).unfocus();
+//
+//                                      String fName = name.text;
+//                                      String fPrice = price.text;
+//
+//                                      name.clear();
+//                                      price.clear();
+//
+//                                      if (fName != "" && fPrice != "") {
+//                                        Navigator.pop(context);
+//
+//                                        List<String> urls = [];
+//                                        FilePickerResult result =
+//                                            await FilePicker.platform.pickFiles(
+//                                                type: FileType.custom,
+//                                                allowedExtensions: [
+//                                                  "png",
+//                                                  "jpg"
+//                                                ],
+//                                                allowMultiple: true);
+//
+//                                        List<File> compFiles = [];
+//
+//                                        for (String path in result.paths) {
+//                                          File file = File(path);
+//                                          List<String> splits =
+//                                              file.absolute.path.split("/");
+//
+//                                          compFiles.add(
+//                                              await FlutterImageCompress
+//                                                  .compressAndGetFile(
+//                                            file.absolute.path,
+//                                            splits
+//                                                    .getRange(
+//                                                        0, splits.length - 1)
+//                                                    .join("/") +
+//                                                "/Compressed" +
+//                                                Timestamp.now()
+//                                                    .toDate()
+//                                                    .toString() +
+//                                                ".jpeg",
+//                                            format: CompressFormat.jpeg,
+//                                          ));
+//                                        }
+//
+//                                        for (File file in compFiles) {
+//                                          String ext = file.path
+//                                              .split("/")
+//                                              .last
+//                                              .split(".")
+//                                              .last;
+//
+//                                          if (!["png", "jpg" "jpeg"]
+//                                              .contains(ext)) {
+//                                            Scaffold.of(context)
+//                                                .removeCurrentSnackBar();
+//                                            Scaffold.of(context).showSnackBar(
+//                                              SnackBar(
+//                                                elevation: 10,
+//                                                backgroundColor: kUIAccent,
+//                                                content: Text(
+//                                                  "This image couldn't be uploaded",
+//                                                  textAlign: TextAlign.center,
+//                                                ),
+//                                              ),
+//                                            );
+//
+//                                            return;
+//                                          }
+//
+//                                          Scaffold.of(context)
+//                                              .removeCurrentSnackBar();
+//                                          Scaffold.of(context)
+//                                              .showSnackBar(SnackBar(
+//                                            elevation: 10,
+//                                            backgroundColor: kUIAccent,
+//                                            content: Text(
+//                                              "Uploading...",
+//                                              textAlign: TextAlign.center,
+//                                            ),
+//                                          ));
+//
+//                                          final StorageReference
+//                                              storageReference =
+//                                              FirebaseStorage.instance.ref().child(
+//                                                  "Products/${args.title}/${args.tabsData[_currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf");
+//                                          final StorageTaskSnapshot snapshot =
+//                                              await storageReference
+//                                                  .putFile(file)
+//                                                  .onComplete;
+//
+//                                          if (snapshot.error == null) {
+//                                            final String url = await snapshot
+//                                                .ref
+//                                                .getDownloadURL();
+//
+//                                            urls.add(url);
+//                                            file.delete();
+//
+//                                            QuerySnapshot query = await args
+//                                                .tabs[_currentTab]
+//                                                .collection("products")
+//                                                .get();
+//
+//                                            int maxId = 0;
+//
+//                                            query.docs.forEach((element) {
+//                                              int currId = int.parse(element
+//                                                  .data()["uId"]
+//                                                  .split("/")
+//                                                  .last);
+//                                              if (currId > maxId)
+//                                                maxId = currId;
+//                                            });
+//
+//                                            await args.tabs[_currentTab]
+//                                                .collection("products")
+//                                                .add({
+//                                              "uId": "1/1/${maxId + 1}",
+//                                              "imgs": urls,
+//                                              "price": double.parse(fPrice),
+//                                              "name": fName
+//                                            });
+//
+//                                            Scaffold.of(context)
+//                                                .removeCurrentSnackBar();
+//                                            Scaffold.of(context).showSnackBar(
+//                                              SnackBar(
+//                                                elevation: 10,
+//                                                backgroundColor: kUIAccent,
+//                                                content: Text(
+//                                                  "Product added successfully",
+//                                                  textAlign: TextAlign.center,
+//                                                ),
+//                                              ),
+//                                            );
+//                                          } else {
+//                                            Scaffold.of(context)
+//                                                .removeCurrentSnackBar();
+//                                            Scaffold.of(context).showSnackBar(
+//                                              SnackBar(
+//                                                elevation: 10,
+//                                                backgroundColor: kUIAccent,
+//                                                content: Text(
+//                                                  "Sorry, The product couldn't be added",
+//                                                  textAlign: TextAlign.center,
+//                                                ),
+//                                              ),
+//                                            );
+//                                          }
+//                                        }
+//                                      } else {
+//                                        FocusScope.of(context).unfocus();
+//                                        Navigator.pop(context);
+//
+//                                        Scaffold.of(context)
+//                                            .removeCurrentSnackBar();
+//                                        Scaffold.of(context).showSnackBar(
+//                                          SnackBar(
+//                                            elevation: 10,
+//                                            backgroundColor: kUIAccent,
+//                                            content: Text(
+//                                              "Enter a Name & Price",
+//                                              textAlign: TextAlign.center,
+//                                            ),
+//                                          ),
+//                                        );
+//                                      }
+//                                    })
+//                              ]),
+//                        );
                       },
                     ))
             : null,
@@ -277,19 +276,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             fontWeight: FontWeight.bold)),
                   ),
                 ),
-                GestureDetector(
-                  onTap: admin
-                      ? () => setState(() => editMode = !editMode)
-                      : () => Navigator.pushNamed(context, "/cart"),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                        admin
-                            ? Icons.edit_outlined
-                            : Icons.shopping_cart_outlined,
-                        size: 26),
-                  ),
-                )
+                if (!admin)
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, "/cart"),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.shopping_cart_outlined, size: 26),
+                    ),
+                  )
               ],
             ),
           ),
@@ -406,7 +400,23 @@ class ProductCard extends StatefulWidget {
   _ProductCardState createState() => _ProductCardState();
 }
 
-class _ProductCardState extends State<ProductCard> {
+class _ProductCardState extends State<ProductCard>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200))
+          ..addListener(() {
+            setState(() {});
+          });
+    _animation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+  }
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width / 2;
@@ -418,126 +428,152 @@ class _ProductCardState extends State<ProductCard> {
             arguments: ProductArguments(widget.product));
       },
       child: Container(
-          padding: EdgeInsets.fromLTRB(12, 24, 12, 0),
+          padding: EdgeInsets.fromLTRB(12, admin ? 12 : 24, 12, 0),
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey[400], width: 0.5)),
-          child: Column(
-            children: [
+          child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                if (admin)
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child: GestureDetector(
-                          onTap: () {},
-                          child: AnimatedIcon(
-                            icon: AnimatedIcons.menu_close,
-                            progress: AlwaysStoppedAnimation<double>(0),
-                          ))),
-//                if (admin && editMode)
-//                  Align(
-//                    alignment: Alignment.centerRight,
-//                    child: GestureDetector(
-//                      onTap: () {
-//                              showDialog(
-//                                context: context,
-//                                builder: (_) => RoundedAlertDialog(
-//                                  title: "Do you want to delete this Product?",
-//                                  buttonsList: [
-//                                    FlatButton(
-//                                      onPressed: () => Navigator.pop(context),
-//                                      textColor: kUIAccent,
-//                                      child: Text("No"),
-//                                    ),
-//                                    FlatButton(
-//                                      onPressed: () async {
-//                                        Navigator.pop(context);
-//
-//                                        List<String> uIds =
-//                                            widget.product.uId.split("/");
-//
-//                                        FirebaseStorage.instance
-//                                            .getReferenceFromUrl(
-//                                                widget.product.img.url)
-//                                            .then((value) => value.delete());
-//
-//                                        QuerySnapshot category = await database
-//                                            .collection("categories")
-//                                            .where("uId",
-//                                                isEqualTo: int.parse(uIds[0]))
-//                                            .get();
-//
-//                                        QuerySnapshot tab = await category
-//                                            .docs.first.reference
-//                                            .collection("tabs")
-//                                            .where("uId",
-//                                                isEqualTo: int.parse(uIds[1]))
-//                                            .get();
-//
-//                                        QuerySnapshot product = await tab
-//                                            .docs.first.reference
-//                                            .collection("products")
-//                                            .where("uId",
-//                                                isEqualTo: widget.product.uId)
-//                                            .get();
-//
-//                                        product.docs.first.reference.delete();
-//                                      },
-//                                      textColor: kUIAccent,
-//                                      child: Text("Yes"),
-//                                    ),
-//                                  ],
-//                                ),
-//                              );
-//                            },
-//                      child: Icon(
-//                        Icons.delete,
-//                        color: kUIDarkText.withOpacity(0.7),
-//                      ),
-//                    ),
-//                  ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: widget.product.img != null
-                        ? Container(
-                            height: height / 1.8,
-                            decoration: BoxDecoration(boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey[600],
-                                  blurRadius: 12,
-                                  offset: Offset(2, 2))
-                            ]),
-                            child: Image(image: widget.product.img))
-                        : Container(
-                            height: height / 2,
-                            child: Center(
-                              child: Text("No Image Provided"),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 24, 12, 0),
+                      child: widget.product.imgs != null
+                          ? Container(
+                              height: height / 1.8,
+                              decoration: BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey[600],
+                                    blurRadius: 12,
+                                    offset: Offset(2, 2))
+                              ]),
+                              child: Image(image: widget.product.imgs[0]))
+                          : Container(
+                              height: height / 2,
+                              child: Center(
+                                child: Text("No Image Provided"),
+                              ),
+                            ),
+                    ),
+                    if (admin) Column(
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              if (!_animationController.isAnimating) {
+                                if (_animationController.isCompleted)
+                                  _animationController.reverse();
+                                else
+                                  _animationController.forward();
+                              }
+                            },
+                            child: AnimatedIcon(
+                              icon: AnimatedIcons.menu_close,
+                              progress: _animation,
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 12 * _animation.value),
+                          child: Icon(
+                            Icons.edit,
+                            size: 20 * _animation.value,
+                            color: kUIDarkText.withOpacity(0.8),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (_) => RoundedAlertDialog(
+                                title:
+                                    "Do you want to delete this Product?",
+                                buttonsList: [
+                                  FlatButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    textColor: kUIAccent,
+                                    child: Text("No"),
+                                  ),
+                                  FlatButton(
+                                    onPressed: () async {
+                                      Navigator.pop(context);
+
+                                      List<String> uIds =
+                                          widget.product.uId.split("/");
+
+                                      widget.product.imgs
+                                          .forEach((element) {
+                                        FirebaseStorage.instance
+                                            .getReferenceFromUrl(
+                                                element.url)
+                                            .then(
+                                                (value) => value.delete());
+                                      });
+
+                                      QuerySnapshot category =
+                                          await database
+                                              .collection("categories")
+                                              .where("uId",
+                                                  isEqualTo:
+                                                      int.parse(uIds[0]))
+                                              .get();
+
+                                      QuerySnapshot tab = await category
+                                          .docs.first.reference
+                                          .collection("tabs")
+                                          .where("uId",
+                                              isEqualTo: int.parse(uIds[1]))
+                                          .get();
+
+                                      QuerySnapshot product = await tab
+                                          .docs.first.reference
+                                          .collection("products")
+                                          .where("uId",
+                                              isEqualTo: widget.product.uId)
+                                          .get();
+
+                                      product.docs.first.reference.delete();
+                                    },
+                                    textColor: kUIAccent,
+                                    child: Text("Yes"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 8 * _animation.value),
+                            child: Icon(
+                              Icons.delete,
+                              size: 20 * _animation.value,
+                              color: kUIDarkText.withOpacity(0.8),
                             ),
                           ),
-                  ),
-                ),
-                SizedBox(height: 12),
-                Text(
-                  "₹ ${widget.product.price}",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "sans-serif-condensed"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 12.0),
-                  child: AutoSizeText(
-                    widget.product.name,
-                    maxLines: 2,
-                    minFontSize: 18,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        letterSpacing: 0.3, fontFamily: "sans-serif-condensed"),
-                  ),
-                ),
-              ]),
-            ],
-          )),
+                        )
+                      ],
+                    )
+                  ],
+                )),
+            SizedBox(height: 12),
+            Text(
+              "₹ ${widget.product.price}",
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "sans-serif-condensed"),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: AutoSizeText(
+                widget.product.name,
+                maxLines: 2,
+                minFontSize: 18,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    letterSpacing: 0.3, fontFamily: "sans-serif-condensed"),
+              ),
+            ),
+          ])),
     );
   }
 }

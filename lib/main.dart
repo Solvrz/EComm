@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/screens/add_product.dart';
 import 'package:suneel_printer/screens/cart_screen.dart';
 import 'package:suneel_printer/screens/category.dart';
 import 'package:suneel_printer/screens/home.dart';
@@ -66,7 +67,8 @@ class SuneelPrinter extends StatelessWidget {
         "/home": (BuildContext context) => HomeScreen(),
         "/category": (BuildContext context) => CategoryScreen(),
         "/product": (BuildContext context) => ProductScreen(),
-        "/cart": (BuildContext context) => CartScreen()
+        "/cart": (BuildContext context) => CartScreen(),
+        "/add": (BuildContext context) => AddProductScreen()
       },
     );
   }

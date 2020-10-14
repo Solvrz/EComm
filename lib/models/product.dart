@@ -4,7 +4,7 @@ import 'package:suneel_printer/models/variation.dart';
 class Product {
   String _uId;
   String _name;
-  NetworkImage _img;
+  List<NetworkImage> _imgs;
   String _price;
   Color _bgColor;
   List<Variation> _variations;
@@ -14,7 +14,7 @@ class Product {
 
   String get name => _name;
 
-  NetworkImage get img => _img;
+  List<NetworkImage> get imgs => _imgs;
 
   String get price => _price;
 
@@ -27,14 +27,14 @@ class Product {
   Product(
       {String uId,
       String name,
-      String img = "",
+      List imgs = const [],
       String price,
       String bgColor,
       List variations,
       Map selected}) {
     _uId = uId;
     _name = name;
-    if (img != "") _img = NetworkImage(img);
+    if (imgs.length > 0) _imgs = imgs.map((e) => NetworkImage(e)).toList();
     _price = price;
     _bgColor = Color(int.parse("0xff$bgColor"));
     _variations = variations;
@@ -47,7 +47,7 @@ class Product {
     return Product(
         uId: data["uId"],
         name: data["name"],
-        img: data["img"],
+        imgs: data["imgs"],
         price: data["price"].toString(),
         bgColor: data["bgColor"],
         variations: (data["variations"] ?? [])
@@ -63,7 +63,7 @@ class Product {
     return {
       "uId": _uId,
       "name": _name,
-      "img": _img.url,
+      "imgs": _imgs.map((e) => e.url).toList(),
       "price": _price,
       "bgColor": _bgColor.toString().substring(10, 16).toUpperCase(),
       "variations": _variations
@@ -79,7 +79,7 @@ class Product {
     return other is Product &&
         uId == other.uId &&
         name == other.name &&
-        img == other.img &&
+        imgs == other.imgs &&
         price == other.price &&
         bgColor == other.bgColor &&
         selected

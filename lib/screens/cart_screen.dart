@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
-import 'package:suneel_printer/components/mail-template.dart';
+import 'package:suneel_printer/components/mail_template.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/cart.dart';
@@ -198,8 +198,8 @@ class _CartScreenState extends State<CartScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                     child: Row(
                       children: [
-                        product.img != null
-                            ? Image(image: product.img)
+                        product.imgs != null
+                            ? Image(image: product.imgs[0])
                             : Text("No Image Provided"),
                         SizedBox(width: 24),
                         Expanded(
