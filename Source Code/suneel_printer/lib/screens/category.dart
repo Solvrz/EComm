@@ -1,13 +1,8 @@
-import 'dart:io';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:suneel_printer/components/alert_button.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -458,100 +453,97 @@ class _ProductCardState extends State<ProductCard>
                               ),
                             ),
                     ),
-                    if (admin) Column(
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              if (!_animationController.isAnimating) {
-                                if (_animationController.isCompleted)
-                                  _animationController.reverse();
-                                else
-                                  _animationController.forward();
-                              }
-                            },
-                            child: AnimatedIcon(
-                              icon: AnimatedIcons.menu_close,
-                              progress: _animation,
-                            )),
-                        Padding(
-                          padding: EdgeInsets.only(top: 12 * _animation.value),
-                          child: Icon(
-                            Icons.edit,
-                            size: 20 * _animation.value,
-                            color: kUIDarkText.withOpacity(0.8),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (_) => RoundedAlertDialog(
-                                title:
-                                    "Do you want to delete this Product?",
-                                buttonsList: [
-                                  FlatButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    textColor: kUIAccent,
-                                    child: Text("No"),
-                                  ),
-                                  FlatButton(
-                                    onPressed: () async {
-                                      Navigator.pop(context);
-
-                                      List<String> uIds =
-                                          widget.product.uId.split("/");
-
-                                      widget.product.imgs
-                                          .forEach((element) {
-                                        FirebaseStorage.instance
-                                            .getReferenceFromUrl(
-                                                element.url)
-                                            .then(
-                                                (value) => value.delete());
-                                      });
-
-                                      QuerySnapshot category =
-                                          await database
-                                              .collection("categories")
-                                              .where("uId",
-                                                  isEqualTo:
-                                                      int.parse(uIds[0]))
-                                              .get();
-
-                                      QuerySnapshot tab = await category
-                                          .docs.first.reference
-                                          .collection("tabs")
-                                          .where("uId",
-                                              isEqualTo: int.parse(uIds[1]))
-                                          .get();
-
-                                      QuerySnapshot product = await tab
-                                          .docs.first.reference
-                                          .collection("products")
-                                          .where("uId",
-                                              isEqualTo: widget.product.uId)
-                                          .get();
-
-                                      product.docs.first.reference.delete();
-                                    },
-                                    textColor: kUIAccent,
-                                    child: Text("Yes"),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 8 * _animation.value),
+                    if (admin)
+                      Column(
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                if (!_animationController.isAnimating) {
+                                  if (_animationController.isCompleted)
+                                    _animationController.reverse();
+                                  else
+                                    _animationController.forward();
+                                }
+                              },
+                              child: AnimatedIcon(
+                                icon: AnimatedIcons.menu_close,
+                                progress: _animation,
+                              )),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: 12 * _animation.value),
                             child: Icon(
-                              Icons.delete,
+                              Icons.edit,
                               size: 20 * _animation.value,
                               color: kUIDarkText.withOpacity(0.8),
                             ),
                           ),
-                        )
-                      ],
-                    )
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (_) => RoundedAlertDialog(
+                                  title: "Do you want to delete this Product?",
+                                  buttonsList: [
+                                    FlatButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      textColor: kUIAccent,
+                                      child: Text("No"),
+                                    ),
+                                    FlatButton(
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+
+                                        List<String> uIds =
+                                            widget.product.uId.split("/");
+
+                                        widget.product.imgs.forEach((element) {
+                                          FirebaseStorage.instance
+                                              .getReferenceFromUrl(element.url)
+                                              .then((value) => value.delete());
+                                        });
+
+                                        QuerySnapshot category = await database
+                                            .collection("categories")
+                                            .where("uId",
+                                                isEqualTo: int.parse(uIds[0]))
+                                            .get();
+
+                                        QuerySnapshot tab = await category
+                                            .docs.first.reference
+                                            .collection("tabs")
+                                            .where("uId",
+                                                isEqualTo: int.parse(uIds[1]))
+                                            .get();
+
+                                        QuerySnapshot product = await tab
+                                            .docs.first.reference
+                                            .collection("products")
+                                            .where("uId",
+                                                isEqualTo: widget.product.uId)
+                                            .get();
+
+                                        product.docs.first.reference.delete();
+                                      },
+                                      textColor: kUIAccent,
+                                      child: Text("Yes"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.only(top: 8 * _animation.value),
+                              child: Icon(
+                                Icons.delete,
+                                size: 20 * _animation.value,
+                                color: kUIDarkText.withOpacity(0.8),
+                              ),
+                            ),
+                          )
+                        ],
+                      )
                   ],
                 )),
             SizedBox(height: 12),
