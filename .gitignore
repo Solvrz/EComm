@@ -3,24 +3,24 @@
 *.log
 *.pyc
 *.swp
+
+# Files
 .DS_Store
-.atom/
 .buildlog/
 .history
 .svn/
+.gradle/
+build/
 
-# IntelliJ related
-*.iml
+# IntelliJ
 *.ipr
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# VSCode
+.vscode/
 
-# Flutter/Dart/Pub related
+# Flutter/Dart/Pub
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
@@ -29,13 +29,28 @@
 .packages
 .pub-cache/
 .pub/
-/build/
+pubspec.lock
 
-# Web related
-lib/generated_plugin_registrant.dart
+# Android
+gradle-wrapper.jar
+.gradle
+captures/
+gradlew
+gradlew.bat
+local.properties
+GeneratedPluginRegistrant.java
+key.properties
 
-# Symbolication related
+
+# Web
+Source Code/suneel_printer/lib/generated_plugin_registrant.dart
+
+# Symbolication
 app.*.symbols
 
-# Obfuscation related
+# Obfuscation
 app.*.map.json
+
+# Exceptions
+!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
