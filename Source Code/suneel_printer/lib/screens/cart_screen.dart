@@ -198,8 +198,8 @@ class _CartScreenState extends State<CartScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                     child: Row(
                       children: [
-                        product.imgs != null
-                            ? Image(image: product.imgs[0])
+                        product.images.length > 0
+                            ? Image(image: product.images[0])
                             : Text("No Image Provided"),
                         SizedBox(width: 24),
                         Expanded(

@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:suneel_printer/components/alert_button.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
+import 'package:suneel_printer/screens/add_product.dart';
 import 'package:suneel_printer/screens/product.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -31,7 +37,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       backgroundColor: Colors.white,
                       child: Icon(Icons.add, color: kUIAccent, size: 30),
                       onPressed: () async {
-                        Navigator.pushNamed(context, "/add");
+                        Navigator.pushNamed(context, "/add", arguments: AddProductArguments(args.tabsData, args.tabs, args.title, _currentTab));
 //                        final TextEditingController name =
 //                            TextEditingController();
 //                        final TextEditingController price =
@@ -81,166 +87,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 //                                      name.clear();
 //                                      price.clear();
 //
-//                                      if (fName != "" && fPrice != "") {
-//                                        Navigator.pop(context);
-//
-//                                        List<String> urls = [];
-//                                        FilePickerResult result =
-//                                            await FilePicker.platform.pickFiles(
-//                                                type: FileType.custom,
-//                                                allowedExtensions: [
-//                                                  "png",
-//                                                  "jpg"
-//                                                ],
-//                                                allowMultiple: true);
-//
-//                                        List<File> compFiles = [];
-//
-//                                        for (String path in result.paths) {
-//                                          File file = File(path);
-//                                          List<String> splits =
-//                                              file.absolute.path.split("/");
-//
-//                                          compFiles.add(
-//                                              await FlutterImageCompress
-//                                                  .compressAndGetFile(
-//                                            file.absolute.path,
-//                                            splits
-//                                                    .getRange(
-//                                                        0, splits.length - 1)
-//                                                    .join("/") +
-//                                                "/Compressed" +
-//                                                Timestamp.now()
-//                                                    .toDate()
-//                                                    .toString() +
-//                                                ".jpeg",
-//                                            format: CompressFormat.jpeg,
-//                                          ));
-//                                        }
-//
-//                                        for (File file in compFiles) {
-//                                          String ext = file.path
-//                                              .split("/")
-//                                              .last
-//                                              .split(".")
-//                                              .last;
-//
-//                                          if (!["png", "jpg" "jpeg"]
-//                                              .contains(ext)) {
-//                                            Scaffold.of(context)
-//                                                .removeCurrentSnackBar();
-//                                            Scaffold.of(context).showSnackBar(
-//                                              SnackBar(
-//                                                elevation: 10,
-//                                                backgroundColor: kUIAccent,
-//                                                content: Text(
-//                                                  "This image couldn't be uploaded",
-//                                                  textAlign: TextAlign.center,
-//                                                ),
-//                                              ),
-//                                            );
-//
-//                                            return;
-//                                          }
-//
-//                                          Scaffold.of(context)
-//                                              .removeCurrentSnackBar();
-//                                          Scaffold.of(context)
-//                                              .showSnackBar(SnackBar(
-//                                            elevation: 10,
-//                                            backgroundColor: kUIAccent,
-//                                            content: Text(
-//                                              "Uploading...",
-//                                              textAlign: TextAlign.center,
-//                                            ),
-//                                          ));
-//
-//                                          final StorageReference
-//                                              storageReference =
-//                                              FirebaseStorage.instance.ref().child(
-//                                                  "Products/${args.title}/${args.tabsData[_currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf");
-//                                          final StorageTaskSnapshot snapshot =
-//                                              await storageReference
-//                                                  .putFile(file)
-//                                                  .onComplete;
-//
-//                                          if (snapshot.error == null) {
-//                                            final String url = await snapshot
-//                                                .ref
-//                                                .getDownloadURL();
-//
-//                                            urls.add(url);
-//                                            file.delete();
-//
-//                                            QuerySnapshot query = await args
-//                                                .tabs[_currentTab]
-//                                                .collection("products")
-//                                                .get();
-//
-//                                            int maxId = 0;
-//
-//                                            query.docs.forEach((element) {
-//                                              int currId = int.parse(element
-//                                                  .data()["uId"]
-//                                                  .split("/")
-//                                                  .last);
-//                                              if (currId > maxId)
-//                                                maxId = currId;
-//                                            });
-//
-//                                            await args.tabs[_currentTab]
-//                                                .collection("products")
-//                                                .add({
-//                                              "uId": "1/1/${maxId + 1}",
-//                                              "imgs": urls,
-//                                              "price": double.parse(fPrice),
-//                                              "name": fName
-//                                            });
-//
-//                                            Scaffold.of(context)
-//                                                .removeCurrentSnackBar();
-//                                            Scaffold.of(context).showSnackBar(
-//                                              SnackBar(
-//                                                elevation: 10,
-//                                                backgroundColor: kUIAccent,
-//                                                content: Text(
-//                                                  "Product added successfully",
-//                                                  textAlign: TextAlign.center,
-//                                                ),
-//                                              ),
-//                                            );
-//                                          } else {
-//                                            Scaffold.of(context)
-//                                                .removeCurrentSnackBar();
-//                                            Scaffold.of(context).showSnackBar(
-//                                              SnackBar(
-//                                                elevation: 10,
-//                                                backgroundColor: kUIAccent,
-//                                                content: Text(
-//                                                  "Sorry, The product couldn't be added",
-//                                                  textAlign: TextAlign.center,
-//                                                ),
-//                                              ),
-//                                            );
-//                                          }
-//                                        }
-//                                      } else {
-//                                        FocusScope.of(context).unfocus();
-//                                        Navigator.pop(context);
-//
-//                                        Scaffold.of(context)
-//                                            .removeCurrentSnackBar();
-//                                        Scaffold.of(context).showSnackBar(
-//                                          SnackBar(
-//                                            elevation: 10,
-//                                            backgroundColor: kUIAccent,
-//                                            content: Text(
-//                                              "Enter a Name & Price",
-//                                              textAlign: TextAlign.center,
-//                                            ),
-//                                          ),
-//                                        );
-//                                      }
+
 //                                    })
 //                              ]),
 //                        );
@@ -436,7 +283,7 @@ class _ProductCardState extends State<ProductCard>
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 24, 12, 0),
-                      child: widget.product.imgs != null
+                      child: widget.product.images != null
                           ? Container(
                               height: height / 1.8,
                               decoration: BoxDecoration(boxShadow: [
@@ -445,7 +292,7 @@ class _ProductCardState extends State<ProductCard>
                                     blurRadius: 12,
                                     offset: Offset(2, 2))
                               ]),
-                              child: Image(image: widget.product.imgs[0]))
+                              child: Image(image: widget.product.images[0]))
                           : Container(
                               height: height / 2,
                               child: Center(
@@ -453,97 +300,100 @@ class _ProductCardState extends State<ProductCard>
                               ),
                             ),
                     ),
-                    if (admin)
-                      Column(
-                        children: [
-                          GestureDetector(
-                              onTap: () {
-                                if (!_animationController.isAnimating) {
-                                  if (_animationController.isCompleted)
-                                    _animationController.reverse();
-                                  else
-                                    _animationController.forward();
-                                }
-                              },
-                              child: AnimatedIcon(
-                                icon: AnimatedIcons.menu_close,
-                                progress: _animation,
-                              )),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 12 * _animation.value),
+                    if (admin) Column(
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              if (!_animationController.isAnimating) {
+                                if (_animationController.isCompleted)
+                                  _animationController.reverse();
+                                else
+                                  _animationController.forward();
+                              }
+                            },
+                            child: AnimatedIcon(
+                              icon: AnimatedIcons.menu_close,
+                              progress: _animation,
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 12 * _animation.value),
+                          child: Icon(
+                            Icons.edit,
+                            size: 20 * _animation.value,
+                            color: kUIDarkText.withOpacity(0.8),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (_) => RoundedAlertDialog(
+                                title:
+                                    "Do you want to delete this Product?",
+                                buttonsList: [
+                                  FlatButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    textColor: kUIAccent,
+                                    child: Text("No"),
+                                  ),
+                                  FlatButton(
+                                    onPressed: () async {
+                                      Navigator.pop(context);
+
+                                      List<String> uIds =
+                                          widget.product.uId.split("/");
+
+                                      widget.product.images
+                                          .forEach((element) {
+                                        FirebaseStorage.instance
+                                            .getReferenceFromUrl(
+                                                element.url)
+                                            .then(
+                                                (value) => value.delete());
+                                      });
+
+                                      QuerySnapshot category =
+                                          await database
+                                              .collection("categories")
+                                              .where("uId",
+                                                  isEqualTo:
+                                                      int.parse(uIds[0]))
+                                              .get();
+
+                                      QuerySnapshot tab = await category
+                                          .docs.first.reference
+                                          .collection("tabs")
+                                          .where("uId",
+                                              isEqualTo: int.parse(uIds[1]))
+                                          .get();
+
+                                      QuerySnapshot product = await tab
+                                          .docs.first.reference
+                                          .collection("products")
+                                          .where("uId",
+                                              isEqualTo: widget.product.uId)
+                                          .get();
+
+                                      product.docs.first.reference.delete();
+                                    },
+                                    textColor: kUIAccent,
+                                    child: Text("Yes"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 8 * _animation.value),
                             child: Icon(
-                              Icons.edit,
+                              Icons.delete,
                               size: 20 * _animation.value,
                               color: kUIDarkText.withOpacity(0.8),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (_) => RoundedAlertDialog(
-                                  title: "Do you want to delete this Product?",
-                                  buttonsList: [
-                                    FlatButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      textColor: kUIAccent,
-                                      child: Text("No"),
-                                    ),
-                                    FlatButton(
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-
-                                        List<String> uIds =
-                                            widget.product.uId.split("/");
-
-                                        widget.product.imgs.forEach((element) {
-                                          FirebaseStorage.instance
-                                              .getReferenceFromUrl(element.url)
-                                              .then((value) => value.delete());
-                                        });
-
-                                        QuerySnapshot category = await database
-                                            .collection("categories")
-                                            .where("uId",
-                                                isEqualTo: int.parse(uIds[0]))
-                                            .get();
-
-                                        QuerySnapshot tab = await category
-                                            .docs.first.reference
-                                            .collection("tabs")
-                                            .where("uId",
-                                                isEqualTo: int.parse(uIds[1]))
-                                            .get();
-
-                                        QuerySnapshot product = await tab
-                                            .docs.first.reference
-                                            .collection("products")
-                                            .where("uId",
-                                                isEqualTo: widget.product.uId)
-                                            .get();
-
-                                        product.docs.first.reference.delete();
-                                      },
-                                      textColor: kUIAccent,
-                                      child: Text("Yes"),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding:
-                                  EdgeInsets.only(top: 8 * _animation.value),
-                              child: Icon(
-                                Icons.delete,
-                                size: 20 * _animation.value,
-                                color: kUIDarkText.withOpacity(0.8),
-                              ),
-                            ),
-                          )
-                        ],
-                      )
+                        )
+                      ],
+                    )
                   ],
                 )),
             SizedBox(height: 12),

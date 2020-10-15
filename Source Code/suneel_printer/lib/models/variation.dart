@@ -5,6 +5,7 @@ class Variation {
   List<Option> _options;
 
   String get name => _name;
+  set name(name) => _name = name;
   List<Option> get options => _options;
 
   Variation({String name, List<Option> options}) {
@@ -35,12 +36,14 @@ class Option {
   Color _color;
 
   String get label => _label;
+  set label(label) => _label = label;
 
   Color get color => _color;
+  set color(color) => _color = color;
 
   Option({String label, dynamic color}) {
     _label = label;
-    _color = color is String ? Color(int.parse("0xff$color")) : color;
+    _color = color is String && color != null ? Color(int.parse("0xff$color")) : color;
   }
 
   Map toJson() {

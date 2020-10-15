@@ -115,13 +115,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                     carouselImages.length,
-                    (int index) => Container(
-                          width: 8.0,
-                          height: 8.0,
+                    (int index) => AnimatedContainer(
+                          duration: Duration(milliseconds: 400),
+                          width: _current == index ? 16.0 : 8.0,
+                          height: _current == index ? 6.0 : 8.0,
                           margin: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 2.0),
+                              vertical: 10.0, horizontal: 3.0),
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
+                            borderRadius: BorderRadius.circular(15),
                             color: _current == index
                                 ? Color.fromRGBO(0, 0, 0, 0.9)
                                 : Color.fromRGBO(0, 0, 0, 0.4),

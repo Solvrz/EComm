@@ -7,13 +7,15 @@ class AlertButton extends StatelessWidget {
   final Color backgroundColor;
   final Color titleColor;
   final double titleSize;
+  final BorderRadius borderRadius;
 
   AlertButton(
       {@required this.title,
       @required this.onPressed,
       this.backgroundColor = kUIAccent,
       this.titleColor = kUIColor,
-      this.titleSize = 17});
+      this.titleSize = 17,
+      this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class AlertButton extends StatelessWidget {
       padding: EdgeInsets.only(top: 12, bottom: 12),
       color: backgroundColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: borderRadius ?? BorderRadius.circular(8),
       ),
       child: Text(
         title,

@@ -88,7 +88,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       Container(
                           height: MediaQuery.of(context).size.height * 0.325,
                           child: Image(
-                            image: args.product.imgs[0],
+                            image: args.product.images[0],
                             fit: BoxFit.fill,
                           )),
                       Icon(Icons.arrow_forward_ios, color: Colors.grey[400]),

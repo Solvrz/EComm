@@ -4,7 +4,7 @@ import 'package:suneel_printer/models/variation.dart';
 class Product {
   String _uId;
   String _name;
-  List<NetworkImage> _imgs;
+  List<NetworkImage> _images;
   String _price;
   Color _bgColor;
   List<Variation> _variations;
@@ -14,7 +14,7 @@ class Product {
 
   String get name => _name;
 
-  List<NetworkImage> get imgs => _imgs;
+  List<NetworkImage> get images => _images;
 
   String get price => _price;
 
@@ -27,16 +27,16 @@ class Product {
   Product(
       {String uId,
       String name,
-      List imgs = const [],
+      List images = const [],
       String price,
       String bgColor,
       List variations,
       Map selected}) {
     _uId = uId;
     _name = name;
-    if (imgs.length > 0) _imgs = imgs.map((e) => NetworkImage(e)).toList();
+    if (images.length > 0) _images = images.map((e) => NetworkImage(e)).toList();
     _price = price;
-    _bgColor = Color(int.parse("0xff$bgColor"));
+    _bgColor = bgColor != null ? Color(int.parse("0xff$bgColor")) : null;
     _variations = variations;
     _selected = selected ??
         variations.asMap().map((key, value) =>
@@ -47,7 +47,7 @@ class Product {
     return Product(
         uId: data["uId"],
         name: data["name"],
-        imgs: data["imgs"],
+        images: data["imgs"],
         price: data["price"].toString(),
         bgColor: data["bgColor"],
         variations: (data["variations"] ?? [])
@@ -63,7 +63,7 @@ class Product {
     return {
       "uId": _uId,
       "name": _name,
-      "imgs": _imgs.map((e) => e.url).toList(),
+      "imgs": _images.map((e) => e.url).toList(),
       "price": _price,
       "bgColor": _bgColor.toString().substring(10, 16).toUpperCase(),
       "variations": _variations
@@ -77,12 +77,12 @@ class Product {
   // ignore: hash_and_equals
   bool operator ==(other) {
     return other is Product &&
-        uId == other.uId &&
-        name == other.name &&
-        imgs == other.imgs &&
-        price == other.price &&
-        bgColor == other.bgColor &&
-        selected
+        _uId == other.uId &&
+        _name == other.name &&
+        _images == other.images &&
+        _price == other.price &&
+        _bgColor == other.bgColor &&
+        _selected
                 .map((key, value) =>
                     MapEntry(key, {"label": value.label, "color": value.color}))
                 .toString() ==
