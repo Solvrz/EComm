@@ -11,6 +11,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:suneel_printer/components/alert_button.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/models/variation.dart';
 
 class AddProductScreen extends StatefulWidget {
@@ -22,18 +23,24 @@ class _AddProductScreenState extends State<AddProductScreen> {
   String name = "";
   String price = "";
 
-  FocusNode _priceNode = FocusNode();
-
   List<Image> images = [];
   List<File> imageFiles = [];
 
   List<Variation> variations = [];
 
   int _currentImage = 0;
+  FocusNode _priceNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     final AddProductArguments args = ModalRoute.of(context).settings.arguments;
+
+    if (args.product != null) {
+      name = args.product.name;
+      price = args.product.price;
+      images = args.product.images.map((e) => Image(image: e)).toList();
+      variations = args.product.variations;
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -44,7 +51,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           children: [
             Builder(
               builder: (BuildContext context) => Container(
-                padding: EdgeInsets.only(top: 12),
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,11 +63,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         decoration:
                             BoxDecoration(border: Border.all(color: kUIColor)),
                         padding: EdgeInsets.all(8),
-                        child: Icon(Icons.arrow_back_ios, color: kUIDarkText),
+                        child: Icon(Icons.arrow_back_ios,
+                            color: kUIDarkText, size: 26),
                       ),
                     ),
                     Text(
-                      "Preview",
+                      args.product != null ? "Edit" : "Preview",
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -71,7 +79,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           ? () async {
                               Navigator.pop(context);
 
-                              List<String> urls = [];
+                              List<String> urls = args.product != null
+                                  ? args.product.images.map((e) => e.url)
+                                  : [];
                               bool noError = true;
 
                               for (File file in imageFiles) {
@@ -108,16 +118,30 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   if (currId > maxId) maxId = currId;
                                 });
 
-                                await args.tabs[args.currentTab]
-                                    .collection("products")
-                                    .add({
-                                  "uId": "1/1/${maxId + 1}",
-                                  "imgs": urls,
-                                  "price": double.parse(price),
-                                  "name": name,
-                                  "variations":
-                                      variations.map((e) => e.toJson()).toList()
-                                });
+                                if (args.product != null) {
+                                  QuerySnapshot query = await args.tabs[args.currentTab].collection("products").where("uId", isEqualTo: args.product.uId).get();
+                                  query.docs.first.reference.update({
+                                    "uId": "1/1/${maxId + 1}",
+                                    "imgs": urls,
+                                    "price": double.parse(price),
+                                    "name": name,
+                                    "variations": variations
+                                        .map((e) => e.toJson())
+                                        .toList()
+                                  });
+                                } else {
+                                  await args.tabs[args.currentTab]
+                                      .collection("products")
+                                      .add({
+                                    "uId": "1/1/${maxId + 1}",
+                                    "imgs": urls,
+                                    "price": double.parse(price),
+                                    "name": name,
+                                    "variations": variations
+                                        .map((e) => e.toJson())
+                                        .toList()
+                                  });
+                                }
 
                                 Scaffold.of(context).removeCurrentSnackBar();
                                 Scaffold.of(context).showSnackBar(
@@ -152,7 +176,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         child: Icon(Icons.arrow_forward_ios,
                             color: name != "" && price != ""
                                 ? kUIDarkText
-                                : Colors.grey[400]),
+                                : Colors.grey[400],
+                            size: 26),
                       ),
                     ),
                   ],
@@ -168,6 +193,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 44, bottom: 36),
                     child: TextField(
+                      controller: TextEditingController(text: name),
                         cursorColor: Colors.grey,
                         decoration: InputDecoration(
                             border: InputBorder.none,
@@ -190,54 +216,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: images.length > 0
-                            ? [
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
-                                  child: CarouselSlider(
-                                    items: images
-                                        .map<Widget>((Image image) => image)
-                                        .toList(),
-                                    options: CarouselOptions(
-                                        pauseAutoPlayOnManualNavigate: false,
-                                        autoPlay: true,
-                                        enlargeCenterPage: true,
-                                        aspectRatio: 2.0,
-                                        onPageChanged: (index, reason) {
-                                          setState(() {
-                                            _currentImage = index;
-                                          });
-                                        }),
-                                  ),
-                                ),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: List.generate(
-                                        images.length,
-                                        (int index) => AnimatedContainer(
-                                              duration:
-                                                  Duration(milliseconds: 400),
-                                              width: _currentImage == index
-                                                  ? 16.0
-                                                  : 8.0,
-                                              height: _currentImage == index
-                                                  ? 6.0
-                                                  : 8.0,
-                                              margin: EdgeInsets.symmetric(
-                                                  vertical: 10.0,
-                                                  horizontal: 3.0),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                color: _currentImage == index
-                                                    ? Color.fromRGBO(
-                                                        0, 0, 0, 0.9)
-                                                    : Color.fromRGBO(
-                                                        0, 0, 0, 0.4),
-                                              ),
-                                            ))),
-                              ]
-                            : [
+                        children: [
+                          Container(
+                            padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
+                            child: CarouselSlider(
+                              items: [
+                                ...images
+                                    .map<Widget>((Image image) => image)
+                                    .toList(),
                                 GestureDetector(
                                   onTap: () async {
                                     FilePickerResult result =
@@ -271,11 +257,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       compImages.add(Image.file(compFile));
                                     }
 
-                                    images = compImages;
-                                    imageFiles = compFiles;
-                                    setState(() {});
+                                    images.addAll(compImages);
+                                    imageFiles.addAll(compFiles);
+                                    setState(() {
+                                      _currentImage = 0;
+                                    });
                                   },
                                   child: Container(
+                                    width: 120,
+                                    margin: EdgeInsets.all(24),
                                     padding: EdgeInsets.all(12),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
@@ -285,8 +275,39 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         color: kUIAccent, size: 32),
                                   ),
                                 ),
-                                SizedBox(height: 48)
-                              ]),
+                              ],
+                              options: CarouselOptions(
+                                  autoPlay: images.length > 0,
+                                  enlargeCenterPage: true,
+                                  aspectRatio: 2.0,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _currentImage = index;
+                                    });
+                                  }),
+                            ),
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                  images.length + 1,
+                                  (int index) => AnimatedContainer(
+                                        duration: Duration(milliseconds: 400),
+                                        width:
+                                            _currentImage == index ? 16.0 : 8.0,
+                                        height:
+                                            _currentImage == index ? 6.0 : 8.0,
+                                        margin: EdgeInsets.symmetric(
+                                            vertical: 10.0, horizontal: 3.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: _currentImage == index
+                                              ? Color.fromRGBO(0, 0, 0, 0.9)
+                                              : Color.fromRGBO(0, 0, 0, 0.4),
+                                        ),
+                                      ))),
+                        ]),
                   )
                 ],
               ),
@@ -600,6 +621,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     width: 80,
                     child: TextField(
                         keyboardType: TextInputType.number,
+                        controller: TextEditingController(text: price),
                         focusNode: _priceNode,
                         decoration: InputDecoration(
                             border: InputBorder.none,
@@ -633,6 +655,8 @@ class AddProductArguments {
   final List<DocumentReference> tabs;
   final String title;
   final int currentTab;
+  Product product;
 
-  AddProductArguments(this.tabsData, this.tabs, this.title, this.currentTab);
+  AddProductArguments(
+      {this.tabsData, this.tabs, this.title, this.currentTab, this.product});
 }

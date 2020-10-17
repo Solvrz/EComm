@@ -33,61 +33,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       child: Icon(Icons.add, color: kUIAccent, size: 30),
                       onPressed: () async {
                         Navigator.pushNamed(context, "/add",
-                            arguments: AddProductArguments(args.tabsData,
-                                args.tabs, args.title, _currentTab));
-//                        final TextEditingController name =
-//                            TextEditingController();
-//                        final TextEditingController price =
-//                            TextEditingController();
-//
-//                        await showDialog(
-//                          context: context,
-//                          builder: (_) => RoundedAlertDialog(
-//                              titleSize: 22,
-//                              title: "Add Product",
-//                              centerTitle: true,
-//                              isExpanded: false,
-//                              otherWidgets: [
-//                                Container(
-//                                  margin: EdgeInsets.only(bottom: 8),
-//                                  width: MediaQuery.of(context).size.width,
-//                                  child: TextField(
-//                                    maxLines: 2,
-//                                    minLines: 1,
-//                                    controller: name,
-//                                    decoration: kInputDialogDecoration.copyWith(
-//                                        hintText: "Name"),
-//                                  ),
-//                                ),
-//                                Container(
-//                                  margin: EdgeInsets.only(bottom: 8),
-//                                  width: MediaQuery.of(context).size.width,
-//                                  child: TextField(
-//                                    maxLines: 1,
-//                                    minLines: 1,
-//                                    keyboardType: TextInputType.number,
-//                                    controller: price,
-//                                    decoration: kInputDialogDecoration.copyWith(
-//                                        hintText: "Price"),
-//                                  ),
-//                                ),
-//                              ],
-//                              buttonsList: [
-//                                AlertButton(
-//                                    title: "Add Image",
-//                                    onPressed: () async {
-//                                      FocusScope.of(context).unfocus();
-//
-//                                      String fName = name.text;
-//                                      String fPrice = price.text;
-//
-//                                      name.clear();
-//                                      price.clear();
-//
-
-//                                    })
-//                              ]),
-//                        );
+                            arguments: AddProductArguments(tabsData: args.tabsData,
+                                tabs: args.tabs, title: args.title, currentTab: _currentTab));
                       },
                     ))
             : null,
@@ -115,12 +62,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             fontWeight: FontWeight.bold)),
                   ),
                 ),
-                if (!admin)
                   GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, "/cart"),
+                    onTap: admin ? () {} : () => Navigator.pushNamed(context, "/cart"),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.shopping_cart_outlined, size: 26),
+                      child: Icon(admin ? null : Icons.shopping_cart_outlined, size: 26),
                     ),
                   )
               ],
@@ -181,7 +127,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           products: future.data.docs
                               .map<Product>((DocumentSnapshot e) =>
                                   Product.fromJson(e.data()))
-                              .toList()));
+                              .toList(), args: AddProductArguments(tabsData: args.tabsData,
+                          tabs: args.tabs, title: args.title, currentTab: _currentTab)));
                 } else {
                   return Center(
                     child: Container(
@@ -209,9 +156,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
 }
 
 class ProductList extends StatefulWidget {
-  ProductList({@required this.products});
+  ProductList({@required this.products, this.args});
 
   final List<Product> products;
+  final AddProductArguments args;
 
   @override
   _ProductListState createState() => _ProductListState();
@@ -225,15 +173,16 @@ class _ProductListState extends State<ProductList> {
       crossAxisCount: 2,
       childAspectRatio: 0.8,
       children: List.generate(widget.products.length,
-          (index) => ProductCard(widget.products[index])),
+          (index) => ProductCard(widget.products[index], widget.args)),
     );
   }
 }
 
 class ProductCard extends StatefulWidget {
   final Product product;
+  final AddProductArguments args;
 
-  ProductCard(this.product);
+  ProductCard(this.product, this.args);
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -241,6 +190,7 @@ class ProductCard extends StatefulWidget {
 
 class _ProductCardState extends State<ProductCard>
     with SingleTickerProviderStateMixin {
+
   AnimationController _animationController;
   Animation<double> _animation;
 
@@ -283,6 +233,7 @@ class _ProductCardState extends State<ProductCard>
                       child: widget.product.images != null
                           ? Container(
                               height: height / 1.8,
+                              constraints: BoxConstraints(maxWidth: width - 64),
                               decoration: BoxDecoration(boxShadow: [
                                 BoxShadow(
                                     color: Colors.grey[600],
@@ -313,13 +264,20 @@ class _ProductCardState extends State<ProductCard>
                                 icon: AnimatedIcons.menu_close,
                                 progress: _animation,
                               )),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 12 * _animation.value),
-                            child: Icon(
-                              Icons.edit,
-                              size: 20 * _animation.value,
-                              color: kUIDarkText.withOpacity(0.8),
+                          GestureDetector(
+                            onTap: () async {
+                              widget.args.product = widget.product;
+                              Navigator.pushNamed(context, "/add",
+                                  arguments: widget.args);
+                            },
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.only(top: 12 * _animation.value),
+                              child: Icon(
+                                Icons.edit,
+                                size: 20 * _animation.value,
+                                color: kUIDarkText.withOpacity(0.8),
+                              ),
                             ),
                           ),
                           GestureDetector(
