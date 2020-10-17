@@ -34,7 +34,8 @@ class Product {
       Map selected}) {
     _uId = uId;
     _name = name;
-    if (images.length > 0) _images = images.map((e) => NetworkImage(e)).toList();
+    if (images.length > 0)
+      _images = images.map((e) => NetworkImage(e)).toList();
     _price = price;
     _bgColor = bgColor != null ? Color(int.parse("0xff$bgColor")) : null;
     _variations = variations;

@@ -86,11 +86,14 @@ class _ProductScreenState extends State<ProductScreen> {
                     children: [
                       Icon(Icons.arrow_back_ios, color: Colors.grey[400]),
                       Container(
-                          height: MediaQuery.of(context).size.height * 0.325,
-                          child: Image(
-                            image: args.product.images[0],
-                            fit: BoxFit.fill,
-                          )),
+                        height: MediaQuery.of(context).size.height * 0.325,
+                        child: args.product.images != null
+                            ? Image(
+                                image: args.product.images[0],
+                                fit: BoxFit.fill,
+                              )
+                            : Center(child: Text("No Images Provided")),
+                      ),
                       Icon(Icons.arrow_forward_ios, color: Colors.grey[400]),
                     ],
                   ),
