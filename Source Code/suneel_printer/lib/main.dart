@@ -7,6 +7,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/add_product.dart';
@@ -52,14 +53,23 @@ class SuneelPrinter extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme:
           ThemeData(primaryColor: kUIAccent, highlightColor: Colors.blueGrey),
-      builder: (BuildContext context, Widget child) {
-        return NotificationListener<OverscrollIndicatorNotification>(
+      builder: (context, widget) => ResponsiveWrapper.builder(
+        NotificationListener<OverscrollIndicatorNotification>(
             onNotification: (overScroll) {
               overScroll.disallowGlow();
               return;
             },
-            child: child);
-      },
+            child: widget),
+        maxWidth: 1200,
+        minWidth: 480,
+        defaultScale: true,
+        breakpoints: [
+          ResponsiveBreakpoint.resize(600, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(800, name: TABLET),
+          ResponsiveBreakpoint.resize(1000, name: DESKTOP),
+        ],
+        background: Container(color: Color(0xFFF5F5F5)),
+      ),
       title: 'SuneelPrinters',
       initialRoute: "/",
       routes: {
