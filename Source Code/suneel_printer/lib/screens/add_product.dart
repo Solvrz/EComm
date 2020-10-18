@@ -38,7 +38,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (args.product != null) {
       name = args.product.name;
       price = args.product.price;
-      images = args.product.images.map((e) => Image(image: e)).toList();
+      if (args.product.images != null)
+        images = args.product.images.map((e) => Image(image: e)).toList();
       variations = args.product.variations;
     }
 
@@ -64,8 +65,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         GestureDetector(
                           onTap: () => Navigator.pop(context),
                           child: Container(
-                            decoration:
-                                BoxDecoration(border: Border.all(color: kUIColor)),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: kUIColor)),
                             padding: EdgeInsets.all(8),
                             child: Icon(Icons.arrow_back_ios,
                                 color: kUIDarkText, size: 26),
@@ -117,13 +118,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     int maxId = 0;
 
                                     query.docs.forEach((element) {
-                                      int currId = int.parse(
-                                          element.data()["uId"].split("/").last);
+                                      int currId = int.parse(element
+                                          .data()["uId"]
+                                          .split("/")
+                                          .last);
                                       if (currId > maxId) maxId = currId;
                                     });
 
                                     if (args.product != null) {
-                                      QuerySnapshot query = await args.tabs[args.currentTab].collection("products").where("uId", isEqualTo: args.product.uId).get();
+                                      QuerySnapshot query = await args
+                                          .tabs[args.currentTab]
+                                          .collection("products")
+                                          .where("uId",
+                                              isEqualTo: args.product.uId)
+                                          .get();
                                       query.docs.first.reference.update({
                                         "uId": "1/1/${maxId + 1}",
                                         "imgs": urls,
@@ -147,7 +155,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       });
                                     }
 
-                                    Scaffold.of(context).removeCurrentSnackBar();
+                                    Scaffold.of(context)
+                                        .removeCurrentSnackBar();
                                     Scaffold.of(context).showSnackBar(
                                       SnackBar(
                                         elevation: 10,
@@ -159,7 +168,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       ),
                                     );
                                   } else {
-                                    Scaffold.of(context).removeCurrentSnackBar();
+                                    Scaffold.of(context)
+                                        .removeCurrentSnackBar();
                                     Scaffold.of(context).showSnackBar(
                                       SnackBar(
                                         elevation: 10,
@@ -174,8 +184,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 }
                               : null,
                           child: Container(
-                            decoration:
-                                BoxDecoration(border: Border.all(color: kUIColor)),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: kUIColor)),
                             padding: EdgeInsets.all(8),
                             child: Icon(Icons.arrow_forward_ios,
                                 color: name != "" && price != ""
@@ -197,7 +207,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       Padding(
                         padding: const EdgeInsets.only(right: 44, bottom: 36),
                         child: TextField(
-                          controller: TextEditingController(text: name),
+                            controller: TextEditingController(text: name),
                             cursorColor: Colors.grey,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -233,7 +243,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         FilePickerResult result =
                                             await FilePicker.platform.pickFiles(
                                                 type: FileType.custom,
-                                                allowedExtensions: ["png", "jpg"],
+                                                allowedExtensions: [
+                                                  "png",
+                                                  "jpg"
+                                                ],
                                                 allowMultiple: true);
 
                                         List<Image> compImages = [];
@@ -244,11 +257,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                           List<String> splits =
                                               file.absolute.path.split("/");
 
-                                          File compFile = await FlutterImageCompress
-                                              .compressAndGetFile(
+                                          File compFile =
+                                              await FlutterImageCompress
+                                                  .compressAndGetFile(
                                             file.absolute.path,
                                             splits
-                                                    .getRange(0, splits.length - 1)
+                                                    .getRange(
+                                                        0, splits.length - 1)
                                                     .join("/") +
                                                 "/Compressed" +
                                                 Timestamp.now()
@@ -272,7 +287,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         margin: EdgeInsets.all(24),
                                         padding: EdgeInsets.all(12),
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           color: Colors.white70,
                                         ),
                                         child: Icon(Icons.post_add,
@@ -296,19 +312,24 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   children: List.generate(
                                       images.length + 1,
                                       (int index) => AnimatedContainer(
-                                            duration: Duration(milliseconds: 400),
-                                            width:
-                                                _currentImage == index ? 16.0 : 8.0,
-                                            height:
-                                                _currentImage == index ? 6.0 : 8.0,
+                                            duration:
+                                                Duration(milliseconds: 400),
+                                            width: _currentImage == index
+                                                ? 16.0
+                                                : 8.0,
+                                            height: _currentImage == index
+                                                ? 6.0
+                                                : 8.0,
                                             margin: EdgeInsets.symmetric(
-                                                vertical: 10.0, horizontal: 3.0),
+                                                vertical: 10.0,
+                                                horizontal: 3.0),
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(15),
                                               color: _currentImage == index
                                                   ? Color.fromRGBO(0, 0, 0, 0.9)
-                                                  : Color.fromRGBO(0, 0, 0, 0.4),
+                                                  : Color.fromRGBO(
+                                                      0, 0, 0, 0.4),
                                             ),
                                           ))),
                             ]),
@@ -339,9 +360,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         },
                                         child: Container(
                                           margin: EdgeInsets.only(left: 12),
-                                          height:
-                                              MediaQuery.of(context).size.height /
-                                                  6,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              6,
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(25),
@@ -353,24 +375,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     ],
                                     child: Container(
                                       height: 76,
-                                      padding:
-                                          const EdgeInsets.symmetric(vertical: 12),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12),
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                             child: TextField(
-                                                onChanged: (value) => variations[
-                                                        variations
+                                                onChanged: (value) =>
+                                                    variations[variations
                                                             .indexOf(variation)]
-                                                    .name = value,
+                                                        .name = value,
                                                 decoration: InputDecoration(
                                                     border: InputBorder.none,
                                                     hintText: "Name",
                                                     hintStyle: TextStyle(
                                                         fontSize: 22,
-                                                        fontWeight: FontWeight.w600,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                         fontFamily:
                                                             "sans-serif-condensed",
                                                         letterSpacing: 0.2)),
@@ -388,9 +411,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                 ...List.generate(
                                                     variation.options.length,
                                                     (index) => Padding(
-                                                          padding: const EdgeInsets
-                                                                  .symmetric(
-                                                              horizontal: 3.0),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      3.0),
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -402,128 +427,134 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                       labelController =
                                                                       TextEditingController(
                                                                           text: variation
-                                                                              .options[
-                                                                                  index]
+                                                                              .options[index]
                                                                               .label);
                                                                   showDialog(
                                                                       context:
                                                                           context,
-                                                                      builder: (_) =>
-                                                                          WillPopScope(
-                                                                            onWillPop:
-                                                                                () async {
-                                                                              setState(
-                                                                                  () {
-                                                                                if (variation.options[index].label != labelController.text &&
-                                                                                    labelController.text != "") {
-                                                                                  variations[variations.indexOf(variation)].options[index].label = labelController.text;
-                                                                                }
-                                                                              });
-                                                                              return true;
-                                                                            },
-                                                                            child:
-                                                                                RoundedAlertDialog(
-                                                                              title:
-                                                                                  "Edit Option",
-                                                                              otherWidgets: [
-                                                                                TextField(
-                                                                                  controller: labelController,
-                                                                                  decoration: kInputDialogDecoration.copyWith(
-                                                                                    suffixIcon: IconButton(icon: Icon(Icons.clear), onPressed: () => labelController.clear()),
-                                                                                  ),
+                                                                      builder:
+                                                                          (_) =>
+                                                                              WillPopScope(
+                                                                                onWillPop: () async {
+                                                                                  setState(() {
+                                                                                    if (variation.options[index].label != labelController.text && labelController.text != "") {
+                                                                                      variations[variations.indexOf(variation)].options[index].label = labelController.text;
+                                                                                    }
+                                                                                  });
+                                                                                  return true;
+                                                                                },
+                                                                                child: RoundedAlertDialog(
+                                                                                  title: "Edit Option",
+                                                                                  otherWidgets: [
+                                                                                    TextField(
+                                                                                      controller: labelController,
+                                                                                      decoration: kInputDialogDecoration.copyWith(
+                                                                                        suffixIcon: IconButton(icon: Icon(Icons.clear), onPressed: () => labelController.clear()),
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(height: 12),
+                                                                                    BlockPicker(
+                                                                                        availableColors: [
+                                                                                          Color(0xFFF44336),
+                                                                                          Color(0xFF2196F3),
+                                                                                          Color(0xFF4CAF50),
+                                                                                          Color(0xFFFFEB3B),
+                                                                                          Color(0xFF03A9F4),
+                                                                                          Color(0xFF8BC34A),
+                                                                                          Color(0xFFFFC107),
+                                                                                          Color(0xFFFF4081),
+                                                                                          Color(0xFF9C27B0),
+                                                                                          Color(0xFF000000),
+                                                                                          Color(0xFF9E9E9E),
+                                                                                          Color(0xFFFFFFFF),
+                                                                                          Colors.transparent
+                                                                                        ],
+                                                                                        itemBuilder: (color, isCurrentColor, changeColor) {
+                                                                                          final bool notTrans = color != Colors.transparent;
+                                                                                          return Container(
+                                                                                            margin: EdgeInsets.all(5.0),
+                                                                                            decoration: BoxDecoration(
+                                                                                              borderRadius: BorderRadius.circular(50.0),
+                                                                                              color: notTrans ? color : Colors.white,
+                                                                                              boxShadow: notTrans
+                                                                                                  ? [
+                                                                                                      BoxShadow(
+                                                                                                        color: color != Colors.white && notTrans ? color.withOpacity(0.8) : Colors.grey[600],
+                                                                                                        offset: Offset(1.0, 2.0),
+                                                                                                        blurRadius: 5.0,
+                                                                                                      ),
+                                                                                                    ]
+                                                                                                  : null,
+                                                                                            ),
+                                                                                            child: Material(
+                                                                                              color: Colors.transparent,
+                                                                                              child: InkWell(
+                                                                                                onTap: changeColor,
+                                                                                                borderRadius: BorderRadius.circular(50.0),
+                                                                                                child: notTrans
+                                                                                                    ? AnimatedOpacity(
+                                                                                                        duration: const Duration(milliseconds: 210),
+                                                                                                        opacity: isCurrentColor ? 1.0 : 0.0,
+                                                                                                        child: Icon(
+                                                                                                          Icons.done,
+                                                                                                          color: useWhiteForeground(color) ? Colors.white : Colors.black,
+                                                                                                        ),
+                                                                                                      )
+                                                                                                    : Icon(Icons.clear),
+                                                                                              ),
+                                                                                            ),
+                                                                                          );
+                                                                                        },
+                                                                                        pickerColor: variation.options[index].color ?? Colors.redAccent,
+                                                                                        onColorChanged: (color) {
+                                                                                          if (color != Colors.transparent)
+                                                                                            variations[variations.indexOf(variation)].options[index].color = color;
+                                                                                          else
+                                                                                            variations[variations.indexOf(variation)].options[index].color = null;
+                                                                                        })
+                                                                                  ],
+                                                                                  isExpanded: false,
+                                                                                  buttonsList: [
+                                                                                    AlertButton(
+                                                                                        title: "Done",
+                                                                                        onPressed: () {
+                                                                                          Navigator.pop(context);
+                                                                                          setState(() {
+                                                                                            if (variation.options[index].label != labelController.text) {
+                                                                                              variations[variations.indexOf(variation)].options[index].label = labelController.text;
+                                                                                            }
+                                                                                          });
+                                                                                        })
+                                                                                  ],
                                                                                 ),
-                                                                                SizedBox(height: 12),
-                                                                                BlockPicker(
-                                                                                    availableColors: [
-                                                                                      Color(0xFFF44336),
-                                                                                      Color(0xFF2196F3),
-                                                                                      Color(0xFF4CAF50),
-                                                                                      Color(0xFFFFEB3B),
-                                                                                      Color(0xFF03A9F4),
-                                                                                      Color(0xFF8BC34A),
-                                                                                      Color(0xFFFFC107),
-                                                                                      Color(0xFFFF4081),
-                                                                                      Color(0xFF9C27B0),
-                                                                                      Color(0xFF000000),
-                                                                                      Color(0xFF9E9E9E),
-                                                                                      Color(0xFFFFFFFF),
-                                                                                      Colors.transparent
-                                                                                    ],
-                                                                                    itemBuilder: (color, isCurrentColor, changeColor) {
-                                                                                      final bool notTrans = color != Colors.transparent;
-                                                                                      return Container(
-                                                                                        margin: EdgeInsets.all(5.0),
-                                                                                        decoration: BoxDecoration(
-                                                                                          borderRadius: BorderRadius.circular(50.0),
-                                                                                          color: notTrans ? color : Colors.white,
-                                                                                          boxShadow: notTrans
-                                                                                              ? [
-                                                                                                  BoxShadow(
-                                                                                                    color: color != Colors.white && notTrans ? color.withOpacity(0.8) : Colors.grey[600],
-                                                                                                    offset: Offset(1.0, 2.0),
-                                                                                                    blurRadius: 5.0,
-                                                                                                  ),
-                                                                                                ]
-                                                                                              : null,
-                                                                                        ),
-                                                                                        child: Material(
-                                                                                          color: Colors.transparent,
-                                                                                          child: InkWell(
-                                                                                            onTap: changeColor,
-                                                                                            borderRadius: BorderRadius.circular(50.0),
-                                                                                            child: notTrans
-                                                                                                ? AnimatedOpacity(
-                                                                                                    duration: const Duration(milliseconds: 210),
-                                                                                                    opacity: isCurrentColor ? 1.0 : 0.0,
-                                                                                                    child: Icon(
-                                                                                                      Icons.done,
-                                                                                                      color: useWhiteForeground(color) ? Colors.white : Colors.black,
-                                                                                                    ),
-                                                                                                  )
-                                                                                                : Icon(Icons.clear),
-                                                                                          ),
-                                                                                        ),
-                                                                                      );
-                                                                                    },
-                                                                                    pickerColor: variation.options[index].color ?? Colors.redAccent,
-                                                                                    onColorChanged: (color) {
-                                                                                      if (color != Colors.transparent)
-                                                                                        variations[variations.indexOf(variation)].options[index].color = color;
-                                                                                      else
-                                                                                        variations[variations.indexOf(variation)].options[index].color = null;
-                                                                                    })
-                                                                              ],
-                                                                              isExpanded:
-                                                                                  false,
-                                                                              buttonsList: [
-                                                                                AlertButton(
-                                                                                    title: "Done",
-                                                                                    onPressed: () {
-                                                                                      Navigator.pop(context);
-                                                                                      setState(() {
-                                                                                        if (variation.options[index].label != labelController.text) {
-                                                                                          variations[variations.indexOf(variation)].options[index].label = labelController.text;
-                                                                                        }
-                                                                                      });
-                                                                                    })
-                                                                              ],
-                                                                            ),
-                                                                          ));
+                                                                              ));
                                                                 },
-                                                                onLongPress: () {
+                                                                onLongPress:
+                                                                    () {
+                                                                  print(variations[
+                                                                          variations
+                                                                              .indexOf(variation)]
+                                                                      .options
+                                                                      .length);
                                                                   setState(() {
-                                                                    variations[variations
-                                                                            .indexOf(
-                                                                                variation)]
-                                                                        .options
-                                                                        .removeAt(
-                                                                            index);
+                                                                    variations[variations.indexOf(variation)].options.length >
+                                                                            1
+                                                                        ? variations[variations.indexOf(variation)]
+                                                                            .options
+                                                                            .removeAt(
+                                                                                index)
+                                                                        : variations
+                                                                            .remove(variation);
                                                                   });
                                                                 },
-                                                                child: Container(
+                                                                child:
+                                                                    Container(
                                                                   margin: EdgeInsets
-                                                                      .fromLTRB(2,
-                                                                          0, 2, 4),
+                                                                      .fromLTRB(
+                                                                          2,
+                                                                          0,
+                                                                          2,
+                                                                          4),
                                                                   width: 32,
                                                                   height: 32,
                                                                   decoration:
@@ -533,41 +564,33 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                     border: 0 ==
                                                                             index
                                                                         ? Border.all(
-                                                                            color: Colors.grey[
-                                                                                400],
-                                                                            width:
-                                                                                2)
+                                                                            color:
+                                                                                Colors.grey[400],
+                                                                            width: 2)
                                                                         : null,
                                                                   ),
                                                                   child: Center(
                                                                     child:
                                                                         CircleAvatar(
-                                                                      radius: 10,
+                                                                      radius:
+                                                                          10,
                                                                       backgroundColor: variation
-                                                                              .options[
-                                                                                  index]
+                                                                              .options[index]
                                                                               .color ??
-                                                                          Colors.grey[
-                                                                              400],
-                                                                      child: variation
-                                                                                  .options[
-                                                                                      index]
-                                                                                  .color ==
+                                                                          Colors.grey[400],
+                                                                      child: variation.options[index].color ==
                                                                               null
                                                                           ? Text(
-                                                                              variation.options[index].label[0]
-                                                                                  .toUpperCase(),
-                                                                              style: TextStyle(
-                                                                                  fontSize: 12,
-                                                                                  fontWeight: FontWeight.w600,
-                                                                                  color: kUIDarkText))
+                                                                              variation.options[index].label[0].toUpperCase(),
+                                                                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: kUIDarkText))
                                                                           : null,
                                                                     ),
                                                                   ),
                                                                 ),
                                                               ),
                                                               Text(variation
-                                                                  .options[index]
+                                                                  .options[
+                                                                      index]
                                                                   .label),
                                                             ],
                                                           ),
@@ -576,15 +599,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                     onTap: () {
                                                       setState(() {
                                                         variations[variations
-                                                                .indexOf(variation)]
+                                                                .indexOf(
+                                                                    variation)]
                                                             .options
                                                             .add(Option(
-                                                                label: "Label"));
+                                                                label:
+                                                                    "Label"));
                                                       });
                                                     },
                                                     child: Padding(
                                                       padding:
-                                                          const EdgeInsets.all(8.0),
+                                                          const EdgeInsets.all(
+                                                              8.0),
                                                       child: Icon(Icons.add),
                                                     ))
                                               ])
@@ -594,14 +620,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   ),
                                 )),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
                               child: AlertButton(
                                 backgroundColor: Colors.white,
                                 titleColor: kUIAccent,
                                 title: "Add Variation",
                                 onPressed: () => setState(() {
                                   variations.add(Variation(
-                                      name: "", options: [Option(label: "Label")]));
+                                      name: "",
+                                      options: [Option(label: "Label")]));
                                 }),
                               ),
                             ),
@@ -610,7 +638,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 18),
                   child: Row(
                     children: [
                       Expanded(

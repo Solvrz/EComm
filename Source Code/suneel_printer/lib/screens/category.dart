@@ -33,8 +33,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       child: Icon(Icons.add, color: kUIAccent, size: 30),
                       onPressed: () async {
                         Navigator.pushNamed(context, "/add",
-                            arguments: AddProductArguments(tabsData: args.tabsData,
-                                tabs: args.tabs, title: args.title, currentTab: _currentTab));
+                            arguments: AddProductArguments(
+                                tabsData: args.tabsData,
+                                tabs: args.tabs,
+                                title: args.title,
+                                currentTab: _currentTab));
                       },
                     ))
             : null,
@@ -62,13 +65,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             fontWeight: FontWeight.bold)),
                   ),
                 ),
-                  GestureDetector(
-                    onTap: admin ? () {} : () => Navigator.pushNamed(context, "/cart"),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(admin ? null : Icons.shopping_cart_outlined, size: 26),
-                    ),
-                  )
+                GestureDetector(
+                  onTap: admin
+                      ? () {}
+                      : () => Navigator.pushNamed(context, "/cart"),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(admin ? null : Icons.shopping_cart_outlined,
+                        size: 26),
+                  ),
+                )
               ],
             ),
           ),
@@ -127,8 +133,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           products: future.data.docs
                               .map<Product>((DocumentSnapshot e) =>
                                   Product.fromJson(e.data()))
-                              .toList(), args: AddProductArguments(tabsData: args.tabsData,
-                          tabs: args.tabs, title: args.title, currentTab: _currentTab)));
+                              .toList(),
+                          args: AddProductArguments(
+                              tabsData: args.tabsData,
+                              tabs: args.tabs,
+                              title: args.title,
+                              currentTab: _currentTab)));
                 } else {
                   return Center(
                     child: Container(
@@ -190,7 +200,6 @@ class ProductCard extends StatefulWidget {
 
 class _ProductCardState extends State<ProductCard>
     with SingleTickerProviderStateMixin {
-
   AnimationController _animationController;
   Animation<double> _animation;
 
@@ -266,6 +275,8 @@ class _ProductCardState extends State<ProductCard>
                               )),
                           GestureDetector(
                             onTap: () async {
+                              _animationController.reverse();
+
                               widget.args.product = widget.product;
                               Navigator.pushNamed(context, "/add",
                                   arguments: widget.args);
@@ -295,6 +306,7 @@ class _ProductCardState extends State<ProductCard>
                                     FlatButton(
                                       onPressed: () async {
                                         Navigator.pop(context);
+                                        _animationController.reverse();
 
                                         List<String> uIds =
                                             widget.product.uId.split("/");
