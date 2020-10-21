@@ -2,16 +2,15 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/home.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
-  _AnimationScreenState createState() => _AnimationScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _AnimationScreenState extends State<SplashScreen>
+class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   Size size = Size.zero;
   AnimationController _controller;

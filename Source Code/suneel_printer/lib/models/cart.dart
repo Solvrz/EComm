@@ -131,7 +131,8 @@ class Cart {
 
         //TODO: Improve changelog messages
         if (products.docs.isEmpty) {
-          changeLog.add("The product '${item.product.name}' has been removed from the store");
+          changeLog.add(
+              "The product '${item.product.name}' has been removed from the store");
         } else {
           Map productData = products.docs.first.data();
           List<String> diff =

@@ -271,51 +271,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      // Container(
-      //   padding: EdgeInsets.symmetric(vertical: 6),
-      //   width: MediaQuery.of(context).size.width,
-      //   decoration: BoxDecoration(
-      //     color: kUIColor,
-      //     border: Border.symmetric(
-      //       horizontal: BorderSide(color: Colors.grey[400], width: 1),
-      //     ),
-      //   ),
-      //   child: SingleChildScrollView(
-      //     scrollDirection: Axis.horizontal,
-      //     child: Row(
-      //       children: [
-      //         ...List.generate(widget.tabs.length, (int index) {
-      //           return Padding(
-      //             padding: EdgeInsets.symmetric(horizontal: 24),
-      //             child: GestureDetector(
-      //               onTap: () {
-      //                 if (index == widget._currentTab) return;
-      //                 setState(() {
-      //                   widget._currentTab = index;
-      //                 });
-      //               },
-      //               child: AnimatedDefaultTextStyle(
-      //                 child: Text(
-      //                   widget.tabsData[index]["name"].split("\\n").join("\n"),
-      //                   textAlign: TextAlign.center,
-      //                 ),
-      //                 duration: Duration(milliseconds: 150),
-      //                 style: TextStyle(
-      //                     fontSize: index == widget._currentTab ? 16 : 14,
-      //                     fontWeight: index == widget._currentTab
-      //                         ? FontWeight.w600
-      //                         : FontWeight.normal,
-      //                     color: index == widget._currentTab
-      //                         ? kUIDarkText
-      //                         : Colors.grey[600]),
-      //               ),
-      //             ),
-      //           );
-      //         })
-      //       ],
-      //     ),
-      //   ),
-      // ),
       StreamBuilder<QuerySnapshot>(
         stream:
             widget.tabs[widget._currentTab].collection("products").snapshots(),
@@ -545,7 +500,11 @@ class _ProductCardState extends State<ProductCard>
 
                                         product.docs.first.reference.delete();
 
-                                        QuerySnapshot query = await database.collection("products").where("uId", isEqualTo: widget.product.uId).get();
+                                        QuerySnapshot query = await database
+                                            .collection("products")
+                                            .where("uId",
+                                                isEqualTo: widget.product.uId)
+                                            .get();
                                         query.docs.first.reference.delete();
                                       },
                                       textColor: kUIAccent,

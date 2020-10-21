@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
 
   final List<String> carouselImages = [
-//    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
+    // TODO: Link with Firbase
     "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRbFeK1UPs7urHqn5U5h_81MTBf6v8jA5K_3w&usqp=CAU"
   ];
 
