@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:suneel_printer/components/category_list.dart';
+import 'package:suneel_printer/components/category_grid.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 
@@ -16,7 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
 
   final List<String> carouselImages = [
-    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
+//    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRbFeK1UPs7urHqn5U5h_81MTBf6v8jA5K_3w&usqp=CAU"
   ];
 
   @override
@@ -115,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 margin: EdgeInsets.symmetric(vertical: 24),
                 padding: EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
-                    color: Color(0xffE3E3E3),
+                    color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(10)),
                 child: Row(children: [
                   Icon(Icons.search, color: Colors.grey[600]),
@@ -161,6 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                     }),
               ),
+              SizedBox(height: 12),
               if (carouselImages.length > 1)
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     : Color.fromRGBO(0, 0, 0, 0.4),
                               ),
                             ))),
-              SizedBox(height: 24),
+              SizedBox(height: 18),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6.0),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -191,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.bold,
                         color: kUIDarkText),
                   ),
-                  CategoryList(categories: categories),
+                  CategoryGrid(categories: categories),
                 ]),
               )
             ]),

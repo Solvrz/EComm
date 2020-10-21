@@ -25,76 +25,79 @@ class _CategoryScreenState extends State<CategoryScreen> {
     title = args.data["name"].split("\n").join(" ");
 
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: kUIColor,
-      resizeToAvoidBottomInset: false,
-      floatingActionButton:
-          admin && screen != null ? Builder(builder: screen.getFAB) : null,
-      body: FutureBuilder<QuerySnapshot>(
-          future: args.docRef.docs.first.reference
-              .collection("tabs")
-              .orderBy("uId")
-              .get(),
-          builder: (context, snapshot) {
-            var screen;
+        child: FutureBuilder<QuerySnapshot>(
+            future: args.docRef.docs.first.reference
+                .collection("tabs")
+                .orderBy("uId")
+                .get(),
+            builder: (context, snapshot) {
+              var screen;
 
-            if (snapshot.hasData) {
-              screen = snapshot.data.docs.length > 0
-                  ? CategoryProductPage(
-                      title,
-                      snapshot.data.docs
-                          .map<Map>((DocumentSnapshot e) => e.data())
-                          .toList(),
-                      snapshot.data.docs
-                          .map<DocumentReference>(
-                              (DocumentSnapshot e) => e.reference)
-                          .toList())
-                  : Center(child: Text("ORDER PAGE GOES HERE! ON LINE 52"));
-            }
+              if (snapshot.hasData) {
+                screen = snapshot.data.docs.length > 0
+                    ? CategoryProductPage(
+                        title,
+                        snapshot.data.docs
+                            .map<Map>((DocumentSnapshot e) => e.data())
+                            .toList(),
+                        snapshot.data.docs
+                            .map<DocumentReference>(
+                                (DocumentSnapshot e) => e.reference)
+                            .toList())
+                    : Center(child: Text("ORDER PAGE GOES HERE! ON LINE 52"));
+              }
 
-            return Column(children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.arrow_back_ios,
-                            color: kUIDarkText, size: 26),
-                      ),
+              return Scaffold(
+                backgroundColor: kUIColor,
+                resizeToAvoidBottomInset: false,
+                floatingActionButton: admin && screen != null
+                    ? Builder(builder: (context) => screen.getFab(context))
+                    : null,
+                body: Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(Icons.arrow_back_ios,
+                                color: kUIDarkText, size: 26),
+                          ),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(title,
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    color: kUIDarkText,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: admin
+                              ? () {}
+                              : () => Navigator.pushNamed(context, "/cart"),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                                admin ? null : Icons.shopping_cart_outlined,
+                                size: 26),
+                          ),
+                        )
+                      ],
                     ),
-                    Expanded(
-                      child: Center(
-                        child: Text(title,
-                            style: TextStyle(
-                                fontSize: 24,
-                                color: kUIDarkText,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: admin
-                          ? () {}
-                          : () => Navigator.pushNamed(context, "/cart"),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(admin ? null : Icons.shopping_cart_outlined,
-                            size: 26),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              snapshot.hasData
-                  ? screen
-                  : Expanded(child: Center(child: Text("Loading...")))
-            ]);
-          }),
-    ));
+                  ),
+                  Expanded(
+                      child: snapshot.hasData
+                          ? screen
+                          : Center(child: Text("Loading...")))
+                ]),
+              );
+            }));
   }
 }
 

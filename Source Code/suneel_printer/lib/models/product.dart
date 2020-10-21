@@ -6,7 +6,6 @@ class Product {
   String _name;
   List<NetworkImage> _images;
   String _price;
-  Color _bgColor;
   List<Variation> _variations;
   Map _selected;
 
@@ -18,8 +17,6 @@ class Product {
 
   String get price => _price;
 
-  Color get bgColor => _bgColor;
-
   List<Variation> get variations => _variations;
 
   Map get selected => _selected;
@@ -29,7 +26,6 @@ class Product {
       String name,
       List images = const [],
       String price,
-      String bgColor,
       List variations,
       Map selected}) {
     _uId = uId;
@@ -37,7 +33,6 @@ class Product {
     if (images.length > 0)
       _images = images.map((e) => NetworkImage(e)).toList();
     _price = price;
-    _bgColor = bgColor != null ? Color(int.parse("0xff$bgColor")) : null;
     _variations = variations;
     _selected = selected ??
         variations.asMap().map((key, value) =>
@@ -50,7 +45,6 @@ class Product {
         name: data["name"],
         images: data["imgs"],
         price: data["price"].toString(),
-        bgColor: data["bgColor"],
         variations: (data["variations"] ?? [])
             .map<Variation>((variation) => Variation.fromJson(variation))
             .toList(),
@@ -66,7 +60,6 @@ class Product {
       "name": _name,
       "imgs": _images.map((e) => e.url).toList(),
       "price": _price,
-      "bgColor": _bgColor.toString().substring(10, 16).toUpperCase(),
       "variations": _variations
           .map<Map>((Variation variation) => variation.toJson())
           .toList(),
@@ -80,9 +73,8 @@ class Product {
     return other is Product &&
         _uId == other.uId &&
         _name == other.name &&
-        _images == other.images &&
+        _images.toString() == other.images.toString() &&
         _price == other.price &&
-        _bgColor == other.bgColor &&
         _selected
                 .map((key, value) =>
                     MapEntry(key, {"label": value.label, "color": value.color}))
