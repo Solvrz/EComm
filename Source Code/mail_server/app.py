@@ -4,6 +4,8 @@ import os
 import flask
 from flask import Flask, request
 from flask_cors import CORS
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 app = Flask(__name__)
 CORS(app)
@@ -40,9 +42,9 @@ def order_confirmation():
     return "Successful"
 
 
-@app.route("/order_request")
+@app.route("/order_request", methods=["POST"])
 def order_request():
-    args = request.json
+    args = request.get_json()
 
     message = EmailMessage()
 
@@ -50,7 +52,8 @@ def order_request():
     message["To"] = "orders.suneelprinters@gmail.com"
     message["Subject"] = f"Order Placed by {args['customer']}"
 
-    message.set_content(
+    message.add_header("Content-Type", "text/html")
+    message.set_payload(
         f"""<!DOCTYPE html>
         <html>
         <head>
