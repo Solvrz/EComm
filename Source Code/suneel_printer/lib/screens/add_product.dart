@@ -531,11 +531,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                 },
                                                                 onLongPress:
                                                                     () {
-                                                                  print(variations[
-                                                                          variations
-                                                                              .indexOf(variation)]
-                                                                      .options
-                                                                      .length);
                                                                   setState(() {
                                                                     variations[variations.indexOf(variation)].options.length >
                                                                             1

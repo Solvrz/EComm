@@ -10,12 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/screens/add_product.dart';
-import 'package:suneel_printer/screens/cart_screen.dart';
-import 'package:suneel_printer/screens/category.dart';
-import 'package:suneel_printer/screens/home.dart';
-import 'package:suneel_printer/screens/product.dart';
-import 'package:suneel_printer/screens/splash.dart';
+import 'package:suneel_printer/screens/export.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
