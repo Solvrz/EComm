@@ -101,6 +101,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 }
 
+// ignore: must_be_immutable
 class CategoryProductPage extends StatefulWidget {
   final String title;
   final List<Map> tabsData;

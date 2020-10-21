@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:suneel_printer/components/marquee.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/category.dart';
 
