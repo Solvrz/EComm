@@ -408,12 +408,11 @@ class _ProductCardState extends State<ProductCard>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-    )..addListener(() {
-        setState(() {});
-      });
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200))
+          ..addListener(() {
+            setState(() {});
+          });
     _animation =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
   }
@@ -425,177 +424,171 @@ class _ProductCardState extends State<ProductCard>
 
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
-          context,
-          "/product",
-          arguments: ProductArguments(widget.product),
-        );
+        Navigator.pushNamed(context, "/product",
+            arguments: ProductArguments(widget.product));
       },
       child: Container(
-        padding: EdgeInsets.fromLTRB(12, admin ? 12 : 24, 12, 0),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[400], width: 0.5),
-        ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 24, 12, 0),
-                  child: widget.product.images != null
-                      ? Container(
-                          height: height / 1.8,
-                          constraints: BoxConstraints(maxWidth: width - 64),
-                          decoration: BoxDecoration(boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[600],
-                              blurRadius: 12,
-                              offset: Offset(2, 2),
-                            )
-                          ]),
-                          child: Image(image: widget.product.images[0]),
-                        )
-                      : Container(
-                          height: height / 2,
-                          child: Center(
-                            child: Text("No Image Provided"),
-                          ),
-                        ),
-                ),
-                if (admin)
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (!_animationController.isAnimating) {
-                            if (_animationController.isCompleted)
-                              _animationController.reverse();
-                            else
-                              _animationController.forward();
-                          }
-                        },
-                        child: AnimatedIcon(
-                          icon: AnimatedIcons.menu_close,
-                          progress: _animation,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          _animationController.reverse();
-
-                          widget.args.product = widget.product;
-                          Navigator.pushNamed(context, "/add_prdouct",
-                              arguments: widget.args);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 12 * _animation.value),
-                          child: Icon(
-                            Icons.edit,
-                            size: 20 * _animation.value,
-                            color: kUIDarkText.withOpacity(0.8),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) => RoundedAlertDialog(
-                              title: "Do you want to delete this Product?",
-                              buttonsList: [
-                                FlatButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  textColor: kUIAccent,
-                                  child: Text("No"),
-                                ),
-                                FlatButton(
-                                  onPressed: () async {
-                                    Navigator.pop(context);
+          padding: EdgeInsets.fromLTRB(12, admin ? 12 : 24, 12, 0),
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[400], width: 0.5)),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 24, 12, 0),
+                      child: widget.product.images != null
+                          ? Container(
+                              height: height / 1.8,
+                              constraints: BoxConstraints(maxWidth: width - 64),
+                              decoration: BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey[600],
+                                    blurRadius: 12,
+                                    offset: Offset(2, 2))
+                              ]),
+                              child: Image(image: widget.product.images[0]))
+                          : Container(
+                              height: height / 2,
+                              child: Center(
+                                child: Text("No Image Provided"),
+                              ),
+                            ),
+                    ),
+                    if (admin)
+                      Column(
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                if (!_animationController.isAnimating) {
+                                  if (_animationController.isCompleted)
                                     _animationController.reverse();
+                                  else
+                                    _animationController.forward();
+                                }
+                              },
+                              child: AnimatedIcon(
+                                icon: AnimatedIcons.menu_close,
+                                progress: _animation,
+                              )),
+                          GestureDetector(
+                            onTap: () async {
+                              _animationController.reverse();
 
-                                    List<String> uIds =
-                                        widget.product.uId.split("/");
+                              widget.args.product = widget.product;
+                              Navigator.pushNamed(context, "/add",
+                                  arguments: widget.args);
+                            },
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.only(top: 12 * _animation.value),
+                              child: Icon(
+                                Icons.edit,
+                                size: 20 * _animation.value,
+                                color: kUIDarkText.withOpacity(0.8),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (_) => RoundedAlertDialog(
+                                  title: "Do you want to delete this Product?",
+                                  buttonsList: [
+                                    FlatButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      textColor: kUIAccent,
+                                      child: Text("No"),
+                                    ),
+                                    FlatButton(
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        _animationController.reverse();
 
-                                    if (widget.product.images != null)
-                                      widget.product.images.forEach((element) {
-                                        FirebaseStorage.instance
-                                            .getReferenceFromUrl(element.url)
-                                            .then(
-                                              (value) => value.delete(),
-                                            );
-                                      });
+                                        List<String> uIds =
+                                            widget.product.uId.split("/");
 
-                                    QuerySnapshot category = await database
-                                        .collection("categories")
-                                        .where(
-                                          "uId",
-                                          isEqualTo: int.parse(uIds[0]),
-                                        )
-                                        .get();
+                                        if (widget.product.images != null)
+                                          widget.product.images
+                                              .forEach((element) {
+                                            FirebaseStorage.instance
+                                                .getReferenceFromUrl(
+                                                    element.url)
+                                                .then(
+                                                    (value) => value.delete());
+                                          });
 
-                                    QuerySnapshot tab =
-                                        await category.docs.first.reference
-                                            .collection("tabs")
-                                            .where(
-                                              "uId",
-                                              isEqualTo: int.parse(uIds[1]),
-                                            )
+                                        QuerySnapshot category = await database
+                                            .collection("categories")
+                                            .where("uId",
+                                                isEqualTo: int.parse(uIds[0]))
                                             .get();
 
-                                    QuerySnapshot product = await tab
-                                        .docs.first.reference
-                                        .collection("products")
-                                        .where("uId",
-                                            isEqualTo: widget.product.uId)
-                                        .get();
+                                        QuerySnapshot tab = await category
+                                            .docs.first.reference
+                                            .collection("tabs")
+                                            .where("uId",
+                                                isEqualTo: int.parse(uIds[1]))
+                                            .get();
 
-                                    product.docs.first.reference.delete();
-                                  },
-                                  textColor: kUIAccent,
-                                  child: Text("Yes"),
+                                        QuerySnapshot product = await tab
+                                            .docs.first.reference
+                                            .collection("products")
+                                            .where("uId",
+                                                isEqualTo: widget.product.uId)
+                                            .get();
+
+                                        product.docs.first.reference.delete();
+
+                                        QuerySnapshot query = await database.collection("products").where("uId", isEqualTo: widget.product.uId).get();
+                                        query.docs.first.reference.delete();
+                                      },
+                                      textColor: kUIAccent,
+                                      child: Text("Yes"),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              );
+                            },
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.only(top: 8 * _animation.value),
+                              child: Icon(
+                                Icons.delete,
+                                size: 20 * _animation.value,
+                                color: kUIDarkText.withOpacity(0.8),
+                              ),
                             ),
-                          );
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 8 * _animation.value),
-                          child: Icon(
-                            Icons.delete,
-                            size: 20 * _animation.value,
-                            color: kUIDarkText.withOpacity(0.8),
-                          ),
-                        ),
+                          )
+                        ],
                       )
-                    ],
-                  )
-              ],
-            ),
-          ),
-          SizedBox(height: 12),
-          Text(
-            "₹ ${widget.product.price}",
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                fontFamily: "sans-serif-condensed"),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: AutoSizeText(
-              widget.product.name,
-              maxLines: 2,
-              minFontSize: 18,
-              overflow: TextOverflow.ellipsis,
+                  ],
+                )),
+            SizedBox(height: 12),
+            Text(
+              "₹ ${widget.product.price}",
               style: TextStyle(
-                  letterSpacing: 0.3, fontFamily: "sans-serif-condensed"),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "sans-serif-condensed"),
             ),
-          ),
-        ]),
-      ),
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: AutoSizeText(
+                widget.product.name,
+                maxLines: 2,
+                minFontSize: 18,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    letterSpacing: 0.3, fontFamily: "sans-serif-condensed"),
+              ),
+            ),
+          ])),
     );
   }
 }

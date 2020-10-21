@@ -114,4 +114,14 @@ class Product {
         .first
         .options[option];
   }
+
+  List<String> difference(Product other) {
+    List<String> difference = [];
+    if (_name != other.name) difference.add("name");
+    if (_images.toString() != other.images.toString()) difference.add("images");
+    if (_price != other.price) difference.add("price");
+    if (_variations.map((e) => e.toString()).toList().toString() != other.variations.map((e) => e.toString()).toList().toString()) difference.add("variations");
+
+    return difference;
+  }
 }
