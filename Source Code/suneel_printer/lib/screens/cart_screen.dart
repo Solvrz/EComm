@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class _CartScreenState extends State<CartScreen> {
         bottomNavigationBar: Container(
           padding: EdgeInsets.symmetric(horizontal: 24),
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.grey[200],
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(25), topRight: Radius.circular(25))),
           height: MediaQuery.of(context).size.height * 0.1,
@@ -186,7 +187,7 @@ class _CartScreenState extends State<CartScreen> {
             margin: EdgeInsets.symmetric(vertical: 8),
             height: MediaQuery.of(context).size.height / 6,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25), color: Colors.white),
+                borderRadius: BorderRadius.circular(25), color: Colors.grey[200]),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -527,21 +528,6 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                         else
                           error["address"] = false;
 
-                        String temp = cart.products
-                            .map<String>((CartItem cartItem) {
-                              Product product = cartItem.product;
-
-                              return '''
-                <tr>
-                    <td>${product.name}</td>
-                    <td class="righty">${cartItem.quantity}</td>
-                    <td class="righty">${(double.parse(product.price) * cartItem.quantity).toStringAsFixed(2)}</td>
-                </tr>
-                ''';
-                            })
-                            .toList()
-                            .join("\n");
-
                         if (!error.values.contains(true)) {
                           await showDialog(
                               context: context,
@@ -556,7 +542,34 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                                     ],
                                   ));
 
-                                  
+                          await http.post(
+                            "https://suneel-printers-mail-server.herokuapp.com/order_request",
+                            headers: <String, String>{
+                              "Content-Type": "application/json; charset=UTF-8",
+                            },
+                            body: jsonEncode(<String, String>{
+                              "customer": "yugthapar37@gmail.com",
+                              "name": name,
+                              "phone": phone,
+                              "address": address,
+                              "price": widget.price.toString(),
+                              "product_list": cart.products
+                                  .map<String>((CartItem cartItem) {
+                                    Product product = cartItem.product;
+
+                                    return '''
+                <tr>
+                    <td>${product.name}</td>
+                    <td class="righty">${cartItem.quantity}</td>
+                    <td class="righty">${(double.parse(product.price) * cartItem.quantity).toStringAsFixed(2)}</td>
+                </tr>
+                ''';
+                                  })
+                                  .toList()
+                                  .join("\n"),
+                            }),
+                          );
+
                           //TODO: Save orders in SharedPreferences
                           cart.clear();
                           Navigator.popUntil(
