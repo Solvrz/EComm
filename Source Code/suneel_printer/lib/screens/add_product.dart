@@ -132,7 +132,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                           .where("uId",
                                               isEqualTo: args.product.uId)
                                           .get();
-                                      query.docs.first.reference.update({
+                                      await query.docs.first.reference.update({
+                                        "uId": "1/1/${maxId + 1}",
+                                        "imgs": urls,
+                                        "price": double.parse(price),
+                                        "name": name,
+                                        "variations": variations
+                                            .map((e) => e.toJson())
+                                            .toList()
+                                      });
+
+                                      query = await database
+                                          .collection("products")
+                                          .where("uId",
+                                              isEqualTo: args.product.uId)
+                                          .get();
+                                      await query.docs.first.reference.update({
                                         "uId": "1/1/${maxId + 1}",
                                         "imgs": urls,
                                         "price": double.parse(price),
@@ -143,6 +158,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       });
                                     } else {
                                       await args.tabs[args.currentTab]
+                                          .collection("products")
+                                          .add({
+                                        "uId": "1/1/${maxId + 1}",
+                                        "imgs": urls,
+                                        "price": double.parse(price),
+                                        "name": name,
+                                        "variations": variations
+                                            .map((e) => e.toJson())
+                                            .toList()
+                                      });
+
+                                      await database
                                           .collection("products")
                                           .add({
                                         "uId": "1/1/${maxId + 1}",

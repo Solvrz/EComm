@@ -394,6 +394,9 @@ class _ProductCardState extends State<ProductCard>
                                             .get();
 
                                         product.docs.first.reference.delete();
+
+                                        QuerySnapshot query = await database.collection("products").where("uId", isEqualTo: widget.product.uId).get();
+                                        query.docs.first.reference.delete();
                                       },
                                       textColor: kUIAccent,
                                       child: Text("Yes"),

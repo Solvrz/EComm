@@ -22,6 +22,7 @@ class CartItem {
 
 class Cart {
   List<CartItem> _products = [];
+  List<String> changeLog = [];
 
   List<CartItem> get products => _products;
 
@@ -106,38 +107,45 @@ class Cart {
           .toList();
 
       for (CartItem item in items) {
-        List<String> splits = item.product.uId.split("/");
-        QuerySnapshot categories = await database
-            .collection("categories")
-            .where("uId", isEqualTo: int.parse(splits[0]))
-            .get();
-        QuerySnapshot tabs = await categories.docs.first.reference
-            .collection("tabs")
-            .where("uId", isEqualTo: int.parse(splits[1]))
-            .get();
-        QuerySnapshot products = await tabs.docs.first.reference
+        QuerySnapshot products = await database
             .collection("products")
-            .where("uId", isEqualTo: splits.join("/"))
+            .where("uId", isEqualTo: item.product.uId)
             .get();
 
+        //TODO: Improve changelog messages
         if (products.docs.isEmpty) {
-          //Product has been removed from the database
+          changeLog.add("The product '${item.product.name}' has been removed from the store");
         } else {
-          Map cartProduct = item.product.toJson();
-          Map product = products.docs.first.data();
-          List diff = cartProduct.values
-              .toSet()
-              .difference(product.values.toSet())
-              .toList();
+          Map productData = products.docs.first.data();
+          List<String> diff =
+              item.product.difference(Product.fromJson(productData));
 
-          diff.forEach((element) {
-            var changeKey = cartProduct.keys
-                .toList()[cartProduct.values.toList().indexOf(element)];
-            print(changeKey);
-            print("Changed $changeKey from $element to ${product[changeKey]}");
+          Map updatedData = item.product.toJson();
+
+          diff.forEach((changeKey) {
+            //TODO: Improve changelog messages
+            if (changeKey == "variations") {
+              //TODO: Remove selected if the variation for that is deleted (To be done by me Yug)
+              changeLog.add(
+                  "The variations for product '${productData["name"]}' have been updated!");
+            } else if (changeKey == "name") {
+              changeLog.add(
+                  "The name of the product '${item.product.name}' has been changed to ${productData["name"]}");
+            } else {
+              changeLog.add(
+                  "The $changeKey for product '${productData["name"]}' has been changed from ${item.product.toJson()[changeKey]} to ${productData[changeKey]}");
+            }
+
+            updatedData[changeKey] = productData[changeKey];
           });
+
+          item.product = Product.fromJson(updatedData);
         }
       }
+
+      print(changeLog);
+
+      _products = items;
     }
   }
 }

@@ -22,6 +22,7 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Use cart.changelog to display a bottomsheet or dialog showing the CHANGE-LOG (not the best word to describe it tbh)
     double price = 0.0;
 
     cart.products.forEach((CartItem cartItem) {
