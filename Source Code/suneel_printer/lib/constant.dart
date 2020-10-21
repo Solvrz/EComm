@@ -33,11 +33,7 @@ Wishlist wishlist = Wishlist();
 SharedPreferences preferences;
 
 const List<Map<String, dynamic>> categories = [
-  {
-    "uId": 1,
-    "name": "Office\nBooks",
-    "image": "assets/images/Office.png"
-  },
+  {"uId": 1, "name": "Office\nBooks", "image": "assets/images/Office.png"},
   {
     "uId": 2,
     "name": "Stationary",

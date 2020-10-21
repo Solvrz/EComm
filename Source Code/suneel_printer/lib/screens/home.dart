@@ -145,12 +145,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        image: DecorationImage(
-                          image: NetworkImage(carouselImages[index]),
-                          fit: BoxFit.cover
-                        )
-                      ),
+                          color: Colors.grey[200],
+                          image: DecorationImage(
+                              image: NetworkImage(carouselImages[index]),
+                              fit: BoxFit.cover)),
                     )),
                 options: CarouselOptions(
                     autoPlay: carouselImages.length > 1 ? true : false,
@@ -183,18 +181,20 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 18),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(
-                    "Categories",
-                    style: TextStyle(
-                        fontFamily: "sans-serif-condensed",
-                        fontSize: 24,
-                        letterSpacing: 0.2,
-                        fontWeight: FontWeight.bold,
-                        color: kUIDarkText),
-                  ),
-                  CategoryGrid(categories: categories),
-                ]),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Categories",
+                        style: TextStyle(
+                            fontFamily: "sans-serif-condensed",
+                            fontSize: 24,
+                            letterSpacing: 0.2,
+                            fontWeight: FontWeight.bold,
+                            color: kUIDarkText),
+                      ),
+                      CategoryGrid(categories: categories),
+                    ]),
               )
             ]),
           ),

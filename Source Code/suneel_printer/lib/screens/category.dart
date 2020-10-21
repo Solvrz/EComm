@@ -44,7 +44,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             .map<DocumentReference>(
                                 (DocumentSnapshot e) => e.reference)
                             .toList())
-                    : Center(child: Text("ORDER PAGE GOES HERE! ON LINE 52"));
+                    : Center(
+                        child: Text("On-Order Page")); // TODO On-Order Page
               }
 
               return Scaffold(

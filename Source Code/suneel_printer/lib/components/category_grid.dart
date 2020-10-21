@@ -51,9 +51,10 @@ class CategoryGrid extends StatelessWidget {
                       data["name"],
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: kUIDarkText,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,),
+                        color: kUIDarkText,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),

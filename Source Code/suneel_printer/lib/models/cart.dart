@@ -107,19 +107,32 @@ class Cart {
 
       for (CartItem item in items) {
         List<String> splits = item.product.uId.split("/");
-        QuerySnapshot categories = await database.collection("categories").where("uId", isEqualTo: int.parse(splits[0])).get();
-        QuerySnapshot tabs = await categories.docs.first.reference.collection("tabs").where("uId", isEqualTo: int.parse(splits[1])).get();
-        QuerySnapshot products = await tabs.docs.first.reference.collection("products").where("uId", isEqualTo: splits.join("/")).get();
+        QuerySnapshot categories = await database
+            .collection("categories")
+            .where("uId", isEqualTo: int.parse(splits[0]))
+            .get();
+        QuerySnapshot tabs = await categories.docs.first.reference
+            .collection("tabs")
+            .where("uId", isEqualTo: int.parse(splits[1]))
+            .get();
+        QuerySnapshot products = await tabs.docs.first.reference
+            .collection("products")
+            .where("uId", isEqualTo: splits.join("/"))
+            .get();
 
         if (products.docs.isEmpty) {
           //Product has been removed from the database
         } else {
           Map cartProduct = item.product.toJson();
           Map product = products.docs.first.data();
-          List diff = cartProduct.values.toSet().difference(product.values.toSet()).toList();
+          List diff = cartProduct.values
+              .toSet()
+              .difference(product.values.toSet())
+              .toList();
 
           diff.forEach((element) {
-            var changeKey = cartProduct.keys.toList()[cartProduct.values.toList().indexOf(element)];
+            var changeKey = cartProduct.keys
+                .toList()[cartProduct.values.toList().indexOf(element)];
             print(changeKey);
             print("Changed $changeKey from $element to ${product[changeKey]}");
           });

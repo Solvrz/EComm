@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:http/http.dart' as http;
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/cart.dart';
@@ -187,7 +188,8 @@ class _CartScreenState extends State<CartScreen> {
             margin: EdgeInsets.symmetric(vertical: 8),
             height: MediaQuery.of(context).size.height / 6,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25), color: Colors.grey[200]),
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.grey[200]),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
