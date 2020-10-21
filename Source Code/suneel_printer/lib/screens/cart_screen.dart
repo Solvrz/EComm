@@ -530,43 +530,41 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                         else
                           error["address"] = false;
 
-                        if (!error.values.contains(true)) {
-                          final smtpServer = gmail(
-                              "aditya05.mgg@gmail.com", "vrdretbdjwfivaem");
-                          final message = Message()
-                            ..from = Address(
-                                "aditya05.mgg@gmail.com", 'Aditya Taggar')
-                            ..recipients.add('adityak.mgg@gmail.com')
-                            ..subject = 'An Order was Placed'
-                            ..html = mailTemplate(
-                                name, phone, address, widget.price);
+                        String temp = cart.products
+                            .map<String>((CartItem cartItem) {
+                              Product product = cartItem.product;
 
-                          try {
-                            send(message, smtpServer).then((value) async {
-                              print('Message sent: ' + value.toString());
-                              await showDialog(
-                                  context: context,
-                                  builder: (_) => RoundedAlertDialog(
-                                        title: "Your Order was placed!",
-                                        buttonsList: [
-                                          FlatButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text("Okay"))
-                                        ],
-                                      ));
-                              //TODO: Save orders in SharedPreferences
-                              cart.clear();
-                              Navigator.popUntil(
-                                  context, ModalRoute.withName("/home"));
-                            });
-                          } on MailerException catch (e) {
-                            print('Message not sent.');
-                            for (var p in e.problems) {
-                              print('Problem: ${p.code}: ${p.msg}');
-                            }
-                          }
+                              return '''
+                <tr>
+                    <td>${product.name}</td>
+                    <td class="righty">${cartItem.quantity}</td>
+                    <td class="righty">${(double.parse(product.price) * cartItem.quantity).toStringAsFixed(2)}</td>
+                </tr>
+                ''';
+                            })
+                            .toList()
+                            .join("\n");
+
+                        if (!error.values.contains(true)) {
+                          await showDialog(
+                              context: context,
+                              builder: (_) => RoundedAlertDialog(
+                                    title: "Your Order was placed!",
+                                    buttonsList: [
+                                      FlatButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Okay"))
+                                    ],
+                                  ));
+
+                                  
+                          //TODO: Save orders in SharedPreferences
+                          cart.clear();
+                          Navigator.popUntil(
+                              context, ModalRoute.withName("/home"));
+
                           //TODO: Implement Proceed To Buy Firebase
                         }
                         setState(() {});
