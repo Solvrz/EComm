@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:suneel_printer/components/category_grid.dart';
+import 'package:suneel_printer/components/category_list.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 
@@ -16,10 +16,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
 
   final List<String> carouselImages = [
-    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
-    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
-    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
-    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
     "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
   ];
 
@@ -65,113 +61,141 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () => Navigator.pushNamed(context, "/cart"),
                   child: Icon(Icons.shopping_cart),
                   backgroundColor: kUIAccent),
-          appBar: AppBar(
-            title: Hero(
-              tag: "logo",
-              child: Material(
-                type: MaterialType.transparency,
-                child: Container(
-                  child: Center(
-                    child: Text(
-                      "Suneel Printers",
-                      style: TextStyle(
-                          fontFamily: "Kalam-Bold",
-                          fontSize: 25,
-                          color: kUILightText),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          body: Column(children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
-              child: CarouselSlider(
-                items: carouselImages
-                    .map<Widget>((String item) => Container(
-                          child: Container(
-                            margin: EdgeInsets.all(5.0),
-                            child: ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5.0)),
-                                child: Image.network(item,
-                                    fit: BoxFit.cover, width: 1000.0)),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text("Deliver To",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.2,
+                                fontFamily: "sans-serif-condensed")),
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.location_on_outlined,
+                              color: Colors.grey[900], size: 20),
+                          SizedBox(width: 2),
+                          SizedBox(
+                            height: 30,
+                            child: DropdownButton(
+                              underline: Container(),
+                              value: "Mandi Gobindgarh",
+                              items: ["Mandi Gobindgarh", "Custom"]
+                                  .map<DropdownMenuItem>((String val) =>
+                                      DropdownMenuItem(
+                                          value: val,
+                                          child: Text(val,
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.grey[900],
+                                                  letterSpacing: 0.2,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily:
+                                                      "sans-serif-condensed"))))
+                                  .toList(),
+                              onChanged: (value) {},
+                            ),
                           ),
-                        ))
-                    .toList(),
+                        ],
+                      )
+                    ]),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                margin: EdgeInsets.symmetric(vertical: 24),
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                    color: Color(0xffE3E3E3),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Row(children: [
+                  Icon(Icons.search, color: Colors.grey[600]),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Search for Products",
+                        hintStyle: TextStyle(
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: Colors.grey[800],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ]),
+              ),
+              CarouselSlider.builder(
+                itemCount: carouselImages.length,
+                itemBuilder: (context, index) => ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        image: DecorationImage(
+                          image: NetworkImage(carouselImages[index]),
+                          fit: BoxFit.cover
+                        )
+                      ),
+                    )),
                 options: CarouselOptions(
-                    autoPlay: true,
+                    autoPlay: carouselImages.length > 1 ? true : false,
                     enlargeCenterPage: true,
-                    aspectRatio: 2.0,
+                    aspectRatio: 2,
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;
                       });
                     }),
               ),
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                    carouselImages.length,
-                    (int index) => AnimatedContainer(
-                          duration: Duration(milliseconds: 400),
-                          width: _current == index ? 16.0 : 8.0,
-                          height: _current == index ? 6.0 : 8.0,
-                          margin: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 3.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: _current == index
-                                ? Color.fromRGBO(0, 0, 0, 0.9)
-                                : Color.fromRGBO(0, 0, 0, 0.4),
-                          ),
-                        ))),
-            SizedBox(height: 16),
-            Expanded(
-              child: Column(children: [
-                Text(
-                  "Categories",
-                  style: TextStyle(
-                      fontFamily: "sans-serif-condensed",
-                      fontSize: 25,
-                      color: kUIDarkText),
-                ),
-                CategoryGrid(categories: [
-                  {
-                    "uId": "1",
-                    "name": "Office\nBooks",
-                    "image": "assets/images/Office.png"
-                  },
-                  {
-                    "name": "Stationary",
-                    "image": "assets/images/Stationery.png",
-                  },
-                  {
-                    "name": "Shagun",
-                    "image": "assets/images/Shagun.png",
-                  },
-                  {
-                    "name": "Computer \nAccessories",
-                    "image": "assets/images/Computer.png",
-                  },
-                  {
-                    "name": "Printing",
-                    "image": "assets/images/Printing.png",
-                  },
-                  {
-                    "name": "Photo Copy",
-                    "image": "assets/images/Copy.png",
-                  },
-                  {
-                    "name": "Binding",
-                    "image": "assets/images/Binding.png",
-                  },
+              if (carouselImages.length > 1)
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                        carouselImages.length,
+                        (int index) => AnimatedContainer(
+                              duration: Duration(milliseconds: 400),
+                              width: _current == index ? 16.0 : 8.0,
+                              height: _current == index ? 6.0 : 8.0,
+                              margin: EdgeInsets.symmetric(horizontal: 3.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: _current == index
+                                    ? Color.fromRGBO(0, 0, 0, 0.9)
+                                    : Color.fromRGBO(0, 0, 0, 0.4),
+                              ),
+                            ))),
+              SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    "Categories",
+                    style: TextStyle(
+                        fontFamily: "sans-serif-condensed",
+                        fontSize: 24,
+                        letterSpacing: 0.2,
+                        fontWeight: FontWeight.bold,
+                        color: kUIDarkText),
+                  ),
+                  CategoryList(categories: categories),
                 ]),
-              ]),
-            )
-          ]),
+              )
+            ]),
+          ),
         ),
       ),
     );
