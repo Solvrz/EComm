@@ -15,10 +15,11 @@ class Variation {
 
   static Variation fromJson(Map data) {
     return Variation(
-        name: data["name"],
-        options: data["options"].map<Option>((option) {
-          return Option(label: option["label"], color: option["color"]);
-        }).toList());
+      name: data["name"],
+      options: data["options"].map<Option>((option) {
+        return Option(label: option["label"], color: option["color"]);
+      }).toList(),
+    );
   }
 
   Map toJson() {
@@ -44,7 +45,9 @@ class Option {
   Option({String label, dynamic color}) {
     _label = label;
     _color = color is String && color != null
-        ? Color(int.parse("0xff$color"))
+        ? Color(
+            int.parse("0xff$color"),
+          )
         : color;
   }
 

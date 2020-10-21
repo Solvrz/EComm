@@ -19,46 +19,49 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       cart.load();
       wishlist.load();
-      Timer(Duration(milliseconds: 800),
-          () => Navigator.pushReplacementNamed(context, "/home"));
+      Timer(
+        Duration(milliseconds: 800),
+        () => Navigator.pushReplacementNamed(context, "/home"),
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () {
-          SystemNavigator.pop();
-          return;
-        },
-        child: SafeArea(
-          child: Scaffold(
-            backgroundColor: kUIColor,
-            resizeToAvoidBottomInset: false,
-            body: Container(
-              height: MediaQuery.of(context).size.height,
-              color: kUIColor,
-              child: Hero(
-                tag: "logo",
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: Container(
-                    child: Center(
-                      child: Text(
-                        "Suneel Printers",
-                        style: TextStyle(
-                            fontFamily: "Kalam-Bold",
-                            fontSize: 50,
-                            color: kUIDarkText),
-                        textAlign: TextAlign.center,
-                      ),
+      onWillPop: () {
+        SystemNavigator.pop();
+        return;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: kUIColor,
+          resizeToAvoidBottomInset: false,
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            color: kUIColor,
+            child: Hero(
+              tag: "logo",
+              child: Material(
+                type: MaterialType.transparency,
+                child: Container(
+                  child: Center(
+                    child: Text(
+                      "Suneel Printers",
+                      style: TextStyle(
+                          fontFamily: "Kalam-Bold",
+                          fontSize: 50,
+                          color: kUIDarkText),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -96,7 +99,8 @@ class _AnimationScreenState extends State<SplashScreen>
     );
 
     holeSize = Tween<double>(begin: 0.0, end: 2.0).animate(
-        CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic));
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
+    );
     _controller.addListener(() {
       setState(() {});
     });
@@ -123,14 +127,17 @@ class _AnimationScreenState extends State<SplashScreen>
             width: 200.0,
           ),
         ),
-      Opacity(opacity: pow(holeSize.value / 2, 2), child: HomeScreen()),
+      Opacity(
+        opacity: pow(holeSize.value / 2, 2),
+        child: HomeScreen(),
+      ),
       if (holeSize.value < 1.5)
         Container(
           width: double.infinity,
           height: double.infinity,
           child: CustomPaint(
-              painter:
-                  AnimatedCircle(circleSize: holeSize.value * size.height)),
+            painter: AnimatedCircle(circleSize: holeSize.value * size.height),
+          ),
         ),
     ]);
   }

@@ -75,10 +75,10 @@ class SuneelPrinter extends StatelessWidget {
       routes: {
         "/": (BuildContext context) => SplashScreen(),
         "/home": (BuildContext context) => HomeScreen(),
-        "/category": (BuildContext context) => CategoryScreen(),
-        "/product": (BuildContext context) => ProductScreen(),
         "/cart": (BuildContext context) => CartScreen(),
-        "/add": (BuildContext context) => AddProductScreen()
+        "/product": (BuildContext context) => ProductScreen(),
+        "/category": (BuildContext context) => CategoryScreen(),
+        "/add_prdouct": (BuildContext context) => AddProductScreen(),
       },
     );
   }

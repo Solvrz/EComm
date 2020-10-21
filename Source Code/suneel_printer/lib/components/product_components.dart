@@ -30,72 +30,72 @@ class _OptionRadioTileState extends State<OptionRadioTile> {
       child: Row(
         children: [
           Expanded(
-            child: Text(widget.variation.name,
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: "sans-serif-condensed",
-                    letterSpacing: 0.2)),
+            child: Text(
+              widget.variation.name,
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: "sans-serif-condensed",
+                  letterSpacing: 0.2),
+            ),
           ),
           Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(
-                  widget.variation.options.length,
-                  (index) => GestureDetector(
-                        onTap: () {
-                          if (widget.currIndex != index)
-                            setState(() {
-                              widget.currIndex = index;
-                            });
-                          widget.onChanged(index);
-                        },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            AnimatedContainer(
-                              duration: Duration(milliseconds: 200),
-                              margin: EdgeInsets.fromLTRB(2, 0, 2, 4),
-                              width: (widget.size + widget.margin) * 2,
-                              height: (widget.size + widget.margin) * 2,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: widget.currIndex == index
-                                    ? Border.all(
-                                        color: Colors.grey[400], width: 2)
-                                    : null,
-                              ),
-                              child: Center(
-                                child: CircleAvatar(
-                                  radius: widget.size,
-                                  backgroundColor:
-                                      widget.variation.options[index].color ??
-                                          Colors.grey[400],
-                                  child:
-                                      widget.variation.options[index].color ==
-                                              null
-                                          ? Text(
-                                              widget.variation.options[index]
-                                                  .label[0]
-                                                  .toUpperCase(),
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: kUIDarkText))
-                                          : null,
-                                ),
-                              ),
-                            ),
-                            AnimatedDefaultTextStyle(
-                              child:
-                                  Text(widget.variation.options[index].label),
-                              duration: Duration(milliseconds: 200),
-                              style: widget.currIndex == index
-                                  ? TextStyle(fontSize: 14, color: kUIDarkText)
-                                  : TextStyle(fontSize: 0),
-                            ),
-                          ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: List.generate(
+              widget.variation.options.length,
+              (index) => GestureDetector(
+                onTap: () {
+                  if (widget.currIndex != index)
+                    setState(() {
+                      widget.currIndex = index;
+                    });
+                  widget.onChanged(index);
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      margin: EdgeInsets.fromLTRB(2, 0, 2, 4),
+                      width: (widget.size + widget.margin) * 2,
+                      height: (widget.size + widget.margin) * 2,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: widget.currIndex == index
+                            ? Border.all(color: Colors.grey[400], width: 2)
+                            : null,
+                      ),
+                      child: Center(
+                        child: CircleAvatar(
+                          radius: widget.size,
+                          backgroundColor:
+                              widget.variation.options[index].color ??
+                                  Colors.grey[400],
+                          child: widget.variation.options[index].color == null
+                              ? Text(
+                                  widget.variation.options[index].label[0]
+                                      .toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: kUIDarkText),
+                                )
+                              : null,
                         ),
-                      )))
+                      ),
+                    ),
+                    AnimatedDefaultTextStyle(
+                      child: Text(widget.variation.options[index].label),
+                      duration: Duration(milliseconds: 200),
+                      style: widget.currIndex == index
+                          ? TextStyle(fontSize: 14, color: kUIDarkText)
+                          : TextStyle(fontSize: 0),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

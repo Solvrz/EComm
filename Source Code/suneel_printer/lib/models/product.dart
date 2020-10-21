@@ -31,12 +31,18 @@ class Product {
     _uId = uId;
     _name = name;
     if (images.length > 0)
-      _images = images.map((e) => NetworkImage(e)).toList();
+      _images = images
+          .map(
+            (e) => NetworkImage(e),
+          )
+          .toList();
     _price = price;
     _variations = variations;
     _selected = selected ??
-        variations.asMap().map((key, value) =>
-            MapEntry(variations[key].name, variations[key].options[0]));
+        variations.asMap().map(
+              (key, value) =>
+                  MapEntry(variations[key].name, variations[key].options[0]),
+            );
   }
 
   static Product fromJson(Map data) {
@@ -46,11 +52,17 @@ class Product {
         images: data["imgs"],
         price: data["price"].toString(),
         variations: (data["variations"] ?? [])
-            .map<Variation>((variation) => Variation.fromJson(variation))
+            .map<Variation>(
+              (variation) => Variation.fromJson(variation),
+            )
             .toList(),
         selected: data["selected"] != null
-            ? data["selected"].map((key, value) => MapEntry(
-                key, Option(label: value["label"], color: value["color"])))
+            ? data["selected"].map(
+                (key, value) => MapEntry(
+                  key,
+                  Option(label: value["label"], color: value["color"]),
+                ),
+              )
             : null);
   }
 
@@ -61,9 +73,16 @@ class Product {
       "imgs": _images.map((e) => e.url).toList(),
       "price": _price,
       "variations": _variations
-          .map<Map>((Variation variation) => variation.toJson())
+          .map<Map>(
+            (Variation variation) => variation.toJson(),
+          )
           .toList(),
-      "selected": _selected.map((key, value) => MapEntry(key, value.toJson()))
+      "selected": _selected.map(
+        (key, value) => MapEntry(
+          key,
+          value.toJson(),
+        ),
+      )
     };
   }
 
@@ -76,12 +95,16 @@ class Product {
         _images.toString() == other.images.toString() &&
         _price == other.price &&
         _selected
-                .map((key, value) =>
-                    MapEntry(key, {"label": value.label, "color": value.color}))
+                .map(
+                  (key, value) => MapEntry(
+                      key, {"label": value.label, "color": value.color}),
+                )
                 .toString() ==
             other.selected
-                .map((key, value) =>
-                    MapEntry(key, {"label": value.label, "color": value.color}))
+                .map(
+                  (key, value) => MapEntry(
+                      key, {"label": value.label, "color": value.color}),
+                )
                 .toString();
   }
 

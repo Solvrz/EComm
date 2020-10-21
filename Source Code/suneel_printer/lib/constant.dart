@@ -27,13 +27,17 @@ const InputDecoration kInputDialogDecoration = InputDecoration(
 );
 
 FirebaseFirestore database = FirebaseFirestore.instance;
+
 Cart cart = Cart();
 Wishlist wishlist = Wishlist();
-
 SharedPreferences preferences;
 
 const List<Map<String, dynamic>> categories = [
-  {"uId": 1, "name": "Office\nBooks", "image": "assets/images/Office.png"},
+  {
+    "uId": 1,
+    "name": "Office\nBooks",
+    "image": "assets/images/Office.png",
+  },
   {
     "uId": 2,
     "name": "Stationary",
@@ -41,7 +45,7 @@ const List<Map<String, dynamic>> categories = [
   },
   {
     "uId": 3,
-    "name": "Shagun",
+    "name": "Shagun & Envelopes",
     "image": "assets/images/Shagun.png",
   },
   {

@@ -37,7 +37,7 @@ class _CartScreenState extends State<CartScreen> {
           decoration: BoxDecoration(
               color: Colors.grey[200],
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+                  topLeft: Radius.circular(25), topRight: Radius.circular(25),),),
           height: MediaQuery.of(context).size.height * 0.1,
           width: MediaQuery.of(context).size.width,
           child: Row(
@@ -62,7 +62,7 @@ class _CartScreenState extends State<CartScreen> {
                             fontWeight: FontWeight.bold,
                             fontFamily: "sans-serif-condensed",
                             letterSpacing: -2,
-                            color: kUIDarkText))
+                            color: kUIDarkText),)
                   ],
                 ),
               ),
@@ -70,7 +70,7 @@ class _CartScreenState extends State<CartScreen> {
                 color:
                     cart.hasProducts ? kUIAccent : kUIDarkText.withOpacity(0.5),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
+                    borderRadius: BorderRadius.circular(25),),
                 padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
                 textColor: kUILightText,
                 child: Row(
@@ -90,7 +90,7 @@ class _CartScreenState extends State<CartScreen> {
                         builder: (_) => Padding(
                               padding: MediaQuery.of(context).viewInsets,
                               child: CheckOutSheet(price),
-                            ));
+                            ),);
                 },
               )
             ],
@@ -119,7 +119,7 @@ class _CartScreenState extends State<CartScreen> {
                           style: TextStyle(
                               fontSize: 24,
                               color: kUIDarkText,
-                              fontWeight: FontWeight.bold)),
+                              fontWeight: FontWeight.bold),),
                     ),
                   ),
                   GestureDetector(
@@ -183,7 +183,7 @@ class _CartScreenState extends State<CartScreen> {
         actionPane: SlidableDrawerActionPane(),
         child: GestureDetector(
           onTap: () => Navigator.pushNamed(context, "/product",
-              arguments: ProductArguments(cart.products[index].product)),
+              arguments: ProductArguments(cart.products[index].product),),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8),
             height: MediaQuery.of(context).size.height / 6,
@@ -261,15 +261,15 @@ class _CartScreenState extends State<CartScreen> {
                                         style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
-                                            color: kUIDarkText))
+                                            color: kUIDarkText),)
                                     : null,
-                              )),
+                              ),),
                     ),
                   ),
                 Container(
                   decoration: BoxDecoration(
                       color: Colors.grey[900],
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -289,7 +289,7 @@ class _CartScreenState extends State<CartScreen> {
                           style: TextStyle(
                               color: kUIColor,
                               fontSize: 18,
-                              fontWeight: FontWeight.w500)),
+                              fontWeight: FontWeight.w500),),
                       GestureDetector(
                         onTap: () async {
                           cart.increaseQuantity(product);
@@ -320,7 +320,7 @@ class _CartScreenState extends State<CartScreen> {
               });
               _listKey.currentState.removeItem(index,
                   (context, animation) => _buildItem(context, index, animation),
-                  duration: Duration(milliseconds: 200));
+                  duration: Duration(milliseconds: 200),);
             },
             child: Container(
               margin: EdgeInsets.only(left: 12),
@@ -380,7 +380,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                   ),
                 ),
                 Text("Check Out",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),)
               ],
             ),
             Padding(
@@ -390,7 +390,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                 children: [
                   Text("Name",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                   TextField(
                     decoration: InputDecoration(
                         focusedBorder: InputBorder.none,
@@ -408,7 +408,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                   if (error["name"]) ...[
                     Text("Please provide a valid name",
                         style:
-                            TextStyle(fontSize: 15, color: Colors.redAccent)),
+                            TextStyle(fontSize: 15, color: Colors.redAccent),),
                     SizedBox(height: 8)
                   ],
                   Divider(
@@ -418,7 +418,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                   SizedBox(height: 12),
                   Text("Phone Number",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                   TextField(
                     scrollPadding: EdgeInsets.zero,
                     decoration: InputDecoration(
@@ -438,7 +438,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                   if (error["phone"]) ...[
                     Text("Please provide a valid phone number",
                         style:
-                            TextStyle(fontSize: 15, color: Colors.redAccent)),
+                            TextStyle(fontSize: 15, color: Colors.redAccent),),
                     SizedBox(height: 8)
                   ],
                   Divider(
@@ -448,7 +448,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                   SizedBox(height: 12),
                   Text("Shipping Address",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                   TextField(
                     maxLines: 4,
                     minLines: 1,
@@ -468,7 +468,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                   if (error["address"]) ...[
                     Text("Please provide a valid address",
                         style:
-                            TextStyle(fontSize: 15, color: Colors.redAccent)),
+                            TextStyle(fontSize: 15, color: Colors.redAccent),),
                     SizedBox(height: 8)
                   ],
                   Divider(
@@ -480,7 +480,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey[600])),
+                          color: Colors.grey[600]),),
                   SizedBox(height: 8),
                   Row(
                     children: [
@@ -490,13 +490,13 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                               fontSize: 24,
                               fontFamily: "sans-serif-condensed",
                               fontWeight: FontWeight.bold,
-                            )),
+                            ),),
                       ),
                       Text("₹ ",
                           style: TextStyle(
                             fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
-                          )),
+                          ),),
                       Text(
                           widget.price - widget.price.toInt() == 0
                               ? widget.price.toInt().toString()
@@ -505,7 +505,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                             fontSize: 24,
                             fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
-                          )),
+                          ),),
                     ],
                   ),
                   SizedBox(height: 32),
@@ -540,9 +540,9 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
-                                          child: Text("Okay"))
+                                          child: Text("Okay"),)
                                     ],
-                                  ));
+                                  ),);
 
                           await http.post(
                             "https://suneel-printers-mail-server.herokuapp.com/order_request",
@@ -575,21 +575,21 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                           //TODO: Save orders in SharedPreferences
                           cart.clear();
                           Navigator.popUntil(
-                              context, ModalRoute.withName("/home"));
+                              context, ModalRoute.withName("/home"),);
 
                           //TODO: Implement Proceed To Buy Firebase
                         }
                         setState(() {});
                       },
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                          borderRadius: BorderRadius.circular(20),),
                       color: kUIAccent,
                       child: Text("Proceed To Buy",
                           style: TextStyle(
                               fontSize: 18,
                               fontFamily: "sans-serif-condensed",
                               fontWeight: FontWeight.w600,
-                              color: kUILightText)),
+                              color: kUILightText),),
                     ),
                   )
                 ],

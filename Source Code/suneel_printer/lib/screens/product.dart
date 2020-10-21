@@ -19,16 +19,17 @@ class _ProductScreenState extends State<ProductScreen> {
     if (product == null) {
       product = args.product;
       variations = List.generate(
-          args.product.variations.length,
-          (index) => OptionRadioTile(
-                onChanged: (option) {
-                  product.select(args.product.variations[index].name, option);
-                  setState(() {});
-                },
-                variation: args.product.variations[index],
-                currIndex: args.product.variations[index].options.indexOf(
-                    product.selected[args.product.variations[index].name]),
-              ));
+        args.product.variations.length,
+        (index) => OptionRadioTile(
+          onChanged: (option) {
+            product.select(args.product.variations[index].name, option);
+            setState(() {});
+          },
+          variation: args.product.variations[index],
+          currIndex: args.product.variations[index].options
+              .indexOf(product.selected[args.product.variations[index].name]),
+        ),
+      );
     }
 
     return SafeArea(
@@ -46,8 +47,9 @@ class _ProductScreenState extends State<ProductScreen> {
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
-                      decoration:
-                          BoxDecoration(border: Border.all(color: kUIColor)),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: kUIColor),
+                      ),
                       padding: EdgeInsets.all(8),
                       margin: EdgeInsets.only(left: 16, top: 16),
                       child: Icon(Icons.arrow_back_ios, color: kUIDarkText),
@@ -56,8 +58,9 @@ class _ProductScreenState extends State<ProductScreen> {
                   GestureDetector(
                     onTap: () => Navigator.pushNamed(context, "/cart"),
                     child: Container(
-                      decoration:
-                          BoxDecoration(border: Border.all(color: kUIColor)),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: kUIColor),
+                      ),
                       padding: EdgeInsets.all(8),
                       margin: EdgeInsets.only(right: 26, top: 16),
                       child: Icon(Icons.shopping_cart_outlined,
@@ -75,11 +78,13 @@ class _ProductScreenState extends State<ProductScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(right: 44, bottom: 36),
-                    child: Text(args.product.name,
-                        style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "sans-serif-condensed")),
+                    child: Text(
+                      args.product.name,
+                      style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "sans-serif-condensed"),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,7 +97,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                 image: args.product.images[0],
                                 fit: BoxFit.fill,
                               )
-                            : Center(child: Text("No Images Provided")),
+                            : Center(
+                                child: Text("No Images Provided"),
+                              ),
                       ),
                       Icon(Icons.arrow_forward_ios, color: Colors.grey[400]),
                     ],
@@ -136,19 +143,23 @@ class _ProductScreenState extends State<ProductScreen> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: Text("Price",
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: "sans-serif-condensed",
-                                    letterSpacing: 0.2)),
-                          ),
-                          Text("₹ ${args.product.price}",
+                            child: Text(
+                              "Price",
                               style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w600,
                                   fontFamily: "sans-serif-condensed",
-                                  letterSpacing: -0.4))
+                                  letterSpacing: 0.2),
+                            ),
+                          ),
+                          Text(
+                            "₹ ${args.product.price}",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "sans-serif-condensed",
+                                letterSpacing: -0.4),
+                          )
                         ],
                       ),
                     ),
@@ -160,17 +171,19 @@ class _ProductScreenState extends State<ProductScreen> {
               padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 40),
               child: MaterialButton(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
+                  borderRadius: BorderRadius.circular(25),
+                ),
                 color: cart.containsProduct(product)
                     ? Colors.grey[600]
                     : kUIAccent,
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: Text(
-                    cart.containsProduct(product) ? "IN CART" : "ADD TO CART",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold)),
+                  cart.containsProduct(product) ? "IN CART" : "ADD TO CART",
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
                 onPressed: () {
                   if (!cart.containsProduct(product)) {
                     cart.addItem(product);

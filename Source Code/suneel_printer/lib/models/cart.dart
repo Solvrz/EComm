@@ -11,12 +11,18 @@ class CartItem {
   CartItem(this.product, this.quantity);
 
   String toString() {
-    return "${jsonEncode(product.toJson())}\n$quantity";
+    return "${jsonEncode(
+      product.toJson(),
+    )}\n$quantity";
   }
 
   static CartItem fromString(String data) {
-    return CartItem(Product.fromJson(jsonDecode(data.split("\n")[0])),
-        int.parse(data.split("\n")[1]));
+    return CartItem(
+      Product.fromJson(
+        jsonDecode(data.split("\n")[0]),
+      ),
+      int.parse(data.split("\n")[1]),
+    );
   }
 }
 
@@ -30,7 +36,13 @@ class Cart {
   bool get hasProducts => _products.length > 0;
 
   void addItem(Product product) {
-    _products.add(CartItem(Product.fromJson(product.toJson()), 1));
+    _products.add(
+      CartItem(
+          Product.fromJson(
+            product.toJson(),
+          ),
+          1),
+    );
     _save();
   }
 
@@ -91,10 +103,13 @@ class Cart {
 
   void _save() async {
     await preferences.setStringList(
-        "cart",
-        _products
-            .map<String>((CartItem cartItem) => cartItem.toString())
-            .toList());
+      "cart",
+      _products
+          .map<String>(
+            (CartItem cartItem) => cartItem.toString(),
+          )
+          .toList(),
+    );
   }
 
   void load() async {
@@ -102,22 +117,33 @@ class Cart {
 
     if (cartData != null) {
       List<CartItem> items = cartData
-          .map<CartItem>((String data) => CartItem.fromString(data))
+          .map<CartItem>(
+            (String data) => CartItem.fromString(data),
+          )
           .toList();
 
       for (CartItem item in items) {
         List<String> splits = item.product.uId.split("/");
         QuerySnapshot categories = await database
             .collection("categories")
-            .where("uId", isEqualTo: int.parse(splits[0]))
+            .where(
+              "uId",
+              isEqualTo: int.parse(splits[0]),
+            )
             .get();
         QuerySnapshot tabs = await categories.docs.first.reference
             .collection("tabs")
-            .where("uId", isEqualTo: int.parse(splits[1]))
+            .where(
+              "uId",
+              isEqualTo: int.parse(splits[1]),
+            )
             .get();
         QuerySnapshot products = await tabs.docs.first.reference
             .collection("products")
-            .where("uId", isEqualTo: splits.join("/"))
+            .where(
+              "uId",
+              isEqualTo: splits.join("/"),
+            )
             .get();
 
         if (products.docs.isEmpty) {
@@ -127,7 +153,9 @@ class Cart {
           Map product = products.docs.first.data();
           List diff = cartProduct.values
               .toSet()
-              .difference(product.values.toSet())
+              .difference(
+                product.values.toSet(),
+              )
               .toList();
 
           diff.forEach((element) {
