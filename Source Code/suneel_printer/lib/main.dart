@@ -54,20 +54,26 @@ class SuneelPrinter extends StatelessWidget {
       theme:
           ThemeData(primaryColor: kUIAccent, highlightColor: Colors.blueGrey),
       builder: (context, widget) => ResponsiveWrapper.builder(
-        NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (overScroll) {
-              overScroll.disallowGlow();
-              return;
-            },
-            child: widget),
-        maxWidth: 2160,
+        BouncingScrollWrapper.builder(
+          context,
+          NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overScroll) {
+                overScroll.disallowGlow();
+                return;
+              },
+              child: widget),
+        ),
+        maxWidth: 1200,
+        minWidth: 360,
         defaultScale: true,
         breakpoints: [
-          ResponsiveBreakpoint.autoScale(600, name: MOBILE),
+          ResponsiveBreakpoint.resize(360, name: MOBILE),
           ResponsiveBreakpoint.autoScale(800, name: TABLET),
-          ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(1000, name: TABLET),
+          ResponsiveBreakpoint.resize(1200, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(2460, name: "4K"),
         ],
-        background: Container(color: Color(0xFFF5F5F5)),
+        background: Container(color: Colors.white),
       ),
       title: 'SuneelPrinters',
       initialRoute: "/",

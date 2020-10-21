@@ -15,153 +15,200 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  int _currentTab = 0;
+  String title;
+  dynamic screen;
 
   @override
   Widget build(BuildContext context) {
     CategoryArguments args = ModalRoute.of(context).settings.arguments;
 
+    title = args.data["name"].split("\n").join(" ");
+
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: kUIColor,
-        resizeToAvoidBottomInset: false,
-        floatingActionButton: admin
-            ? Builder(
-                builder: (BuildContext context) => FloatingActionButton(
-                      elevation: 10,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.add, color: kUIAccent, size: 30),
-                      onPressed: () async {
-                        Navigator.pushNamed(context, "/add",
-                            arguments: AddProductArguments(
-                                tabsData: args.tabsData,
-                                tabs: args.tabs,
-                                title: args.title,
-                                currentTab: _currentTab));
+        child: Scaffold(
+      backgroundColor: kUIColor,
+      resizeToAvoidBottomInset: false,
+      floatingActionButton:
+          admin && screen != null ? Builder(builder: screen.getFAB) : null,
+      body: FutureBuilder<QuerySnapshot>(
+          future: args.docRef.docs.first.reference
+              .collection("tabs")
+              .orderBy("uId")
+              .get(),
+          builder: (context, snapshot) {
+            var screen;
+
+            if (snapshot.hasData) {
+              screen = snapshot.data.docs.length > 0
+                  ? CategoryProductPage(
+                      title,
+                      snapshot.data.docs
+                          .map<Map>((DocumentSnapshot e) => e.data())
+                          .toList(),
+                      snapshot.data.docs
+                          .map<DocumentReference>(
+                              (DocumentSnapshot e) => e.reference)
+                          .toList())
+                  : Center(child: Text("ORDER PAGE GOES HERE! ON LINE 52"));
+            }
+
+            return Column(children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
                       },
-                    ))
-            : null,
-        body: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.arrow_back_ios,
-                        color: kUIDarkText, size: 26),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(args.title,
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: kUIDarkText,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: admin
-                      ? () {}
-                      : () => Navigator.pushNamed(context, "/cart"),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(admin ? null : Icons.shopping_cart_outlined,
-                        size: 26),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                color: kUIColor,
-                border: Border.symmetric(
-                    horizontal: BorderSide(color: Colors.grey[400], width: 1))),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  ...List.generate(args.tabs.length, (int index) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      child: GestureDetector(
-                        onTap: () {
-                          if (index == _currentTab) return;
-                          setState(() {
-                            _currentTab = index;
-                          });
-                        },
-                        child: AnimatedDefaultTextStyle(
-                          child: Text(
-                            args.tabsData[index]["name"]
-                                .split("\\n")
-                                .join("\n"),
-                            textAlign: TextAlign.center,
-                          ),
-                          duration: Duration(milliseconds: 150),
-                          style: TextStyle(
-                              fontSize: index == _currentTab ? 16 : 14,
-                              fontWeight: index == _currentTab
-                                  ? FontWeight.w600
-                                  : FontWeight.normal,
-                              color: index == _currentTab
-                                  ? kUIDarkText
-                                  : Colors.grey[600]),
-                        ),
-                      ),
-                    );
-                  })
-                ],
-              ),
-            ),
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: args.tabs[_currentTab].collection("products").snapshots(),
-            builder: (context, future) {
-              if (future.hasData) {
-                if (future.data.docs.isNotEmpty) {
-                  return Expanded(
-                      child: ProductList(
-                          products: future.data.docs
-                              .map<Product>((DocumentSnapshot e) =>
-                                  Product.fromJson(e.data()))
-                              .toList(),
-                          args: AddProductArguments(
-                              tabsData: args.tabsData,
-                              tabs: args.tabs,
-                              title: args.title,
-                              currentTab: _currentTab)));
-                } else {
-                  return Center(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 1.5,
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      child: EmptyListWidget(
-                        title: "No Product",
-                        subTitle: "No Product Available Yet",
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.arrow_back_ios,
+                            color: kUIDarkText, size: 26),
                       ),
                     ),
-                  );
-                }
-              } else {
-                return Container(
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Center(child: Text("Loading...")));
-              }
-            },
+                    Expanded(
+                      child: Center(
+                        child: Text(title,
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: kUIDarkText,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: admin
+                          ? () {}
+                          : () => Navigator.pushNamed(context, "/cart"),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(admin ? null : Icons.shopping_cart_outlined,
+                            size: 26),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              snapshot.hasData
+                  ? screen
+                  : Expanded(child: Center(child: Text("Loading...")))
+            ]);
+          }),
+    ));
+  }
+}
+
+class CategoryProductPage extends StatefulWidget {
+  final String title;
+  final List<Map> tabsData;
+  final List<DocumentReference> tabs;
+  int _currentTab = 0;
+
+  CategoryProductPage(this.title, this.tabsData, this.tabs);
+
+  Widget getFab(BuildContext context) => FloatingActionButton(
+        elevation: 10,
+        backgroundColor: Colors.white,
+        child: Icon(Icons.add, color: kUIAccent, size: 30),
+        onPressed: () async {
+          Navigator.pushNamed(context, "/add",
+              arguments: AddProductArguments(
+                  tabsData: tabsData,
+                  tabs: tabs,
+                  title: title,
+                  currentTab: _currentTab));
+        },
+      );
+
+  @override
+  _CategoryProductPageState createState() => _CategoryProductPageState();
+}
+
+class _CategoryProductPageState extends State<CategoryProductPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 6),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: kUIColor,
+            border: Border.symmetric(
+                horizontal: BorderSide(color: Colors.grey[400], width: 1))),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              ...List.generate(widget.tabs.length, (int index) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: GestureDetector(
+                    onTap: () {
+                      if (index == widget._currentTab) return;
+                      setState(() {
+                        widget._currentTab = index;
+                      });
+                    },
+                    child: AnimatedDefaultTextStyle(
+                      child: Text(
+                        widget.tabsData[index]["name"].split("\\n").join("\n"),
+                        textAlign: TextAlign.center,
+                      ),
+                      duration: Duration(milliseconds: 150),
+                      style: TextStyle(
+                          fontSize: index == widget._currentTab ? 16 : 14,
+                          fontWeight: index == widget._currentTab
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                          color: index == widget._currentTab
+                              ? kUIDarkText
+                              : Colors.grey[600]),
+                    ),
+                  ),
+                );
+              })
+            ],
           ),
-        ]),
+        ),
       ),
-    );
+      StreamBuilder<QuerySnapshot>(
+        stream:
+            widget.tabs[widget._currentTab].collection("products").snapshots(),
+        builder: (context, future) {
+          if (future.hasData) {
+            if (future.data.docs.isNotEmpty) {
+              return Expanded(
+                  child: ProductList(
+                      products: future.data.docs
+                          .map<Product>((DocumentSnapshot e) =>
+                              Product.fromJson(e.data()))
+                          .toList(),
+                      args: AddProductArguments(
+                          tabsData: widget.tabsData,
+                          tabs: widget.tabs,
+                          title: widget.title,
+                          currentTab: widget._currentTab)));
+            } else {
+              return Center(
+                child: Container(
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  child: EmptyListWidget(
+                    title: "No Product",
+                    subTitle: "No Product Available Yet",
+                  ),
+                ),
+              );
+            }
+          } else {
+            return Container(
+                height: MediaQuery.of(context).size.height / 1.5,
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Center(child: Text("Loading...")));
+          }
+        },
+      ),
+    ]);
   }
 }
 
@@ -389,10 +436,8 @@ class _ProductCardState extends State<ProductCard>
 }
 
 class CategoryArguments {
-  final String title;
-  final List<Map> tabsData;
-  final List<DocumentReference> tabs;
-  final DocumentReference docRef;
+  final Map<String, dynamic> data;
+  final QuerySnapshot docRef;
 
-  CategoryArguments(this.title, this.tabsData, this.tabs, this.docRef);
+  CategoryArguments(this.data, this.docRef);
 }
