@@ -112,9 +112,9 @@ class Cart {
             .where("uId", isEqualTo: item.product.uId)
             .get();
 
-        //TODO: Improve changelog messages
         if (products.docs.isEmpty) {
           changeLog.add("The product '${item.product.name}' has been removed from the store");
+          cart.removeItem(item.product);
         } else {
           Map productData = products.docs.first.data();
           List<String> diff =
@@ -123,9 +123,8 @@ class Cart {
           Map updatedData = item.product.toJson();
 
           diff.forEach((changeKey) {
-            //TODO: Improve changelog messages
+            //TODO: Improve change messages (Yug remove it if you are satisfied with the change messages)
             if (changeKey == "variations") {
-              //TODO: Remove selected if the variation for that is deleted (To be done by me Yug)
               changeLog.add(
                   "The variations for product '${productData["name"]}' have been updated!");
             } else if (changeKey == "name") {
@@ -143,9 +142,9 @@ class Cart {
         }
       }
 
-      print(changeLog);
-
       _products = items;
+
+      _save();
     }
   }
 }
