@@ -21,7 +21,7 @@ class CartItem {
       Product.fromJson(
         jsonDecode(data.split("\n")[0]),
       ),
-      int.parse(data.split("\n")[1]),
+      data.split("\n")[1].toInt(),
     );
   }
 }
@@ -129,7 +129,6 @@ class Cart {
             .where("uId", isEqualTo: item.product.uId)
             .get();
 
-        //TODO: Improve changelog messages
         if (products.docs.isEmpty) {
           changeLog.add(
               "The product '${item.product.name}' has been removed from the store");
@@ -141,17 +140,16 @@ class Cart {
           Map updatedData = item.product.toJson();
 
           diff.forEach((changeKey) {
-            //TODO: Improve changelog messages
             if (changeKey == "variations") {
               //TODO: Remove selected if the variation for that is deleted (To be done by me Yug)
               changeLog.add(
-                  "The variations for product '${productData["name"]}' have been updated!");
+                  "The variations for product '${productData["name"]}' have been updated.");
             } else if (changeKey == "name") {
               changeLog.add(
-                  "The name of the product '${item.product.name}' has been changed to ${productData["name"]}");
+                  "The name of the product '${item.product.name}' has been changed to ${productData["name"]}.");
             } else {
               changeLog.add(
-                  "The $changeKey for product '${productData["name"]}' has been changed from ${item.product.toJson()[changeKey]} to ${productData[changeKey]}");
+                  "The ${changeKey.capitalize()} for product '${productData["name"]}' has been changed from ${item.product.toJson()[changeKey]} to ${productData[changeKey]}.");
             }
 
             updatedData[changeKey] = productData[changeKey];
@@ -160,8 +158,6 @@ class Cart {
           item.product = Product.fromJson(updatedData);
         }
       }
-
-      print(changeLog);
 
       _products = items;
     }

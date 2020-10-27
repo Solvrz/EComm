@@ -22,7 +22,6 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Use cart.changelog to display a bottomsheet or dialog showing the CHANGE-LOG (not the best word to describe it tbh)
     double price = 0.0;
 
     cart.products.forEach((CartItem cartItem) {
@@ -150,6 +149,72 @@ class _CartScreenState extends State<CartScreen> {
                 ],
               ),
             ),
+            if (cart.changeLog.isNotEmpty)
+              Container(
+                height: 70,
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    color: Colors.yellow[200]),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        print(cart.changeLog);
+                        await showDialog(
+                          context: context,
+                          builder: (_) => WillPopScope(
+                            onWillPop: () async {
+                              setState(() => cart.changeLog.clear());
+                              return true;
+                            },
+                            child: RoundedAlertDialog(
+                                title: "Alerts",
+                                otherWidgets: [
+                                  Container(
+                                    height: 220,
+                                    width: 300,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: cart.changeLog.length,
+                                      itemBuilder: (context, index) {
+                                        return Column(
+                                          children: [
+                                            Text(
+                                              cart.changeLog[index],
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily:
+                                                      "sans-serif-condensed"),
+                                            ),
+                                            Divider(
+                                              height: 15,
+                                              thickness: 0.8,
+                                              color: Colors.black,
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ]),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Alerts for items in your cart",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "sans-serif-condensed"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             Expanded(
               child: cart.products.isNotEmpty
                   ? Padding(

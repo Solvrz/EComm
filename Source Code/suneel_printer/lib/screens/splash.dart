@@ -16,7 +16,6 @@ class _SplashScreenState extends State<SplashScreen>
   AnimationController _controller;
   Animation<double> holeSize;
 
-  //StaggeredRaindropAnimation _animation;
   void didChangeDependencies() {
     setState(() {
       size = MediaQuery.of(context).size;

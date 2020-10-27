@@ -33,8 +33,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           builder: (context, snapshot) {
             var screen;
 
-            if (snapshot.hasData) {
-              print(title != "Binding");
+            if (snapshot.hasData)
               screen = title != "Printing" && title != "Binding"
                   ? CategoryProductPage(
                       title,
@@ -62,7 +61,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               (DocumentSnapshot e) => e.reference)
                           .toList(),
                     );
-            }
 
             return Scaffold(
               backgroundColor: kUIColor,
@@ -481,14 +479,14 @@ class _ProductCardState extends State<ProductCard>
                                         QuerySnapshot category = await database
                                             .collection("categories")
                                             .where("uId",
-                                                isEqualTo: int.parse(uIds[0]))
+                                                isEqualTo: uIds[0].toInt())
                                             .get();
 
                                         QuerySnapshot tab = await category
                                             .docs.first.reference
                                             .collection("tabs")
                                             .where("uId",
-                                                isEqualTo: int.parse(uIds[1]))
+                                                isEqualTo: uIds[1].toInt())
                                             .get();
 
                                         QuerySnapshot product = await tab

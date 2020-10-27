@@ -60,7 +60,21 @@ class _HomeScreenState extends State<HomeScreen> {
               ? null
               : FloatingActionButton(
                   onPressed: () => Navigator.pushNamed(context, "/cart"),
-                  child: Icon(Icons.shopping_cart),
+                  child: Stack(
+                    // TODO: No. of added products in cart on cart icon
+
+                    children: [
+                      Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 30,
+                      ),
+                      Text(cart.products.length.toString(),
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                   backgroundColor: kUIAccent),
           body: Padding(
             padding: const EdgeInsets.all(16.0),

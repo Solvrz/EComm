@@ -64,3 +64,17 @@ const List<Map<String, dynamic>> categories = [
     "image": "assets/images/Binding.png",
   },
 ];
+
+extension StringExtension on String {
+  String capitalize() {
+    return this.length > 0 ? this[0].toUpperCase() + this.substring(1) : "";
+  }
+
+  int toInt() {
+    return int.parse(this);
+  }
+
+  bool toBool() {
+    return this.toLowerCase() == "true";
+  }
+}
