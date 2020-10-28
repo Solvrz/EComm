@@ -16,7 +16,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
 
   final List<String> carouselImages = [
-    // TODO: Link with Firbase
     "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRbFeK1UPs7urHqn5U5h_81MTBf6v8jA5K_3w&usqp=CAU"
   ];
 
@@ -61,8 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
               : FloatingActionButton(
                   onPressed: () => Navigator.pushNamed(context, "/cart"),
                   child: Stack(
-                    // TODO: No. of added products in cart on cart icon
-
                     children: [
                       Icon(
                         Icons.shopping_cart_outlined,
