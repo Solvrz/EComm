@@ -39,8 +39,16 @@ class Wishlist {
 
   void _save() async {
     final preferences = await SharedPreferences.getInstance();
-    await preferences.setStringList("wishlist",
-        _products.map<String>((Product e) => jsonEncode(e.toJson())).toList());
+    await preferences.setStringList(
+      "wishlist",
+      _products
+          .map<String>(
+            (Product e) => jsonEncode(
+              e.toJson(),
+            ),
+          )
+          .toList(),
+    );
   }
 
   void load() async {
@@ -49,7 +57,11 @@ class Wishlist {
 
     if (wishlistData != null)
       _products = wishlistData
-          .map<Product>((element) => Product.fromJson(jsonDecode(element)))
+          .map<Product>(
+            (element) => Product.fromJson(
+              jsonDecode(element),
+            ),
+          )
           .toList();
   }
 }

@@ -2,16 +2,15 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/home.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
-  _AnimationScreenState createState() => _AnimationScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _AnimationScreenState extends State<SplashScreen>
+class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   Size size = Size.zero;
   AnimationController _controller;
@@ -40,7 +39,8 @@ class _AnimationScreenState extends State<SplashScreen>
     );
 
     holeSize = Tween<double>(begin: 0.0, end: 2.0).animate(
-        CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic));
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
+    );
     _controller.addListener(() {
       setState(() {});
     });
@@ -67,14 +67,17 @@ class _AnimationScreenState extends State<SplashScreen>
             width: 200.0,
           ),
         ),
-      Opacity(opacity: pow(holeSize.value / 2, 2), child: HomeScreen()),
+      Opacity(
+        opacity: pow(holeSize.value / 2, 2),
+        child: HomeScreen(),
+      ),
       if (holeSize.value < 1.5)
         Container(
           width: double.infinity,
           height: double.infinity,
           child: CustomPaint(
-              painter:
-                  AnimatedCircle(circleSize: holeSize.value * size.height)),
+            painter: AnimatedCircle(circleSize: holeSize.value * size.height),
+          ),
         ),
     ]);
   }

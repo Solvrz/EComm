@@ -25,80 +25,103 @@ class _CategoryScreenState extends State<CategoryScreen> {
     title = args.data["name"].split("\n").join(" ");
 
     return SafeArea(
-        child: FutureBuilder<QuerySnapshot>(
-            future: args.docRef.docs.first.reference
-                .collection("tabs")
-                .orderBy("uId")
-                .get(),
-            builder: (context, snapshot) {
-              var screen;
+      child: FutureBuilder<QuerySnapshot>(
+          future: args.docRef.docs.first.reference
+              .collection("tabs")
+              .orderBy("uId")
+              .get(),
+          builder: (context, snapshot) {
+            var screen;
 
-              if (snapshot.hasData) {
-                screen = snapshot.data.docs.length > 0
-                    ? CategoryProductPage(
-                        title,
-                        snapshot.data.docs
-                            .map<Map>((DocumentSnapshot e) => e.data())
-                            .toList(),
-                        snapshot.data.docs
-                            .map<DocumentReference>(
-                                (DocumentSnapshot e) => e.reference)
-                            .toList())
-                    : Center(
-                        child: Text("On-Order Page")); // TODO On-Order Page
-              }
+            if (snapshot.hasData) {
+              screen = title != "Printing" && title != "Binding"
+                  ? CategoryProductPage(
+                      title,
+                      snapshot.data.docs
+                          .map<Map>(
+                            (DocumentSnapshot e) => e.data(),
+                          )
+                          .toList(),
+                      snapshot.data.docs
+                          .map<DocumentReference>(
+                              (DocumentSnapshot e) => e.reference)
+                          .toList(),
+                    )
+                  : OrderProductPage(
+                      // TODO On-Order Page
 
-              return Scaffold(
-                backgroundColor: kUIColor,
-                resizeToAvoidBottomInset: false,
-                floatingActionButton: admin && screen != null
-                    ? Builder(builder: (context) => screen.getFab(context))
-                    : null,
-                body: Column(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.arrow_back_ios,
-                                color: kUIDarkText, size: 26),
+                      title,
+                      snapshot.data.docs
+                          .map<Map>(
+                            (DocumentSnapshot e) => e.data(),
+                          )
+                          .toList(),
+                      snapshot.data.docs
+                          .map<DocumentReference>(
+                              (DocumentSnapshot e) => e.reference)
+                          .toList(),
+                    );
+            }
+
+            return Scaffold(
+              backgroundColor: kUIColor,
+              resizeToAvoidBottomInset: false,
+              floatingActionButton: admin && screen != null
+                  ? Builder(
+                      builder: (context) => screen.getFab(context),
+                    )
+                  : null,
+              body: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.arrow_back_ios,
+                              color: kUIDarkText, size: 26),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: kUIDarkText,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Expanded(
-                          child: Center(
-                            child: Text(title,
-                                style: TextStyle(
-                                    fontSize: 24,
-                                    color: kUIDarkText,
-                                    fontWeight: FontWeight.bold)),
-                          ),
+                      ),
+                      GestureDetector(
+                        onTap: admin
+                            ? () {}
+                            : () => Navigator.pushNamed(context, "/cart"),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                              admin ? null : Icons.shopping_cart_outlined,
+                              size: 26),
                         ),
-                        GestureDetector(
-                          onTap: admin
-                              ? () {}
-                              : () => Navigator.pushNamed(context, "/cart"),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                                admin ? null : Icons.shopping_cart_outlined,
-                                size: 26),
-                          ),
-                        )
-                      ],
-                    ),
+                      )
+                    ],
                   ),
-                  Expanded(
-                      child: snapshot.hasData
-                          ? screen
-                          : Center(child: Text("Loading...")))
-                ]),
-              );
-            }));
+                ),
+                Expanded(
+                  child: snapshot.hasData
+                      ? screen
+                      : Center(
+                          child: Text("Loading..."),
+                        ),
+                )
+              ]),
+            );
+          }),
+    );
   }
 }
 
@@ -116,12 +139,15 @@ class CategoryProductPage extends StatefulWidget {
         backgroundColor: Colors.white,
         child: Icon(Icons.add, color: kUIAccent, size: 30),
         onPressed: () async {
-          Navigator.pushNamed(context, "/add",
-              arguments: AddProductArguments(
-                  tabsData: tabsData,
-                  tabs: tabs,
-                  title: title,
-                  currentTab: _currentTab));
+          Navigator.pushNamed(
+            context,
+            "/add_prdouct",
+            arguments: AddProductArguments(
+                tabsData: tabsData,
+                tabs: tabs,
+                title: title,
+                currentTab: _currentTab),
+          );
         },
       );
 
@@ -137,9 +163,11 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
         padding: EdgeInsets.symmetric(vertical: 6),
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-            color: kUIColor,
-            border: Border.symmetric(
-                horizontal: BorderSide(color: Colors.grey[400], width: 1))),
+          color: kUIColor,
+          border: Border.symmetric(
+            horizontal: BorderSide(color: Colors.grey[400], width: 1),
+          ),
+        ),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -183,16 +211,21 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
           if (future.hasData) {
             if (future.data.docs.isNotEmpty) {
               return Expanded(
-                  child: ProductList(
-                      products: future.data.docs
-                          .map<Product>((DocumentSnapshot e) =>
-                              Product.fromJson(e.data()))
-                          .toList(),
-                      args: AddProductArguments(
-                          tabsData: widget.tabsData,
-                          tabs: widget.tabs,
-                          title: widget.title,
-                          currentTab: widget._currentTab)));
+                child: ProductList(
+                  products: future.data.docs
+                      .map<Product>(
+                        (DocumentSnapshot e) => Product.fromJson(
+                          e.data(),
+                        ),
+                      )
+                      .toList(),
+                  args: AddProductArguments(
+                      tabsData: widget.tabsData,
+                      tabs: widget.tabs,
+                      title: widget.title,
+                      currentTab: widget._currentTab),
+                ),
+              );
             } else {
               return Center(
                 child: Container(
@@ -207,9 +240,78 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             }
           } else {
             return Container(
-                height: MediaQuery.of(context).size.height / 1.5,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Center(child: Text("Loading...")));
+              height: MediaQuery.of(context).size.height / 1.5,
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: Center(
+                child: Text("Loading..."),
+              ),
+            );
+          }
+        },
+      ),
+    ]);
+  }
+}
+
+// ignore: must_be_immutable
+class OrderProductPage extends StatefulWidget {
+  final String title;
+  final List<Map> tabsData;
+  final List<DocumentReference> tabs;
+  int _currentTab = 0;
+
+  OrderProductPage(this.title, this.tabsData, this.tabs);
+
+  @override
+  _OrderProductPageState createState() => _OrderProductPageState();
+}
+
+class _OrderProductPageState extends State<OrderProductPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      StreamBuilder<QuerySnapshot>(
+        stream:
+            widget.tabs[widget._currentTab].collection("products").snapshots(),
+        builder: (context, future) {
+          if (future.hasData) {
+            if (future.data.docs.isNotEmpty) {
+              return Expanded(
+                child: ProductList(
+                  products: future.data.docs
+                      .map<Product>(
+                        (DocumentSnapshot e) => Product.fromJson(
+                          e.data(),
+                        ),
+                      )
+                      .toList(),
+                  args: AddProductArguments(
+                      tabsData: widget.tabsData,
+                      tabs: widget.tabs,
+                      title: widget.title,
+                      currentTab: widget._currentTab),
+                ),
+              );
+            } else {
+              return Center(
+                child: Container(
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  child: EmptyListWidget(
+                    title: "No Product",
+                    subTitle: "No Product Available Yet",
+                  ),
+                ),
+              );
+            }
+          } else {
+            return Container(
+              height: MediaQuery.of(context).size.height / 1.5,
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: Center(
+                child: Text("Loading..."),
+              ),
+            );
           }
         },
       ),
@@ -234,8 +336,10 @@ class _ProductListState extends State<ProductList> {
       shrinkWrap: true,
       crossAxisCount: 2,
       childAspectRatio: 0.8,
-      children: List.generate(widget.products.length,
-          (index) => ProductCard(widget.products[index], widget.args)),
+      children: List.generate(
+        widget.products.length,
+        (index) => ProductCard(widget.products[index], widget.args),
+      ),
     );
   }
 }
@@ -395,7 +499,11 @@ class _ProductCardState extends State<ProductCard>
 
                                         product.docs.first.reference.delete();
 
-                                        QuerySnapshot query = await database.collection("products").where("uId", isEqualTo: widget.product.uId).get();
+                                        QuerySnapshot query = await database
+                                            .collection("products")
+                                            .where("uId",
+                                                isEqualTo: widget.product.uId)
+                                            .get();
                                         query.docs.first.reference.delete();
                                       },
                                       textColor: kUIAccent,

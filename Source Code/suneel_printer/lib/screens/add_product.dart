@@ -39,7 +39,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
       name = args.product.name;
       price = args.product.price;
       if (args.product.images != null)
-        images = args.product.images.map((e) => Image(image: e)).toList();
+        images = args.product.images
+            .map(
+              (e) => Image(image: e),
+            )
+            .toList();
       variations = args.product.variations;
     }
 
@@ -66,7 +70,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           onTap: () => Navigator.pop(context),
                           child: Container(
                             decoration: BoxDecoration(
-                                border: Border.all(color: kUIColor)),
+                              border: Border.all(color: kUIColor),
+                            ),
                             padding: EdgeInsets.all(8),
                             child: Icon(Icons.arrow_back_ios,
                                 color: kUIDarkText, size: 26),
@@ -153,7 +158,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         "price": double.parse(price),
                                         "name": name,
                                         "variations": variations
-                                            .map((e) => e.toJson())
+                                            .map(
+                                              (e) => e.toJson(),
+                                            )
                                             .toList()
                                       });
                                     } else {
@@ -165,7 +172,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         "price": double.parse(price),
                                         "name": name,
                                         "variations": variations
-                                            .map((e) => e.toJson())
+                                            .map(
+                                              (e) => e.toJson(),
+                                            )
                                             .toList()
                                       });
 
@@ -212,7 +221,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               : null,
                           child: Container(
                             decoration: BoxDecoration(
-                                border: Border.all(color: kUIColor)),
+                              border: Border.all(color: kUIColor),
+                            ),
                             padding: EdgeInsets.all(8),
                             child: Icon(Icons.arrow_forward_ios,
                                 color: name != "" && price != ""
@@ -234,22 +244,24 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       Padding(
                         padding: const EdgeInsets.only(right: 44, bottom: 36),
                         child: TextField(
-                            controller: TextEditingController(text: name),
-                            cursorColor: Colors.grey,
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Product Name",
-                                hintStyle: TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: "sans-serif-condensed")),
-                            onChanged: (value) => name = value,
-                            onSubmitted: (_) =>
-                                FocusScope.of(context).autofocus(_priceNode),
-                            style: TextStyle(
+                          controller: TextEditingController(text: name),
+                          cursorColor: Colors.grey,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Product Name",
+                            hintStyle: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: "sans-serif-condensed")),
+                                fontFamily: "sans-serif-condensed"),
+                          ),
+                          onChanged: (value) => name = value,
+                          onSubmitted: (_) =>
+                              FocusScope.of(context).autofocus(_priceNode),
+                          style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "sans-serif-condensed"),
+                        ),
                       ),
                       Container(
                         height: MediaQuery.of(context).size.height * 0.3,
@@ -300,7 +312,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                             format: CompressFormat.jpeg,
                                           );
                                           compFiles.add(compFile);
-                                          compImages.add(Image.file(compFile));
+                                          compImages.add(
+                                            Image.file(compFile),
+                                          );
                                         }
 
                                         images.addAll(compImages);
@@ -335,30 +349,24 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 ),
                               ),
                               Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                      images.length + 1,
-                                      (int index) => AnimatedContainer(
-                                            duration:
-                                                Duration(milliseconds: 400),
-                                            width: _currentImage == index
-                                                ? 16.0
-                                                : 8.0,
-                                            height: _currentImage == index
-                                                ? 6.0
-                                                : 8.0,
-                                            margin: EdgeInsets.symmetric(
-                                                vertical: 10.0,
-                                                horizontal: 3.0),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              color: _currentImage == index
-                                                  ? Color.fromRGBO(0, 0, 0, 0.9)
-                                                  : Color.fromRGBO(
-                                                      0, 0, 0, 0.4),
-                                            ),
-                                          ))),
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                  images.length + 1,
+                                  (int index) => AnimatedContainer(
+                                    duration: Duration(milliseconds: 400),
+                                    width: _currentImage == index ? 16.0 : 8.0,
+                                    height: _currentImage == index ? 6.0 : 8.0,
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 10.0, horizontal: 3.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: _currentImage == index
+                                          ? Color.fromRGBO(0, 0, 0, 0.9)
+                                          : Color.fromRGBO(0, 0, 0, 0.4),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ]),
                       )
                     ],
@@ -372,275 +380,364 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            ...variations.map((Variation variation) => Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 2.0),
-                                  child: Slidable(
-                                    key: ValueKey(variation.toString()),
-                                    actionPane: SlidableDrawerActionPane(),
-                                    secondaryActions: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            variations.remove(variation);
-                                          });
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.only(left: 12),
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              6,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(25),
-                                              color: kUIAccent),
-                                          child: Icon(Icons.delete,
-                                              color: kUILightText, size: 32),
-                                        ),
-                                      )
-                                    ],
-                                    child: Container(
-                                      height: 76,
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: TextField(
-                                                onChanged: (value) =>
-                                                    variations[variations
-                                                            .indexOf(variation)]
-                                                        .name = value,
-                                                decoration: InputDecoration(
-                                                    border: InputBorder.none,
-                                                    hintText: "Name",
-                                                    hintStyle: TextStyle(
-                                                        fontSize: 22,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontFamily:
-                                                            "sans-serif-condensed",
-                                                        letterSpacing: 0.2)),
-                                                style: TextStyle(
-                                                    fontSize: 22,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontFamily:
-                                                        "sans-serif-condensed",
-                                                    letterSpacing: 0.2)),
+                            ...variations.map(
+                              (Variation variation) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 2.0),
+                                child: Slidable(
+                                  key: ValueKey(
+                                    variation.toString(),
+                                  ),
+                                  actionPane: SlidableDrawerActionPane(),
+                                  secondaryActions: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          variations.remove(variation);
+                                        });
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.only(left: 12),
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                6,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            color: kUIAccent),
+                                        child: Icon(Icons.delete,
+                                            color: kUILightText, size: 32),
+                                      ),
+                                    )
+                                  ],
+                                  child: Container(
+                                    height: 76,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: TextField(
+                                            onChanged: (value) => variations[
+                                                    variations
+                                                        .indexOf(variation)]
+                                                .name = value,
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText: "Name",
+                                              hintStyle: TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily:
+                                                      "sans-serif-condensed",
+                                                  letterSpacing: 0.2),
+                                            ),
+                                            style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily:
+                                                    "sans-serif-condensed",
+                                                letterSpacing: 0.2),
                                           ),
-                                          Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                ...List.generate(
-                                                    variation.options.length,
-                                                    (index) => Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      3.0),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  final TextEditingController
-                                                                      labelController =
-                                                                      TextEditingController(
-                                                                          text: variation
-                                                                              .options[index]
-                                                                              .label);
-                                                                  showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (_) =>
-                                                                              WillPopScope(
-                                                                                onWillPop: () async {
-                                                                                  setState(() {
-                                                                                    if (variation.options[index].label != labelController.text && labelController.text != "") {
-                                                                                      variations[variations.indexOf(variation)].options[index].label = labelController.text;
-                                                                                    }
-                                                                                  });
-                                                                                  return true;
-                                                                                },
-                                                                                child: RoundedAlertDialog(
-                                                                                  title: "Edit Option",
-                                                                                  otherWidgets: [
-                                                                                    TextField(
-                                                                                      controller: labelController,
-                                                                                      decoration: kInputDialogDecoration.copyWith(
-                                                                                        suffixIcon: IconButton(icon: Icon(Icons.clear), onPressed: () => labelController.clear()),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(height: 12),
-                                                                                    BlockPicker(
-                                                                                        availableColors: [
-                                                                                          Color(0xFFF44336),
-                                                                                          Color(0xFF2196F3),
-                                                                                          Color(0xFF4CAF50),
-                                                                                          Color(0xFFFFEB3B),
-                                                                                          Color(0xFF03A9F4),
-                                                                                          Color(0xFF8BC34A),
-                                                                                          Color(0xFFFFC107),
-                                                                                          Color(0xFFFF4081),
-                                                                                          Color(0xFF9C27B0),
-                                                                                          Color(0xFF000000),
-                                                                                          Color(0xFF9E9E9E),
-                                                                                          Color(0xFFFFFFFF),
-                                                                                          Colors.transparent
-                                                                                        ],
-                                                                                        itemBuilder: (color, isCurrentColor, changeColor) {
-                                                                                          final bool notTrans = color != Colors.transparent;
-                                                                                          return Container(
-                                                                                            margin: EdgeInsets.all(5.0),
-                                                                                            decoration: BoxDecoration(
-                                                                                              borderRadius: BorderRadius.circular(50.0),
-                                                                                              color: notTrans ? color : Colors.white,
-                                                                                              boxShadow: notTrans
-                                                                                                  ? [
-                                                                                                      BoxShadow(
-                                                                                                        color: color != Colors.white && notTrans ? color.withOpacity(0.8) : Colors.grey[600],
-                                                                                                        offset: Offset(1.0, 2.0),
-                                                                                                        blurRadius: 5.0,
-                                                                                                      ),
-                                                                                                    ]
-                                                                                                  : null,
-                                                                                            ),
-                                                                                            child: Material(
-                                                                                              color: Colors.transparent,
-                                                                                              child: InkWell(
-                                                                                                onTap: changeColor,
-                                                                                                borderRadius: BorderRadius.circular(50.0),
-                                                                                                child: notTrans
-                                                                                                    ? AnimatedOpacity(
-                                                                                                        duration: const Duration(milliseconds: 210),
-                                                                                                        opacity: isCurrentColor ? 1.0 : 0.0,
-                                                                                                        child: Icon(
-                                                                                                          Icons.done,
-                                                                                                          color: useWhiteForeground(color) ? Colors.white : Colors.black,
-                                                                                                        ),
-                                                                                                      )
-                                                                                                    : Icon(Icons.clear),
-                                                                                              ),
-                                                                                            ),
-                                                                                          );
-                                                                                        },
-                                                                                        pickerColor: variation.options[index].color ?? Colors.redAccent,
-                                                                                        onColorChanged: (color) {
-                                                                                          if (color != Colors.transparent)
-                                                                                            variations[variations.indexOf(variation)].options[index].color = color;
-                                                                                          else
-                                                                                            variations[variations.indexOf(variation)].options[index].color = null;
-                                                                                        })
-                                                                                  ],
-                                                                                  isExpanded: false,
-                                                                                  buttonsList: [
-                                                                                    AlertButton(
-                                                                                        title: "Done",
-                                                                                        onPressed: () {
-                                                                                          Navigator.pop(context);
-                                                                                          setState(() {
-                                                                                            if (variation.options[index].label != labelController.text) {
-                                                                                              variations[variations.indexOf(variation)].options[index].label = labelController.text;
-                                                                                            }
-                                                                                          });
-                                                                                        })
-                                                                                  ],
-                                                                                ),
-                                                                              ));
-                                                                },
-                                                                onLongPress:
-                                                                    () {
-                                                                  setState(() {
-                                                                    variations[variations.indexOf(variation)].options.length >
-                                                                            1
-                                                                        ? variations[variations.indexOf(variation)]
-                                                                            .options
-                                                                            .removeAt(
-                                                                                index)
-                                                                        : variations
-                                                                            .remove(variation);
-                                                                  });
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  margin: EdgeInsets
-                                                                      .fromLTRB(
-                                                                          2,
-                                                                          0,
-                                                                          2,
-                                                                          4),
-                                                                  width: 32,
-                                                                  height: 32,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    shape: BoxShape
-                                                                        .circle,
-                                                                    border: 0 ==
-                                                                            index
-                                                                        ? Border.all(
-                                                                            color:
-                                                                                Colors.grey[400],
-                                                                            width: 2)
-                                                                        : null,
-                                                                  ),
-                                                                  child: Center(
-                                                                    child:
-                                                                        CircleAvatar(
-                                                                      radius:
-                                                                          10,
-                                                                      backgroundColor: variation
-                                                                              .options[index]
-                                                                              .color ??
-                                                                          Colors.grey[400],
-                                                                      child: variation.options[index].color ==
-                                                                              null
-                                                                          ? Text(
-                                                                              variation.options[index].label[0].toUpperCase(),
-                                                                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: kUIDarkText))
-                                                                          : null,
+                                        ),
+                                        Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ...List.generate(
+                                                variation.options.length,
+                                                (index) => Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 3.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          final TextEditingController
+                                                              labelController =
+                                                              TextEditingController(
+                                                                  text: variation
+                                                                      .options[
+                                                                          index]
+                                                                      .label);
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (_) =>
+                                                                WillPopScope(
+                                                              onWillPop:
+                                                                  () async {
+                                                                setState(() {
+                                                                  if (variation
+                                                                              .options[
+                                                                                  index]
+                                                                              .label !=
+                                                                          labelController
+                                                                              .text &&
+                                                                      labelController
+                                                                              .text !=
+                                                                          "") {
+                                                                    variations[variations.indexOf(
+                                                                            variation)]
+                                                                        .options[
+                                                                            index]
+                                                                        .label = labelController.text;
+                                                                  }
+                                                                });
+                                                                return true;
+                                                              },
+                                                              child:
+                                                                  RoundedAlertDialog(
+                                                                title:
+                                                                    "Edit Option",
+                                                                otherWidgets: [
+                                                                  TextField(
+                                                                    controller:
+                                                                        labelController,
+                                                                    decoration:
+                                                                        kInputDialogDecoration
+                                                                            .copyWith(
+                                                                      suffixIcon:
+                                                                          IconButton(
+                                                                        icon: Icon(
+                                                                            Icons.clear),
+                                                                        onPressed:
+                                                                            () =>
+                                                                                labelController.clear(),
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          12),
+                                                                  BlockPicker(
+                                                                      availableColors: [
+                                                                        Color(
+                                                                            0xFFF44336),
+                                                                        Color(
+                                                                            0xFF2196F3),
+                                                                        Color(
+                                                                            0xFF4CAF50),
+                                                                        Color(
+                                                                            0xFFFFEB3B),
+                                                                        Color(
+                                                                            0xFF03A9F4),
+                                                                        Color(
+                                                                            0xFF8BC34A),
+                                                                        Color(
+                                                                            0xFFFFC107),
+                                                                        Color(
+                                                                            0xFFFF4081),
+                                                                        Color(
+                                                                            0xFF9C27B0),
+                                                                        Color(
+                                                                            0xFF000000),
+                                                                        Color(
+                                                                            0xFF9E9E9E),
+                                                                        Color(
+                                                                            0xFFFFFFFF),
+                                                                        Colors
+                                                                            .transparent
+                                                                      ],
+                                                                      itemBuilder: (color,
+                                                                          isCurrentColor,
+                                                                          changeColor) {
+                                                                        final bool
+                                                                            notTrans =
+                                                                            color !=
+                                                                                Colors.transparent;
+                                                                        return Container(
+                                                                          margin:
+                                                                              EdgeInsets.all(5.0),
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(50.0),
+                                                                            color: notTrans
+                                                                                ? color
+                                                                                : Colors.white,
+                                                                            boxShadow: notTrans
+                                                                                ? [
+                                                                                    BoxShadow(
+                                                                                      color: color != Colors.white && notTrans ? color.withOpacity(0.8) : Colors.grey[600],
+                                                                                      offset: Offset(1.0, 2.0),
+                                                                                      blurRadius: 5.0,
+                                                                                    ),
+                                                                                  ]
+                                                                                : null,
+                                                                          ),
+                                                                          child:
+                                                                              Material(
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            child:
+                                                                                InkWell(
+                                                                              onTap: changeColor,
+                                                                              borderRadius: BorderRadius.circular(50.0),
+                                                                              child: notTrans
+                                                                                  ? AnimatedOpacity(
+                                                                                      duration: const Duration(milliseconds: 210),
+                                                                                      opacity: isCurrentColor ? 1.0 : 0.0,
+                                                                                      child: Icon(
+                                                                                        Icons.done,
+                                                                                        color: useWhiteForeground(color) ? Colors.white : Colors.black,
+                                                                                      ),
+                                                                                    )
+                                                                                  : Icon(Icons.clear),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                      pickerColor: variation
+                                                                              .options[
+                                                                                  index]
+                                                                              .color ??
+                                                                          Colors
+                                                                              .redAccent,
+                                                                      onColorChanged:
+                                                                          (color) {
+                                                                        if (color !=
+                                                                            Colors.transparent)
+                                                                          variations[variations.indexOf(variation)]
+                                                                              .options[index]
+                                                                              .color = color;
+                                                                        else
+                                                                          variations[variations.indexOf(variation)]
+                                                                              .options[index]
+                                                                              .color = null;
+                                                                      })
+                                                                ],
+                                                                isExpanded:
+                                                                    false,
+                                                                buttonsList: [
+                                                                  AlertButton(
+                                                                      title:
+                                                                          "Done",
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        setState(
+                                                                            () {
+                                                                          if (variation.options[index].label !=
+                                                                              labelController.text) {
+                                                                            variations[variations.indexOf(variation)].options[index].label =
+                                                                                labelController.text;
+                                                                          }
+                                                                        });
+                                                                      })
+                                                                ],
                                                               ),
-                                                              Text(variation
-                                                                  .options[
-                                                                      index]
-                                                                  .label),
-                                                            ],
+                                                            ),
+                                                          );
+                                                        },
+                                                        onLongPress: () {
+                                                          setState(() {
+                                                            variations[variations.indexOf(
+                                                                            variation)]
+                                                                        .options
+                                                                        .length >
+                                                                    1
+                                                                ? variations[variations
+                                                                        .indexOf(
+                                                                            variation)]
+                                                                    .options
+                                                                    .removeAt(
+                                                                        index)
+                                                                : variations
+                                                                    .remove(
+                                                                        variation);
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          margin: EdgeInsets
+                                                              .fromLTRB(
+                                                                  2, 0, 2, 4),
+                                                          width: 32,
+                                                          height: 32,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            border: 0 == index
+                                                                ? Border.all(
+                                                                    color: Colors
+                                                                            .grey[
+                                                                        400],
+                                                                    width: 2)
+                                                                : null,
                                                           ),
-                                                        )),
-                                                GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        variations[variations
-                                                                .indexOf(
-                                                                    variation)]
-                                                            .options
-                                                            .add(Option(
-                                                                label:
-                                                                    "Label"));
-                                                      });
-                                                    },
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Icon(Icons.add),
-                                                    ))
-                                              ])
-                                        ],
-                                      ),
+                                                          child: Center(
+                                                            child: CircleAvatar(
+                                                              radius: 10,
+                                                              backgroundColor: variation
+                                                                      .options[
+                                                                          index]
+                                                                      .color ??
+                                                                  Colors.grey[
+                                                                      400],
+                                                              child: variation
+                                                                          .options[
+                                                                              index]
+                                                                          .color ==
+                                                                      null
+                                                                  ? Text(
+                                                                      variation
+                                                                          .options[
+                                                                              index]
+                                                                          .label[
+                                                                              0]
+                                                                          .toUpperCase(),
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight: FontWeight
+                                                                              .w600,
+                                                                          color:
+                                                                              kUIDarkText),
+                                                                    )
+                                                                  : null,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(variation
+                                                          .options[index]
+                                                          .label),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    variations[variations
+                                                            .indexOf(variation)]
+                                                        .options
+                                                        .add(
+                                                          Option(
+                                                              label: "Label"),
+                                                        );
+                                                  });
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Icon(Icons.add),
+                                                ),
+                                              )
+                                            ])
+                                      ],
                                     ),
                                   ),
-                                )),
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8.0),
@@ -649,9 +746,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 titleColor: kUIAccent,
                                 title: "Add Variation",
                                 onPressed: () => setState(() {
-                                  variations.add(Variation(
-                                      name: "",
-                                      options: [Option(label: "Label")]));
+                                  variations.add(
+                                    Variation(
+                                        name: "",
+                                        options: [Option(label: "Label")]),
+                                  );
                                 }),
                               ),
                             ),
@@ -665,35 +764,39 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text("Price",
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "sans-serif-condensed",
-                                letterSpacing: 0.2)),
+                        child: Text(
+                          "Price",
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "sans-serif-condensed",
+                              letterSpacing: 0.2),
+                        ),
                       ),
                       Container(
                         width: 80,
                         child: TextField(
-                            keyboardType: TextInputType.number,
-                            controller: TextEditingController(text: price),
-                            focusNode: _priceNode,
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                prefixText: "₹ ",
-                                hintText: "Price",
-                                hintStyle: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: "sans-serif-condensed",
-                                    letterSpacing: -0.4)),
-                            cursorColor: Colors.grey,
-                            onChanged: (value) => price = value,
-                            style: TextStyle(
+                          keyboardType: TextInputType.number,
+                          controller: TextEditingController(text: price),
+                          focusNode: _priceNode,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            prefixText: "₹ ",
+                            hintText: "Price",
+                            hintStyle: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
                                 fontFamily: "sans-serif-condensed",
-                                letterSpacing: -0.4)),
+                                letterSpacing: -0.4),
+                          ),
+                          cursorColor: Colors.grey,
+                          onChanged: (value) => price = value,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "sans-serif-condensed",
+                              letterSpacing: -0.4),
+                        ),
                       )
                     ],
                   ),

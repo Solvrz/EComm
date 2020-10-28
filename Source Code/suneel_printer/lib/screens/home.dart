@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
 
   final List<String> carouselImages = [
-//    "https://i.ytimg.com/vi/wf4vcbiweDs/maxresdefault.jpg",
+    // TODO: Link with Firbase
     "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRbFeK1UPs7urHqn5U5h_81MTBf6v8jA5K_3w&usqp=CAU"
   ];
 
@@ -72,13 +72,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 4.0),
-                        child: Text("Deliver To",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[600],
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.2,
-                                fontFamily: "sans-serif-condensed")),
+                        child: Text(
+                          "Deliver To",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.2,
+                              fontFamily: "sans-serif-condensed"),
+                        ),
                       ),
                       Row(
                         children: [
@@ -91,17 +93,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               underline: Container(),
                               value: "Mandi Gobindgarh",
                               items: ["Mandi Gobindgarh", "Custom"]
-                                  .map<DropdownMenuItem>((String val) =>
-                                      DropdownMenuItem(
-                                          value: val,
-                                          child: Text(val,
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.grey[900],
-                                                  letterSpacing: 0.2,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily:
-                                                      "sans-serif-condensed"))))
+                                  .map<DropdownMenuItem>(
+                                    (String val) => DropdownMenuItem(
+                                      value: val,
+                                      child: Text(
+                                        val,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey[900],
+                                            letterSpacing: 0.2,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: "sans-serif-condensed"),
+                                      ),
+                                    ),
+                                  )
                                   .toList(),
                               onChanged: (value) {},
                             ),
@@ -116,8 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 margin: EdgeInsets.symmetric(vertical: 24),
                 padding: EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10)),
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Row(children: [
                   Icon(Icons.search, color: Colors.grey[600]),
                   SizedBox(width: 12),
@@ -142,14 +148,16 @@ class _HomeScreenState extends State<HomeScreen> {
               CarouselSlider.builder(
                 itemCount: carouselImages.length,
                 itemBuilder: (context, index) => ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          image: DecorationImage(
-                              image: NetworkImage(carouselImages[index]),
-                              fit: BoxFit.cover)),
-                    )),
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      image: DecorationImage(
+                          image: NetworkImage(carouselImages[index]),
+                          fit: BoxFit.cover),
+                    ),
+                  ),
+                ),
                 options: CarouselOptions(
                     autoPlay: carouselImages.length > 1 ? true : false,
                     enlargeCenterPage: true,
@@ -163,21 +171,23 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 12),
               if (carouselImages.length > 1)
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                        carouselImages.length,
-                        (int index) => AnimatedContainer(
-                              duration: Duration(milliseconds: 400),
-                              width: _current == index ? 16.0 : 8.0,
-                              height: _current == index ? 6.0 : 8.0,
-                              margin: EdgeInsets.symmetric(horizontal: 3.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: _current == index
-                                    ? Color.fromRGBO(0, 0, 0, 0.9)
-                                    : Color.fromRGBO(0, 0, 0, 0.4),
-                              ),
-                            ))),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    carouselImages.length,
+                    (int index) => AnimatedContainer(
+                      duration: Duration(milliseconds: 400),
+                      width: _current == index ? 16.0 : 8.0,
+                      height: _current == index ? 6.0 : 8.0,
+                      margin: EdgeInsets.symmetric(horizontal: 3.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: _current == index
+                            ? Color.fromRGBO(0, 0, 0, 0.9)
+                            : Color.fromRGBO(0, 0, 0, 0.4),
+                      ),
+                    ),
+                  ),
+                ),
               SizedBox(height: 18),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6.0),
