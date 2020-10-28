@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
+import 'package:suneel_printer/models/variation.dart';
 
 class CartItem {
   Product product;
@@ -28,9 +29,10 @@ class CartItem {
 
 class Cart {
   List<CartItem> _products = [];
-  List<String> changeLog = [];
+  List<String> _changeLog = [];
 
   List<CartItem> get products => _products;
+  List<String> get changeLog => _changeLog;
 
   bool get hasNoProducts => !(_products.length > 0);
 
@@ -130,8 +132,8 @@ class Cart {
             .get();
 
         if (products.docs.isEmpty) {
-          changeLog.add(
-              "The product '${item.product.name}' has been removed from the store");
+          _changeLog.add("The product '${item.product.name}' has been removed from the store");
+          cart.removeItem(item.product);
         } else {
           Map productData = products.docs.first.data();
           List<String> diff =
@@ -141,14 +143,18 @@ class Cart {
 
           diff.forEach((changeKey) {
             if (changeKey == "variations") {
-              //TODO: Remove selected if the variation for that is deleted (To be done by me Yug)
-              changeLog.add(
+              _changeLog.add(
                   "The variations for product '${productData["name"]}' have been updated.");
+
+              updatedData["selected"] = productData["variations"].asMap().map((_, element) {
+                Variation variation = Variation.fromJson(element);
+                return MapEntry(variation.name, variation.options.first.toJson());
+              });
             } else if (changeKey == "name") {
-              changeLog.add(
+              _changeLog.add(
                   "The name of the product '${item.product.name}' has been changed to ${productData["name"]}.");
             } else {
-              changeLog.add(
+              _changeLog.add(
                   "The ${changeKey.capitalize()} for product '${productData["name"]}' has been changed from ${item.product.toJson()[changeKey]} to ${productData[changeKey]}.");
             }
 
@@ -160,6 +166,8 @@ class Cart {
       }
 
       _products = items;
+
+      _save();
     }
   }
 }

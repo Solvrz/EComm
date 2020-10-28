@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,10 +15,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
-
-  final List<String> carouselImages = [
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRbFeK1UPs7urHqn5U5h_81MTBf6v8jA5K_3w&usqp=CAU"
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -60,16 +57,23 @@ class _HomeScreenState extends State<HomeScreen> {
               : FloatingActionButton(
                   onPressed: () => Navigator.pushNamed(context, "/cart"),
                   child: Stack(
+                    alignment: Alignment.center,
                     children: [
                       Icon(
                         Icons.shopping_cart_outlined,
                         size: 30,
                       ),
-                      Text(cart.products.length.toString(),
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold)),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                          child: Text(cart.products.length.toString(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
                     ],
                   ),
                   backgroundColor: kUIAccent),
@@ -156,49 +160,64 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 ]),
               ),
-              CarouselSlider.builder(
-                itemCount: carouselImages.length,
-                itemBuilder: (context, index) => ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      image: DecorationImage(
-                          image: NetworkImage(carouselImages[index]),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                ),
-                options: CarouselOptions(
-                    autoPlay: carouselImages.length > 1 ? true : false,
-                    enlargeCenterPage: true,
-                    aspectRatio: 2,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        _current = index;
-                      });
-                    }),
-              ),
-              SizedBox(height: 12),
-              if (carouselImages.length > 1)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    carouselImages.length,
-                    (int index) => AnimatedContainer(
-                      duration: Duration(milliseconds: 400),
-                      width: _current == index ? 16.0 : 8.0,
-                      height: _current == index ? 6.0 : 8.0,
-                      margin: EdgeInsets.symmetric(horizontal: 3.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: _current == index
-                            ? Color.fromRGBO(0, 0, 0, 0.9)
-                            : Color.fromRGBO(0, 0, 0, 0.4),
+              FutureBuilder<QuerySnapshot>(
+                future: database.collection("carouselImages").get(),
+                builder: (context, future) {
+                  List carouselImages = ["https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"];
+
+                  if (future.hasData) {
+                    carouselImages = future.data.docs.map((e) => e.get("url")).toList();
+                  }
+
+                  return Column(
+                  children: [
+                    CarouselSlider.builder(
+                      itemCount: carouselImages.length,
+                      itemBuilder: (context, index) => ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            image: DecorationImage(
+                                image: NetworkImage(carouselImages[index]),
+                                fit: BoxFit.cover),
+                          ),
+                        ),
                       ),
+                      options: CarouselOptions(
+                          autoPlay: carouselImages.length > 1 ? true : false,
+                          enlargeCenterPage: true,
+                          aspectRatio: 2,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _current = index;
+                            });
+                          }),
                     ),
-                  ),
-                ),
+                    SizedBox(height: 12),
+                    if (carouselImages.length > 1)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          carouselImages.length,
+                              (int index) => AnimatedContainer(
+                            duration: Duration(milliseconds: 400),
+                            width: _current == index ? 16.0 : 8.0,
+                            height: _current == index ? 6.0 : 8.0,
+                            margin: EdgeInsets.symmetric(horizontal: 3.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: _current == index
+                                  ? Color.fromRGBO(0, 0, 0, 0.9)
+                                  : Color.fromRGBO(0, 0, 0, 0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ]
+                );
+                },
+              ),
               SizedBox(height: 18),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6.0),
