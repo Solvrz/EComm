@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class Variation {
@@ -29,6 +31,10 @@ class Variation {
         return option.toJson();
       }).toList()
     };
+  }
+
+  String toString() {
+    return jsonEncode(toJson());
   }
 }
 

@@ -22,7 +22,6 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Use cart.changelog to display a bottomsheet or dialog showing the CHANGE-LOG (not the best word to describe it tbh)
     double price = 0.0;
 
     cart.products.forEach((CartItem cartItem) {
@@ -150,6 +149,73 @@ class _CartScreenState extends State<CartScreen> {
                 ],
               ),
             ),
+            if (cart.changeLog.isNotEmpty)
+              GestureDetector(
+                onTap: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (_) => WillPopScope(
+                      onWillPop: () async {
+                        setState(() => cart.changeLog.clear());
+                        return true;
+                      },
+                      child: RoundedAlertDialog(title: "Alerts", otherWidgets: [
+                        Container(
+                          height: 220,
+                          width: 300,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: cart.changeLog.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Text(
+                                    cart.changeLog[index],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: "sans-serif-condensed"),
+                                  ),
+                                  Divider(
+                                    height: 15,
+                                    thickness: 0.8,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ]),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 70,
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      color: Colors.yellow[200]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Alerts for items in your cart",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "sans-serif-condensed"),
+                      ),
+                      Text("Tap to view",
+                          style: TextStyle(
+                              color: Colors.grey[800],
+                              fontFamily: "sans-serif-condensed"))
+                    ],
+                  ),
+                ),
+              ),
             Expanded(
               child: cart.products.isNotEmpty
                   ? Padding(
@@ -563,20 +629,23 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                           error["address"] = false;
 
                         if (!error.values.contains(true)) {
-                          await showDialog(
-                            context: context,
-                            builder: (_) => RoundedAlertDialog(
-                              title: "Your Order was placed!",
-                              buttonsList: [
-                                FlatButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("Okay"),
-                                )
-                              ],
-                            ),
-                          );
+                          Timer(Duration(milliseconds: 500), () async {
+                            await showDialog(
+                              context: context,
+                              builder: (_) => RoundedAlertDialog(
+                                title: "Your Order was placed!",
+                                buttonsList: [
+                                  FlatButton(
+                                    onPressed: () {
+                                      Navigator.popUntil(context,
+                                          ModalRoute.withName("/home"));
+                                    },
+                                    child: Text("Okay"),
+                                  )
+                                ],
+                              ),
+                            );
+                          });
 
                           await http.post(
                             "https://suneel-printers-mail-server.herokuapp.com/order_request",
@@ -606,14 +675,31 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                             }),
                           );
 
-                          //TODO: Save orders in SharedPreferences
+                          List<String> pastOrders =
+                              preferences.getStringList("orders") ?? [];
+
+                          pastOrders.add(jsonEncode(
+                              cart.products.map((e) => e.toString()).toList()));
+
+                          preferences.setStringList("orders", pastOrders);
+
+                          database.collection("orders").add({
+                            "name": name,
+                            "phone": phone,
+                            "address": address,
+                            "products": cart.products.map((e) {
+                              return {
+                                "product": e.product.toJson(),
+                                "quantity": e.quantity
+                              };
+                            }).toList()
+                          });
+
                           cart.clear();
                           Navigator.popUntil(
                             context,
                             ModalRoute.withName("/home"),
                           );
-
-                          //TODO: Implement Proceed To Buy Firebase
                         }
                         setState(() {});
                       },

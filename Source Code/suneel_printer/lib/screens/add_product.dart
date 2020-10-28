@@ -123,10 +123,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     int maxId = 0;
 
                                     query.docs.forEach((element) {
-                                      int currId = int.parse(element
+                                      int currId = element
                                           .data()["uId"]
                                           .split("/")
-                                          .last);
+                                          .last
+                                          .toInt();
                                       if (currId > maxId) maxId = currId;
                                     });
 
