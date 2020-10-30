@@ -549,6 +549,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
                         FocusScope.of(context).unfocus();
 
+                        // TODO FIXME Need to hot refresh to see error on fields
+
                         if (name.trim() == "")
                           fields["name"].error = true;
                         else
@@ -572,8 +574,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         else
                           fields["email"].error = false;
 
-                        http.Response result = await http
-                            .get("https://api.postalpincode.in/pincode/$pincode");
+                        http.Response result = await http.get(
+                            "https://api.postalpincode.in/pincode/$pincode");
 
                         if (jsonDecode(result.body)[0]["Status"] == "Error")
                           fields["pincode"].error = true;
@@ -607,29 +609,31 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             );
                           });
 
+                          payment.startPayment();
+
                           await http.post(
                             "https://suneel-printers.herokuapp.com/order_request",
                             headers: <String, String>{
                               "Content-Type": "application/json; charset=UTF-8",
                             },
                             body: jsonEncode(<String, String>{
-                              "customer": "yugthapar37@gmail.com",
                               "name": name,
                               "phone": phone,
                               "address": address,
                               "email": email,
+                              "payment_mode": "COD",
                               "price": widget.price.toString(),
                               "product_list": cart.products
                                   .map<String>((CartItem cartItem) {
                                     Product product = cartItem.product;
 
                                     return '''
-                <tr>
-                    <td>${product.name}</td>
-                    <td class="righty">${cartItem.quantity}</td>
-                    <td class="righty">${(double.parse(product.price) * cartItem.quantity).toStringAsFixed(2)}</td>
-                </tr>
-                ''';
+                                          <tr>
+                                              <td>${product.name}</td>
+                                              <td class="righty">${cartItem.quantity}</td>
+                                              <td class="righty">${(double.parse(product.price) * cartItem.quantity).toStringAsFixed(2)}</td>
+                                          </tr>
+                                          ''';
                                   })
                                   .toList()
                                   .join("\n"),

@@ -178,26 +178,29 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                 child: Row(
                   children: [
-                    if (cart.containsProduct(product)) Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey[900])
-                      ),
-                      child: IntrinsicWidth(
-                        child: Column(
-                          children: [
-                            Icon(Icons.remove, size: 30),
-                            Text(cart.getQuantity(product).toString(), style: TextStyle(fontSize: 22, color: Colors.grey[900])),
-                            Icon(Icons.add, size: 30),
-                          ],
+                    if (cart.containsProduct(product))
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.grey[900])),
+                        child: IntrinsicWidth(
+                          child: Column(
+                            children: [
+                              Icon(Icons.remove, size: 30),
+                              Text(cart.getQuantity(product).toString(),
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.grey[900])),
+                              Icon(Icons.add, size: 30),
+                            ],
+                          ),
                         ),
+                        margin: EdgeInsets.only(right: 16),
                       ),
-                      margin: EdgeInsets.only(right: 16),
-                    ),
                     Expanded(
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
@@ -208,7 +211,9 @@ class _ProductScreenState extends State<ProductScreen> {
                             : kUIAccent,
                         padding: EdgeInsets.symmetric(vertical: 16),
                         child: Text(
-                          cart.containsProduct(product) ? "IN CART" : "ADD TO CART",
+                          cart.containsProduct(product)
+                              ? "IN CART"
+                              : "ADD TO CART",
                           style: TextStyle(
                               fontSize: 20,
                               color: Colors.white,
