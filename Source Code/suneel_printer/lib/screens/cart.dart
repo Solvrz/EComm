@@ -94,7 +94,7 @@ class _CartScreenState extends State<CartScreen> {
                       context: context,
                       builder: (_) => Padding(
                         padding: MediaQuery.of(context).viewInsets,
-                        child: CheckOutSheet(price),
+                        child: CheckoutSheet(price),
                       ),
                     );
                 },
@@ -419,21 +419,43 @@ class _CartScreenState extends State<CartScreen> {
   }
 }
 
-class CheckOutSheet extends StatefulWidget {
+//ignore: must_be_immutable
+class CheckoutSheet extends StatefulWidget {
   final double price;
 
-  CheckOutSheet(this.price);
+  CheckoutSheet(this.price);
 
   @override
-  _CheckOutSheetState createState() => _CheckOutSheetState();
+  _CheckoutSheetState createState() => _CheckoutSheetState();
 }
 
-class _CheckOutSheetState extends State<CheckOutSheet> {
-  String name = "";
-  String phone = "";
-  String address = "";
-
-  Map<String, bool> error = {"name": false, "phone": false, "address": false};
+class _CheckoutSheetState extends State<CheckoutSheet> {
+  Map<String, InformationTextField> fields = {
+    "name": InformationTextField(
+        title: "Name",
+        placeholder: "Your Name",
+        errorMessage: "Please enter a valid name"),
+    "phone": InformationTextField(
+      title: "Phone Number",
+      placeholder: "Your Phone Number",
+      errorMessage: "Please enter a valid phone number",
+      inputType: TextInputType.phone,
+    ),
+    "email": InformationTextField(
+        title: "Email Address",
+        placeholder: "Your Email Address",
+        errorMessage: "Please enter a valid email address"),
+    "address": InformationTextField(
+        title: "Shipping Address",
+        placeholder: "Your Address",
+        errorMessage: "Please enter a valid address"),
+    "pincode": InformationTextField(
+      title: "Pincode",
+      placeholder: "Your Pincode",
+      errorMessage: "Please enter a valid pincode",
+      inputType: TextInputType.number,
+    )
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -473,100 +495,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Name",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        focusedBorder: InputBorder.none,
-                        border: InputBorder.none,
-                        hintText: name.trim() == "" ? "Your name" : null),
-                    controller: TextEditingController(text: name),
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500),
-                    onChanged: (String value) {
-                      name = value;
-                    },
-                  ),
-                  if (error["name"]) ...[
-                    Text(
-                      "Please provide a valid name",
-                      style: TextStyle(fontSize: 15, color: Colors.redAccent),
-                    ),
-                    SizedBox(height: 8)
-                  ],
-                  Divider(
-                    height: 8,
-                    thickness: 2,
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    "Phone Number",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  TextField(
-                    scrollPadding: EdgeInsets.zero,
-                    decoration: InputDecoration(
-                        focusedBorder: InputBorder.none,
-                        border: InputBorder.none,
-                        hintText:
-                            phone.trim() == "" ? "Your phone number" : null),
-                    controller: TextEditingController(text: phone),
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500),
-                    onChanged: (String value) {
-                      phone = value;
-                    },
-                  ),
-                  if (error["phone"]) ...[
-                    Text(
-                      "Please provide a valid phone number",
-                      style: TextStyle(fontSize: 15, color: Colors.redAccent),
-                    ),
-                    SizedBox(height: 8)
-                  ],
-                  Divider(
-                    height: 8,
-                    thickness: 2,
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    "Shipping Address",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  TextField(
-                    maxLines: 4,
-                    minLines: 1,
-                    decoration: InputDecoration(
-                        focusedBorder: InputBorder.none,
-                        border: InputBorder.none,
-                        hintText: address.trim() == "" ? "Your address" : null),
-                    controller: TextEditingController(text: address),
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500),
-                    onChanged: (String value) {
-                      address = value;
-                    },
-                  ),
-                  if (error["address"]) ...[
-                    Text(
-                      "Please provide a valid address",
-                      style: TextStyle(fontSize: 15, color: Colors.redAccent),
-                    ),
-                    SizedBox(height: 8)
-                  ],
-                  Divider(
-                    height: 8,
-                    thickness: 2,
-                  ),
-                  SizedBox(height: 12),
+                  ...fields.values.toList(),
                   Text(
                     "${cart.products.length} Items",
                     style: TextStyle(
@@ -612,33 +541,64 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                       padding:
                           EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                       onPressed: () async {
+                        String name = fields["name"].value;
+                        String phone = fields["phone"].value;
+                        String address = fields["address"].value;
+                        String email = fields["email"].value;
+                        String pincode = fields["pincode"].value;
+
                         FocusScope.of(context).unfocus();
+
                         if (name.trim() == "")
-                          error["name"] = true;
+                          fields["name"].error = true;
                         else
-                          error["name"] = false;
+                          fields["name"].error = false;
+
                         if (!(phone.trim().length == 10) &&
                             !(phone.trim().length > 10 &&
                                 phone.startsWith("+")))
-                          error["phone"] = true;
+                          fields["phone"].error = true;
                         else
-                          error["phone"] = false;
-                        if (address.trim() == "")
-                          error["address"] = true;
-                        else
-                          error["address"] = false;
+                          fields["phone"].error = false;
 
-                        if (!error.values.contains(true)) {
-                          Timer(Duration(milliseconds: 500), () async {
-                            await showDialog(
+                        if (address.trim() == "")
+                          fields["address"].error = true;
+                        else
+                          fields["address"].error = false;
+
+                        if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
+                            .hasMatch(email))
+                          fields["email"].error = true;
+                        else
+                          fields["email"].error = false;
+
+                        http.Response result = await http
+                            .get("https://api.postalpincode.in/pincode/$pincode");
+
+                        if (jsonDecode(result.body)[0]["Status"] == "Error")
+                          fields["pincode"].error = true;
+                        else
+                          fields["pincode"].error = false;
+
+                        setState(() {});
+
+                        if (!fields.values
+                            .toList()
+                            .map((e) => e.error)
+                            .contains(true)) {
+                          Timer(Duration(milliseconds: 500), () {
+                            showDialog(
                               context: context,
                               builder: (_) => RoundedAlertDialog(
                                 title: "Your Order was placed!",
                                 buttonsList: [
                                   FlatButton(
                                     onPressed: () {
-                                      Navigator.popUntil(context,
-                                          ModalRoute.withName("/home"));
+                                      Navigator.pop(context);
+
+                                      //FIXME: UNCOMMENTING THIS GIVES THE LEGENDARY 'WHITE SCREEN OF DEATH'
+//                                      Navigator.popUntil(context,
+//                                          ModalRoute.withName("/home"));
                                     },
                                     child: Text("Okay"),
                                   )
@@ -657,6 +617,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                               "name": name,
                               "phone": phone,
                               "address": address,
+                              "email": email,
                               "price": widget.price.toString(),
                               "product_list": cart.products
                                   .map<String>((CartItem cartItem) {
@@ -696,12 +657,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                           });
 
                           cart.clear();
-                          Navigator.popUntil(
-                            context,
-                            ModalRoute.withName("/home"),
-                          );
                         }
-                        setState(() {});
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -724,5 +680,61 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
         ),
       ),
     );
+  }
+}
+
+// ignore: must_be_immutable
+class InformationTextField extends StatefulWidget {
+  String title;
+  String placeholder;
+  String errorMessage;
+  TextInputType inputType;
+
+  InformationTextField(
+      {this.title,
+      this.placeholder,
+      this.errorMessage,
+      this.inputType = TextInputType.name});
+
+  bool error = false;
+  TextEditingController controller = TextEditingController();
+
+  String get value => controller.text;
+
+  @override
+  _InformationTextFieldState createState() => _InformationTextFieldState();
+}
+
+class _InformationTextFieldState extends State<InformationTextField> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(
+        widget.title,
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+      TextField(
+        decoration: InputDecoration(
+            focusedBorder: InputBorder.none,
+            border: InputBorder.none,
+            hintText: widget.placeholder),
+        controller: widget.controller,
+        keyboardType: widget.inputType,
+        style: TextStyle(
+            fontSize: 17, color: Colors.grey[600], fontWeight: FontWeight.w500),
+      ),
+      if (widget.error) ...[
+        Text(
+          widget.errorMessage,
+          style: TextStyle(fontSize: 15, color: Colors.redAccent),
+        ),
+        SizedBox(height: 8),
+      ],
+      Divider(
+        height: 8,
+        thickness: 2,
+      ),
+      SizedBox(height: 12),
+    ]);
   }
 }

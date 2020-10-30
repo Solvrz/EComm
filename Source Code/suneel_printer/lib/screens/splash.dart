@@ -40,6 +40,7 @@ class _SplashScreenState extends State<SplashScreen>
     holeSize = Tween<double>(begin: 0.0, end: 2.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
     );
+
     _controller.addListener(() {
       setState(() {});
     });
