@@ -66,7 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 5),
                           child: Text(cart.products.length.toString(),
                               style: TextStyle(
                                   color: Colors.white,
@@ -163,14 +164,16 @@ class _HomeScreenState extends State<HomeScreen> {
               FutureBuilder<QuerySnapshot>(
                 future: database.collection("carouselImages").get(),
                 builder: (context, future) {
-                  List carouselImages = ["https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"];
+                  List carouselImages = [
+                    "https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"
+                  ];
 
                   if (future.hasData) {
-                    carouselImages = future.data.docs.map((e) => e.get("url")).toList();
+                    carouselImages =
+                        future.data.docs.map((e) => e.get("url")).toList();
                   }
 
-                  return Column(
-                  children: [
+                  return Column(children: [
                     CarouselSlider.builder(
                       itemCount: carouselImages.length,
                       itemBuilder: (context, index) => ClipRRect(
@@ -200,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
                           carouselImages.length,
-                              (int index) => AnimatedContainer(
+                          (int index) => AnimatedContainer(
                             duration: Duration(milliseconds: 400),
                             width: _current == index ? 16.0 : 8.0,
                             height: _current == index ? 6.0 : 8.0,
@@ -214,8 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                  ]
-                );
+                  ]);
                 },
               ),
               SizedBox(height: 18),

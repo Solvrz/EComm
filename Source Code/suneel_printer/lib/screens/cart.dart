@@ -648,7 +648,7 @@ class _CheckOutSheetState extends State<CheckOutSheet> {
                           });
 
                           await http.post(
-                            "https://suneel-printers-mail-server.herokuapp.com/order_request",
+                            "https://suneel-printers.herokuapp.com/order_request",
                             headers: <String, String>{
                               "Content-Type": "application/json; charset=UTF-8",
                             },
