@@ -553,6 +553,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
                         FocusScope.of(context).unfocus();
 
+                        // TODO FIXME Need to hot refresh to see error on fields
+
                         if (name.trim() == "")
                           fields["name"].error = true;
                         else
@@ -611,23 +613,25 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             );
                           });
 
-                          http.post(
-                            "https://suneel-printers-mail-server.herokuapp.com/order_request",
+                          payment.startPayment();
+
+                          await http.post(
+                            "https://suneel-printers.herokuapp.com/order_request",
                             headers: <String, String>{
                               "Content-Type": "application/json; charset=UTF-8",
                             },
                             body: jsonEncode(<String, String>{
-                              "customer": "yugthapar37@gmail.com",
                               "name": name,
                               "phone": phone,
                               "address": address,
                               "email": email,
+                              "payment_mode": "COD",
                               "price": widget.price.toString(),
                               "product_list": bag.products
                                   .map<String>((BagItem bagItem) {
                                     Product product = bagItem.product;
 
-                                    return '''
+                                    return '''t
                 <tr>
                     <td>${product.name}</td>
                     <td class="righty">${bagItem.quantity}</td>

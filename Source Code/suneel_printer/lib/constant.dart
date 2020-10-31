@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/models/bag.dart';
+import 'package:suneel_printer/models/payment.dart';
 import 'package:suneel_printer/models/wishlist.dart';
 
 bool admin = false;
@@ -30,6 +31,7 @@ FirebaseFirestore database = FirebaseFirestore.instance;
 
 Bag bag = Bag();
 Wishlist wishlist = Wishlist();
+Payment payment = Payment();
 SharedPreferences preferences;
 
 const List<Map<String, dynamic>> categories = [

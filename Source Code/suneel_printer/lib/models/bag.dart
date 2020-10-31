@@ -146,9 +146,11 @@ class Bag {
               _changeLog.add(
                   "The variations for product '${productData["name"]}' have been updated.");
 
-              updatedData["selected"] = productData["variations"].asMap().map((_, element) {
+              updatedData["selected"] =
+                  productData["variations"].asMap().map((_, element) {
                 Variation variation = Variation.fromJson(element);
-                return MapEntry(variation.name, variation.options.first.toJson());
+                return MapEntry(
+                    variation.name, variation.options.first.toJson());
               });
             } else if (changeKey == "name") {
               _changeLog.add(
