@@ -258,7 +258,7 @@ class OrderProductPage extends StatefulWidget {
   final List<Map> tabsData;
   final List<DocumentReference> tabs;
   int _currentTab = 0;
-
+  
   OrderProductPage(this.title, this.tabsData, this.tabs);
 
   @override
@@ -266,7 +266,14 @@ class OrderProductPage extends StatefulWidget {
 }
 
 class _OrderProductPageState extends State<OrderProductPage> {
+  String value;
   @override
+  void initState() {
+    // TODO: implement initState
+    value = widget.tabsData[0]['name'];
+  }
+  @override
+
   Widget build(BuildContext context) {
     return Column(children: [
       StreamBuilder<QuerySnapshot>(
@@ -275,48 +282,82 @@ class _OrderProductPageState extends State<OrderProductPage> {
         builder: (context, future) {
           if (future.hasData) {
             if (future.data.docs.isNotEmpty) {
-              return Expanded(
-                child: ProductList(
-                  products: future.data.docs
-                      .map<Product>(
-                        (DocumentSnapshot e) => Product.fromJson(
-                          e.data(),
-                        ),
-                      )
-                      .toList(),
-                  args: AddProductArguments(
-                      tabsData: widget.tabsData,
-                      tabs: widget.tabs,
-                      title: widget.title,
-                      currentTab: widget._currentTab),
-                ),
-              );
-            } else {
-              return Center(
-                child: Container(
-                  height: MediaQuery.of(context).size.height / 1.5,
-                  width: MediaQuery.of(context).size.width / 1.5,
-                  child: EmptyListWidget(
-                    title: "No Product",
-                    subTitle: "No Product Available Yet",
-                  ),
-                ),
-              );
-            }
-          } else {
-            return Container(
-              height: MediaQuery.of(context).size.height / 1.5,
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Center(
-                child: Text("Loading..."),
-              ),
-            );
-          }
-        },
-      ),
-    ]);
-  }
-}
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children:[
+        Container(
+          height : 100.0, 
+          width: MediaQuery.of(context).size.width/ 1.5,
+          child : Row(children : [
+            Text('Service'), 
+            DropDownButton(
+              hint : Text(value),
+              items : List.generate(widget.tabsData.length, (index) => widget.tabsData[index]['name']) .map<DropdownMenuItem>(
+                                            (String val) => DropdownMenuItem(
+                                              value: val,
+                                                onChanged: (value) {
+                   
+                    setState(() {
+                      value = value;}},
+                                              child: Text(
+                                                val,
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.grey[900],
+                                                    letterSpacing: 0.2,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily:
+                                                        "sans-serif-condensed"),
+                                              ),
+                                            ),
+                                          )
+            )
+             ]   )
+        ),
+        SizedBox(height : 20.0),
+        Container(
+          height : 100.0, 
+          width: MediaQuery.of(context).size.width/ 1.5,
+          Column(children:[
+            Row(children:[
+              Text('Name'), 
+              //TODO Fetch from delivery information
+              Text('ABC')
+            ]),
+            Row(children:[
+              Text('Phone No.')
+              Text('9779902905')
+            ])
+          ])
+        ),
+
+        GestureDetector(
+          onTap:()async{
+            await http.post(
+      "https://suneel-printers.herokuapp.com/onOrder",
+      headers: <String, String>{
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+      body: jsonEncode(<String, String>{
+        "name": 'abc',
+        "phone": 'Phone',
+        "email": 'ljfoyal207@gmail.com',
+        "order_list": value
+           
+      }),
+    );
+
+          },
+          child: Container(
+            height : 100.0, 
+          width: MediaQuery.of(context).size.width/ 1.5,
+          child : Text('Place Order')
+          )
+        )
+      ]
+    );
+    
+}}})]);}
 
 class ProductList extends StatefulWidget {
   ProductList({@required this.products, this.args});
