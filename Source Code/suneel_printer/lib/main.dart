@@ -51,12 +51,7 @@ class SuneelPrinter extends StatelessWidget {
       builder: (context, widget) => ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(
           context,
-          NotificationListener<OverscrollIndicatorNotification>(
-              onNotification: (overScroll) {
-                overScroll.disallowGlow();
-                return;
-              },
-              child: widget),
+          Container(child: widget),
         ),
         maxWidth: 1200,
         minWidth: 360,

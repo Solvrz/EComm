@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:suneel_printer/components/category_grid.dart';
+import 'package:suneel_printer/components/home%20_components.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 
@@ -79,33 +81,31 @@ class _HomeScreenState extends State<HomeScreen> {
                               Row(
                                 children: [
                                   Icon(Icons.location_on_outlined,
-                                      color: Colors.grey[900], size: 20),
+                                      color: kUIDarkText, size: 20),
                                   SizedBox(width: 2),
-                                  SizedBox(
-                                    height: 30,
-                                    child: DropdownButton(
-                                      underline: Container(),
-                                      value: "Mandi Gobindgarh",
-                                      items: ["Mandi Gobindgarh", "Custom"]
-                                          .map<DropdownMenuItem>(
-                                            (String val) => DropdownMenuItem(
-                                              value: val,
-                                              child: Text(
-                                                val,
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.grey[900],
-                                                    letterSpacing: 0.2,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily:
-                                                        "sans-serif-condensed"),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                      onChanged: (value) {},
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await showMaterialModalBottomSheet(
+                                        backgroundColor: Colors.transparent,
+                                        context: context,
+                                        builder: (_, __) => InformationSheet(context),);
+                                      setState(() {});
+                                    },
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(maxWidth: (MediaQuery.of(context).size.width - 24) / 2.1),
+                                      child: Text(selectedInfo != null ? selectedInfo["address"] : "Not Given",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: kUIDarkText,
+                                              letterSpacing: 0.2,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily:
+                                                  "sans-serif-condensed")),
                                     ),
                                   ),
+                                  Icon(Icons.arrow_drop_down,
+                                      color: Colors.grey[600])
                                 ],
                               )
                             ]),
@@ -118,13 +118,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Navigator.pushNamed(context, "/bag"),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset("assets/images/ShoppingBag.png", width: 30, height: 30),
+                                    child: Image.asset(
+                                        "assets/images/ShoppingBag.png",
+                                        width: 30,
+                                        height: 30),
                                   )),
                               GestureDetector(
                                 onTap: () => print("Past Orders Go Here!"),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset("assets/images/YourOrders.png", width: 30, height: 30),
+                                  child: Image.asset(
+                                      "assets/images/YourOrders.png",
+                                      width: 30,
+                                      height: 30),
                                 ),
                               ),
                             ]))

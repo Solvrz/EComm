@@ -34,6 +34,8 @@ Wishlist wishlist = Wishlist();
 Payment payment = Payment();
 SharedPreferences preferences;
 
+Map selectedInfo;
+
 const List<Map<String, dynamic>> categories = [
   {
     "uId": 1,
