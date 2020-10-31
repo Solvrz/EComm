@@ -52,191 +52,196 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           backgroundColor: kUIColor,
           resizeToAvoidBottomInset: false,
-          floatingActionButton: admin
-              ? null
-              : FloatingActionButton(
-                  onPressed: () => Navigator.pushNamed(context, "/cart"),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Icon(
-                        Icons.shopping_cart_outlined,
-                        size: 30,
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                          child: Text(cart.products.length.toString(),
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                    ],
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4.0),
+                                child: Text(
+                                  "Deliver To",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.2,
+                                      fontFamily: "sans-serif-condensed"),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Icon(Icons.location_on_outlined,
+                                      color: Colors.grey[900], size: 20),
+                                  SizedBox(width: 2),
+                                  SizedBox(
+                                    height: 30,
+                                    child: DropdownButton(
+                                      underline: Container(),
+                                      value: "Mandi Gobindgarh",
+                                      items: ["Mandi Gobindgarh", "Custom"]
+                                          .map<DropdownMenuItem>(
+                                            (String val) => DropdownMenuItem(
+                                              value: val,
+                                              child: Text(
+                                                val,
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.grey[900],
+                                                    letterSpacing: 0.2,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily:
+                                                        "sans-serif-condensed"),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                      onChanged: (value) {},
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ]),
+                        Expanded(
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                              GestureDetector(
+                                  onTap: () =>
+                                      Navigator.pushNamed(context, "/bag"),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.asset("assets/images/ShoppingBag.png", width: 30, height: 30),
+                                  )),
+                              GestureDetector(
+                                onTap: () => print("Past Orders Go Here!"),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset("assets/images/YourOrders.png", width: 30, height: 30),
+                                ),
+                              ),
+                            ]))
+                      ],
+                    ),
                   ),
-                  backgroundColor: kUIAccent),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(
-                          "Deliver To",
-                          style: TextStyle(
-                              fontSize: 16,
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    margin: EdgeInsets.symmetric(vertical: 24),
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(children: [
+                      Icon(Icons.search, color: Colors.grey[600]),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Search for Products",
+                            hintStyle: TextStyle(
                               color: Colors.grey[600],
                               fontWeight: FontWeight.bold,
-                              letterSpacing: 0.2,
-                              fontFamily: "sans-serif-condensed"),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.location_on_outlined,
-                              color: Colors.grey[900], size: 20),
-                          SizedBox(width: 2),
-                          SizedBox(
-                            height: 30,
-                            child: DropdownButton(
-                              underline: Container(),
-                              value: "Mandi Gobindgarh",
-                              items: ["Mandi Gobindgarh", "Custom"]
-                                  .map<DropdownMenuItem>(
-                                    (String val) => DropdownMenuItem(
-                                      value: val,
-                                      child: Text(
-                                        val,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.grey[900],
-                                            letterSpacing: 0.2,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: "sans-serif-condensed"),
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {},
                             ),
                           ),
-                        ],
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       )
                     ]),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                margin: EdgeInsets.symmetric(vertical: 24),
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(children: [
-                  Icon(Icons.search, color: Colors.grey[600]),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Search for Products",
-                        hintStyle: TextStyle(
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      style: TextStyle(
-                        color: Colors.grey[800],
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                ]),
-              ),
-              FutureBuilder<QuerySnapshot>(
-                future: database.collection("carouselImages").get(),
-                builder: (context, future) {
-                  List carouselImages = ["https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"];
+                  ),
+                  FutureBuilder<QuerySnapshot>(
+                    future: database.collection("carouselImages").get(),
+                    builder: (context, future) {
+                      List carouselImages = [
+                        "https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"
+                      ];
 
-                  if (future.hasData) {
-                    carouselImages = future.data.docs.map((e) => e.get("url")).toList();
-                  }
+                      if (future.hasData) {
+                        carouselImages =
+                            future.data.docs.map((e) => e.get("url")).toList();
+                      }
 
-                  return Column(
-                  children: [
-                    CarouselSlider.builder(
-                      itemCount: carouselImages.length,
-                      itemBuilder: (context, index) => ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            image: DecorationImage(
-                                image: NetworkImage(carouselImages[index]),
-                                fit: BoxFit.cover),
-                          ),
-                        ),
-                      ),
-                      options: CarouselOptions(
-                          autoPlay: carouselImages.length > 1 ? true : false,
-                          enlargeCenterPage: true,
-                          aspectRatio: 2,
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _current = index;
-                            });
-                          }),
-                    ),
-                    SizedBox(height: 12),
-                    if (carouselImages.length > 1)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          carouselImages.length,
-                              (int index) => AnimatedContainer(
-                            duration: Duration(milliseconds: 400),
-                            width: _current == index ? 16.0 : 8.0,
-                            height: _current == index ? 6.0 : 8.0,
-                            margin: EdgeInsets.symmetric(horizontal: 3.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: _current == index
-                                  ? Color.fromRGBO(0, 0, 0, 0.9)
-                                  : Color.fromRGBO(0, 0, 0, 0.4),
+                      return Column(children: [
+                        CarouselSlider.builder(
+                          itemCount: carouselImages.length,
+                          itemBuilder: (context, index) => ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                image: DecorationImage(
+                                    image: NetworkImage(carouselImages[index]),
+                                    fit: BoxFit.cover),
+                              ),
                             ),
                           ),
+                          options: CarouselOptions(
+                              autoPlay:
+                                  carouselImages.length > 1 ? true : false,
+                              enlargeCenterPage: true,
+                              aspectRatio: 2,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _current = index;
+                                });
+                              }),
                         ),
-                      ),
-                  ]
-                );
-                },
+                        SizedBox(height: 12),
+                        if (carouselImages.length > 1)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                              carouselImages.length,
+                              (int index) => AnimatedContainer(
+                                duration: Duration(milliseconds: 400),
+                                width: _current == index ? 16.0 : 8.0,
+                                height: _current == index ? 6.0 : 8.0,
+                                margin: EdgeInsets.symmetric(horizontal: 3.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: _current == index
+                                      ? Color.fromRGBO(0, 0, 0, 0.9)
+                                      : Color.fromRGBO(0, 0, 0, 0.4),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ]);
+                    },
+                  ),
+                  SizedBox(height: 18),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Categories",
+                            style: TextStyle(
+                                fontFamily: "sans-serif-condensed",
+                                fontSize: 24,
+                                letterSpacing: 0.2,
+                                fontWeight: FontWeight.bold,
+                                color: kUIDarkText),
+                          ),
+                          CategoryGrid(categories: categories),
+                        ]),
+                  ),
+                ]),
               ),
-              SizedBox(height: 18),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Categories",
-                        style: TextStyle(
-                            fontFamily: "sans-serif-condensed",
-                            fontSize: 24,
-                            letterSpacing: 0.2,
-                            fontWeight: FontWeight.bold,
-                            color: kUIDarkText),
-                      ),
-                      CategoryGrid(categories: categories),
-                    ]),
-              )
-            ]),
+            ],
           ),
         ),
       ),

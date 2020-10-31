@@ -61,15 +61,17 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => Navigator.pushNamed(context, "/cart"),
+                      onTap: () async {
+                        await Navigator.pushNamed(context, "/bag"); //DO NOT REMOVE THIS AWAIT STATEMENT
+                        setState(() {});
+                      },
                       child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: kUIColor),
-                        ),
-                        padding: EdgeInsets.all(8),
-                        child: Icon(Icons.shopping_cart_outlined,
-                            color: kUIDarkText, size: 26),
-                      ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: kUIColor),
+                          ),
+                          padding: EdgeInsets.all(8),
+                          child: Image.asset("assets/images/ShoppingBag.png",
+                              width: 30, height: 30)),
                     )
                   ],
                 ),
@@ -178,47 +180,52 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                 child: Row(
                   children: [
-                    if (cart.containsProduct(product)) Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey[900])
-                      ),
-                      child: IntrinsicWidth(
-                        child: Column(
-                          children: [
-                            Icon(Icons.remove, size: 30),
-                            Text(cart.getQuantity(product).toString(), style: TextStyle(fontSize: 22, color: Colors.grey[900])),
-                            Icon(Icons.add, size: 30),
-                          ],
+                    if (bag.containsProduct(product))
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.grey[900])),
+                        child: IntrinsicWidth(
+                          child: Column(
+                            children: [
+                              Icon(Icons.remove, size: 30),
+                              Text(bag.getQuantity(product).toString(),
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.grey[900])),
+                              Icon(Icons.add, size: 30),
+                            ],
+                          ),
                         ),
+                        margin: EdgeInsets.only(right: 16),
                       ),
-                      margin: EdgeInsets.only(right: 16),
-                    ),
                     Expanded(
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        color: cart.containsProduct(product)
+                        color: bag.containsProduct(product)
                             ? Colors.grey[600]
                             : kUIAccent,
                         padding: EdgeInsets.symmetric(vertical: 16),
                         child: Text(
-                          cart.containsProduct(product) ? "IN CART" : "ADD TO CART",
+                          bag.containsProduct(product)
+                              ? "IN BAG"
+                              : "ADD TO BAG",
                           style: TextStyle(
                               fontSize: 20,
                               color: Colors.white,
                               fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
-                          if (!cart.containsProduct(product)) {
-                            cart.addItem(product);
+                          if (!bag.containsProduct(product)) {
+                            bag.addItem(product);
                           } else {
-                            cart.removeItem(product);
+                            bag.removeItem(product);
                           }
                           setState(() {});
                         },

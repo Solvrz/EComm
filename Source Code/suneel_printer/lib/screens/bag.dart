@@ -8,24 +8,24 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/models/cart.dart';
+import 'package:suneel_printer/models/bag.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/product.dart';
 
-class CartScreen extends StatefulWidget {
+class BagScreen extends StatefulWidget {
   @override
-  _CartScreenState createState() => _CartScreenState();
+  _BagScreenState createState() => _BagScreenState();
 }
 
-class _CartScreenState extends State<CartScreen> {
+class _BagScreenState extends State<BagScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     double price = 0.0;
 
-    cart.products.forEach((CartItem cartItem) {
-      price += double.parse(cartItem.product.price) * cartItem.quantity;
+    bag.products.forEach((BagItem bagItem) {
+      price += double.parse(bagItem.product.price) * bagItem.quantity;
     });
 
     return SafeArea(
@@ -71,33 +71,37 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               MaterialButton(
-                color:
-                    cart.hasProducts ? kUIAccent : kUIDarkText.withOpacity(0.5),
+                color: kUIAccent,
+                disabledColor: kUIDarkText.withOpacity(0.5),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                textColor: kUILightText,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shopping_cart, size: 20),
+                    Icon(Icons.check_circle_outline, color: Colors.grey[200]),
                     SizedBox(width: 8),
-                    Text("Checkout"),
+                    Text("Checkout",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[200])),
                   ],
                 ),
-                onPressed: () {
-                  if (cart.hasProducts)
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (_) => Padding(
-                        padding: MediaQuery.of(context).viewInsets,
-                        child: CheckoutSheet(price),
-                      ),
-                    );
-                },
+                onPressed: bag.hasProducts
+                    ? () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (_) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: CheckoutSheet(price),
+                          ),
+                        );
+                      }
+                    : null,
               )
             ],
           ),
@@ -122,7 +126,7 @@ class _CartScreenState extends State<CartScreen> {
                   Expanded(
                     child: Center(
                       child: Text(
-                        "My Cart",
+                        "My Bag",
                         style: TextStyle(
                             fontSize: 24,
                             color: kUIDarkText,
@@ -131,16 +135,16 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: cart.hasProducts
+                    onTap: bag.hasProducts
                         ? () {
-                            cart.clear();
+                            bag.clear();
                             setState(() {});
                           }
                         : () {},
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Icon(
-                        cart.hasProducts ? Icons.delete : null,
+                        bag.hasProducts ? Icons.delete : null,
                         size: 26,
                         color: kUIDarkText.withOpacity(0.6),
                       ),
@@ -149,14 +153,14 @@ class _CartScreenState extends State<CartScreen> {
                 ],
               ),
             ),
-            if (cart.changeLog.isNotEmpty)
+            if (bag.changeLog.isNotEmpty)
               GestureDetector(
                 onTap: () async {
                   await showDialog(
                     context: context,
                     builder: (_) => WillPopScope(
                       onWillPop: () async {
-                        setState(() => cart.changeLog.clear());
+                        setState(() => bag.changeLog.clear());
                         return true;
                       },
                       child: RoundedAlertDialog(title: "Alerts", otherWidgets: [
@@ -165,12 +169,12 @@ class _CartScreenState extends State<CartScreen> {
                           width: 300,
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: cart.changeLog.length,
+                            itemCount: bag.changeLog.length,
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
                                   Text(
-                                    cart.changeLog[index],
+                                    bag.changeLog[index],
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontSize: 16,
@@ -202,7 +206,7 @@ class _CartScreenState extends State<CartScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Alerts for items in your cart",
+                        "Alerts for items in your bag",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
@@ -217,14 +221,14 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
             Expanded(
-              child: cart.products.isNotEmpty
+              child: bag.products.isNotEmpty
                   ? Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 24.0),
                       child: AnimatedList(
                         shrinkWrap: true,
                         key: _listKey,
-                        initialItemCount: cart.products.length,
+                        initialItemCount: bag.products.length,
                         itemBuilder: (BuildContext context, int index,
                                 Animation<double> animation) =>
                             _buildItem(context, index, animation),
@@ -249,18 +253,18 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
-    final Product product = cart.products[index].product;
+    final Product product = bag.products[index].product;
 
     return SizeTransition(
       sizeFactor: animation,
       child: Slidable(
-        key: ObjectKey(cart.products[index]),
+        key: ObjectKey(bag.products[index]),
         actionPane: SlidableDrawerActionPane(),
         child: GestureDetector(
           onTap: () => Navigator.pushNamed(
             context,
             "/product",
-            arguments: ProductArguments(cart.products[index].product),
+            arguments: ProductArguments(bag.products[index].product),
           ),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8),
@@ -354,8 +358,8 @@ class _CartScreenState extends State<CartScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          if (cart.getQuantity(product) > 1) {
-                            cart.decreaseQuantity(product);
+                          if (bag.getQuantity(product) > 1) {
+                            bag.decreaseQuantity(product);
                           }
                           setState(() {});
                         },
@@ -365,7 +369,7 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ),
                       Text(
-                        cart.getQuantity(product).toString(),
+                        bag.getQuantity(product).toString(),
                         style: TextStyle(
                             color: kUIColor,
                             fontSize: 18,
@@ -373,7 +377,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          cart.increaseQuantity(product);
+                          bag.increaseQuantity(product);
                           setState(() {});
                         },
                         child: Padding(
@@ -396,7 +400,7 @@ class _CartScreenState extends State<CartScreen> {
           GestureDetector(
             onTap: () {
               Timer(Duration(milliseconds: 200), () {
-                cart.removeItem(product);
+                bag.removeItem(product);
                 setState(() {});
               });
               _listKey.currentState.removeItem(
@@ -497,7 +501,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                 children: [
                   ...fields.values.toList(),
                   Text(
-                    "${cart.products.length} Items",
+                    "${bag.products.length} Items",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -572,8 +576,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         else
                           fields["email"].error = false;
 
-                        http.Response result = await http
-                            .get("https://api.postalpincode.in/pincode/$pincode");
+                        http.Response result = await http.get(
+                            "https://api.postalpincode.in/pincode/$pincode");
 
                         if (jsonDecode(result.body)[0]["Status"] == "Error")
                           fields["pincode"].error = true;
@@ -619,15 +623,15 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               "address": address,
                               "email": email,
                               "price": widget.price.toString(),
-                              "product_list": cart.products
-                                  .map<String>((CartItem cartItem) {
-                                    Product product = cartItem.product;
+                              "product_list": bag.products
+                                  .map<String>((BagItem bagItem) {
+                                    Product product = bagItem.product;
 
                                     return '''
                 <tr>
                     <td>${product.name}</td>
-                    <td class="righty">${cartItem.quantity}</td>
-                    <td class="righty">${(double.parse(product.price) * cartItem.quantity).toStringAsFixed(2)}</td>
+                    <td class="righty">${bagItem.quantity}</td>
+                    <td class="righty">${(double.parse(product.price) * bagItem.quantity).toStringAsFixed(2)}</td>
                 </tr>
                 ''';
                                   })
@@ -640,7 +644,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               preferences.getStringList("orders") ?? [];
 
                           pastOrders.add(jsonEncode(
-                              cart.products.map((e) => e.toString()).toList()));
+                              bag.products.map((e) => e.toString()).toList()));
 
                           preferences.setStringList("orders", pastOrders);
 
@@ -648,7 +652,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             "name": name,
                             "phone": phone,
                             "address": address,
-                            "products": cart.products.map((e) {
+                            "products": bag.products.map((e) {
                               return {
                                 "product": e.product.toJson(),
                                 "quantity": e.quantity
@@ -656,7 +660,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             }).toList()
                           });
 
-                          cart.clear();
+                          bag.clear();
                         }
                       },
                       shape: RoundedRectangleBorder(

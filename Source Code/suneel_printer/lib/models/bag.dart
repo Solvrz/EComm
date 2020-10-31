@@ -5,11 +5,11 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/models/variation.dart';
 
-class CartItem {
+class BagItem {
   Product product;
   int quantity;
 
-  CartItem(this.product, this.quantity);
+  BagItem(this.product, this.quantity);
 
   String toString() {
     return "${jsonEncode(
@@ -17,8 +17,8 @@ class CartItem {
     )}\n$quantity";
   }
 
-  static CartItem fromString(String data) {
-    return CartItem(
+  static BagItem fromString(String data) {
+    return BagItem(
       Product.fromJson(
         jsonDecode(data.split("\n")[0]),
       ),
@@ -27,11 +27,11 @@ class CartItem {
   }
 }
 
-class Cart {
-  List<CartItem> _products = [];
+class Bag {
+  List<BagItem> _products = [];
   List<String> _changeLog = [];
 
-  List<CartItem> get products => _products;
+  List<BagItem> get products => _products;
   List<String> get changeLog => _changeLog;
 
   bool get hasNoProducts => !(_products.length > 0);
@@ -40,7 +40,7 @@ class Cart {
 
   void addItem(Product product) {
     _products.add(
-      CartItem(
+      BagItem(
           Product.fromJson(
             product.toJson(),
           ),
@@ -50,7 +50,7 @@ class Cart {
   }
 
   void removeItem(Product product) {
-    _products.removeWhere((CartItem cartItem) => cartItem.product == product);
+    _products.removeWhere((BagItem bagItem) => bagItem.product == product);
     _save();
   }
 
@@ -59,21 +59,21 @@ class Cart {
   }
 
   void increaseQuantity(Product product, {int increase = 1}) {
-    _products.forEach((CartItem cartItem) {
-      if (cartItem.product == product) {
-        cartItem.quantity += increase;
+    _products.forEach((BagItem bagItem) {
+      if (bagItem.product == product) {
+        bagItem.quantity += increase;
 
-        if (cartItem.quantity > 15) cartItem.quantity = 15;
+        if (bagItem.quantity > 15) bagItem.quantity = 15;
       }
     });
     _save();
   }
 
   void decreaseQuantity(Product product, {int decrease = 1}) {
-    for (var cartItem in _products) {
-      if (cartItem.product == product) {
-        cartItem.quantity -= decrease;
-        if (cartItem.quantity == 0) {
+    for (var bagItem in _products) {
+      if (bagItem.product == product) {
+        bagItem.quantity -= decrease;
+        if (bagItem.quantity == 0) {
           removeItem(product);
           break;
         }
@@ -84,8 +84,8 @@ class Cart {
 
   bool containsProduct(Product product) {
     bool contains;
-    for (CartItem cartItem in _products) {
-      if (cartItem.product == product) {
+    for (BagItem bagItem in _products) {
+      if (bagItem.product == product) {
         contains = true;
         break;
       }
@@ -97,8 +97,8 @@ class Cart {
   int getQuantity(Product product) {
     int quantity = 0;
 
-    _products.forEach((cartItem) {
-      if (cartItem.product == product) quantity = cartItem.quantity;
+    _products.forEach((bagItem) {
+      if (bagItem.product == product) quantity = bagItem.quantity;
     });
 
     return quantity;
@@ -106,26 +106,26 @@ class Cart {
 
   void _save() async {
     await preferences.setStringList(
-      "cart",
+      "bag",
       _products
           .map<String>(
-            (CartItem cartItem) => cartItem.toString(),
+            (BagItem bagItem) => bagItem.toString(),
           )
           .toList(),
     );
   }
 
   void load() async {
-    final List<String> cartData = preferences.getStringList("cart");
+    final List<String> bagData = preferences.getStringList("bag");
 
-    if (cartData != null) {
-      List<CartItem> items = cartData
-          .map<CartItem>(
-            (String data) => CartItem.fromString(data),
+    if (bagData != null) {
+      List<BagItem> items = bagData
+          .map<BagItem>(
+            (String data) => BagItem.fromString(data),
           )
           .toList();
 
-      for (CartItem item in items) {
+      for (BagItem item in items) {
         QuerySnapshot products = await database
             .collection("products")
             .where("uId", isEqualTo: item.product.uId)
@@ -133,7 +133,7 @@ class Cart {
 
         if (products.docs.isEmpty) {
           _changeLog.add("The product '${item.product.name}' has been removed from the store");
-          cart.removeItem(item.product);
+          bag.removeItem(item.product);
         } else {
           Map productData = products.docs.first.data();
           List<String> diff =

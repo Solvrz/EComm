@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      cart.load();
+      bag.load();
       wishlist.load();
     });
 

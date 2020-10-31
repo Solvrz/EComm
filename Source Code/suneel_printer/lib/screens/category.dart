@@ -99,12 +99,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       GestureDetector(
                         onTap: admin
                             ? () {}
-                            : () => Navigator.pushNamed(context, "/cart"),
+                            : () => Navigator.pushNamed(context, "/bag"),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                              admin ? null : Icons.shopping_cart_outlined,
-                              size: 26),
+                          child: admin ? SizedBox(height: 34, width: 34) : Image.asset("assets/images/ShoppingBag.png", width: 30, height: 30)
                         ),
                       )
                     ],
