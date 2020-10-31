@@ -15,6 +15,7 @@ class _SplashScreenState extends State<SplashScreen>
   Size size = Size.zero;
   AnimationController _controller;
   Animation<double> holeSize;
+  Animation<Color> holeColor;
 
   void didChangeDependencies() {
     setState(() {
@@ -41,6 +42,11 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
     );
 
+    holeColor =
+        ColorTween(begin: Color(0xfffcd7de), end: kUIColor).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
+    );
+
     _controller.addListener(() {
       setState(() {});
     });
@@ -58,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen>
       Container(
           width: double.infinity,
           height: double.infinity,
-          color: holeSize.value > 1.5 ? Colors.white : Colors.red),
+          color: holeSize.value > 1.5 ? kUIColor : Color(0xfff23558)),
       if (holeSize.value < 1.5)
         Center(
           child: Image.asset(
@@ -76,7 +82,9 @@ class _SplashScreenState extends State<SplashScreen>
           width: double.infinity,
           height: double.infinity,
           child: CustomPaint(
-            painter: AnimatedCircle(circleSize: holeSize.value * size.height),
+            painter: AnimatedCircle(
+                circleSize: holeSize.value * size.height,
+                holeColor: holeColor.value),
           ),
         ),
     ]);
@@ -92,9 +100,11 @@ class _SplashScreenState extends State<SplashScreen>
 class AnimatedCircle extends CustomPainter {
   AnimatedCircle({
     @required this.circleSize,
+    @required this.holeColor,
   });
 
   double circleSize;
+  Color holeColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -111,7 +121,7 @@ class AnimatedCircle extends CustomPainter {
         ..close(),
     );
 
-    canvas.drawPath(circle, Paint()..color = Colors.white);
+    canvas.drawPath(circle, Paint()..color = holeColor);
   }
 
   @override

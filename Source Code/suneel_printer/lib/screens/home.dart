@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:suneel_printer/components/category_grid.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/screens/category.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -231,18 +231,72 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6.0),
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             "Categories",
                             style: TextStyle(
                                 fontFamily: "sans-serif-condensed",
-                                fontSize: 24,
+                                fontSize: 32,
                                 letterSpacing: 0.2,
                                 fontWeight: FontWeight.bold,
                                 color: kUIDarkText),
                           ),
-                          CategoryGrid(categories: categories),
+                          Container(
+                            margin: const EdgeInsets.only(top: 22),
+                            child: GridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              childAspectRatio: 0.9,
+                              children:
+                                  List.generate(categories.length, (int index) {
+                                Map<String, dynamic> data = categories[index];
+                                return GestureDetector(
+                                  onTap: () async {
+                                    Navigator.pushNamed(
+                                      context,
+                                      "/category",
+                                      arguments: CategoryArguments(
+                                        data,
+                                        await database
+                                            .collection("categories")
+                                            .where("uId",
+                                                isEqualTo: data["uId"])
+                                            .get(),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffFFEBEB),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(data["image"],
+                                            height:50, width:50),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          data["name"],
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: kUIDarkText,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
                         ]),
                   ),
                 ]),

@@ -24,6 +24,8 @@ class Payment {
     if (response.statusCode == 200) {
       Map result = jsonDecode(response.body);
 
+      print("ID: ${result["orderId"].runtimeType}");
+
       var arguments = <String, dynamic>{
         "mid": "MoShyC80984595390154",
         "orderId": result["orderId"],
@@ -33,13 +35,13 @@ class Payment {
         "isStaging": true
       };
 
-      try {
-        var result = await _channel.invokeMethod("pay", arguments);
-        print("RESULT: ${result.toString()}");
-      } catch (err) {
-        print("ERROR: ${err.message}");
-        return false;
-      }
+        try {
+          var result = await _channel.invokeMethod("pay", arguments);
+          print("RESULT: ${result.toString()}");
+        } catch (err) {
+          print("ERROR: ${err.message}");
+          return false;
+        }
     }
 
     return true;

@@ -35,8 +35,3 @@ flutter:
 
   assets:
     - assets/images/
-
-  fonts:
-    - family: Kalam-Bold
-      fonts:
-        - asset: assets/fonts/Kalam-Bold.ttf
