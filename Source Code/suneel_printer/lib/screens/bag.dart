@@ -561,8 +561,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   String email = fields["email"].value;
 
                   if (await payment.startPayment(email, phone, widget.price)) {
-                      placeOrder("PayTM / Net Banking");
-                      Navigator.popUntil(context, ModalRoute.withName("/home"));
+                    placeOrder("PayTM / Net Banking");
+                    Navigator.popUntil(context, ModalRoute.withName("/home"));
                   }
                 },
                 shape: RoundedRectangleBorder(

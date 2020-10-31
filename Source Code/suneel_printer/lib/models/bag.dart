@@ -133,7 +133,8 @@ class Bag {
             .get();
 
         if (products.docs.isEmpty) {
-          _changeLog.add("The product '${item.product.name}' has been removed from the store");
+          _changeLog.add(
+              "The product '${item.product.name}' has been removed from the store");
           bag.removeItem(item.product);
         } else {
           Map productData = products.docs.first.data();

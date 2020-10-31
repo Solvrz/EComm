@@ -118,13 +118,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Navigator.pushNamed(context, "/bag"),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset("assets/images/ShoppingBag.png", width: 30, height: 30),
+                                    child: Image.asset(
+                                        "assets/images/ShoppingBag.png",
+                                        width: 30,
+                                        height: 30),
                                   )),
                               GestureDetector(
                                 onTap: () => print("Past Orders Go Here!"),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset("assets/images/YourOrders.png", width: 30, height: 30),
+                                  child: Image.asset(
+                                      "assets/images/YourOrders.png",
+                                      width: 30,
+                                      height: 30),
                                 ),
                               ),
                             ]))

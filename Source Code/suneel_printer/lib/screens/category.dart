@@ -101,9 +101,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             ? () {}
                             : () => Navigator.pushNamed(context, "/bag"),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: admin ? SizedBox(height: 34, width: 34) : Image.asset("assets/images/ShoppingBag.png", width: 30, height: 30)
-                        ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: admin
+                                ? SizedBox(height: 34, width: 34)
+                                : Image.asset("assets/images/ShoppingBag.png",
+                                    width: 30, height: 30)),
                       )
                     ],
                   ),
