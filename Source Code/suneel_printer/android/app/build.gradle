@@ -23,10 +23,9 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
-
-apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -36,7 +35,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.suneel37.suneel_printer"
+        applicationId 'com.suneel37.suneel_printer'
         minSdkVersion 18
         targetSdkVersion 29
         multiDexEnabled true
@@ -53,11 +52,19 @@ android {
     }
 }
 
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+}
+
 flutter {
     source '../..'
 }
 
 dependencies {
+    testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:multidex:1.0.3'
-    implementation "com.paytm.appinvokesdk:appinvokesdk:1.5"
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    implementation 'com.paytm.appinvokesdk:appinvokesdk:1.5'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

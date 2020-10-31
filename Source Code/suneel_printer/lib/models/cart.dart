@@ -56,6 +56,7 @@ class Cart {
 
   void clear() {
     _products.clear();
+    preferences.setStringList("cart", []);
   }
 
   void increaseQuantity(Product product, {int increase = 1}) {

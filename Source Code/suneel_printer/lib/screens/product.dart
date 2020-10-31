@@ -182,25 +182,27 @@ class _ProductScreenState extends State<ProductScreen> {
                     const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                 child: Row(
                   children: [
-                    if (cart.containsProduct(product))
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey[900])),
-                        child: IntrinsicWidth(
-                          child: Column(
-                            children: [
-                              Icon(Icons.remove, size: 30),
-                              Text(cart.getQuantity(product).toString(),
-                                  style: TextStyle(
-                                      fontSize: 22, color: Colors.grey[900])),
-                              Icon(Icons.add, size: 30),
-                            ],
-                          ),
-                        ),
-                        margin: EdgeInsets.only(right: 16),
-                      ),
+                    // if (cart.containsProduct(product))
+                    //   Container(
+                    //     padding: EdgeInsets.all(5),
+                    //     decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(10),
+                    //         border: Border.all(color: Colors.grey[900])),
+                    //     child: IntrinsicWidth(
+                    //       child: Column(
+                    //         children: [
+                    //           Icon(Icons.add, size: 30),
+                    //           Text(
+                    //             cart.getQuantity(product).toString(),
+                    //             style: TextStyle(
+                    //                 fontSize: 22, color: Colors.grey[900]),
+                    //           ),
+                    //           Icon(Icons.remove, size: 30),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     margin: EdgeInsets.only(right: 16),
+                    //   ),
                     Expanded(
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
@@ -223,7 +225,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           if (!cart.containsProduct(product)) {
                             cart.addItem(product);
                           } else {
-                            cart.removeItem(product);
+                            Navigator.pushNamed(context, "/cart");
                           }
                           setState(() {});
                         },
