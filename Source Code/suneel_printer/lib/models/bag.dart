@@ -56,7 +56,7 @@ class Bag {
 
   void clear() {
     _products.clear();
-    preferences.setStringList("cart", []);
+    preferences.setStringList("bag", []);
   }
 
   void increaseQuantity(Product product, {int increase = 1}) {

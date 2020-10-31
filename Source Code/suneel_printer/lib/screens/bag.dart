@@ -90,8 +90,8 @@ class _BagScreenState extends State<BagScreen> {
                   ],
                 ),
                 onPressed: bag.hasProducts
-                    ? () {
-                        showModalBottomSheet(
+                    ? () async {
+                        await showModalBottomSheet(
                           isScrollControlled: true,
                           backgroundColor: Colors.transparent,
                           context: context,
@@ -100,6 +100,7 @@ class _BagScreenState extends State<BagScreen> {
                             child: CheckoutSheet(price),
                           ),
                         );
+                        setState(() {});
                       }
                     : null,
               )
@@ -443,16 +444,19 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
       title: "Phone Number",
       placeholder: "Your Phone Number",
       errorMessage: "Please enter a valid phone number",
-      inputType: TextInputType.phone,
+      inputType: TextInputType.number,
     ),
     "email": InformationTextField(
-        title: "Email Address",
-        placeholder: "Your Email Address",
-        errorMessage: "Please enter a valid email address"),
+      title: "Email Address",
+      placeholder: "Your Email Address",
+      errorMessage: "Please enter a valid email address",
+      inputType: TextInputType.emailAddress,
+    ),
     "address": InformationTextField(
-        title: "Shipping Address",
-        placeholder: "Your Address",
-        errorMessage: "Please enter a valid address"),
+      title: "Shipping Address",
+      placeholder: "Your Address",
+      errorMessage: "Please enter a valid address",
+    ),
     "pincode": InformationTextField(
       title: "Pincode",
       placeholder: "Your Pincode",
@@ -539,155 +543,140 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 32),
-                  Center(
-                    child: MaterialButton(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                      onPressed: () async {
-                        String name = fields["name"].value;
-                        String phone = fields["phone"].value;
-                        String address = fields["address"].value;
-                        String email = fields["email"].value;
-                        String pincode = fields["pincode"].value;
-
-                        FocusScope.of(context).unfocus();
-
-                        // TODO FIXME Need to hot refresh to see error on fields
-
-                        if (name.trim() == "")
-                          fields["name"].error = true;
-                        else
-                          fields["name"].error = false;
-
-                        if (!(phone.trim().length == 10) &&
-                            !(phone.trim().length > 10 &&
-                                phone.startsWith("+")))
-                          fields["phone"].error = true;
-                        else
-                          fields["phone"].error = false;
-
-                        if (address.trim() == "")
-                          fields["address"].error = true;
-                        else
-                          fields["address"].error = false;
-
-                        if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
-                            .hasMatch(email))
-                          fields["email"].error = true;
-                        else
-                          fields["email"].error = false;
-
-                        http.Response result = await http.get(
-                            "https://api.postalpincode.in/pincode/$pincode");
-
-                        if (jsonDecode(result.body)[0]["Status"] == "Error")
-                          fields["pincode"].error = true;
-                        else
-                          fields["pincode"].error = false;
-
-                        setState(() {});
-
-                        if (!fields.values
-                            .toList()
-                            .map((e) => e.error)
-                            .contains(true)) {
-                          Timer(Duration(milliseconds: 500), () {
-                            showDialog(
-                              context: context,
-                              builder: (_) => RoundedAlertDialog(
-                                title: "Your Order was placed!",
-                                buttonsList: [
-                                  FlatButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-
-                                      //FIXME: UNCOMMENTING THIS GIVES THE LEGENDARY 'WHITE SCREEN OF DEATH'
-//                                      Navigator.popUntil(context,
-//                                          ModalRoute.withName("/home"));
-                                    },
-                                    child: Text("Okay"),
-                                  )
-                                ],
-                              ),
-                            );
-                          });
-
-                          payment.startPayment();
-
-                          await http.post(
-                            "https://suneel-printers.herokuapp.com/order_request",
-                            headers: <String, String>{
-                              "Content-Type": "application/json; charset=UTF-8",
-                            },
-                            body: jsonEncode(<String, String>{
-                              "name": name,
-                              "phone": phone,
-                              "address": address,
-                              "email": email,
-                              "payment_mode": "COD",
-                              "price": widget.price.toString(),
-                              "product_list": bag.products
-                                  .map<String>((BagItem bagItem) {
-                                    Product product = bagItem.product;
-
-                                    return '''t
-                <tr>
-                    <td>${product.name}</td>
-                    <td class="righty">${bagItem.quantity}</td>
-                    <td class="righty">${(double.parse(product.price) * bagItem.quantity).toStringAsFixed(2)}</td>
-                </tr>
-                ''';
-                                  })
-                                  .toList()
-                                  .join("\n"),
-                            }),
-                          );
-
-                          List<String> pastOrders =
-                              preferences.getStringList("orders") ?? [];
-
-                          pastOrders.add(jsonEncode(
-                              bag.products.map((e) => e.toString()).toList()));
-
-                          preferences.setStringList("orders", pastOrders);
-
-                          database.collection("orders").add({
-                            "name": name,
-                            "phone": phone,
-                            "address": address,
-                            "products": bag.products.map((e) {
-                              return {
-                                "product": e.product.toJson(),
-                                "quantity": e.quantity
-                              };
-                            }).toList()
-                          });
-
-                          bag.clear();
-                        }
-                      },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      color: kUIAccent,
-                      child: Text(
-                        "Proceed To Buy",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontFamily: "sans-serif-condensed",
-                            fontWeight: FontWeight.w600,
-                            color: kUILightText),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
+            SizedBox(height: 32),
+            Center(
+              child: MaterialButton(
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                onPressed: () async {
+                  FocusScope.of(context).unfocus();
+
+                  if (await validateFields() == false) {
+                    return;
+                  }
+
+                  String phone = fields["phone"].value;
+                  String email = fields["email"].value;
+
+                  if (await payment.startPayment(email, phone, widget.price)) {
+                      placeOrder("PayTM / Net Banking");
+                      Navigator.popUntil(context, ModalRoute.withName("/home"));
+                  }
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                color: kUIAccent,
+                child: Text(
+                  "Proceed To Buy",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: "sans-serif-condensed",
+                      fontWeight: FontWeight.w600,
+                      color: kUILightText),
+                ),
+              ),
+            ),
+            SizedBox(height: 12)
           ],
         ),
       ),
     );
+  }
+
+  void placeOrder(String mode) async {
+    String name = fields["name"].value;
+    String phone = fields["phone"].value;
+    String address = fields["address"].value;
+    String email = fields["email"].value;
+
+    await http.post(
+      "https://suneel-printers.herokuapp.com/order_request",
+      headers: <String, String>{
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+      body: jsonEncode(<String, String>{
+        "name": name,
+        "phone": phone,
+        "address": address,
+        "email": email,
+        "payment_mode": mode,
+        "price": widget.price.toString(),
+        "product_list": bag.products
+            .map<String>((BagItem bagItem) {
+              Product product = bagItem.product;
+
+              return '''t
+                    <tr>
+                        <td>${product.name}</td>
+                        <td class="righty">${bagItem.quantity}</td>
+                        <td class="righty">${(double.parse(product.price) * bagItem.quantity).toStringAsFixed(2)}</td>
+                    </tr>
+                    ''';
+            })
+            .toList()
+            .join("\n"),
+      }),
+    );
+
+    List<String> pastOrders = preferences.getStringList("orders") ?? [];
+
+    pastOrders.add(jsonEncode(bag.products.map((e) => e.toString()).toList()));
+
+    preferences.setStringList("orders", pastOrders);
+
+    database.collection("orders").add({
+      "name": name,
+      "phone": phone,
+      "address": address,
+      "products": bag.products.map((e) {
+        return {"product": e.product.toJson(), "quantity": e.quantity};
+      }).toList()
+    });
+
+    bag.clear();
+  }
+
+  Future<bool> validateFields() async {
+    String name = fields["name"].value;
+    String phone = fields["phone"].value;
+    String address = fields["address"].value;
+    String email = fields["email"].value;
+    String pincode = fields["pincode"].value;
+
+    if (name.trim() == "")
+      fields["name"].error = true;
+    else
+      fields["name"].error = false;
+
+    if (!RegExp(r"^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$").hasMatch(phone))
+      fields["phone"].error = true;
+    else
+      fields["phone"].error = false;
+
+    if (address.trim() == "")
+      fields["address"].error = true;
+    else
+      fields["address"].error = false;
+
+    if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email))
+      fields["email"].error = true;
+    else
+      fields["email"].error = false;
+
+    http.Response result =
+        await http.get("https://api.postalpincode.in/pincode/$pincode");
+
+    if (jsonDecode(result.body)[0]["Status"] == "Error" || pincode.trim() == "")
+      fields["pincode"].error = true;
+    else
+      fields["pincode"].error = false;
+
+    setState(() {});
+
+    return !fields.values.toList().map((e) => e.error).toList().contains(true);
   }
 }
 
