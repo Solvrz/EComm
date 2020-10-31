@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class Payment {
-  // ignore: non_constant_identifier_names
-  var CHANNEL = "com.suneel37.suneel_printer/allInOne";
+  static const MethodChannel _channel =
+      MethodChannel("com.suneel37.suneel_printer/allInOne");
   static const platform = const MethodChannel('CHANNEL');
 
   void startPayment() async {
@@ -16,7 +16,7 @@ class Payment {
       },
       body: jsonEncode(<String, String>{
         "cust": "yugthapar37@gmail.com",
-        "id": "ORDER_0100",
+        "id": "ORDER_0105",
         // TODO : Generate Random Order
         "value": "5.00",
         "staging": "true",
@@ -28,7 +28,7 @@ class Payment {
 
       var arguments = <String, dynamic>{
         "mid": "MoShyC80984595390154",
-        "orderId": "MoShyC80984595390154kkk",
+        "orderId": "ORDER_0",
         "amount": "5.00",
         "txnToken": txn,
         "callbackUrl": "https://securegw-stage.paytm.in/order/process",
@@ -36,7 +36,7 @@ class Payment {
       };
 
       try {
-        var result = await platform.invokeMethod("pay", arguments);
+        var result = await _channel.invokeMethod("pay", arguments);
         print(result.toString());
       } catch (err) {
         print(err.message);

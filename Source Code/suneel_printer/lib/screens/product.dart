@@ -225,7 +225,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           if (!bag.containsProduct(product)) {
                             bag.addItem(product);
                           } else {
-                            bag.removeItem(product);
+                            Navigator.pushNamed(context, "/cart");
                           }
                           setState(() {});
                         },
