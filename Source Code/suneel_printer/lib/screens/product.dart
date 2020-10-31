@@ -190,14 +190,14 @@ class _ProductScreenState extends State<ProductScreen> {
                         padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey[900])),
+                            border: Border.all(color: kUIDarkText)),
                         child: IntrinsicWidth(
                           child: Column(
                             children: [
                               Icon(Icons.remove, size: 30),
                               Text(bag.getQuantity(product).toString(),
                                   style: TextStyle(
-                                      fontSize: 22, color: Colors.grey[900])),
+                                      fontSize: 22, color: kUIDarkText)),
                               Icon(Icons.add, size: 30),
                             ],
                           ),

@@ -5,6 +5,7 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
+import 'package:suneel_printer/components/information_textfield.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/bag.dart';
@@ -350,7 +351,7 @@ class _BagScreenState extends State<BagScreen> {
                   ),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[900],
+                    color: kUIDarkText,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
@@ -438,7 +439,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     "name": InformationTextField(
         title: "Name",
         placeholder: "Your Name",
-        errorMessage: "Please enter a valid name"),
+        errorMessage: "Please enter a name"),
     "phone": InformationTextField(
       title: "Phone Number",
       placeholder: "Your Phone Number",
@@ -454,7 +455,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     "address": InformationTextField(
       title: "Shipping Address",
       placeholder: "Your Address",
-      errorMessage: "Please enter a valid address",
+      errorMessage: "Please enter an address",
     ),
     "pincode": InformationTextField(
       title: "Pincode",
@@ -552,9 +553,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                 onPressed: () async {
                   FocusScope.of(context).unfocus();
 
-                  if (await validateFields() == false) {
-                    return;
-                  }
+                  if (await validateFields() == false) return;
 
                   String phone = fields["phone"].value;
                   String email = fields["email"].value;
@@ -569,7 +568,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                 ),
                 color: kUIAccent,
                 child: Text(
-                  "Proceed To Buy",
+                  "Proceed To Pay",
                   style: TextStyle(
                       fontSize: 18,
                       fontFamily: "sans-serif-condensed",
@@ -607,7 +606,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
             .map<String>((BagItem bagItem) {
               Product product = bagItem.product;
 
-              return '''t
+              return '''
                     <tr>
                         <td>${product.name}</td>
                         <td class="righty">${bagItem.quantity}</td>
@@ -676,61 +675,5 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     setState(() {});
 
     return !fields.values.toList().map((e) => e.error).toList().contains(true);
-  }
-}
-
-// ignore: must_be_immutable
-class InformationTextField extends StatefulWidget {
-  String title;
-  String placeholder;
-  String errorMessage;
-  TextInputType inputType;
-
-  InformationTextField(
-      {this.title,
-      this.placeholder,
-      this.errorMessage,
-      this.inputType = TextInputType.name});
-
-  bool error = false;
-  TextEditingController controller = TextEditingController();
-
-  String get value => controller.text;
-
-  @override
-  _InformationTextFieldState createState() => _InformationTextFieldState();
-}
-
-class _InformationTextFieldState extends State<InformationTextField> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(
-        widget.title,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      TextField(
-        decoration: InputDecoration(
-            focusedBorder: InputBorder.none,
-            border: InputBorder.none,
-            hintText: widget.placeholder),
-        controller: widget.controller,
-        keyboardType: widget.inputType,
-        style: TextStyle(
-            fontSize: 17, color: Colors.grey[600], fontWeight: FontWeight.w500),
-      ),
-      if (widget.error) ...[
-        Text(
-          widget.errorMessage,
-          style: TextStyle(fontSize: 15, color: Colors.redAccent),
-        ),
-        SizedBox(height: 8),
-      ],
-      Divider(
-        height: 8,
-        thickness: 2,
-      ),
-      SizedBox(height: 12),
-    ]);
   }
 }
