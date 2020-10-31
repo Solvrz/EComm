@@ -1,4 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,6 +9,7 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/add_product.dart';
 import 'package:suneel_printer/screens/product.dart';
+import 'package:http/http.dart' as http;
 
 class CategoryScreen extends StatefulWidget {
   @override
@@ -48,17 +50,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           .toList(),
                     )
                   : OrderProductPage(
-                      // TODO On-Order Page
-
                       title,
                       snapshot.data.docs
                           .map<Map>(
                             (DocumentSnapshot e) => e.data(),
                           )
-                          .toList(),
-                      snapshot.data.docs
-                          .map<DocumentReference>(
-                              (DocumentSnapshot e) => e.reference)
                           .toList(),
                     );
 
@@ -101,9 +97,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             ? () {}
                             : () => Navigator.pushNamed(context, "/bag"),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: admin ? SizedBox(height: 34, width: 34) : Image.asset("assets/images/ShoppingBag.png", width: 30, height: 30)
-                        ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: admin
+                                ? SizedBox(height: 34, width: 34)
+                                : Image.asset("assets/images/ShoppingBag.png",
+                                    width: 30, height: 30)),
                       )
                     ],
                   ),
@@ -254,64 +252,92 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
 class OrderProductPage extends StatefulWidget {
   final String title;
   final List<Map> tabsData;
-  final List<DocumentReference> tabs;
-  int _currentTab = 0;
 
-  OrderProductPage(this.title, this.tabsData, this.tabs);
+  OrderProductPage(this.title, this.tabsData);
 
   @override
   _OrderProductPageState createState() => _OrderProductPageState();
 }
 
 class _OrderProductPageState extends State<OrderProductPage> {
+  String value;
+
+  @override
+  void initState() {
+    super.initState();
+    value = widget.tabsData[0]["name"];
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      StreamBuilder<QuerySnapshot>(
-        stream:
-            widget.tabs[widget._currentTab].collection("products").snapshots(),
-        builder: (context, future) {
-          if (future.hasData) {
-            if (future.data.docs.isNotEmpty) {
-              return Expanded(
-                child: ProductList(
-                  products: future.data.docs
-                      .map<Product>(
-                        (DocumentSnapshot e) => Product.fromJson(
-                          e.data(),
-                        ),
-                      )
-                      .toList(),
-                  args: AddProductArguments(
-                      tabsData: widget.tabsData,
-                      tabs: widget.tabs,
-                      title: widget.title,
-                      currentTab: widget._currentTab),
-                ),
-              );
-            } else {
-              return Center(
-                child: Container(
-                  height: MediaQuery.of(context).size.height / 1.5,
-                  width: MediaQuery.of(context).size.width / 1.5,
-                  child: EmptyListWidget(
-                    title: "No Product",
-                    subTitle: "No Product Available Yet",
+    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      Container(
+        height: 100.0,
+        width: MediaQuery.of(context).size.width / 1.5,
+        child: Row(children: [
+          Text("Service"),
+          DropdownButton(
+            hint: Text(value),
+            onChanged: (val) {
+              setState(() {
+                value = val;
+              });
+            },
+            items: List.generate(widget.tabsData.length,
+                    (index) => widget.tabsData[index]["name"])
+                .map<DropdownMenuItem>(
+                  (var val) => DropdownMenuItem(
+                    value: val,
+                    child: Text(
+                      val,
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey[900],
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "sans-serif-condensed"),
+                    ),
                   ),
-                ),
-              );
-            }
-          } else {
-            return Container(
-              height: MediaQuery.of(context).size.height / 1.5,
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Center(
-                child: Text("Loading..."),
-              ),
-            );
-          }
-        },
+                )
+                .toList(),
+          )
+        ]),
       ),
+      SizedBox(height: 20.0),
+      Container(
+          height: 100.0,
+          width: MediaQuery.of(context).size.width / 1.5,
+          child: Column(children: [
+            Row(children: [
+              Text("Name"),
+              //TODO Fetch from delivery information
+              Text("ABC")
+            ]),
+            Row(children: [
+              Text("Phone No."),
+              Text("9779902905"),
+            ])
+          ])),
+      GestureDetector(
+          onTap: () async {
+            print("djjdjddjdj");
+            await http.post(
+              "https://suneel-printers.herokuapp.com/on_order",
+              headers: <String, String>{
+                "Content-Type": "application/json; charset=UTF-8",
+              },
+              body: jsonEncode(<String, String>{
+                "name": "abc",
+                "phone": "Phone",
+                "email": "ljgoyal207@gmail.com",
+                "order_list": value
+              }),
+            );
+          },
+          child: Container(
+              height: 100.0,
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: Text("Place Order")))
     ]);
   }
 }
@@ -534,13 +560,14 @@ class _ProductCardState extends State<ProductCard>
             ),
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
-              child: AutoSizeText(
+              child: Text(
                 widget.product.name,
                 maxLines: 2,
-                minFontSize: 18,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    letterSpacing: 0.3, fontFamily: "sans-serif-condensed"),
+                    fontSize: 18,
+                    letterSpacing: 0.3,
+                    fontFamily: "sans-serif-condensed"),
               ),
             ),
           ])),

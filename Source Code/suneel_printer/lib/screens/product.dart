@@ -62,7 +62,8 @@ class _ProductScreenState extends State<ProductScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        await Navigator.pushNamed(context, "/bag"); //DO NOT REMOVE THIS AWAIT STATEMENT
+                        await Navigator.pushNamed(context,
+                            "/bag"); //DO NOT REMOVE THIS AWAIT STATEMENT
                         setState(() {});
                       },
                       child: Container(
@@ -225,7 +226,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           if (!bag.containsProduct(product)) {
                             bag.addItem(product);
                           } else {
-                            Navigator.pushNamed(context, "/cart");
+                            Navigator.pushNamed(context, "/bag");
                           }
                           setState(() {});
                         },

@@ -23,7 +23,6 @@ dependencies:
   flutter_slidable: ^0.5.7
   carousel_slider: ^2.3.1
   googleapis_auth: ^0.2.12
-  auto_size_text: ^2.1.0
   empty_widget: ^0.0.1
   file_picker: ^2.0.7
   modal_bottom_sheet: ^0.2.2
