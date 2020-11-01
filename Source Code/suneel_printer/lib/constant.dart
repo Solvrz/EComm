@@ -6,6 +6,7 @@ import 'package:suneel_printer/models/payment.dart';
 import 'package:suneel_printer/models/wishlist.dart';
 
 bool admin = false;
+bool staging = true;
 
 const kUIAccent = Colors.redAccent;
 const kUIColor = Colors.white;

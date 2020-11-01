@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:suneel_printer/components/home%20_components.dart';
+import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/category.dart';
@@ -88,12 +88,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                       await showMaterialModalBottomSheet(
                                         backgroundColor: Colors.transparent,
                                         context: context,
-                                        builder: (_, __) => InformationSheet(context),);
+                                        builder: (_, __) => InformationSheet(
+                                            parentContext: context),
+                                      );
                                       setState(() {});
                                     },
                                     child: ConstrainedBox(
-                                      constraints: BoxConstraints(maxWidth: (MediaQuery.of(context).size.width - 24) / 2.1),
-                                      child: Text(selectedInfo != null ? selectedInfo["address"] : "Not Given",
+                                      constraints: BoxConstraints(
+                                          maxWidth: (MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  24) /
+                                              2.1),
+                                      child: Text(
+                                          selectedInfo != null
+                                              ? selectedInfo["address"]
+                                              : "Not Selected",
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontSize: 18,
@@ -110,10 +120,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               )
                             ]),
                         Expanded(
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                              GestureDetector(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    // TODO: Past Orders Screen
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.asset(
+                                        "assets/images/YourOrders.png",
+                                        width: 30,
+                                        height: 30),
+                                  ),
+                                ),
+                                GestureDetector(
                                   onTap: () =>
                                       Navigator.pushNamed(context, "/bag"),
                                   child: Padding(
@@ -122,18 +144,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         "assets/images/ShoppingBag.png",
                                         width: 30,
                                         height: 30),
-                                  )),
-                              GestureDetector(
-                                onTap: () => print("Past Orders Go Here!"),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                      "assets/images/YourOrders.png",
-                                      width: 30,
-                                      height: 30),
+                                  ),
                                 ),
-                              ),
-                            ]))
+                              ]),
+                        )
                       ],
                     ),
                   ),
@@ -279,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Image.asset(data["image"],
-                                            height:50, width:50),
+                                            height: 50, width: 50),
                                         SizedBox(height: 8),
                                         Text(
                                           data["name"],

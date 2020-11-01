@@ -42,8 +42,7 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
     );
 
-    holeColor =
-        ColorTween(begin: Color(0xfffcd7de), end: kUIColor).animate(
+    holeColor = ColorTween(begin: Color(0xfffcd7de), end: kUIColor).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
     );
 

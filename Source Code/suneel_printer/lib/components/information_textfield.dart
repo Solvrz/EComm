@@ -9,9 +9,9 @@ class InformationTextField extends StatefulWidget {
 
   InformationTextField(
       {this.title,
-        this.placeholder,
-        this.errorMessage,
-        this.inputType = TextInputType.name});
+      this.placeholder,
+      this.errorMessage,
+      this.inputType = TextInputType.name});
 
   bool error = false;
   TextEditingController controller = TextEditingController();

@@ -5,7 +5,7 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
-import 'package:suneel_printer/components/information_textfield.dart';
+import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/bag.dart';
@@ -91,15 +91,28 @@ class _BagScreenState extends State<BagScreen> {
                 ),
                 onPressed: bag.hasProducts
                     ? () async {
-                        await showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          context: context,
-                          builder: (_) => Padding(
-                            padding: MediaQuery.of(context).viewInsets,
-                            child: CheckoutSheet(price),
-                          ),
-                        );
+                        selectedInfo == null
+                            ? await showModalBottomSheet(
+                                isScrollControlled: true,
+                                isDismissible: false,
+                                enableDrag: false,
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (_) => Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: InformationSheet(
+                                        parentContext: context,
+                                        popable: false)),
+                              )
+                            : await showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (_) => Padding(
+                                  padding: MediaQuery.of(context).viewInsets,
+                                  child: CheckoutSheet(price: price),
+                                ),
+                              );
                         setState(() {});
                       }
                     : null,
@@ -136,18 +149,15 @@ class _BagScreenState extends State<BagScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: bag.hasProducts
-                        ? () {
-                            bag.clear();
-                            setState(() {});
-                          }
-                        : () {},
+                    onTap: () {
+                      // TODO: WIshlist Screen
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Icon(
-                        bag.hasProducts ? Icons.delete : null,
-                        size: 26,
-                        color: kUIDarkText.withOpacity(0.6),
+                        Icons.favorite_border,
+                        color: kUIDarkText,
+                        size: 28,
                       ),
                     ),
                   )
@@ -428,42 +438,14 @@ class _BagScreenState extends State<BagScreen> {
 class CheckoutSheet extends StatefulWidget {
   final double price;
 
-  CheckoutSheet(this.price);
+  CheckoutSheet({@required this.price});
 
   @override
   _CheckoutSheetState createState() => _CheckoutSheetState();
 }
 
 class _CheckoutSheetState extends State<CheckoutSheet> {
-  Map<String, InformationTextField> fields = {
-    "name": InformationTextField(
-        title: "Name",
-        placeholder: "Your Name",
-        errorMessage: "Please enter a name"),
-    "phone": InformationTextField(
-      title: "Phone Number",
-      placeholder: "Your Phone Number",
-      errorMessage: "Please enter a valid phone number",
-      inputType: TextInputType.number,
-    ),
-    "email": InformationTextField(
-      title: "Email Address",
-      placeholder: "Your Email Address",
-      errorMessage: "Please enter a valid email address",
-      inputType: TextInputType.emailAddress,
-    ),
-    "address": InformationTextField(
-      title: "Shipping Address",
-      placeholder: "Your Address",
-      errorMessage: "Please enter an address",
-    ),
-    "pincode": InformationTextField(
-      title: "Pincode",
-      placeholder: "Your Pincode",
-      errorMessage: "Please enter a valid pincode",
-      inputType: TextInputType.number,
-    )
-  };
+  bool pod = true;
 
   @override
   Widget build(BuildContext context) {
@@ -478,129 +460,258 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         ),
         padding: EdgeInsets.only(top: 8),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Icon(Icons.close, color: kUIDarkText),
-                  ),
-                ),
-                Text(
-                  "Check Out",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
                 children: [
-                  ...fields.values.toList(),
-                  Text(
-                    "${bag.products.length} Items",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[600]),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Icon(Icons.close, color: kUIDarkText),
+                    ),
                   ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "Total:",
+                  Text(
+                    "Check Out",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Name: ",
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 20,
                             fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                      Text(
-                        "₹ ",
-                        style: TextStyle(
-                          fontFamily: "sans-serif-condensed",
-                          fontWeight: FontWeight.bold,
+                        Text(
+                          "${selectedInfo['name'].toString().capitalize()}",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        widget.price - widget.price.toInt() == 0
-                            ? widget.price.toInt().toString()
-                            : widget.price.toStringAsFixed(2),
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontFamily: "sans-serif-condensed",
-                          fontWeight: FontWeight.bold,
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Phone: ",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                        Text(
+                          "${selectedInfo['phone']}",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Email: ",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "${selectedInfo['email']}",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Address: ",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Divider(height: 20, thickness: 2),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Payment Methods",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Container(
+                          height: 120,
+                          child: ListView(children: [
+                            // TODO: Can these be made round @Aditya
+                            CheckboxListTile(
+                              title: Text(
+                                "Pay on Delivery",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: "sans-serif-condensed",
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              value: pod,
+                              onChanged: (_) {
+                                setState(() => pod = !pod);
+                              },
+                            ),
+                            CheckboxListTile(
+                              title: Text(
+                                "PayTM, Credit Card, Debit Card & Net Banking",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: "sans-serif-condensed",
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              value: !pod,
+                              onChanged: (_) {
+                                setState(() => pod = !pod);
+                              },
+                            )
+                          ]),
+                        ),
+                        Divider(height: 20, thickness: 2),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Total:",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontFamily: "sans-serif-condensed",
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "₹ ",
+                              style: TextStyle(
+                                fontFamily: "sans-serif-condensed",
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              widget.price - widget.price.toInt() == 0
+                                  ? widget.price.toInt().toString()
+                                  : widget.price.toStringAsFixed(2),
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontFamily: "sans-serif-condensed",
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Divider(height: 15, thickness: 2),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Center(
+                child: MaterialButton(
+                  onPressed: pod
+                      ? () {
+                          placeOrder();
+                          // TODO: Order Confirmation Page By: Yug
+                          // TODO FIXME: White Screen of Death
+
+                          // Navigator.popUntil(
+                          //   context,
+                          //   ModalRoute.withName("/home"),
+                          // );
+                        }
+                      : () async {
+                          FocusScope.of(context).unfocus();
+
+                          if (await payment.startPayment(selectedInfo["email"],
+                              selectedInfo["phone"], widget.price)) {
+                            placeOrder();
+                            // TODO: Order Confirmation Page By: Yug
+                            // TODO FIXME: White Screen of Death
+                            // Navigator.popUntil(
+                            //   context,
+                            //   ModalRoute.withName("/home"),
+                            // );
+                          } else {
+                            // TODO: Order Failed Page By: Yug
+                          }
+                        },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 32),
-            Center(
-              child: MaterialButton(
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                onPressed: () async {
-                  FocusScope.of(context).unfocus();
-
-                  if (await validateFields() == false) return;
-
-                  String phone = fields["phone"].value;
-                  String email = fields["email"].value;
-
-                  if (await payment.startPayment(email, phone, widget.price)) {
-                    placeOrder("PayTM / Net Banking");
-                    Navigator.popUntil(context, ModalRoute.withName("/home"));
-                  }
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                color: kUIAccent,
-                child: Text(
-                  "Proceed To Pay",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: "sans-serif-condensed",
-                      fontWeight: FontWeight.w600,
-                      color: kUILightText),
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 36),
+                  color: kUIAccent,
+                  child: Text(
+                    pod ? "Proceed To Buy" : "Proceed To Pay",
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontFamily: "sans-serif-condensed",
+                        fontWeight: FontWeight.w600,
+                        color: kUILightText),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 12)
-          ],
-        ),
+              SizedBox(height: 15),
+            ]),
       ),
     );
   }
 
-  void placeOrder(String mode) async {
-    String name = fields["name"].value;
-    String phone = fields["phone"].value;
-    String address = fields["address"].value;
-    String email = fields["email"].value;
-
+  void placeOrder() async {
     await http.post(
       "https://suneel-printers.herokuapp.com/order_request",
       headers: <String, String>{
         "Content-Type": "application/json; charset=UTF-8",
       },
       body: jsonEncode(<String, String>{
-        "name": name,
-        "phone": phone,
-        "address": address,
-        "email": email,
-        "payment_mode": mode,
+        "name": selectedInfo["name"],
+        "phone": selectedInfo["phone"],
+        "address": selectedInfo["address"],
+        "email": selectedInfo["email"],
+        "payment_mode": pod ? "Pay On Delivery" : "Prepaid",
         "price": widget.price.toString(),
         "product_list": bag.products
             .map<String>((BagItem bagItem) {
@@ -626,54 +737,16 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     preferences.setStringList("orders", pastOrders);
 
     database.collection("orders").add({
-      "name": name,
-      "phone": phone,
-      "address": address,
+      "name": selectedInfo["name"],
+      "phone": selectedInfo["phone"],
+      "address": selectedInfo["address"],
+      "email": selectedInfo["email"],
+      "payment_mode": pod ? "Pay On Delivery" : "Prepaid",
       "products": bag.products.map((e) {
         return {"product": e.product.toJson(), "quantity": e.quantity};
       }).toList()
     });
 
     bag.clear();
-  }
-
-  Future<bool> validateFields() async {
-    String name = fields["name"].value;
-    String phone = fields["phone"].value;
-    String address = fields["address"].value;
-    String email = fields["email"].value;
-    String pincode = fields["pincode"].value;
-
-    if (name.trim() == "")
-      fields["name"].error = true;
-    else
-      fields["name"].error = false;
-
-    if (!RegExp(r"^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$").hasMatch(phone))
-      fields["phone"].error = true;
-    else
-      fields["phone"].error = false;
-
-    if (address.trim() == "")
-      fields["address"].error = true;
-    else
-      fields["address"].error = false;
-
-    if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email))
-      fields["email"].error = true;
-    else
-      fields["email"].error = false;
-
-    http.Response result =
-        await http.get("https://api.postalpincode.in/pincode/$pincode");
-
-    if (jsonDecode(result.body)[0]["Status"] == "Error" || pincode.trim() == "")
-      fields["pincode"].error = true;
-    else
-      fields["pincode"].error = false;
-
-    setState(() {});
-
-    return !fields.values.toList().map((e) => e.error).toList().contains(true);
   }
 }

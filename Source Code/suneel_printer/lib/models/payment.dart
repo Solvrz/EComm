@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:suneel_printer/constant.dart';
 
 class Payment {
   static const MethodChannel _channel =
@@ -15,33 +16,30 @@ class Payment {
       },
       body: jsonEncode(<String, String>{
         "cust": address,
-        "value": amount.toString(),
-        "staging": "true",
         "phone": phone,
+        "value": amount.toString(),
+        "staging": staging.toString(),
       }),
     );
 
     if (response.statusCode == 200) {
       Map result = jsonDecode(response.body);
 
-      print("ID: ${result["orderId"].runtimeType}");
-
       var arguments = <String, dynamic>{
+        "amount": amount.toString(),
         "mid": "MoShyC80984595390154",
         "orderId": result["orderId"],
-        "amount": amount.toString(),
         "txnToken": result["body"]["txnToken"],
-        "callbackUrl": "https://securegw-stage.paytm.in/order/process",
-        "isStaging": true
+        "isStaging": staging
       };
 
-        try {
-          var result = await _channel.invokeMethod("pay", arguments);
-          print("RESULT: ${result.toString()}");
-        } catch (err) {
-          print("ERROR: ${err.message}");
-          return false;
-        }
+      try {
+        var result = await _channel.invokeMethod("pay", arguments);
+        print("RESULT: ${result.toString()}");
+      } catch (err) {
+        print("ERROR: ${err.message}");
+        return false;
+      }
     }
 
     return true;
