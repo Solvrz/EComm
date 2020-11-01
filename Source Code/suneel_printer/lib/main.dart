@@ -58,7 +58,7 @@ class SuneelPrinter extends StatelessWidget {
         defaultScale: true,
         breakpoints: [
           ResponsiveBreakpoint.resize(360, name: MOBILE),
-          ResponsiveBreakpoint.autoScale(800, name: TABLET),
+          ResponsiveBreakpoint.autoScale(500, name: MOBILE),
           ResponsiveBreakpoint.autoScale(1000, name: TABLET),
           ResponsiveBreakpoint.resize(1200, name: DESKTOP),
           ResponsiveBreakpoint.autoScale(2460, name: "4K"),

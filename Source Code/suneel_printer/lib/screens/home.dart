@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:suneel_printer/components/alert_button.dart';
 import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
@@ -27,24 +28,19 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (_) => RoundedAlertDialog(
             title: "Do you want to quit the app?",
             buttonsList: [
-              FlatButton(
+              AlertButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(
-                  "No",
-                  style:
-                      TextStyle(color: kUIAccent, fontWeight: FontWeight.bold),
-                ),
+                titleColor: kUIColor,
+                title: "No",
               ),
-              FlatButton(
+              AlertButton(
                 onPressed: () {
                   SystemNavigator.pop();
                 },
-                child: Text(
-                  "Yes",
-                  style: TextStyle(color: kUIAccent),
-                ),
+                titleColor: kUIColor,
+                title: "Yes",
               )
             ],
           ),
@@ -57,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0),
                 child: Column(children: [
                   Align(
                     alignment: Alignment.centerLeft,
@@ -67,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
+                                padding: EdgeInsets.only(left: 4.0),
                                 child: Text(
                                   "Deliver To",
                                   style: TextStyle(
@@ -84,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: kUIDarkText, size: 20),
                                   SizedBox(width: 2),
                                   GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
                                     onTap: () async {
                                       await showMaterialModalBottomSheet(
                                         backgroundColor: Colors.transparent,
@@ -124,11 +121,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
                                   onTap: () {
                                     // TODO: Past Orders Screen
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.0),
                                     child: Image.asset(
                                         "assets/images/YourOrders.png",
                                         width: 30,
@@ -136,10 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
                                   onTap: () =>
                                       Navigator.pushNamed(context, "/bag"),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.0),
                                     child: Image.asset(
                                         "assets/images/ShoppingBag.png",
                                         width: 30,
@@ -243,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: 18),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    padding: EdgeInsets.symmetric(horizontal: 6.0),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -257,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: kUIDarkText),
                           ),
                           Container(
-                            margin: const EdgeInsets.only(top: 22),
+                            margin: EdgeInsets.only(top: 22),
                             child: GridView.count(
                               shrinkWrap: true,
                               crossAxisCount: 3,
@@ -268,6 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   List.generate(categories.length, (int index) {
                                 Map<String, dynamic> data = categories[index];
                                 return GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
                                   onTap: () async {
                                     Navigator.pushNamed(
                                       context,
@@ -300,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: kUIDarkText,
-                                            fontSize: 18,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),

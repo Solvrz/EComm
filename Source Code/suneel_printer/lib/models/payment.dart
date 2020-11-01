@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:suneel_printer/constant.dart';
 
 class Payment {
-  static const MethodChannel _channel =
+  static MethodChannel _channel =
       MethodChannel("com.suneel37.suneel_printer/allInOne");
 
   Future<bool> startPayment(String address, String phone, double amount) async {

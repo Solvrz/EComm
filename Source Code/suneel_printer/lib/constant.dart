@@ -13,14 +13,14 @@ const kUIColor = Colors.white;
 const kUILightText = Color(0xffF1F9F8);
 const kUIDarkText = Color(0xff031715);
 
-const InputDecoration kInputDialogDecoration = InputDecoration(
+InputDecoration kInputDialogDecoration = InputDecoration(
   enabledBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(
       Radius.circular(8),
     ),
     borderSide: BorderSide(color: Colors.grey),
   ),
-  focusedBorder: const OutlineInputBorder(
+  focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(
       Radius.circular(8),
     ),
@@ -37,7 +37,7 @@ SharedPreferences preferences;
 
 Map selectedInfo;
 
-const List<Map<String, dynamic>> categories = [
+List<Map<String, dynamic>> categories = [
   {
     "uId": 1,
     "name": "Office\nBooks",

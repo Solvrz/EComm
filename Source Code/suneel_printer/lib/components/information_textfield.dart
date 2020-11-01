@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:suneel_printer/constant.dart';
 
 // ignore: must_be_immutable
 class InformationTextField extends StatefulWidget {
@@ -6,12 +7,14 @@ class InformationTextField extends StatefulWidget {
   String placeholder;
   String errorMessage;
   TextInputType inputType;
+  int maxLines;
 
   InformationTextField(
       {this.title,
       this.placeholder,
       this.errorMessage,
-      this.inputType = TextInputType.name});
+      this.inputType = TextInputType.name,
+      this.maxLines = 3});
 
   bool error = false;
   TextEditingController controller = TextEditingController();
@@ -37,13 +40,15 @@ class _InformationTextFieldState extends State<InformationTextField> {
             hintText: widget.placeholder),
         controller: widget.controller,
         keyboardType: widget.inputType,
+        minLines: 1,
+        maxLines: widget.maxLines,
         style: TextStyle(
             fontSize: 17, color: Colors.grey[600], fontWeight: FontWeight.w500),
       ),
       if (widget.error) ...[
         Text(
           widget.errorMessage,
-          style: TextStyle(fontSize: 15, color: Colors.redAccent),
+          style: TextStyle(fontSize: 15, color: kUIAccent),
         ),
         SizedBox(height: 8),
       ],

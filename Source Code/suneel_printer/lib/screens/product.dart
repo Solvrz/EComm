@@ -50,6 +50,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () => Navigator.pop(context),
                       child: Container(
                         decoration: BoxDecoration(
@@ -61,6 +62,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                     ),
                     GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () async {
                         await Navigator.pushNamed(context, "/bag");
                         setState(() {});
@@ -78,12 +80,12 @@ class _ProductScreenState extends State<ProductScreen> {
               ),
               Divider(thickness: 2, height: 20),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 44, bottom: 36),
+                      padding: EdgeInsets.only(right: 44, bottom: 36),
                       child: Text(
                         product.name,
                         style: TextStyle(
@@ -145,7 +147,7 @@ class _ProductScreenState extends State<ProductScreen> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: variations,
@@ -154,8 +156,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 18),
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 18),
                 child: Row(
                   children: [
                     Expanded(
@@ -180,8 +181,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                padding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                 child: Row(
                   children: [
                     if (bag.containsProduct(product))

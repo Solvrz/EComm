@@ -26,7 +26,7 @@ class _OptionRadioTileState extends State<OptionRadioTile> {
   Widget build(BuildContext context) {
     return Container(
       height: (widget.size + widget.margin) * 2 + 44,
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
           Expanded(
@@ -44,6 +44,7 @@ class _OptionRadioTileState extends State<OptionRadioTile> {
             children: List.generate(
               widget.variation.options.length,
               (index) => GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   if (widget.currIndex != index)
                     setState(() {

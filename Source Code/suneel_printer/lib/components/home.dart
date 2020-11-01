@@ -66,6 +66,7 @@ class _InformationSheetState extends State<InformationSheet> {
                   ),
                   if (widget.popable)
                     GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () async {
                         await save();
                         Navigator.pop(context);
@@ -107,6 +108,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                   width: 60,
                                   child: Row(children: [
                                     GestureDetector(
+                                        behavior: HitTestBehavior.translucent,
                                         onTap: () async {
                                           await showMaterialModalBottomSheet(
                                             backgroundColor: Colors.transparent,
@@ -127,6 +129,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                             color: Colors.grey[700])),
                                     SizedBox(width: 12),
                                     GestureDetector(
+                                        behavior: HitTestBehavior.translucent,
                                         onTap: () async {
                                           if (isSelected) {
                                             if (addresses.length == 1)
@@ -178,6 +181,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                     fontWeight: FontWeight.w500))),
                   ),
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () async {
                       await showMaterialModalBottomSheet(
                         backgroundColor: Colors.transparent,
@@ -283,6 +287,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
             Row(
               children: [
                 GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     Navigator.pop(context);
                   },
@@ -300,12 +305,13 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
             SizedBox(height: 12),
             ...fields.values.toList(),
             GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () async {
                 if (await validateFields() == false)
                   return;
                 else
-                  setState(() {}); 
-                  //TODO FIXME: Doesn't show error till hot refresh
+                  setState(() {});
+                //TODO FIXME: Doesn't show error till hot refresh
 
                 String name = fields["name"].value;
                 String phone = fields["phone"].value;

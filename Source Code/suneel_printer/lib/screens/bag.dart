@@ -123,10 +123,11 @@ class _BagScreenState extends State<BagScreen> {
         body: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: Row(
                 children: [
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () => Navigator.pop(context),
                     child: Padding(
                       padding: EdgeInsets.all(8),
@@ -149,11 +150,12 @@ class _BagScreenState extends State<BagScreen> {
                     ),
                   ),
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       // TODO: WIshlist Screen
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Icon(
                         Icons.favorite_border,
                         color: kUIDarkText,
@@ -166,6 +168,7 @@ class _BagScreenState extends State<BagScreen> {
             ),
             if (bag.changeLog.isNotEmpty)
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () async {
                   await showDialog(
                     context: context,
@@ -234,8 +237,8 @@ class _BagScreenState extends State<BagScreen> {
             Expanded(
               child: bag.products.isNotEmpty
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 24.0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 24.0),
                       child: AnimatedList(
                         shrinkWrap: true,
                         key: _listKey,
@@ -272,6 +275,7 @@ class _BagScreenState extends State<BagScreen> {
         key: ObjectKey(bag.products[index]),
         actionPane: SlidableDrawerActionPane(),
         child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () => Navigator.pushNamed(
             context,
             "/product",
@@ -310,7 +314,7 @@ class _BagScreenState extends State<BagScreen> {
                                     letterSpacing: -0.4),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
+                                padding: EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 4),
                                 child: Text(
                                   "₹ ${product.price}",
@@ -330,7 +334,7 @@ class _BagScreenState extends State<BagScreen> {
                 ),
                 if (product.selected.length > 0)
                   Padding(
-                    padding: const EdgeInsets.only(
+                    padding: EdgeInsets.only(
                         right: 12, left: 4, top: 18, bottom: 18),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -368,6 +372,7 @@ class _BagScreenState extends State<BagScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () {
                           if (bag.getQuantity(product) > 1) {
                             bag.decreaseQuantity(product);
@@ -375,7 +380,7 @@ class _BagScreenState extends State<BagScreen> {
                           setState(() {});
                         },
                         child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: EdgeInsets.all(10.0),
                           child: Icon(Icons.remove, color: kUIColor, size: 20),
                         ),
                       ),
@@ -387,12 +392,13 @@ class _BagScreenState extends State<BagScreen> {
                             fontWeight: FontWeight.w500),
                       ),
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () async {
                           bag.increaseQuantity(product);
                           setState(() {});
                         },
                         child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: EdgeInsets.all(10.0),
                           child: Icon(
                             Icons.add,
                             color: kUIColor,
@@ -409,6 +415,7 @@ class _BagScreenState extends State<BagScreen> {
         ),
         secondaryActions: [
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               Timer(Duration(milliseconds: 200), () {
                 bag.removeItem(product);
@@ -466,6 +473,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
               Row(
                 children: [
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -481,26 +489,53 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Name: ",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: "sans-serif-condensed",
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              "Name: ",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: "sans-serif-condensed",
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "${selectedInfo['name'].toString().capitalize()}",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey[200],
+                                fontFamily: "sans-serif-condensed",
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "${selectedInfo['name'].toString().capitalize()}",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontFamily: "sans-serif-condensed",
-                            fontWeight: FontWeight.bold,
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () async {
+                            await showModalBottomSheet(
+                              isScrollControlled: true,
+                              isDismissible: false,
+                              enableDrag: false,
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (_) => Padding(
+                                  padding: MediaQuery.of(context).viewInsets,
+                                  child: InformationSheet(
+                                      parentContext: context, popable: false)),
+                            );
+                          },
+                          child: Icon(
+                            Icons.edit,
+                            size: 25,
+                            color: kUIDarkText.withOpacity(0.8),
                           ),
                         ),
                       ],
@@ -519,8 +554,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "${selectedInfo['phone']}",
                           style: TextStyle(
                             fontSize: 18,
+                            color: Colors.grey[200],
                             fontFamily: "sans-serif-condensed",
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -539,8 +575,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "${selectedInfo['email']}",
                           style: TextStyle(
                             fontSize: 18,
+                            color: Colors.grey[200],
                             fontFamily: "sans-serif-condensed",
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -555,12 +592,16 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontFamily: "sans-serif-condensed",
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[200],
+                              fontFamily: "sans-serif-condensed",
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ],

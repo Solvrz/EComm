@@ -67,6 +67,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: () => Navigator.pop(context),
                           child: Container(
                             decoration: BoxDecoration(
@@ -85,6 +86,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               fontFamily: "sans-serif-condensed"),
                         ),
                         GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: name != "" && price != ""
                               ? () async {
                                   Navigator.pop(context);
@@ -238,12 +240,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 Divider(thickness: 2, height: 20),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 44, bottom: 36),
+                        padding: EdgeInsets.only(right: 44, bottom: 36),
                         child: TextField(
                           controller: TextEditingController(text: name),
                           cursorColor: Colors.grey,
@@ -279,6 +281,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         .map<Widget>((Image image) => image)
                                         .toList(),
                                     GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
                                       onTap: () async {
                                         FilePickerResult result =
                                             await FilePicker.platform.pickFiles(
@@ -377,14 +380,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             ...variations.map(
                               (Variation variation) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 2.0),
+                                padding: EdgeInsets.symmetric(vertical: 2.0),
                                 child: Slidable(
                                   key: ValueKey(
                                     variation.toString(),
@@ -392,6 +394,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   actionPane: SlidableDrawerActionPane(),
                                   secondaryActions: [
                                     GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
                                       onTap: () {
                                         setState(() {
                                           variations.remove(variation);
@@ -413,8 +416,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   ],
                                   child: Container(
                                     height: 76,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12),
+                                    padding: EdgeInsets.symmetric(vertical: 12),
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -450,8 +452,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                               ...List.generate(
                                                 variation.options.length,
                                                 (index) => Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
+                                                  padding: EdgeInsets.symmetric(
                                                       horizontal: 3.0),
                                                   child: Column(
                                                     crossAxisAlignment:
@@ -459,6 +460,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                             .center,
                                                     children: [
                                                       GestureDetector(
+                                                        behavior:
+                                                            HitTestBehavior
+                                                                .translucent,
                                                         onTap: () {
                                                           final TextEditingController
                                                               labelController =
@@ -582,7 +586,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                               borderRadius: BorderRadius.circular(50.0),
                                                                               child: notTrans
                                                                                   ? AnimatedOpacity(
-                                                                                      duration: const Duration(milliseconds: 210),
+                                                                                      duration: Duration(milliseconds: 210),
                                                                                       opacity: isCurrentColor ? 1.0 : 0.0,
                                                                                       child: Icon(
                                                                                         Icons.done,
@@ -715,6 +719,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                 ),
                                               ),
                                               GestureDetector(
+                                                behavior:
+                                                    HitTestBehavior.translucent,
                                                 onTap: () {
                                                   setState(() {
                                                     variations[variations
@@ -727,8 +733,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                   });
                                                 },
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
+                                                  padding: EdgeInsets.all(8.0),
                                                   child: Icon(Icons.add),
                                                 ),
                                               )
@@ -740,8 +745,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
                               child: AlertButton(
                                 backgroundColor: Colors.white,
                                 titleColor: kUIAccent,
@@ -760,8 +764,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 18),
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 18),
                   child: Row(
                     children: [
                       Expanded(

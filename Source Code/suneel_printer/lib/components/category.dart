@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:suneel_printer/components/alert_button.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -65,6 +66,7 @@ class _ProductCardState extends State<ProductCard>
     final double height = width / 0.8;
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         Navigator.pushNamed(context, "/product",
             arguments: ProductArguments(widget.product));
@@ -105,6 +107,7 @@ class _ProductCardState extends State<ProductCard>
                       Column(
                         children: [
                           GestureDetector(
+                              behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 if (!_animationController.isAnimating) {
                                   if (_animationController.isCompleted)
@@ -118,6 +121,7 @@ class _ProductCardState extends State<ProductCard>
                                 progress: _animation,
                               )),
                           GestureDetector(
+                            behavior: HitTestBehavior.translucent,
                             onTap: () async {
                               _animationController.reverse();
 
@@ -136,18 +140,19 @@ class _ProductCardState extends State<ProductCard>
                             ),
                           ),
                           GestureDetector(
+                            behavior: HitTestBehavior.translucent,
                             onTap: () {
                               showDialog(
                                 context: context,
                                 builder: (_) => RoundedAlertDialog(
                                   title: "Do you want to delete this Product?",
                                   buttonsList: [
-                                    FlatButton(
+                                    AlertButton(
                                       onPressed: () => Navigator.pop(context),
-                                      textColor: kUIAccent,
-                                      child: Text("No"),
+                                      titleColor: kUIAccent,
+                                      title: "No",
                                     ),
-                                    FlatButton(
+                                    AlertButton(
                                       onPressed: () async {
                                         Navigator.pop(context);
                                         _animationController.reverse();
@@ -194,8 +199,8 @@ class _ProductCardState extends State<ProductCard>
                                             .get();
                                         query.docs.first.reference.delete();
                                       },
-                                      textColor: kUIAccent,
-                                      child: Text("Yes"),
+                                      titleColor: kUIAccent,
+                                      title: "Yes",
                                     ),
                                   ],
                                 ),

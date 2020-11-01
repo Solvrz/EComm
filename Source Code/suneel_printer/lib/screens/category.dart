@@ -5,6 +5,7 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:suneel_printer/components/category.dart';
+import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/add_product.dart';
@@ -48,8 +49,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           .toList(),
                     )
                   : OrderProductPage(
-                      title,
-                      snapshot.data.docs
+                      title: title,
+                      tabsData: snapshot.data.docs
                           .map<Map>(
                             (DocumentSnapshot e) => e.data(),
                           )
@@ -66,7 +67,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   : null,
               body: Column(children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(16.0),
                   child: Row(
                     children: [
                       GestureDetector(
@@ -74,7 +75,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           Navigator.pop(context);
                         },
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Icon(Icons.arrow_back_ios,
                               color: kUIDarkText, size: 26),
                         ),
@@ -95,7 +96,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             ? () {}
                             : () => Navigator.pushNamed(context, "/bag"),
                         child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: admin
                                 ? SizedBox(height: 34, width: 34)
                                 : Image.asset("assets/images/ShoppingBag.png",
@@ -248,11 +249,9 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
 
 // ignore: must_be_immutable
 class OrderProductPage extends StatefulWidget {
-  final String title;
-  final List<Map> tabsData;
-
-  OrderProductPage(this.title, this.tabsData);
-
+  String title;
+  List tabsData;
+  OrderProductPage({this.title, this.tabsData});
   @override
   _OrderProductPageState createState() => _OrderProductPageState();
 }
@@ -263,79 +262,274 @@ class _OrderProductPageState extends State<OrderProductPage> {
   @override
   void initState() {
     super.initState();
-    value = widget.tabsData[0]["name"];
+    value = "Choose a Service";
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      Container(
-        height: 100.0,
-        width: MediaQuery.of(context).size.width / 1.5,
-        child: Row(children: [
-          Text("Service"),
-          DropdownButton(
-            hint: Text(value),
-            onChanged: (val) {
-              setState(() {
-                value = val;
-              });
-            },
-            items: List.generate(widget.tabsData.length,
-                    (index) => widget.tabsData[index]["name"])
-                .map<DropdownMenuItem>(
-                  (var val) => DropdownMenuItem(
-                    value: val,
-                    child: Text(
-                      val,
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[900],
-                          letterSpacing: 0.2,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "sans-serif-condensed"),
-                    ),
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey[200],
+                ),
+                height: 100.0,
+                width: MediaQuery.of(context).size.width / 1.5,
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Service: ",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: "sans-serif-condensed",
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        DropdownButton(
+                          hint: Text(value),
+                          onChanged: (val) {
+                            setState(() {
+                              value = val;
+                            });
+                          },
+                          items: List.generate(widget.tabsData.length,
+                                  (index) => widget.tabsData[index]["name"])
+                              .map<DropdownMenuItem>(
+                                (var val) => DropdownMenuItem(
+                                  value: val,
+                                  child: Text(
+                                    val,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.grey[900],
+                                        letterSpacing: 0.2,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "sans-serif-condensed"),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        )
+                      ]),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[200],
                   ),
-                )
-                .toList(),
-          )
-        ]),
-      ),
-      SizedBox(height: 20.0),
-      Container(
-          height: 100.0,
-          width: MediaQuery.of(context).size.width / 1.5,
-          child: Column(children: [
-            Row(children: [
-              Text("Name"),
-              //TODO: Fetch from delivery information
-              Text("ABC")
+                  height: 130.0,
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: selectedInfo == null
+                        ? Center(
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () async {
+                                await showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (_) => Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: InformationSheet(
+                                      parentContext: context,
+                                    ),
+                                  ),
+                                );
+
+                                setState(() {});
+                              },
+                              child: Text(
+                                "Pick Info",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: "sans-serif-condensed",
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Name: ",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: "sans-serif-condensed",
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          "${selectedInfo['name'].toString().capitalize()}",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey[900],
+                                            fontFamily: "sans-serif-condensed",
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
+                                      onTap: () async {
+                                        await showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          backgroundColor: Colors.transparent,
+                                          context: context,
+                                          builder: (_) => Padding(
+                                            padding: MediaQuery.of(context)
+                                                .viewInsets,
+                                            child: InformationSheet(
+                                              parentContext: context,
+                                            ),
+                                          ),
+                                        );
+
+                                        setState(() {});
+                                      },
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 25,
+                                        color: kUIDarkText.withOpacity(0.8),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Phone: ",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: "sans-serif-condensed",
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${selectedInfo['phone']}",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.grey[900],
+                                        fontFamily: "sans-serif-condensed",
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Email: ",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: "sans-serif-condensed",
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${selectedInfo['email']}",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.grey[900],
+                                        fontFamily: "sans-serif-condensed",
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Address: ",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: "sans-serif-condensed",
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.grey[900],
+                                          fontFamily: "sans-serif-condensed",
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ]),
+                  ))
             ]),
-            Row(children: [
-              Text("Phone No."),
-              Text("9779902905"),
-            ])
-          ])),
-      GestureDetector(
-          onTap: () async {
-            await http.post(
-              "https://suneel-printers.herokuapp.com/on_order",
-              headers: <String, String>{
-                "Content-Type": "application/json; charset=UTF-8",
-              },
-              body: jsonEncode(<String, String>{
-                "name": "abc",
-                "phone": "Phone",
-                "email": "ljgoyal207@gmail.com",
-                "order_list": value
-              }),
-            );
-          },
-          child: Container(
-              height: 100.0,
-              width: MediaQuery.of(context).size.width / 1.5,
-              child: Text("Place Order")))
-    ]);
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: MaterialButton(
+                onPressed: value != "Choose a Service" && selectedInfo != null
+                    ? () async {
+                        await http.post(
+                          "https://suneel-printers.herokuapp.com/on_order",
+                          headers: <String, String>{
+                            "Content-Type": "application/json; charset=UTF-8",
+                          },
+                          body: jsonEncode(<String, String>{
+                            "name": selectedInfo["name"],
+                            "phone": selectedInfo["phone"],
+                            "address": selectedInfo["address"],
+                            "email": selectedInfo["email"],
+                            "order_list": value
+                          }),
+                        );
+
+                        // TODO: SHow Order Sucessful Screen
+
+                        Navigator.pop(context);
+                      }
+                    : null,
+                disabledColor: kUIDarkText.withOpacity(0.5),
+                color: kUIAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.check_circle_outline, color: Colors.grey[200]),
+                    SizedBox(width: 8),
+                    Text("Place Order",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[200])),
+                  ],
+                ),
+              ),
+            )
+          ]),
+    );
   }
 }
 

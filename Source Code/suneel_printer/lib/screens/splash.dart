@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen>
     });
 
     _controller = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: Duration(seconds: 2),
       vsync: this,
     );
 
@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen>
       setState(() {});
     });
 
-    Timer(Duration(seconds: 5), () {
+    Timer(Duration(seconds: 3), () {
       setState(() {
         _controller.forward();
       });
