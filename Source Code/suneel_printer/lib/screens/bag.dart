@@ -22,7 +22,7 @@ class _BagScreenState extends State<BagScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double price = 0.0;
+    double price = 0;
 
     bag.products.forEach((BagItem bagItem) {
       price += double.parse(bagItem.product.price) * bagItem.quantity;
@@ -82,11 +82,14 @@ class _BagScreenState extends State<BagScreen> {
                   children: [
                     Icon(Icons.check_circle_outline, color: Colors.grey[200]),
                     SizedBox(width: 8),
-                    Text("Checkout",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[200])),
+                    Text(
+                      "Checkout",
+                      style: TextStyle(
+                          fontFamily: "sans-serif-condensed",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[200]),
+                    ),
                   ],
                 ),
                 onPressed: bag.hasProducts
@@ -99,10 +102,10 @@ class _BagScreenState extends State<BagScreen> {
                                 backgroundColor: Colors.transparent,
                                 context: context,
                                 builder: (_) => Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: InformationSheet(
-                                        parentContext: context,
-                                        popable: false)),
+                                  padding: MediaQuery.of(context).viewInsets,
+                                  child: InformationSheet(
+                                      parentContext: context, popable: false),
+                                ),
                               )
                             : await showModalBottomSheet(
                                 isScrollControlled: true,
@@ -123,7 +126,7 @@ class _BagScreenState extends State<BagScreen> {
         body: Column(
           children: [
             Container(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16),
               child: Row(
                 children: [
                   GestureDetector(
@@ -143,8 +146,9 @@ class _BagScreenState extends State<BagScreen> {
                       child: Text(
                         "My Bag",
                         style: TextStyle(
-                            fontSize: 24,
+                            fontFamily: "sans-serif-condensed",
                             color: kUIDarkText,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -155,7 +159,7 @@ class _BagScreenState extends State<BagScreen> {
                       // TODO: WIshlist Screen
                     },
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8),
                       child: Icon(
                         Icons.favorite_border,
                         color: kUIDarkText,
@@ -174,7 +178,9 @@ class _BagScreenState extends State<BagScreen> {
                     context: context,
                     builder: (_) => WillPopScope(
                       onWillPop: () async {
-                        setState(() => bag.changeLog.clear());
+                        setState(
+                          () => bag.changeLog.clear(),
+                        );
                         return true;
                       },
                       child: RoundedAlertDialog(title: "Alerts", otherWidgets: [
@@ -191,6 +197,7 @@ class _BagScreenState extends State<BagScreen> {
                                     bag.changeLog[index],
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
+                                        color: kUIDarkText,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "sans-serif-condensed"),
@@ -222,14 +229,17 @@ class _BagScreenState extends State<BagScreen> {
                       Text(
                         "Alerts for items in your bag",
                         style: TextStyle(
+                            color: kUIDarkText,
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                             fontFamily: "sans-serif-condensed"),
                       ),
-                      Text("Tap to view",
-                          style: TextStyle(
-                              color: Colors.grey[800],
-                              fontFamily: "sans-serif-condensed"))
+                      Text(
+                        "Tap to view",
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontFamily: "sans-serif-condensed"),
+                      )
                     ],
                   ),
                 ),
@@ -238,7 +248,7 @@ class _BagScreenState extends State<BagScreen> {
               child: bag.products.isNotEmpty
                   ? Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 24.0),
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 24),
                       child: AnimatedList(
                         shrinkWrap: true,
                         key: _listKey,
@@ -308,6 +318,7 @@ class _BagScreenState extends State<BagScreen> {
                                 product.name,
                                 maxLines: 3,
                                 style: TextStyle(
+                                    color: kUIDarkText,
                                     fontSize: 22,
                                     fontWeight: FontWeight.w500,
                                     fontFamily: "sans-serif-condensed",
@@ -319,6 +330,7 @@ class _BagScreenState extends State<BagScreen> {
                                 child: Text(
                                   "₹ ${product.price}",
                                   style: TextStyle(
+                                      color: kUIDarkText,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: -1,
@@ -354,6 +366,7 @@ class _BagScreenState extends State<BagScreen> {
                                           .label[0]
                                           .toUpperCase(),
                                       style: TextStyle(
+                                          fontFamily: "sans-serif-condensed",
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
                                           color: kUIDarkText),
@@ -380,13 +393,14 @@ class _BagScreenState extends State<BagScreen> {
                           setState(() {});
                         },
                         child: Padding(
-                          padding: EdgeInsets.all(10.0),
+                          padding: EdgeInsets.all(10),
                           child: Icon(Icons.remove, color: kUIColor, size: 20),
                         ),
                       ),
                       Text(
                         bag.getQuantity(product).toString(),
                         style: TextStyle(
+                            fontFamily: "sans-serif-condensed",
                             color: kUIColor,
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
@@ -398,7 +412,7 @@ class _BagScreenState extends State<BagScreen> {
                           setState(() {});
                         },
                         child: Padding(
-                          padding: EdgeInsets.all(10.0),
+                          padding: EdgeInsets.all(10),
                           child: Icon(
                             Icons.add,
                             color: kUIColor,
@@ -463,7 +477,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          color: Colors.white,
+          color: kUIColor,
         ),
         padding: EdgeInsets.only(top: 8),
         child: Column(
@@ -484,7 +498,11 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   ),
                   Text(
                     "Check Out",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontFamily: "sans-serif-condensed",
+                        color: kUIDarkText,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold),
                   )
                 ],
               ),
@@ -501,6 +519,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             Text(
                               "Name: ",
                               style: TextStyle(
+                                color: kUIDarkText,
                                 fontSize: 20,
                                 fontFamily: "sans-serif-condensed",
                                 fontWeight: FontWeight.bold,
@@ -527,9 +546,10 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               backgroundColor: Colors.transparent,
                               context: context,
                               builder: (_) => Padding(
-                                  padding: MediaQuery.of(context).viewInsets,
-                                  child: InformationSheet(
-                                      parentContext: context, popable: false)),
+                                padding: MediaQuery.of(context).viewInsets,
+                                child: InformationSheet(
+                                    parentContext: context, popable: false),
+                              ),
                             );
                           },
                           child: Icon(
@@ -545,6 +565,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         Text(
                           "Phone: ",
                           style: TextStyle(
+                            color: kUIDarkText,
                             fontSize: 20,
                             fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
@@ -566,6 +587,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         Text(
                           "Email: ",
                           style: TextStyle(
+                            color: kUIDarkText,
                             fontSize: 20,
                             fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
@@ -574,8 +596,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         Text(
                           "${selectedInfo['email']}",
                           style: TextStyle(
+                            color: kUIDarkText,
                             fontSize: 18,
-                            color: Colors.grey[200],
                             fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.w500,
                           ),
@@ -587,6 +609,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         Text(
                           "Address: ",
                           style: TextStyle(
+                            color: kUIDarkText,
                             fontSize: 20,
                             fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
@@ -597,8 +620,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
+                              color: kUIDarkText,
                               fontSize: 18,
-                              color: Colors.grey[200],
                               fontFamily: "sans-serif-condensed",
                               fontWeight: FontWeight.w500,
                             ),
@@ -614,6 +637,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         Text(
                           "Payment Methods",
                           style: TextStyle(
+                            color: kUIDarkText,
                             fontSize: 22,
                             fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
@@ -627,6 +651,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               title: Text(
                                 "Pay on Delivery",
                                 style: TextStyle(
+                                  color: kUIDarkText,
                                   fontSize: 18,
                                   fontFamily: "sans-serif-condensed",
                                   fontWeight: FontWeight.bold,
@@ -641,6 +666,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               title: Text(
                                 "PayTM, Credit Card, Debit Card & Net Banking",
                                 style: TextStyle(
+                                  color: kUIDarkText,
                                   fontSize: 18,
                                   fontFamily: "sans-serif-condensed",
                                   fontWeight: FontWeight.bold,
@@ -660,6 +686,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               child: Text(
                                 "Total:",
                                 style: TextStyle(
+                                  color: kUIDarkText,
                                   fontSize: 24,
                                   fontFamily: "sans-serif-condensed",
                                   fontWeight: FontWeight.bold,
@@ -669,6 +696,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             Text(
                               "₹ ",
                               style: TextStyle(
+                                color: kUIDarkText,
                                 fontFamily: "sans-serif-condensed",
                                 fontWeight: FontWeight.bold,
                               ),
@@ -678,6 +706,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                   ? widget.price.toInt().toString()
                                   : widget.price.toStringAsFixed(2),
                               style: TextStyle(
+                                color: kUIDarkText,
                                 fontSize: 24,
                                 fontFamily: "sans-serif-condensed",
                                 fontWeight: FontWeight.bold,
@@ -773,7 +802,15 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
     List<String> pastOrders = preferences.getStringList("orders") ?? [];
 
-    pastOrders.add(jsonEncode(bag.products.map((e) => e.toString()).toList()));
+    pastOrders.add(
+      jsonEncode(
+        bag.products
+            .map(
+              (e) => e.toString(),
+            )
+            .toList(),
+      ),
+    );
 
     preferences.setStringList("orders", pastOrders);
 

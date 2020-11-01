@@ -63,7 +63,7 @@ class SuneelPrinter extends StatelessWidget {
           ResponsiveBreakpoint.resize(1200, name: DESKTOP),
           ResponsiveBreakpoint.autoScale(2460, name: "4K"),
         ],
-        background: Container(color: Colors.white),
+        background: Container(color: kUIColor),
       ),
       title: 'SuneelPrinters',
       initialRoute: "/",

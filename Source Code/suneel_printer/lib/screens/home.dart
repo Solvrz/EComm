@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16),
                 child: Column(children: [
                   Align(
                     alignment: Alignment.centerLeft,
@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(left: 4.0),
+                                padding: EdgeInsets.only(left: 4),
                                 child: Text(
                                   "Deliver To",
                                   style: TextStyle(
@@ -98,17 +98,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   24) /
                                               2.1),
                                       child: Text(
-                                          selectedInfo != null
-                                              ? selectedInfo["address"]
-                                              : "Not Selected",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              color: kUIDarkText,
-                                              letterSpacing: 0.2,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily:
-                                                  "sans-serif-condensed")),
+                                        selectedInfo != null
+                                            ? selectedInfo["address"]
+                                            : "Not Selected",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: kUIDarkText,
+                                            letterSpacing: 0.2,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: "sans-serif-condensed"),
+                                      ),
                                     ),
                                   ),
                                   Icon(Icons.arrow_drop_down,
@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // TODO: Past Orders Screen
                                   },
                                   child: Padding(
-                                    padding: EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8),
                                     child: Image.asset(
                                         "assets/images/YourOrders.png",
                                         width: 30,
@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onTap: () =>
                                       Navigator.pushNamed(context, "/bag"),
                                   child: Padding(
-                                    padding: EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8),
                                     child: Image.asset(
                                         "assets/images/ShoppingBag.png",
                                         width: 30,
@@ -168,11 +168,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             border: InputBorder.none,
                             hintText: "Search for Products",
                             hintStyle: TextStyle(
+                              fontFamily: "sans-serif-condensed",
                               color: Colors.grey[600],
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           style: TextStyle(
+                            fontFamily: "sans-serif-condensed",
                             color: Colors.grey[800],
                             fontWeight: FontWeight.bold,
                           ),
@@ -188,8 +190,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ];
 
                       if (future.hasData) {
-                        carouselImages =
-                            future.data.docs.map((e) => e.get("url")).toList();
+                        carouselImages = future.data.docs
+                            .map(
+                              (e) => e.get("url"),
+                            )
+                            .toList();
                       }
 
                       return Column(children: [
@@ -225,9 +230,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               carouselImages.length,
                               (int index) => AnimatedContainer(
                                 duration: Duration(milliseconds: 400),
-                                width: _current == index ? 16.0 : 8.0,
-                                height: _current == index ? 6.0 : 8.0,
-                                margin: EdgeInsets.symmetric(horizontal: 3.0),
+                                width: _current == index ? 16 : 8,
+                                height: _current == index ? 6 : 8,
+                                margin: EdgeInsets.symmetric(horizontal: 3),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   color: _current == index
@@ -242,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: 18),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 6.0),
+                    padding: EdgeInsets.symmetric(horizontal: 6),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -299,6 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           data["name"],
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
+                                            fontFamily: "sans-serif-condensed",
                                             color: kUIDarkText,
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,

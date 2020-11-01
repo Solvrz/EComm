@@ -34,7 +34,9 @@ class Variation {
   }
 
   String toString() {
-    return jsonEncode(toJson());
+    return jsonEncode(
+      toJson(),
+    );
   }
 }
 

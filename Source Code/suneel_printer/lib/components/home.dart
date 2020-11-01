@@ -24,13 +24,21 @@ class _InformationSheetState extends State<InformationSheet> {
   void initState() {
     super.initState();
     addresses = (preferences.getStringList("info") ?? [])
-        .map<Map>((e) => jsonDecode(e))
+        .map<Map>(
+          (e) => jsonDecode(e),
+        )
         .toList();
   }
 
   Future<void> save() async {
     await preferences.setStringList(
-        "info", addresses.map((e) => jsonEncode(e)).toList());
+      "info",
+      addresses
+          .map(
+            (e) => jsonEncode(e),
+          )
+          .toList(),
+    );
   }
 
   @override
@@ -48,7 +56,7 @@ class _InformationSheetState extends State<InformationSheet> {
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
-            color: Colors.white,
+            color: kUIColor,
           ),
           padding: EdgeInsets.all(16),
           child: Column(
@@ -60,8 +68,11 @@ class _InformationSheetState extends State<InformationSheet> {
                   Expanded(
                     child: Text(
                       "Delivery Information",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontFamily: "sans-serif-condensed",
+                          color: kUIDarkText,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   if (widget.popable)
@@ -108,63 +119,67 @@ class _InformationSheetState extends State<InformationSheet> {
                                   width: 60,
                                   child: Row(children: [
                                     GestureDetector(
-                                        behavior: HitTestBehavior.translucent,
-                                        onTap: () async {
-                                          await showMaterialModalBottomSheet(
-                                            backgroundColor: Colors.transparent,
-                                            context: context,
-                                            builder: (_, __) => Padding(
-                                              padding: MediaQuery.of(context)
-                                                  .viewInsets,
-                                              child: AddInformationSheet(
-                                                addresses: addresses,
-                                                edit: true,
-                                                data: address,
-                                              ),
+                                      behavior: HitTestBehavior.translucent,
+                                      onTap: () async {
+                                        await showMaterialModalBottomSheet(
+                                          backgroundColor: Colors.transparent,
+                                          context: context,
+                                          builder: (_, __) => Padding(
+                                            padding: MediaQuery.of(context)
+                                                .viewInsets,
+                                            child: AddInformationSheet(
+                                              addresses: addresses,
+                                              edit: true,
+                                              data: address,
                                             ),
-                                          );
-                                          setState(() {});
-                                        },
-                                        child: Icon(Icons.edit,
-                                            color: Colors.grey[700])),
+                                          ),
+                                        );
+                                        setState(() {});
+                                      },
+                                      child: Icon(Icons.edit,
+                                          color: Colors.grey[700]),
+                                    ),
                                     SizedBox(width: 12),
                                     GestureDetector(
-                                        behavior: HitTestBehavior.translucent,
-                                        onTap: () async {
-                                          if (isSelected) {
-                                            if (addresses.length == 1)
-                                              selectedInfo = null;
-                                            else
-                                              selectedInfo = addresses[
-                                                  index - 1 >= 0
-                                                      ? index - 1
-                                                      : index + 1];
+                                      behavior: HitTestBehavior.translucent,
+                                      onTap: () async {
+                                        if (isSelected) {
+                                          if (addresses.length == 1)
+                                            selectedInfo = null;
+                                          else
+                                            selectedInfo = addresses[
+                                                index - 1 >= 0
+                                                    ? index - 1
+                                                    : index + 1];
 
-                                            // TODO: Save Selected Info to Shared Prefrences
-                                          }
+                                          // TODO: Save Selected Info to Shared Prefrences
+                                        }
 
-                                          addresses.removeAt(index);
-                                          setState(() {});
-                                        },
-                                        child: Icon(Icons.delete,
-                                            color: Colors.grey[700]))
+                                        addresses.removeAt(index);
+                                        setState(() {});
+                                      },
+                                      child: Icon(Icons.delete,
+                                          color: Colors.grey[700]),
+                                    )
                                   ]),
                                 ),
                                 title: Text(
-                                    "${address["name"].toString().capitalize()}, ${address["phone"]}",
-                                    style: TextStyle(
-                                        color: isSelected
-                                            ? kUIDarkText
-                                            : Colors.grey[600],
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        fontFamily: "sans-serif-condensed",
-                                        letterSpacing: 0.2)),
+                                  "${address["name"].toString().capitalize()}, ${address["phone"]}",
+                                  style: TextStyle(
+                                      color: isSelected
+                                          ? kUIDarkText
+                                          : Colors.grey[600],
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      fontFamily: "sans-serif-condensed",
+                                      letterSpacing: 0.2),
+                                ),
                                 subtitle: Padding(
-                                  padding: const EdgeInsets.only(top: 6.0),
+                                  padding: EdgeInsets.only(top: 6),
                                   child: Text(
                                     address["address"],
                                     style: TextStyle(
+                                        color: kUIDarkText,
                                         fontFamily: "sans-serif-condensed",
                                         letterSpacing: 0.2),
                                   ),
@@ -175,10 +190,15 @@ class _InformationSheetState extends State<InformationSheet> {
                                 thickness: 0.75, color: Colors.grey[400]),
                           )
                         : Center(
-                            child: Text("No Information Added",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500))),
+                            child: Text(
+                              "No Information Added",
+                              style: TextStyle(
+                                  fontFamily: "sans-serif-condensed",
+                                  color: kUIDarkText,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
                   ),
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
@@ -194,16 +214,22 @@ class _InformationSheetState extends State<InformationSheet> {
                       setState(() {});
                     },
                     child: Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: kUIAccent,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                            child: Text("Add Information",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)))),
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: kUIAccent,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Add Information",
+                          style: TextStyle(
+                              fontFamily: "sans-serif-condensed",
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: kUIColor),
+                        ),
+                      ),
+                    ),
                   )
                 ]),
               )
@@ -278,7 +304,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          color: Colors.white,
+          color: kUIColor,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,7 +324,11 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                 ),
                 Text(
                   "${widget.edit ? "Edit" : "Add"} Information",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontFamily: "sans-serif-condensed",
+                      color: kUIDarkText,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
                 )
               ],
             ),
@@ -339,22 +369,35 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                   });
                 }
 
-                await preferences.setStringList("info",
-                    widget.addresses.map((e) => jsonEncode(e)).toList());
+                await preferences.setStringList(
+                  "info",
+                  widget.addresses
+                      .map(
+                        (e) => jsonEncode(e),
+                      )
+                      .toList(),
+                );
 
                 Navigator.pop(context);
               },
               child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: kUIAccent,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                      child: Text("${widget.edit ? "Save" : "Add"} Information",
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)))),
+                height: 40,
+                decoration: BoxDecoration(
+                  color: kUIAccent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    "${widget.edit ? "Save" : "Add"} Information",
+                    style: TextStyle(
+                      fontFamily: "sans-serif-condensed",
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: kUIColor,
+                    ),
+                  ),
+                ),
+              ),
             )
           ],
         ),

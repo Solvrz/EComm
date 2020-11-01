@@ -81,6 +81,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         Text(
                           args.product != null ? "Edit" : "Preview",
                           style: TextStyle(
+                              color: kUIDarkText,
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               fontFamily: "sans-serif-condensed"),
@@ -146,7 +147,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         "price": double.parse(price),
                                         "name": name,
                                         "variations": variations
-                                            .map((e) => e.toJson())
+                                            .map(
+                                              (e) => e.toJson(),
+                                            )
                                             .toList()
                                       });
 
@@ -189,7 +192,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         "price": double.parse(price),
                                         "name": name,
                                         "variations": variations
-                                            .map((e) => e.toJson())
+                                            .map(
+                                              (e) => e.toJson(),
+                                            )
                                             .toList()
                                       });
                                     }
@@ -253,6 +258,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             border: InputBorder.none,
                             hintText: "Product Name",
                             hintStyle: TextStyle(
+                                color: kUIDarkText,
                                 fontSize: 28,
                                 fontWeight: FontWeight.w600,
                                 fontFamily: "sans-serif-condensed"),
@@ -261,6 +267,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           onSubmitted: (_) =>
                               FocusScope.of(context).autofocus(_priceNode),
                           style: TextStyle(
+                              color: kUIDarkText,
                               fontSize: 28,
                               fontWeight: FontWeight.w600,
                               fontFamily: "sans-serif-condensed"),
@@ -344,7 +351,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   options: CarouselOptions(
                                       autoPlay: images.length > 0,
                                       enlargeCenterPage: true,
-                                      aspectRatio: 2.0,
+                                      aspectRatio: 2,
                                       onPageChanged: (index, reason) {
                                         setState(() {
                                           _currentImage = index;
@@ -358,10 +365,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   images.length + 1,
                                   (int index) => AnimatedContainer(
                                     duration: Duration(milliseconds: 400),
-                                    width: _currentImage == index ? 16.0 : 8.0,
-                                    height: _currentImage == index ? 6.0 : 8.0,
+                                    width: _currentImage == index ? 16 : 8,
+                                    height: _currentImage == index ? 6 : 8,
                                     margin: EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 3.0),
+                                        vertical: 10, horizontal: 3),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
                                       color: _currentImage == index
@@ -380,13 +387,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             ...variations.map(
                               (Variation variation) => Padding(
-                                padding: EdgeInsets.symmetric(vertical: 2.0),
+                                padding: EdgeInsets.symmetric(vertical: 2),
                                 child: Slidable(
                                   key: ValueKey(
                                     variation.toString(),
@@ -431,6 +438,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                               border: InputBorder.none,
                                               hintText: "Name",
                                               hintStyle: TextStyle(
+                                                  color: kUIDarkText,
                                                   fontSize: 22,
                                                   fontWeight: FontWeight.w600,
                                                   fontFamily:
@@ -438,6 +446,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                   letterSpacing: 0.2),
                                             ),
                                             style: TextStyle(
+                                                color: kUIDarkText,
                                                 fontSize: 22,
                                                 fontWeight: FontWeight.w600,
                                                 fontFamily:
@@ -453,7 +462,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                 variation.options.length,
                                                 (index) => Padding(
                                                   padding: EdgeInsets.symmetric(
-                                                      horizontal: 3.0),
+                                                      horizontal: 3),
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
@@ -558,20 +567,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                                 Colors.transparent;
                                                                         return Container(
                                                                           margin:
-                                                                              EdgeInsets.all(5.0),
+                                                                              EdgeInsets.all(5),
                                                                           decoration:
                                                                               BoxDecoration(
                                                                             borderRadius:
-                                                                                BorderRadius.circular(50.0),
+                                                                                BorderRadius.circular(50),
                                                                             color: notTrans
                                                                                 ? color
-                                                                                : Colors.white,
+                                                                                : kUIColor,
                                                                             boxShadow: notTrans
                                                                                 ? [
                                                                                     BoxShadow(
-                                                                                      color: color != Colors.white && notTrans ? color.withOpacity(0.8) : Colors.grey[600],
-                                                                                      offset: Offset(1.0, 2.0),
-                                                                                      blurRadius: 5.0,
+                                                                                      color: color != kUIColor && notTrans ? color.withOpacity(0.8) : Colors.grey[600],
+                                                                                      offset: Offset(1, 2),
+                                                                                      blurRadius: 5,
                                                                                     ),
                                                                                   ]
                                                                                 : null,
@@ -583,14 +592,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                             child:
                                                                                 InkWell(
                                                                               onTap: changeColor,
-                                                                              borderRadius: BorderRadius.circular(50.0),
+                                                                              borderRadius: BorderRadius.circular(50),
                                                                               child: notTrans
                                                                                   ? AnimatedOpacity(
                                                                                       duration: Duration(milliseconds: 210),
-                                                                                      opacity: isCurrentColor ? 1.0 : 0.0,
+                                                                                      opacity: isCurrentColor ? 1 : 0,
                                                                                       child: Icon(
                                                                                         Icons.done,
-                                                                                        color: useWhiteForeground(color) ? Colors.white : Colors.black,
+                                                                                        color: useWhiteForeground(color) ? kUIColor : Colors.black,
                                                                                       ),
                                                                                     )
                                                                                   : Icon(Icons.clear),
@@ -699,6 +708,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                               0]
                                                                           .toUpperCase(),
                                                                       style: TextStyle(
+                                                                          fontFamily:
+                                                                              "sans-serif-condensed",
                                                                           fontSize:
                                                                               12,
                                                                           fontWeight: FontWeight
@@ -733,7 +744,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                   });
                                                 },
                                                 child: Padding(
-                                                  padding: EdgeInsets.all(8.0),
+                                                  padding: EdgeInsets.all(8),
                                                   child: Icon(Icons.add),
                                                 ),
                                               )
@@ -745,9 +756,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              padding: EdgeInsets.symmetric(horizontal: 8),
                               child: AlertButton(
-                                backgroundColor: Colors.white,
+                                backgroundColor: kUIColor,
                                 titleColor: kUIAccent,
                                 title: "Add Variation",
                                 onPressed: () => setState(() {
@@ -771,6 +782,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         child: Text(
                           "Price",
                           style: TextStyle(
+                              color: kUIDarkText,
                               fontSize: 22,
                               fontWeight: FontWeight.w600,
                               fontFamily: "sans-serif-condensed",
@@ -788,6 +800,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             prefixText: "₹ ",
                             hintText: "Price",
                             hintStyle: TextStyle(
+                                color: kUIDarkText,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
                                 fontFamily: "sans-serif-condensed",
@@ -796,6 +809,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           cursorColor: Colors.grey,
                           onChanged: (value) => price = value,
                           style: TextStyle(
+                              color: kUIDarkText,
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                               fontFamily: "sans-serif-condensed",

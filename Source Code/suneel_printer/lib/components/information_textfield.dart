@@ -31,7 +31,11 @@ class _InformationTextFieldState extends State<InformationTextField> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         widget.title,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            fontFamily: "sans-serif-condensed",
+            color: kUIDarkText,
+            fontSize: 16,
+            fontWeight: FontWeight.bold),
       ),
       TextField(
         decoration: InputDecoration(
@@ -43,12 +47,18 @@ class _InformationTextFieldState extends State<InformationTextField> {
         minLines: 1,
         maxLines: widget.maxLines,
         style: TextStyle(
-            fontSize: 17, color: Colors.grey[600], fontWeight: FontWeight.w500),
+            fontFamily: "sans-serif-condensed",
+            color: kUIDarkText,
+            fontSize: 17,
+            fontWeight: FontWeight.w500),
       ),
       if (widget.error) ...[
         Text(
           widget.errorMessage,
-          style: TextStyle(fontSize: 15, color: kUIAccent),
+          style: TextStyle(
+              fontFamily: "sans-serif-condensed",
+              fontSize: 15,
+              color: kUIAccent),
         ),
         SizedBox(height: 8),
       ],

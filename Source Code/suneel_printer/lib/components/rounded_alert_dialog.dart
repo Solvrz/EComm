@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:suneel_printer/constant.dart';
 
 class RoundedAlertDialog extends StatelessWidget {
   final String title;
@@ -31,8 +32,11 @@ class RoundedAlertDialog extends StatelessWidget {
           ? Text(
               title,
               textAlign: centerTitle ? TextAlign.center : TextAlign.left,
-              style:
-                  TextStyle(fontSize: titleSize, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontFamily: "sans-serif-condensed",
+                  color: kUIDarkText,
+                  fontSize: titleSize,
+                  fontWeight: FontWeight.bold),
             )
           : null,
       content: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -40,7 +44,10 @@ class RoundedAlertDialog extends StatelessWidget {
           Text(
             description,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: descriptionSize),
+            style: TextStyle(
+                fontFamily: "sans-serif-condensed",
+                color: kUIDarkText,
+                fontSize: descriptionSize),
           ),
         if (otherWidgets != null)
           Column(

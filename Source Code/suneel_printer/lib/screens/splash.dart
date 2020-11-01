@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
     );
 
-    holeSize = Tween<double>(begin: 0.0, end: 2.0).animate(
+    holeSize = Tween<double>(begin: 0, end: 2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
     );
 
@@ -61,15 +61,16 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Stack(children: [
       Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: holeSize.value > 1.5 ? kUIColor : Color(0xfff23558)),
+        width: double.infinity,
+        height: double.infinity,
+        color: holeSize.value > 1.5 ? kUIColor : Color(0xfff23558),
+      ),
       if (holeSize.value < 1.5)
         Center(
           child: Image.asset(
             'assets/images/Logo.png',
-            height: 200.0,
-            width: 200.0,
+            height: 200,
+            width: 200,
           ),
         ),
       Opacity(

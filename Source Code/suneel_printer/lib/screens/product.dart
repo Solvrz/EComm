@@ -19,7 +19,9 @@ class _ProductScreenState extends State<ProductScreen> {
     ProductArguments args = ModalRoute.of(context).settings.arguments;
 
     if (product == null) {
-      product = Product.fromJson(args.product.toJson());
+      product = Product.fromJson(
+        args.product.toJson(),
+      );
       variations = List.generate(
         args.product.variations.length,
         (index) => OptionRadioTile(
@@ -68,12 +70,13 @@ class _ProductScreenState extends State<ProductScreen> {
                         setState(() {});
                       },
                       child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: kUIColor),
-                          ),
-                          padding: EdgeInsets.all(8),
-                          child: Image.asset("assets/images/ShoppingBag.png",
-                              width: 30, height: 30)),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: kUIColor),
+                        ),
+                        padding: EdgeInsets.all(8),
+                        child: Image.asset("assets/images/ShoppingBag.png",
+                            width: 30, height: 30),
+                      ),
                     )
                   ],
                 ),
@@ -89,6 +92,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       child: Text(
                         product.name,
                         style: TextStyle(
+                            color: kUIDarkText,
                             fontSize: 28,
                             fontWeight: FontWeight.w600,
                             fontFamily: "sans-serif-condensed"),
@@ -105,13 +109,15 @@ class _ProductScreenState extends State<ProductScreen> {
                               padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
                               child: CarouselSlider(
                                 items: product.images
-                                    .map<Widget>((NetworkImage image) =>
-                                        Image(image: image))
+                                    .map<Widget>(
+                                      (NetworkImage image) =>
+                                          Image(image: image),
+                                    )
                                     .toList(),
                                 options: CarouselOptions(
                                     autoPlay: product.images.length > 1,
                                     enlargeCenterPage: true,
-                                    aspectRatio: 2.0,
+                                    aspectRatio: 2,
                                     onPageChanged: (index, reason) {
                                       setState(() {
                                         _currentImage = index;
@@ -125,10 +131,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                 product.images.length,
                                 (int index) => AnimatedContainer(
                                   duration: Duration(milliseconds: 400),
-                                  width: _currentImage == index ? 16.0 : 8.0,
-                                  height: _currentImage == index ? 6.0 : 8.0,
+                                  width: _currentImage == index ? 16 : 8,
+                                  height: _currentImage == index ? 6 : 8,
                                   margin: EdgeInsets.symmetric(
-                                      vertical: 10.0, horizontal: 3.0),
+                                      vertical: 10, horizontal: 3),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
                                     color: _currentImage == index
@@ -147,7 +153,7 @@ class _ProductScreenState extends State<ProductScreen> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: variations,
@@ -163,6 +169,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       child: Text(
                         "Price",
                         style: TextStyle(
+                            color: kUIDarkText,
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
                             fontFamily: "sans-serif-condensed",
@@ -172,6 +179,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     Text(
                       "₹ ${product.price}",
                       style: TextStyle(
+                          color: kUIDarkText,
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
                           fontFamily: "sans-serif-condensed",
@@ -188,15 +196,20 @@ class _ProductScreenState extends State<ProductScreen> {
                       Container(
                         padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: kUIDarkText)),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: kUIDarkText),
+                        ),
                         child: IntrinsicWidth(
                           child: Column(
                             children: [
                               Icon(Icons.remove, size: 30),
-                              Text(bag.getQuantity(product).toString(),
-                                  style: TextStyle(
-                                      fontSize: 22, color: kUIDarkText)),
+                              Text(
+                                bag.getQuantity(product).toString(),
+                                style: TextStyle(
+                                    fontFamily: "sans-serif-condensed",
+                                    fontSize: 22,
+                                    color: kUIDarkText),
+                              ),
                               Icon(Icons.add, size: 30),
                             ],
                           ),
@@ -217,8 +230,9 @@ class _ProductScreenState extends State<ProductScreen> {
                               ? "IN BAG"
                               : "ADD TO BAG",
                           style: TextStyle(
+                              fontFamily: "sans-serif-condensed",
                               fontSize: 20,
-                              color: Colors.white,
+                              color: kUIColor,
                               fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {

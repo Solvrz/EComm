@@ -138,8 +138,9 @@ class Bag {
           bag.removeItem(item.product);
         } else {
           Map productData = products.docs.first.data();
-          List<String> diff =
-              item.product.difference(Product.fromJson(productData));
+          List<String> diff = item.product.difference(
+            Product.fromJson(productData),
+          );
 
           Map updatedData = item.product.toJson();
 
@@ -152,7 +153,9 @@ class Bag {
                   productData["variations"].asMap().map((_, element) {
                 Variation variation = Variation.fromJson(element);
                 return MapEntry(
-                    variation.name, variation.options.first.toJson());
+                  variation.name,
+                  variation.options.first.toJson(),
+                );
               });
             } else if (changeKey == "name") {
               _changeLog.add(
