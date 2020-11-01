@@ -5,7 +5,7 @@ import 'package:suneel_printer/models/bag.dart';
 import 'package:suneel_printer/models/payment.dart';
 import 'package:suneel_printer/models/wishlist.dart';
 
-bool admin = false;
+bool admin = true;
 bool staging = true;
 
 const kUIAccent = Colors.redAccent;
@@ -77,6 +77,10 @@ extension StringExtension on String {
 
   int toInt() {
     return int.parse(this);
+  }
+
+  double toDouble() {
+    return double.parse(this);
   }
 
   bool toBool() {

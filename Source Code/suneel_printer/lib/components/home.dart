@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:suneel_printer/components/information_textfield.dart';
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/models/product.dart';
+import 'package:suneel_printer/screens/product.dart';
 
 class InformationSheet extends StatefulWidget {
   final BuildContext parentContext;
@@ -441,5 +443,96 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
       fields["pincode"].error = false;
 
     return !fields.values.toList().map((e) => e.error).toList().contains(true);
+  }
+}
+
+class SearchCard extends StatefulWidget {
+  final Product product;
+
+  SearchCard({this.product});
+
+  @override
+  _SearchCardState createState() => _SearchCardState();
+}
+
+class _SearchCardState extends State<SearchCard> {
+  @override
+  Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width / 2;
+    final double height = width / 0.8;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+
+        Navigator.pushNamed(
+          context,
+          "/product",
+          arguments: ProductArguments(widget.product),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.fromLTRB(12, admin ? 12 : 24, 12, 0),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey[400], width: 0.5),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 24, 12, 0),
+                  child: widget.product.images != null
+                      ? Container(
+                          height: height / 1.8,
+                          constraints: BoxConstraints(maxWidth: width - 64),
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey[600],
+                              blurRadius: 12,
+                              offset: Offset(2, 2),
+                            )
+                          ]),
+                          child: Image(image: widget.product.images[0]),
+                        )
+                      : Container(
+                          height: height / 2,
+                          child: Center(
+                            child: Text("No Image Provided"),
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 12),
+          Text(
+            "₹ ${widget.product.price}",
+            style: TextStyle(
+                color: kUIDarkText,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                fontFamily: "sans-serif-condensed"),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: Text(
+              widget.product.name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: kUIDarkText,
+                  fontSize: 18,
+                  letterSpacing: 0.3,
+                  fontFamily: "sans-serif-condensed"),
+            ),
+          ),
+        ]),
+      ),
+    );
   }
 }

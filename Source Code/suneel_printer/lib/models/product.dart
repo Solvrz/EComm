@@ -6,6 +6,7 @@ class Product {
   String _name;
   List<NetworkImage> _images;
   String _price;
+  String _mrp;
   List<Variation> _variations;
   Map _selected;
 
@@ -17,6 +18,8 @@ class Product {
 
   String get price => _price;
 
+  String get mrp => _mrp;
+
   List<Variation> get variations => _variations;
 
   Map get selected => _selected;
@@ -26,6 +29,7 @@ class Product {
       String name,
       List images = const [],
       String price,
+      String mrp,
       List variations,
       Map selected}) {
     _uId = uId;
@@ -37,6 +41,7 @@ class Product {
           )
           .toList();
     _price = price;
+    _mrp = mrp;
     _variations = variations;
     _selected = selected ??
         variations.asMap().map(
@@ -51,6 +56,7 @@ class Product {
         name: data["name"],
         images: data["imgs"],
         price: data["price"].toString(),
+        mrp: data["mrp"].toString(),
         variations: (data["variations"] ?? [])
             .map<Variation>(
               (variation) => Variation.fromJson(variation),
@@ -72,6 +78,7 @@ class Product {
       "name": _name,
       "imgs": _images.map((e) => e.url).toList(),
       "price": _price,
+      "mrp": _mrp,
       "variations": _variations
           .map<Map>(
             (Variation variation) => variation.toJson(),

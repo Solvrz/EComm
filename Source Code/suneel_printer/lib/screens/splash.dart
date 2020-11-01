@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/home.dart';
 
+// TODO: White Screen After Animation By: Lovish
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();

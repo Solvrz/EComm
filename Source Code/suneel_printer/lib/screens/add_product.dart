@@ -14,6 +14,8 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/models/variation.dart';
 
+// TODO: Varition Text .trim() By: Aditya
+
 class AddProductScreen extends StatefulWidget {
   @override
   _AddProductScreenState createState() => _AddProductScreenState();
@@ -22,6 +24,7 @@ class AddProductScreen extends StatefulWidget {
 class _AddProductScreenState extends State<AddProductScreen> {
   String name = "";
   String price = "";
+  String mrp = "";
 
   List<Image> images = [];
   List<File> imageFiles = [];
@@ -30,6 +33,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   int _currentImage = 0;
   FocusNode _priceNode = FocusNode();
+  FocusNode _mrpNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +42,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (args.product != null) {
       name = args.product.name;
       price = args.product.price;
+      mrp = args.product.mrp;
       if (args.product.images != null)
         images = args.product.images
             .map(
@@ -88,7 +93,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ),
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
-                          onTap: name != "" && price != ""
+                          onTap: name != "" && price != "" && mrp != ""
                               ? () async {
                                   Navigator.pop(context);
 
@@ -144,8 +149,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       await query.docs.first.reference.update({
                                         "uId": "1/1/${maxId + 1}",
                                         "imgs": urls,
-                                        "price": double.parse(price),
-                                        "name": name,
+                                        "mrp": mrp.toDouble(),
+                                        "price": price.toDouble(),
+                                        "name": name.trim(),
                                         "variations": variations
                                             .map(
                                               (e) => e.toJson(),
@@ -161,8 +167,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       await query.docs.first.reference.update({
                                         "uId": "1/1/${maxId + 1}",
                                         "imgs": urls,
-                                        "price": double.parse(price),
-                                        "name": name,
+                                        "mrp": mrp.toDouble(),
+                                        "price": price.toDouble(),
+                                        "name": name.trim(),
                                         "variations": variations
                                             .map(
                                               (e) => e.toJson(),
@@ -175,8 +182,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                           .add({
                                         "uId": "1/1/${maxId + 1}",
                                         "imgs": urls,
-                                        "price": double.parse(price),
-                                        "name": name,
+                                        "mrp": mrp.toDouble(),
+                                        "price": price.toDouble(),
+                                        "name": name.trim(),
                                         "variations": variations
                                             .map(
                                               (e) => e.toJson(),
@@ -189,8 +197,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                           .add({
                                         "uId": "1/1/${maxId + 1}",
                                         "imgs": urls,
-                                        "price": double.parse(price),
-                                        "name": name,
+                                        "mrp": mrp.toDouble(),
+                                        "price": price.toDouble(),
+                                        "name": name.trim(),
                                         "variations": variations
                                             .map(
                                               (e) => e.toJson(),
@@ -233,7 +242,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             ),
                             padding: EdgeInsets.all(8),
                             child: Icon(Icons.arrow_forward_ios,
-                                color: name != "" && price != ""
+                                color: name != "" && price != "" && mrp != ""
                                     ? kUIDarkText
                                     : Colors.grey[400],
                                 size: 26),
@@ -265,7 +274,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           ),
                           onChanged: (value) => name = value,
                           onSubmitted: (_) =>
-                              FocusScope.of(context).autofocus(_priceNode),
+                              FocusScope.of(context).autofocus(_mrpNode),
                           style: TextStyle(
                               color: kUIDarkText,
                               fontSize: 28,
@@ -775,12 +784,59 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 18),
+                  padding: EdgeInsets.fromLTRB(18, 20, 18, 0),
                   child: Row(
                     children: [
                       Expanded(
                         child: Text(
-                          "Price",
+                          "MRP",
+                          style: TextStyle(
+                              color: kUIDarkText,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "sans-serif-condensed",
+                              letterSpacing: 0.2),
+                        ),
+                      ),
+                      Container(
+                        width: 80,
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          controller: TextEditingController(text: mrp),
+                          focusNode: _mrpNode,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            prefixText: "₹ ",
+                            hintText: "MRP",
+                            hintStyle: TextStyle(
+                                color: kUIDarkText,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "sans-serif-condensed",
+                                letterSpacing: -0.4),
+                          ),
+                          onSubmitted: (_) =>
+                              FocusScope.of(context).autofocus(_priceNode),
+                          cursorColor: Colors.grey,
+                          onChanged: (value) => mrp = value,
+                          style: TextStyle(
+                              color: kUIDarkText,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "sans-serif-condensed",
+                              letterSpacing: -0.4),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(18, 0, 18, 20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Actual Price",
                           style: TextStyle(
                               color: kUIDarkText,
                               fontSize: 22,

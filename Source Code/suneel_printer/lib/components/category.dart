@@ -24,10 +24,11 @@ class _ProductListState extends State<ProductList> {
     return GridView.count(
       shrinkWrap: true,
       crossAxisCount: 2,
-      childAspectRatio: 0.8,
+      childAspectRatio: 0.75,
       children: List.generate(
         widget.products.length,
-        (index) => ProductCard(widget.products[index], widget.args),
+        (index) =>
+            ProductCard(product: widget.products[index], args: widget.args),
       ),
     );
   }
@@ -37,7 +38,7 @@ class ProductCard extends StatefulWidget {
   final Product product;
   final AddProductArguments args;
 
-  ProductCard(this.product, this.args);
+  ProductCard({this.product, this.args});
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -47,6 +48,8 @@ class _ProductCardState extends State<ProductCard>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
   Animation<double> _animation;
+
+  // TODO: Show MRP By: Aditya
 
   @override
   void initState() {
