@@ -646,7 +646,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         Container(
                           height: 120,
                           child: ListView(children: [
-                            // TODO: Can these be made round @Aditya
                             CheckboxListTile(
                               title: Text(
                                 "Pay on Delivery",
