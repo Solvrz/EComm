@@ -77,7 +77,6 @@ class SuneelPrinter extends StatelessWidget {
         "/wishlist": (BuildContext context) => WishlistScreen(),
         "/category": (BuildContext context) => CategoryScreen(),
         "/add_prdouct": (BuildContext context) => AddProductScreen(),
-        "/wishlist": (BuildContext context) => WishlistScreen()
       },
     );
   }

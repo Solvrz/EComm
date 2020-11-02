@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,12 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:suneel_printer/components/alert_button.dart';
-import 'package:suneel_printer/components/home_components.dart';
+import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/category.dart';
-import 'package:suneel_printer/screens/payment.dart';
 
 bool hasShown = false;
 
@@ -28,22 +25,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   TextEditingController controller = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    if (!hasShown)
-      Timer(Duration(seconds: 5), () {
-        if (addresses.length == 0) {
-          hasShown = true;
-          showModalBottomSheet(
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            context: context,
-            builder: (_) => InformationSheet(),
-          );
-        }
-      });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   if (!hasShown)
+  //     Timer(Duration(seconds: 5), () {
+  //       if (addresses.length == 0) {
+  //         hasShown = true;
+  //         showModalBottomSheet(
+  //           isScrollControlled: true,
+  //           backgroundColor: Colors.transparent,
+  //           context: context,
+  //           builder: (_) => InformationSheet(),
+  //         );
+  //       }
+  //     });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +155,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 GestureDetector(
                                   behavior: HitTestBehavior.translucent,
                                   onTap: () {
-                                    Navigator.pushNamed(context, "/payment", arguments: PaymentArguments(success: false, msg: "It Failed cause u suck"));
                                     // TODO: Past Orders Screen
                                   },
                                   child: Padding(
@@ -258,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ? GridView.count(
                                       shrinkWrap: true,
                                       crossAxisCount: 2,
-                                      childAspectRatio: 0.75,
+                                      childAspectRatio: 0.725,
                                       children: List.generate(
                                         products.length,
                                         (index) => SearchCard(

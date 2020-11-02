@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:suneel_printer/components/bag_components.dart';
-import 'package:suneel_printer/components/home_components.dart';
+import 'package:suneel_printer/components/bag.dart';
+import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/bag.dart';
@@ -326,19 +326,28 @@ class _BagScreenState extends State<BagScreen> {
                                     fontFamily: "sans-serif-condensed",
                                     letterSpacing: -0.4),
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                child: Text(
-                                  "₹ ${product.price}",
-                                  style: TextStyle(
-                                      color: kUIDarkText,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: -1,
-                                      fontFamily: "sans-serif-condensed"),
-                                ),
-                              )
+                              Row(
+                                children: [
+                                  Text(
+                                    "₹ ${product.price}",
+                                    style: TextStyle(
+                                        color: kUIDarkText,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "sans-serif-condensed"),
+                                  ),
+                                  SizedBox(width: 12),
+                                  Text(
+                                    "₹ ${product.mrp}",
+                                    style: TextStyle(
+                                        color: kUIDarkText.withOpacity(0.7),
+                                        decoration: TextDecoration.lineThrough,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                        fontFamily: "sans-serif-condensed"),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -388,15 +397,17 @@ class _BagScreenState extends State<BagScreen> {
                     children: [
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          if (bag.getQuantity(product) > 1) {
-                            bag.decreaseQuantity(product);
-                          }
+                        onTap: () async {
+                          bag.increaseQuantity(product);
                           setState(() {});
                         },
                         child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: Icon(Icons.remove, color: kUIColor, size: 20),
+                          child: Icon(
+                            Icons.add,
+                            color: kUIColor,
+                            size: 20,
+                          ),
                         ),
                       ),
                       Text(
@@ -409,17 +420,15 @@ class _BagScreenState extends State<BagScreen> {
                       ),
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
-                        onTap: () async {
-                          bag.increaseQuantity(product);
+                        onTap: () {
+                          if (bag.getQuantity(product) > 1) {
+                            bag.decreaseQuantity(product);
+                          }
                           setState(() {});
                         },
                         child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: Icon(
-                            Icons.add,
-                            color: kUIColor,
-                            size: 20,
-                          ),
+                          child: Icon(Icons.remove, color: kUIColor, size: 20),
                         ),
                       ),
                     ],

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -133,18 +134,28 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                     fontFamily: "sans-serif-condensed",
                                     letterSpacing: -0.4),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                child: Text(
-                                  "₹ ${product.price}",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: -1,
-                                      fontFamily: "sans-serif-condensed"),
-                                ),
-                              )
+                              Row(
+                                children: [
+                                  Text(
+                                    "₹ ${product.price}",
+                                    style: TextStyle(
+                                        color: kUIDarkText,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "sans-serif-condensed"),
+                                  ),
+                                  SizedBox(width: 12),
+                                  Text(
+                                    "₹ ${product.mrp}",
+                                    style: TextStyle(
+                                        color: kUIDarkText.withOpacity(0.7),
+                                        decoration: TextDecoration.lineThrough,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                        fontFamily: "sans-serif-condensed"),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),

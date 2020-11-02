@@ -108,6 +108,9 @@ class _ProductScreenState extends State<ProductScreen> {
                               wishlist.containsProduct(product)
                                   ? Icons.favorite
                                   : Icons.favorite_outline,
+                              color: wishlist.containsProduct(product)
+                                  ? kUIAccent
+                                  : kUIDarkText,
                               size: 30),
                         )
                       ],
@@ -160,25 +163,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                   ),
                                 ),
-                                Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: GestureDetector(
-                                        onTap: () {
-                                          if (wishlist.containsProduct(product))
-                                            wishlist.removeProduct(product);
-                                          else
-                                            wishlist.addProduct(product);
-
-                                          setState(() {});
-                                        },
-                                        child: Icon(
-                                            wishlist.containsProduct(product)
-                                                ? Icons.favorite
-                                                : Icons.favorite_outline,
-                                            color: wishlist
-                                                    .containsProduct(product)
-                                                ? kUIAccent
-                                                : kUIDarkText)))
                               ],
                             ),
                           ]),
@@ -199,7 +183,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 18),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 18),
                 child: Row(
                   children: [
                     Expanded(
@@ -217,6 +201,44 @@ class _ProductScreenState extends State<ProductScreen> {
                       "₹ ${product.price}",
                       style: TextStyle(
                           color: kUIDarkText,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "sans-serif-condensed",
+                          letterSpacing: -0.4),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 18),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "MRP",
+                        style: TextStyle(
+                            color: kUIDarkText,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "sans-serif-condensed",
+                            letterSpacing: 0.2),
+                      ),
+                    ),
+                    Text(
+                      "₹ ${product.mrp}",
+                      style: TextStyle(
+                          color: kUIDarkText,
+                          decoration: TextDecoration.lineThrough,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "sans-serif-condensed",
+                          letterSpacing: -0.4),
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      "Save: ₹ ${product.mrp.toDouble() - product.price.toDouble()}",
+                      style: TextStyle(
+                          color: Colors.orangeAccent,
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
                           fontFamily: "sans-serif-condensed",

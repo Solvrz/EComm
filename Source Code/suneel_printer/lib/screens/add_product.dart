@@ -14,8 +14,6 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/models/variation.dart';
 
-// TODO: Varition Text .trim() By: Aditya
-
 class AddProductScreen extends StatefulWidget {
   @override
   _AddProductScreenState createState() => _AddProductScreenState();
@@ -442,7 +440,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                             onChanged: (value) => variations[
                                                     variations
                                                         .indexOf(variation)]
-                                                .name = value,
+                                                .name = value.trim(),
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
                                               hintText: "Name",
@@ -505,11 +503,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                       labelController
                                                                               .text !=
                                                                           "") {
-                                                                    variations[variations.indexOf(
-                                                                            variation)]
-                                                                        .options[
-                                                                            index]
-                                                                        .label = labelController.text;
+                                                                    variations[variations.indexOf(variation)]
+                                                                            .options[
+                                                                                index]
+                                                                            .label =
+                                                                        labelController
+                                                                            .text
+                                                                            .trim();
                                                                   }
                                                                 });
                                                                 return true;
@@ -650,7 +650,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                           if (variation.options[index].label !=
                                                                               labelController.text) {
                                                                             variations[variations.indexOf(variation)].options[index].label =
-                                                                                labelController.text;
+                                                                                labelController.text.trim();
                                                                           }
                                                                         });
                                                                       })

@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:suneel_printer/components/home_components.dart';
+import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/screens/payment.dart';
 
 // ignore: must_be_immutable
 class OrderProductPage extends StatefulWidget {
@@ -102,8 +103,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                 context: context,
                                 builder: (_) => Padding(
                                   padding: MediaQuery.of(context).viewInsets,
-                                  child: InformationSheet(
-                                  ),
+                                  child: InformationSheet(),
                                 ),
                               );
 
@@ -159,8 +159,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                         builder: (_) => Padding(
                                           padding:
                                               MediaQuery.of(context).viewInsets,
-                                          child: InformationSheet(
-                                          ),
+                                          child: InformationSheet(),
                                         ),
                                       );
 
@@ -266,9 +265,13 @@ class _OrderProductPageState extends State<OrderProductPage> {
                           }),
                         );
 
-                        // TODO: Show Order Sucessful Screen
-
-                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(
+                          context,
+                          "/payment",
+                          arguments: PaymentArguments(
+                            success: true,
+                          ),
+                        );
                       }
                     : null,
                 disabledColor: kUIDarkText.withOpacity(0.5),

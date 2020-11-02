@@ -23,38 +23,49 @@ class _PaymentScreenState extends State<PaymentScreen> {
           resizeToAvoidBottomInset: false,
           backgroundColor: kUIColor,
           body: Container(
-            padding: EdgeInsets.symmetric(vertical: 32),
             width: MediaQuery.of(context).size.width,
-            height: 700,
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 300,
-                    width: 300,
-                    child: FlareActor(
-                      args.success
-                          ? "assets/animation/Success.flr"
-                          : "assets/animation/Failure.flr",
-                      animation: "forward",
-                      fit: BoxFit.contain,
-                      callback: (_) {
-                        Timer(Duration(milliseconds: 500),
-                            () => Navigator.popAndPushNamed(context, "/home"));
-                      },
-                    ),
-                  ),
-                  Text(
-                    args.msg,
-                    style: TextStyle(
-                      color: kUIDarkText,
-                      fontSize: 20,
-                      fontFamily: "sans-serif-condensed",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ]),
+            child: Column(children: [
+              Container(
+                height: 500,
+                width: 500,
+                child: FlareActor(
+                  args.success
+                      ? "assets/animation/Success.flr"
+                      : "assets/animation/Failure.flr",
+                  animation: "forward",
+                  fit: BoxFit.contain,
+                  callback: (_) {
+                    Timer(
+                      Duration(milliseconds: 800),
+                      () => Navigator.popAndPushNamed(
+                        context,
+                        "/home",
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Text(
+                args.success ? "Order Placed Successfully" : "Payment Failed",
+                style: TextStyle(
+                  color: kUIDarkText,
+                  fontSize: 36,
+                  fontFamily: "sans-serif-condensed",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                args.msg,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: kUIDarkText,
+                  fontSize: 20,
+                  fontFamily: "sans-serif-condensed",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ]),
           ),
         ),
       ),
@@ -66,5 +77,7 @@ class PaymentArguments {
   final bool success;
   final String msg;
 
-  PaymentArguments({@required this.success, this.msg});
+  PaymentArguments(
+      {@required this.success,
+      this.msg = "You will soon recieve a conformation mail from us."});
 }
