@@ -11,7 +11,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/export.dart';
-import 'package:suneel_printer/screens/wishlist.dart';
+import 'package:suneel_printer/screens/payment.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,6 +73,7 @@ class SuneelPrinter extends StatelessWidget {
         "/home": (BuildContext context) => HomeScreen(),
         "/bag": (BuildContext context) => BagScreen(),
         "/product": (BuildContext context) => ProductScreen(),
+        "/payment": (BuildContext context) => PaymentScreen(),
         "/wishlist": (BuildContext context) => WishlistScreen(),
         "/category": (BuildContext context) => CategoryScreen(),
         "/add_prdouct": (BuildContext context) => AddProductScreen(),
