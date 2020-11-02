@@ -9,28 +9,15 @@ import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/product.dart';
 
 class InformationSheet extends StatefulWidget {
-  final BuildContext parentContext;
   final bool popable;
 
-  InformationSheet({@required this.parentContext, this.popable = true});
+  InformationSheet({this.popable = true});
 
   @override
   _InformationSheetState createState() => _InformationSheetState();
 }
 
 class _InformationSheetState extends State<InformationSheet> {
-  List<Map> addresses;
-
-  @override
-  void initState() {
-    super.initState();
-    addresses = (preferences.getStringList("info") ?? [])
-        .map<Map>(
-          (e) => jsonDecode(e),
-        )
-        .toList();
-  }
-
   Future<void> save() async {
     await preferences.setStringList(
       "info",
@@ -104,13 +91,11 @@ class _InformationSheetState extends State<InformationSheet> {
                             itemCount: addresses.length,
                             itemBuilder: (context, int index) {
                               Map address = addresses[index];
-                              bool isSelected =
-                                  address.toString() == selectedInfo.toString();
+                              bool isSelected = address["selected"];
 
                               return ListTile(
                                 onTap: () async {
                                   await save();
-                                  selectedInfo = address;
                                   setState(() {});
                                   Navigator.pop(context);
                                 },
@@ -148,13 +133,20 @@ class _InformationSheetState extends State<InformationSheet> {
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () async {
                                         if (isSelected) {
-                                          if (addresses.length == 1)
+                                          if (addresses.length == 1) {
+                                            address["selected"] = false;
                                             selectedInfo = null;
-                                          else
-                                            selectedInfo = addresses[
-                                                index - 1 >= 0
-                                                    ? index - 1
-                                                    : index + 1];
+                                          } else {
+                                            Map newAddress = addresses[
+                                            index - 1 >= 0
+                                                ? index - 1
+                                                : index + 1];
+                                            address["selected"] = false;
+                                            newAddress["selected"] = true;
+                                            selectedInfo = newAddress;
+
+                                            print(addresses);
+                                          }
 
                                           // TODO: Save Selected Info to Shared Prefrences
                                         }
@@ -208,6 +200,7 @@ class _InformationSheetState extends State<InformationSheet> {
                     behavior: HitTestBehavior.translucent,
                     onTap: () async {
                       await showModalBottomSheet(
+                        isScrollControlled: true,
                         backgroundColor: Colors.transparent,
                         context: context,
                         builder: (_) => Padding(
@@ -363,13 +356,15 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                     "email": email,
                     "pincode": pincode
                   });
+                  selectedInfo = widget.addresses[index];
                 } else {
                   widget.addresses.add({
                     "name": name,
                     "phone": phone,
                     "address": address,
                     "email": email,
-                    "pincode": pincode
+                    "pincode": pincode,
+                    "selected": false
                   });
                 }
 
@@ -481,34 +476,28 @@ class _SearchCardState extends State<SearchCard> {
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Align(
-            alignment: Alignment.centerRight,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 24, 12, 0),
-                  child: widget.product.images != null
-                      ? Container(
-                          height: height / 1.8,
-                          constraints: BoxConstraints(maxWidth: width - 64),
-                          decoration: BoxDecoration(boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[600],
-                              blurRadius: 12,
-                              offset: Offset(2, 2),
-                            )
-                          ]),
-                          child: Image(image: widget.product.images[0]),
+            alignment: Alignment.center,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 24, 12, 0),
+              child: widget.product.images != null
+                  ? Container(
+                      height: height / 1.8,
+                      constraints: BoxConstraints(maxWidth: width - 64),
+                      decoration: BoxDecoration(boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey[600],
+                          blurRadius: 12,
+                          offset: Offset(2, 2),
                         )
-                      : Container(
-                          height: height / 2,
-                          child: Center(
-                            child: Text("No Image Provided"),
-                          ),
-                        ),
-                ),
-              ],
+                      ]),
+                      child: Image(image: widget.product.images[0]),
+                    )
+                  : Container(
+                      height: height / 2,
+                      child: Center(
+                        child: Text("No Image Provided"),
+                      ),
+                    ),
             ),
           ),
           SizedBox(height: 12),

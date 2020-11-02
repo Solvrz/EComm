@@ -38,7 +38,7 @@ class Bag {
 
   bool get hasProducts => _products.length > 0;
 
-  void addItem(Product product) {
+  void addProduct(Product product) {
     _products.add(
       BagItem(
           Product.fromJson(
@@ -49,7 +49,7 @@ class Bag {
     _save();
   }
 
-  void removeItem(Product product) {
+  void removeProduct(Product product) {
     _products.removeWhere((BagItem bagItem) => bagItem.product == product);
     _save();
   }
@@ -75,7 +75,7 @@ class Bag {
       if (bagItem.product == product) {
         bagItem.quantity -= decrease;
         if (bagItem.quantity == 0) {
-          removeItem(product);
+          removeProduct(product);
           break;
         }
       }
@@ -135,7 +135,7 @@ class Bag {
         if (products.docs.isEmpty) {
           _changeLog.add(
               "The product '${item.product.name}' has been removed from the store");
-          bag.removeItem(item.product);
+          bag.removeProduct(item.product);
         } else {
           Map productData = products.docs.first.data();
           List<String> diff = item.product.difference(

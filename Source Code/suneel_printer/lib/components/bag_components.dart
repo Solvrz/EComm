@@ -99,8 +99,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               context: context,
                               builder: (_) => Padding(
                                 padding: MediaQuery.of(context).viewInsets,
-                                child: InformationSheet(
-                                    parentContext: context, popable: false),
+                                child: InformationSheet(popable: false),
                               ),
                             );
                           },

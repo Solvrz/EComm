@@ -108,8 +108,7 @@ class _BagScreenState extends State<BagScreen> {
                                 context: context,
                                 builder: (_) => Padding(
                                   padding: MediaQuery.of(context).viewInsets,
-                                  child: InformationSheet(
-                                      parentContext: context, popable: false),
+                                  child: InformationSheet(popable: false),
                                 ),
                               )
                             : await showModalBottomSheet(
@@ -160,9 +159,7 @@ class _BagScreenState extends State<BagScreen> {
                   ),
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      Navigator.pushNamed(context, "/wishlist");
-                    },
+                    onTap: () => Navigator.pushNamed(context, "/wishlist"),
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Icon(
@@ -437,7 +434,7 @@ class _BagScreenState extends State<BagScreen> {
             behavior: HitTestBehavior.translucent,
             onTap: () {
               Timer(Duration(milliseconds: 200), () {
-                bag.removeItem(product);
+                bag.removeProduct(product);
                 setState(() {});
               });
               _listKey.currentState.removeItem(

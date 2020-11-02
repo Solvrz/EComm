@@ -23,7 +23,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         body: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   GestureDetector(
@@ -48,6 +48,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
                       ),
                     ),
                   ),
+                  GestureDetector(
+                    onTap: null,
+                    child: Icon(Icons.clear, color: Colors.transparent),
+                  ),
                 ],
               ),
             ),
@@ -55,7 +59,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
               child: wishlist.products.isNotEmpty
                   ? Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 24.0),
+                          horizontal: 12, vertical: 24),
                       child: AnimatedList(
                         shrinkWrap: true,
                         key: _listKey,
@@ -69,7 +73,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                       child: Container(
                         width: MediaQuery.of(context).size.width / 1.25,
                         child: EmptyListWidget(
-                          packageImage: PackageImage.Image_2,
+                          packageImage: PackageImage.Image_4,
                           title: "No Items",
                           subTitle: "Shop and add more items",
                         ),
@@ -156,7 +160,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
           GestureDetector(
             onTap: () {
               Timer(Duration(milliseconds: 200), () {
-                wishlist.removeItem(product);
+                wishlist.removeProduct(product);
                 setState(() {});
               });
               _listKey.currentState.removeItem(

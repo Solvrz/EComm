@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,13 +7,14 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:suneel_printer/components/alert_button.dart';
 import 'package:suneel_printer/components/home_components.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/category.dart';
+
+bool hasShown = false;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -23,6 +26,23 @@ class _HomeScreenState extends State<HomeScreen> {
   String query = "";
 
   TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (!hasShown)
+      Timer(Duration(seconds: 5), () {
+        if (addresses.length == 0) {
+          hasShown = true;
+          showModalBottomSheet(
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (_) => InformationSheet(),
+          );
+        }
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       await showModalBottomSheet(
                                         backgroundColor: Colors.transparent,
                                         context: context,
-                                        builder: (_) => InformationSheet(
-                                            parentContext: context),
+                                        builder: (_) => InformationSheet(),
                                       );
                                       setState(() {});
                                     },

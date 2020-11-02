@@ -34,8 +34,8 @@ Bag bag = Bag();
 Wishlist wishlist = Wishlist();
 Payment payment = Payment();
 SharedPreferences preferences;
-
 Map selectedInfo;
+List<Map> addresses;
 
 List<Map<String, dynamic>> categories = [
   {

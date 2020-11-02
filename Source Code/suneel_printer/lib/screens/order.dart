@@ -103,7 +103,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                 builder: (_) => Padding(
                                   padding: MediaQuery.of(context).viewInsets,
                                   child: InformationSheet(
-                                    parentContext: context,
                                   ),
                                 ),
                               );
@@ -161,7 +160,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                           padding:
                                               MediaQuery.of(context).viewInsets,
                                           child: InformationSheet(
-                                            parentContext: context,
                                           ),
                                         ),
                                       );
