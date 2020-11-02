@@ -12,6 +12,7 @@ import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/category.dart';
+import 'package:suneel_printer/screens/payment.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -138,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 GestureDetector(
                                   behavior: HitTestBehavior.translucent,
                                   onTap: () {
+                                    Navigator.pushNamed(context, "/payment", arguments: PaymentArguments(success: false, msg: "It Failed cause u suck"));
                                     // TODO: Past Orders Screen
                                   },
                                   child: Padding(

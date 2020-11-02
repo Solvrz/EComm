@@ -26,6 +26,7 @@ dependencies:
   googleapis_auth: ^0.2.12
   empty_widget: ^0.0.1
   file_picker: ^2.0.7
+  flare_flutter: ^2.0.6
 
 dev_dependencies:
   flutter_test:
@@ -36,3 +37,4 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/animation/Failure.flr
