@@ -4,3 +4,4 @@ export 'category.dart';
 export 'home.dart';
 export 'product.dart';
 export 'splash.dart';
+export 'wishlist.dart';

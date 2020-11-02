@@ -154,9 +154,7 @@ class _BagScreenState extends State<BagScreen> {
                   ),
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      // TODO: Wishlist Screen
-                    },
+                    onTap: () => Navigator.pushNamed(context, "/wishlist"),
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Icon(

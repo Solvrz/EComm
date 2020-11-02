@@ -11,12 +11,12 @@ class Wishlist {
   bool get hasProducts => _products.length > 0;
   bool get hasNoProducts => !(_products.length > 0);
 
-  void addItem(Product product) {
+  void addProduct(Product product) {
     _products.add(product);
     _save();
   }
 
-  void removeItem(Product product) {
+  void removeProduct(Product product) {
     _products.removeWhere((Product element) => element == product);
     _save();
   }

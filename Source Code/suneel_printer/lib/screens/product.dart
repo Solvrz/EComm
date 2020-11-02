@@ -87,16 +87,33 @@ class _ProductScreenState extends State<ProductScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 44, bottom: 36),
-                      child: Text(
-                        product.name,
-                        style: TextStyle(
-                            color: kUIDarkText,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "sans-serif-condensed"),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          product.name,
+                          style: TextStyle(
+                              color: kUIDarkText,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "sans-serif-condensed"),
+                        ),
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            wishlist.containsProduct(product)
+                                ? wishlist.removeProduct(product)
+                                : wishlist.addProduct(product);
+
+                            setState(() {});
+                          },
+                          child: Icon(
+                              wishlist.containsProduct(product)
+                                  ? Icons.favorite
+                                  : Icons.favorite_outline,
+                              size: 30),
+                        )
+                      ],
                     ),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.3,
