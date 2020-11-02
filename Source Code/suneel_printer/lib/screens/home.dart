@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:suneel_printer/components/alert_button.dart';
-import 'package:suneel_printer/components/home.dart';
+import 'package:suneel_printer/components/home_components.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -97,10 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   GestureDetector(
                                     behavior: HitTestBehavior.translucent,
                                     onTap: () async {
-                                      await showMaterialModalBottomSheet(
+                                      await showModalBottomSheet(
                                         backgroundColor: Colors.transparent,
                                         context: context,
-                                        builder: (_, __) => InformationSheet(
+                                        builder: (_) => InformationSheet(
                                             parentContext: context),
                                       );
                                       setState(() {});
@@ -210,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.clear();
                             });
                           },
-                          child: Icon(Icons.clear),
+                          child: Icon(Icons.clear, color: Colors.grey[600]),
                         )
                     ]),
                   ),
@@ -400,7 +400,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         fontFamily:
                                                             "sans-serif-condensed",
                                                         color: kUIDarkText,
-                                                        fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.w600,
                                                       ),

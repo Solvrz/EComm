@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:suneel_printer/components/bag.dart';
-import 'package:suneel_printer/components/home.dart';
+import 'package:suneel_printer/components/bag_components.dart';
+import 'package:suneel_printer/components/home_components.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/bag.dart';
@@ -65,7 +65,13 @@ class _BagScreenState extends State<BagScreen> {
                           fontFamily: "sans-serif-condensed",
                           letterSpacing: -2,
                           color: kUIDarkText),
-                    )
+                    ),
+                    SizedBox(width: 12),
+                    Text("(${bag.products.length} items)",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[600])),
                   ],
                 ),
               ),
@@ -155,7 +161,7 @@ class _BagScreenState extends State<BagScreen> {
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
-                      // TODO: Wishlist Screen
+                      Navigator.pushNamed(context, "/wishlist");
                     },
                     child: Padding(
                       padding: EdgeInsets.all(8),

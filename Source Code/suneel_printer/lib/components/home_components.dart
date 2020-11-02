@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:suneel_printer/components/information_textfield.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -47,8 +46,11 @@ class _InformationSheetState extends State<InformationSheet> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        await save();
-        return widget.popable ? true : false;
+        if (widget.popable) {
+          await save();
+          return true;
+        }
+        return false;
       },
       child: SingleChildScrollView(
         child: Container(
@@ -123,10 +125,10 @@ class _InformationSheetState extends State<InformationSheet> {
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () async {
-                                        await showMaterialModalBottomSheet(
+                                        await showModalBottomSheet(
                                           backgroundColor: Colors.transparent,
                                           context: context,
-                                          builder: (_, __) => Padding(
+                                          builder: (_) => Padding(
                                             padding: MediaQuery.of(context)
                                                 .viewInsets,
                                             child: AddInformationSheet(
@@ -205,10 +207,10 @@ class _InformationSheetState extends State<InformationSheet> {
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () async {
-                      await showMaterialModalBottomSheet(
+                      await showModalBottomSheet(
                         backgroundColor: Colors.transparent,
                         context: context,
-                        builder: (_, __) => Padding(
+                        builder: (_) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
                           child: AddInformationSheet(addresses: addresses),
                         ),

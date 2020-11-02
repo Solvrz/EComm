@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:suneel_printer/components/product.dart';
+import 'package:suneel_printer/components/product_components.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 
@@ -25,10 +25,7 @@ class _ProductScreenState extends State<ProductScreen> {
       variations = List.generate(
         args.product.variations.length,
         (index) => OptionRadioTile(
-          onChanged: (option) {
-            product.select(args.product.variations[index].name, option);
-            setState(() {});
-          },
+          onChanged: (_) {},
           variation: args.product.variations[index],
           currIndex: args.product.variations[index].options
               .indexOf(product.selected[args.product.variations[index].name]),
@@ -125,24 +122,47 @@ class _ProductScreenState extends State<ProductScreen> {
                                     }),
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(
-                                product.images.length,
-                                (int index) => AnimatedContainer(
-                                  duration: Duration(milliseconds: 400),
-                                  width: _currentImage == index ? 16 : 8,
-                                  height: _currentImage == index ? 6 : 8,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 3),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: _currentImage == index
-                                        ? Color.fromRGBO(0, 0, 0, 0.9)
-                                        : Color.fromRGBO(0, 0, 0, 0.4),
+                            Stack(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                    product.images.length,
+                                    (int index) => AnimatedContainer(
+                                      duration: Duration(milliseconds: 400),
+                                      width: _currentImage == index ? 16 : 8,
+                                      height: _currentImage == index ? 6 : 8,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 3),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: _currentImage == index
+                                            ? Color.fromRGBO(0, 0, 0, 0.9)
+                                            : Color.fromRGBO(0, 0, 0, 0.4),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                                Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          if (wishlist.containsProduct(product))
+                                            wishlist.removeItem(product);
+                                          else
+                                            wishlist.addItem(product);
+
+                                          setState(() {});
+                                        },
+                                        child: Icon(
+                                            wishlist.containsProduct(product)
+                                                ? Icons.favorite
+                                                : Icons.favorite_outline,
+                                            color: wishlist
+                                                    .containsProduct(product)
+                                                ? kUIAccent
+                                                : kUIDarkText)))
+                              ],
                             ),
                           ]),
                     )
