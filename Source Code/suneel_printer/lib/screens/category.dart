@@ -4,12 +4,8 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/category_product.dart';
 import 'package:suneel_printer/screens/order.dart';
 
-class CategoryScreen extends StatefulWidget {
-  @override
-  _CategoryScreenState createState() => _CategoryScreenState();
-}
-
-class _CategoryScreenState extends State<CategoryScreen> {
+// ignore: must_be_immutable
+class CategoryScreen extends StatelessWidget {
   String title;
   dynamic screen;
 
@@ -25,8 +21,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
               .collection("tabs")
               .orderBy("uId")
               .get(),
-          builder: (context, snapshot) {
-            var screen;
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            dynamic screen;
 
             if (snapshot.hasData)
               screen = title != "Printing" && title != "Binding"
@@ -56,7 +52,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               resizeToAvoidBottomInset: false,
               floatingActionButton: admin && screen != null
                   ? Builder(
-                      builder: (context) => screen.getFab(context),
+                      builder: (BuildContext context) => screen.getFab(context),
                     )
                   : null,
               body: Column(children: [
@@ -105,7 +101,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   child: snapshot.hasData
                       ? screen
                       : Center(
-                          child: Text("Loading..."),
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.grey[700]),
+                          ),
                         ),
                 )
               ]),

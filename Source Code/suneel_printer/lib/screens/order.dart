@@ -10,7 +10,9 @@ import 'package:suneel_printer/screens/payment.dart';
 class OrderProductPage extends StatefulWidget {
   String title;
   List tabsData;
+
   OrderProductPage({this.title, this.tabsData});
+
   @override
   _OrderProductPageState createState() => _OrderProductPageState();
 }

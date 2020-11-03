@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:suneel_printer/components/home.dart';
@@ -8,7 +9,6 @@ import 'package:suneel_printer/models/bag.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/payment.dart';
 
-//ignore: must_be_immutable
 class CheckoutSheet extends StatefulWidget {
   final double price;
 
@@ -274,27 +274,14 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
               Center(
                 child: MaterialButton(
                   onPressed: pod
-                      ? () async {
-                          await placeOrder();
-                          Navigator.popAndPushNamed(
-                            context,
-                            "/payment",
-                            arguments: PaymentArguments(success: true),
-                          );
-                        }
+                      ? () async => await placeOrder()
                       : () async {
                           FocusScope.of(context).unfocus();
 
                           if (await payment.startPayment(selectedInfo["email"],
-                              selectedInfo["phone"], widget.price)) {
+                              selectedInfo["phone"], widget.price))
                             await placeOrder();
-
-                            Navigator.popAndPushNamed(
-                              context,
-                              "/payment",
-                              arguments: PaymentArguments(success: true),
-                            );
-                          } else {
+                          else {
                             Navigator.popAndPushNamed(context, "/payment",
                                 arguments: PaymentArguments(
                                     success: false, msg: "TBD"));
@@ -322,6 +309,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
   }
 
   Future placeOrder() async {
+    // TODO FIXME: Takes Alot of Time
+
     await http.post(
       "https://suneel-printers.herokuapp.com/order_request",
       headers: <String, String>{
@@ -354,13 +343,18 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     List<String> pastOrders = preferences.getStringList("orders") ?? [];
 
     pastOrders.add(
-      jsonEncode(
-        bag.products
-            .map(
-              (e) => e.toString(),
-            )
-            .toList(),
-      ),
+      jsonEncode({
+        "name": selectedInfo["name"],
+        "phone": selectedInfo["phone"],
+        "address": selectedInfo["address"],
+        "email": selectedInfo["email"],
+        "time": Timestamp.now().toString(),
+        "price": widget.price.toString(),
+        "payment_mode": pod ? "Pay On Delivery" : "Prepaid",
+        "products": bag.products.map((e) {
+          return {"product": e.product.toJson(), "quantity": e.quantity};
+        }).toList()
+      }),
     );
 
     preferences.setStringList("orders", pastOrders);
@@ -370,12 +364,21 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
       "phone": selectedInfo["phone"],
       "address": selectedInfo["address"],
       "email": selectedInfo["email"],
+      "time": Timestamp.now(),
+      "price": widget.price.toString(),
       "payment_mode": pod ? "Pay On Delivery" : "Prepaid",
+      "status": false,
       "products": bag.products.map((e) {
         return {"product": e.product.toJson(), "quantity": e.quantity};
       }).toList()
     });
 
     bag.clear();
+
+    Navigator.popAndPushNamed(
+      context,
+      "/payment",
+      arguments: PaymentArguments(success: true),
+    );
   }
 }

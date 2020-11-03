@@ -49,10 +49,11 @@ class SuneelPrinter extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme:
           ThemeData(primaryColor: kUIAccent, highlightColor: Colors.blueGrey),
-      builder: (context, widget) => ResponsiveWrapper.builder(
+      builder: (BuildContext context, Widget widget) =>
+          ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(
           context,
-          Container(child: widget),
+          widget,
         ),
         maxWidth: 1200,
         minWidth: 360,
@@ -76,7 +77,8 @@ class SuneelPrinter extends StatelessWidget {
         "/payment": (BuildContext context) => PaymentScreen(),
         "/wishlist": (BuildContext context) => WishlistScreen(),
         "/category": (BuildContext context) => CategoryScreen(),
-        "/add_prdouct": (BuildContext context) => AddProductScreen(),
+        "/orders": (BuildContext context) => PastOrderScreen(),
+        "/add_product": (BuildContext context) => AddProductScreen(),
       },
     );
   }

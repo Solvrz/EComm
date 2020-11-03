@@ -4,12 +4,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/constant.dart';
 
-class PaymentScreen extends StatefulWidget {
-  @override
-  _PaymentScreenState createState() => _PaymentScreenState();
-}
-
-class _PaymentScreenState extends State<PaymentScreen> {
+class PaymentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PaymentArguments args = ModalRoute.of(context).settings.arguments;
@@ -79,5 +74,5 @@ class PaymentArguments {
 
   PaymentArguments(
       {@required this.success,
-      this.msg = "You will soon recieve a conformation mail from us."});
+      this.msg = "You will soon recieve a confirmation mail from us."});
 }

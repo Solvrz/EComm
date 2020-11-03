@@ -22,7 +22,7 @@ class CategoryProductPage extends StatefulWidget {
         onPressed: () async {
           Navigator.pushNamed(
             context,
-            "/add_prdouct",
+            "/add_product",
             arguments: AddProductArguments(
                 tabsData: tabsData,
                 tabs: tabs,
@@ -89,7 +89,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
       StreamBuilder<QuerySnapshot>(
         stream:
             widget.tabs[widget._currentTab].collection("products").snapshots(),
-        builder: (context, future) {
+        builder: (BuildContext context, AsyncSnapshot future) {
           if (future.hasData) {
             if (future.data.docs.isNotEmpty) {
               return Expanded(
@@ -125,7 +125,9 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
               height: MediaQuery.of(context).size.height / 1.5,
               width: MediaQuery.of(context).size.width * 0.9,
               child: Center(
-                child: Text("Loading..."),
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),
+                ),
               ),
             );
           }

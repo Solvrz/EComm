@@ -192,7 +192,7 @@ class _BagScreenState extends State<BagScreen> {
                           child: ListView.builder(
                             shrinkWrap: true,
                             itemCount: bag.changeLog.length,
-                            itemBuilder: (context, index) {
+                            itemBuilder: (BuildContext context, int index) {
                               return Column(
                                 children: [
                                   Text(
