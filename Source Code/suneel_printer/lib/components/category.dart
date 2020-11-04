@@ -153,6 +153,8 @@ class _ProductCardState extends State<ProductCard>
                             GestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () {
+                                _animationController.reverse();
+
                                 showDialog(
                                   context: context,
                                   builder: (_) => RoundedAlertDialog(
@@ -161,7 +163,6 @@ class _ProductCardState extends State<ProductCard>
                                     buttonsList: [
                                       AlertButton(
                                         onPressed: () => Navigator.pop(context),
-                                        titleColor: kUIAccent,
                                         title: "No",
                                       ),
                                       AlertButton(
@@ -217,7 +218,6 @@ class _ProductCardState extends State<ProductCard>
                                               .get();
                                           query.docs.first.reference.delete();
                                         },
-                                        titleColor: kUIAccent,
                                         title: "Yes",
                                       ),
                                     ],

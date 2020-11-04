@@ -187,7 +187,8 @@ class _BagScreenState extends State<BagScreen> {
                       },
                       child: RoundedAlertDialog(title: "Alerts", otherWidgets: [
                         Container(
-                          height: 220,
+                          height:
+                              MediaQuery.of(context).size.height * 200 / 816,
                           width: 300,
                           child: ListView.builder(
                             shrinkWrap: true,

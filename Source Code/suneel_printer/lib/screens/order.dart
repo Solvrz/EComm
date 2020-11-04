@@ -40,7 +40,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey[200],
                 ),
-                height: 100,
+                height: MediaQuery.of(context).size.height * 100 / 816,
                 width: MediaQuery.of(context).size.width / 1.5,
                 child: Padding(
                   padding: EdgeInsets.all(20),
@@ -90,7 +90,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey[200],
                 ),
-                height: 130,
+                height: MediaQuery.of(context).size.height * 130 / 816,
                 width: MediaQuery.of(context).size.width / 1.5,
                 child: Padding(
                   padding: EdgeInsets.all(15),
@@ -253,26 +253,29 @@ class _OrderProductPageState extends State<OrderProductPage> {
               child: MaterialButton(
                 onPressed: value != "Choose a Service" && selectedInfo != null
                     ? () async {
-                        await http.post(
-                          "https://suneel-printers.herokuapp.com/on_order",
-                          headers: <String, String>{
-                            "Content-Type": "application/json; charset=UTF-8",
-                          },
-                          body: jsonEncode(<String, String>{
-                            "name": selectedInfo["name"],
-                            "phone": selectedInfo["phone"],
-                            "address": selectedInfo["address"],
-                            "email": selectedInfo["email"],
-                            "order_list": value
-                          }),
-                        );
-
                         Navigator.popAndPushNamed(
                           context,
                           "/payment",
                           arguments: PaymentArguments(
-                            success: true,
-                          ),
+                              success: true,
+                              msg:
+                                  "You will soon receive a confirmation mail from us.",
+                              process: () async {
+                                await http.post(
+                                  "https://suneel-printers.herokuapp.com/on_order",
+                                  headers: <String, String>{
+                                    "Content-Type":
+                                        "application/json; charset=UTF-8",
+                                  },
+                                  body: jsonEncode(<String, String>{
+                                    "name": selectedInfo["name"],
+                                    "phone": selectedInfo["phone"],
+                                    "address": selectedInfo["address"],
+                                    "email": selectedInfo["email"],
+                                    "order_list": value
+                                  }),
+                                );
+                              }),
                         );
                       }
                     : null,

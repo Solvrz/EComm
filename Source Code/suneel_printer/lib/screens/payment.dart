@@ -11,6 +11,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   FlareActor flareAnimation;
+
   bool isCompleted = false;
   bool isProcessing = false;
 
@@ -22,6 +23,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       isProcessing = true;
       args.process().then((_) => setState(() {
             isCompleted = true;
+
             flareAnimation = FlareActor(
               args.success
                   ? "assets/animation/Success.flr"
@@ -36,6 +38,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     "/home",
                   ),
                 );
+
+                if (args.success) bag.clear();
               },
             );
           }));
@@ -60,31 +64,35 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 child: isCompleted
                     ? flareAnimation
                     : CircularProgressIndicator(
-                      strokeWidth: 14,
-                    ),
+                        strokeWidth: 14,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.grey[700]),
+                      ),
               ),
               if (!isCompleted) SizedBox(height: 150),
-              Text(
-                args.success ? "Order Placed Successfully" : "Payment Failed",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: kUIDarkText,
-                  fontSize: 36,
-                  fontFamily: "sans-serif-condensed",
-                  fontWeight: FontWeight.bold,
+              if (isCompleted) ...[
+                Text(
+                  args.success ? "Order Placed Successfully" : "Payment Failed",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: kUIDarkText,
+                    fontSize: 28,
+                    fontFamily: "sans-serif-condensed",
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                args.msg,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: kUIDarkText,
-                  fontSize: 20,
-                  fontFamily: "sans-serif-condensed",
-                  fontWeight: FontWeight.bold,
+                SizedBox(height: 8),
+                Text(
+                  args.msg,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: kUIDarkText,
+                    fontSize: 20,
+                    fontFamily: "sans-serif-condensed",
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
+              ]
             ]),
           ),
         ),
@@ -101,6 +109,6 @@ class PaymentArguments {
   PaymentArguments({
     @required this.success,
     @required this.process,
-    this.msg = "You will soon receive a confirmation mail from us.",
+    @required this.msg,
   });
 }

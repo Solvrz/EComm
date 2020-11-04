@@ -49,16 +49,27 @@ class InfoWidget extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  "${order['time'].toDate().toString().split(" ")[0].split("-").reversed.join("-")}",
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: kUIDarkText,
-                    fontSize: 18,
-                    fontFamily: "sans-serif-condensed",
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                admin
+                    ? Text(
+                        "${order['time'].toDate().toString().split(" ")[0].split("-").reversed.join("-")}",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: kUIDarkText,
+                          fontSize: 18,
+                          fontFamily: "sans-serif-condensed",
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    : Text(
+                        "${DateTime.fromMicrosecondsSinceEpoch(order['time'].split("(")[1].split("=")[1].split(",")[0].toString().toInt() * 1000000 + order['time'].split("(")[1].split("=")[2].split(")")[0].toString().toInt() ~/ 1000).toString().split(" ")[0].split("-").reversed.join("-")}",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: kUIDarkText,
+                          fontSize: 18,
+                          fontFamily: "sans-serif-condensed",
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
               ],
             ),
           ],
@@ -108,6 +119,7 @@ class InfoWidget extends StatelessWidget {
           ],
         ),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Address: ",
@@ -343,7 +355,10 @@ class PastOrderSheet extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            InfoWidget(order: order, overflow: true,)
+            InfoWidget(
+              order: order,
+              overflow: true,
+            )
           ],
         ),
       ),

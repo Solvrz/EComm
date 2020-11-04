@@ -265,9 +265,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   ],
                 ),
               ),
-
-              // TODO: Bag.clear() Validation
-
               Center(
                 child: MaterialButton(
                   onPressed: pod == paymentMethods.first
@@ -277,6 +274,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             "/payment",
                             arguments: PaymentArguments(
                                 success: true,
+                                msg:
+                                    "You will soon receive a confirmation mail from us.",
                                 process: () async {
                                   await placeOrder();
                                 }),
@@ -285,15 +284,119 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       : () async {
                           FocusScope.of(context).unfocus();
 
-                          if (await payment.startPayment(selectedInfo["email"],
-                              selectedInfo["phone"], widget.price))
-                            await placeOrder();
-                          else {
-                            Navigator.popAndPushNamed(context, "/payment",
-                                arguments: PaymentArguments(
-                                    success: false, msg: "TBD", process: () async {
+                          dynamic status = await payment.startPayment(
+                              selectedInfo["email"],
+                              selectedInfo["phone"],
+                              widget.price);
 
-                                }));
+                          print(status);
+
+                          if (status != false) {
+                            String msg;
+                            bool success;
+
+                            switch (status) {
+                              case "01":
+                                {
+                                  success = true;
+                                  msg =
+                                      "You will soon receive a confirmation mail from us.";
+                                }
+                                break;
+                              case "227":
+                                {
+                                  success = false;
+                                  msg =
+                                      "Payment was declined by your Bank. Please contact your bank for any queries.";
+                                }
+                                break;
+                              case "235":
+                                {
+                                  success = false;
+                                  msg = "Insufficent Balance";
+                                }
+                                break;
+                              case "295":
+                                {
+                                  success = false;
+                                  msg = "UPI ID was inccorect";
+                                }
+                                break;
+
+                              case "334":
+                                {
+                                  success = false;
+                                  msg = "Server Error";
+                                }
+                                break;
+                              case "335":
+                                {
+                                  success = false;
+                                  msg = "Server Error. Try Again Later";
+                                }
+                                break;
+
+                              case "400":
+                                {
+                                  success = false;
+                                  msg =
+                                      "Your Transaction Status is not Confirmed. Please Contact Us or Try a Diffrent Payment Method";
+                                }
+                                break;
+                              case "401":
+                                {
+                                  success = false;
+                                  msg =
+                                      "Payment was declined by your Bank. Please contact your bank for any queries.";
+                                }
+                                break;
+                              case "402":
+                                {
+                                  success = false;
+                                  msg =
+                                      "Your Transaction Status is not Confirmed. Please Contact Us or Try a Diffrent Payment Method";
+                                }
+                                break;
+                              case "501":
+                                {
+                                  success = false;
+                                  msg = "Server Down. Try Again Later";
+                                }
+                                break;
+                              case "810":
+                                {
+                                  success = false;
+                                  msg = "Transaction Failed";
+                                }
+                                break;
+
+                              default:
+                                {
+                                  success = false;
+                                  msg = "An Unknown Error Occurred";
+                                }
+                                break;
+                            }
+
+                            Navigator.popAndPushNamed(
+                              context,
+                              "/payment",
+                              arguments: PaymentArguments(
+                                  success: success,
+                                  msg: msg,
+                                  process: () async {
+                                    if (success) await placeOrder();
+                                  }),
+                            );
+                          } else {
+                            Navigator.popAndPushNamed(
+                              context,
+                              "/payment",
+                              arguments: PaymentArguments(
+                                  success: false,
+                                  msg: "The Transaction was cancelled",
+                                  process: () async {}),
+                            );
                           }
                         },
                   shape: RoundedRectangleBorder(
@@ -320,8 +423,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
   }
 
   Future placeOrder() async {
-    // TODO FIXME: Takes Alot of Time
-
     await http.post(
       "https://suneel-printers.herokuapp.com/order_request",
       headers: <String, String>{
@@ -388,7 +489,5 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         return {"product": e.product.toJson(), "quantity": e.quantity};
       }).toList()
     });
-
-    bag.clear();
   }
 }

@@ -33,13 +33,16 @@ class _SplashScreenState extends State<SplashScreen>
       bag.load();
       wishlist.load();
 
+      // TODO: Save savedInfo in SharedPrefrences
+
       addresses = (preferences.getStringList("info") ?? [])
           .map<Map>(
             (e) => jsonDecode(e),
           )
           .toList();
-       List<Map> selected = addresses.where((e) => e["selected"]).toList();
-       if (selected.length > 0) selectedInfo = selected.first;
+
+      List<Map> selected = addresses.where((e) => e["selected"]).toList();
+      if (selected.length > 0) selectedInfo = selected.first;
     });
 
     _controller = AnimationController(

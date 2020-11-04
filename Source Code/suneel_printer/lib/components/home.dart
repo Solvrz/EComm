@@ -90,8 +90,8 @@ class _InformationSheetState extends State<InformationSheet> {
                             itemCount: addresses.length,
                             itemBuilder: (BuildContext context, int index) {
                               Map address = addresses[index];
-//                              bool isSelected =
-//                                  address.toString() == selectedInfo.toString();
+                              // bool isSelected =
+                              //     address.toString() == selectedInfo.toString();
                               bool isSelected = address["selected"];
 
                               return ListTile(
@@ -109,6 +109,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                 trailing: SizedBox(
                                   width: 60,
                                   child: Row(children: [
+                                    // TODO FIXME: Buttons not working
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () async {

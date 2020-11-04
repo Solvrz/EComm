@@ -24,7 +24,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         body: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               child: Row(
                 children: [
                   GestureDetector(
@@ -61,8 +61,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
             Expanded(
               child: wishlist.products.isNotEmpty
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 24),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 24),
                       child: AnimatedList(
                         shrinkWrap: true,
                         key: _listKey,

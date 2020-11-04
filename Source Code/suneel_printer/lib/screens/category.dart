@@ -8,9 +8,6 @@ import 'package:suneel_printer/screens/order.dart';
 class CategoryScreen extends StatelessWidget {
   String title;
   dynamic screen;
-  CircularProgressIndicator indicator = CircularProgressIndicator(
-    valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -101,10 +98,22 @@ class CategoryScreen extends StatelessWidget {
                                     padding: EdgeInsets.all(8),
                                     child: admin
                                         ? SizedBox(height: 34, width: 34)
-                                        : Image.asset(
-                                            "assets/images/ShoppingBag.png",
-                                            width: 30,
-                                            height: 30),
+                                        : Stack(
+                                            children: [
+                                              Image.asset(
+                                                  "assets/images/ShoppingBag.png",
+                                                  width: 30,
+                                                  height: 30),
+                                              Positioned(
+                                                // TODO FIXME: Bag amount not updating
+
+                                                left: 11,
+                                                top: 10,
+                                                child: Text(bag.products.length
+                                                    .toString()),
+                                              )
+                                            ],
+                                          ),
                                   ),
                                 )
                               ],

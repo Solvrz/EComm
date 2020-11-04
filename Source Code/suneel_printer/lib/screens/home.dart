@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,22 +27,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   TextEditingController controller = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   if (!hasShown)
-  //     Timer(Duration(seconds: 5), () {
-  //       if (addresses.length == 0) {
-  //         hasShown = true;
-  //         showModalBottomSheet(
-  //           isScrollControlled: true,
-  //           backgroundColor: Colors.transparent,
-  //           context: context,
-  //           builder: (_) => InformationSheet(),
-  //         );
-  //       }
-  //     });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    if (!hasShown)
+      Timer(Duration(seconds: 5), () {
+        if (addresses.length == 0) {
+          hasShown = true;
+          showModalBottomSheet(
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (_) => InformationSheet(),
+          );
+        }
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,10 +177,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.all(8),
-                                      child: Image.asset(
-                                          "assets/images/ShoppingBag.png",
-                                          width: 30,
-                                          height: 30),
+                                      child: Stack(
+                                        children: [
+                                          Image.asset(
+                                              "assets/images/ShoppingBag.png",
+                                              width: 30,
+                                              height: 30),
+                                          Positioned(
+                                            left: 11,
+                                            top: 10,
+                                            child: Text(
+                                                bag.products.length.toString()),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                               ]),
@@ -280,10 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     );
                             } else {
                               return Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.grey[700]),
-                                ),
+                                child: indicator,
                               );
                             }
                           })

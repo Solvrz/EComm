@@ -38,6 +38,10 @@ SharedPreferences preferences;
 Map selectedInfo;
 List<Map> addresses;
 
+CircularProgressIndicator indicator = CircularProgressIndicator(
+  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),
+);
+
 List<Map<String, dynamic>> categories = [
   {
     "uId": 1,

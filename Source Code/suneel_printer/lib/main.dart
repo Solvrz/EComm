@@ -28,17 +28,19 @@ void main() async {
           .whenComplete(() {
         FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-            .then(
-          (_) => runApp(
-            SuneelPrinter(),
-          ),
-        );
+        SharedPreferences.getInstance()
+            .then((value) => preferences = value)
+            .whenComplete(() {
+          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+              .whenComplete(
+            () => runApp(
+              SuneelPrinter(),
+            ),
+          );
+        });
       });
     });
   });
-
-  preferences = await SharedPreferences.getInstance();
 }
 
 class SuneelPrinter extends StatelessWidget {

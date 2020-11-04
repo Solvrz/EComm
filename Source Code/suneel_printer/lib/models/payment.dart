@@ -8,8 +8,9 @@ class Payment {
   static MethodChannel _channel =
       MethodChannel("com.suneel37.suneel_printer/allInOne");
 
-  Future<bool> startPayment(String address, String phone, double amount) async {
-    http.Response response = await http.post(
+  Future startPayment(String address, String phone, double amount) async {
+    // try {
+    http.Response token = await http.post(
       "https://suneel-printers.herokuapp.com/payment",
       headers: <String, String>{
         "Content-Type": "application/json; charset=UTF-8",
@@ -22,26 +23,39 @@ class Payment {
       }),
     );
 
-    if (response.statusCode == 200) {
-      Map result = jsonDecode(response.body);
+    if (token.statusCode == 200) {
+      Map tokenResponse = jsonDecode(token.body);
 
       var arguments = <String, dynamic>{
         "amount": amount.toString(),
         "mid": "MoShyC80984595390154",
-        "orderId": result["orderId"],
-        "txnToken": result["body"]["txnToken"],
+        "orderId": tokenResponse["orderId"],
+        "txnToken": tokenResponse["body"]["txnToken"],
         "isStaging": staging
       };
 
-      try {
-        var result = await _channel.invokeMethod("pay", arguments);
-        print("RESULT: ${result.toString()}");
-      } catch (err) {
-        print("ERROR: ${err.message}");
-        return false;
+      await _channel.invokeMethod("pay", arguments);
+
+      http.Response status = await http.post(
+        "https://suneel-printers.herokuapp.com/status",
+        headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: jsonEncode(<String, String>{
+          "orderId": tokenResponse["orderId"],
+          "staging": staging.toString(),
+        }),
+      );
+
+      if (status.statusCode == 200) {
+        Map statusResponse = jsonDecode(status.body);
+
+        return statusResponse["body"]["resultInfo"]["resultCode"];
       }
     }
-
-    return true;
+    // } catch (err) {
+    //   print(err);
+    //   return false;
+    // }
   }
 }

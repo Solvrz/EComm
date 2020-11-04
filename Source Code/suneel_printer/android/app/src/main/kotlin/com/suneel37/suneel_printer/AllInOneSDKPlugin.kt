@@ -8,7 +8,7 @@ import com.paytm.pgsdk.PaytmPaymentTransactionCallback
 import com.paytm.pgsdk.TransactionManager
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
- 
+
 class AllInOneSDKPlugin(var activity: Activity, var call: MethodCall, var result: MethodChannel.Result) {
     private val REQ_CODE = 0
 
@@ -29,18 +29,18 @@ class AllInOneSDKPlugin(var activity: Activity, var call: MethodCall, var result
             val callbackUrl = arg["callbackUrl"] as String?
             val isStaging = arg["isStaging"] as Boolean
             if (mid == null || orderId == null || amount == null || mid.isEmpty() || orderId.isEmpty() || amount.isEmpty()) {
-                showToast("Please enter all field")
+                showToast("Server Error, Try Again (Field)")
                 return
             }
 
             if (txnToken == null || txnToken.isEmpty()) {
-                showToast("Token error")
+                showToast("Server Error, Try Again (Token)")
                 return
             }
 
             initiateTransaction(mid, orderId, amount, txnToken, callbackUrl, isStaging)
         } else {
-            showToast("Please send arguments")
+            showToast("Server Error, Try Again (Server)")
         }
     }
 
