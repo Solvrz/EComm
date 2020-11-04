@@ -291,7 +291,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           else {
                             Navigator.popAndPushNamed(context, "/payment",
                                 arguments: PaymentArguments(
-                                    success: false, msg: "TBD"));
+                                    success: false, msg: "TBD", process: () async {
+
+                                }));
                           }
                         },
                   shape: RoundedRectangleBorder(
@@ -388,11 +390,5 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     });
 
     bag.clear();
-
-    Navigator.popAndPushNamed(
-      context,
-      "/payment",
-      arguments: PaymentArguments(success: true),
-    );
   }
 }
