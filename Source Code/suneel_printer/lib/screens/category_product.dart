@@ -57,6 +57,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
                   child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () {
                       if (index == widget._currentTab) return;
                       setState(() {
@@ -125,7 +126,9 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
               height: MediaQuery.of(context).size.height / 1.5,
               width: MediaQuery.of(context).size.width * 0.9,
               child: Center(
-                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),),
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),
+                ),
               ),
             );
           }

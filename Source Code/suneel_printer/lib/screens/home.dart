@@ -156,7 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 GestureDetector(
                                   behavior: HitTestBehavior.translucent,
                                   onTap: () {
-                                    Navigator.pushNamed(context, "/past_orders");
+                                    Navigator.pushNamed(
+                                        context, "/past_orders");
                                   },
                                   child: Padding(
                                     padding: EdgeInsets.all(8),

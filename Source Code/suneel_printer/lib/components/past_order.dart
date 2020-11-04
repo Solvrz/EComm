@@ -75,6 +75,8 @@ class PastOrderSheet extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         GestureDetector(
+                                          behavior:
+                                              HitTestBehavior.translucent,
                                           onTap: () => Navigator.pushNamed(
                                             context,
                                             "/product",

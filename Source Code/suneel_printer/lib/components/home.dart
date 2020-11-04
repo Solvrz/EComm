@@ -92,7 +92,7 @@ class _InformationSheetState extends State<InformationSheet> {
                               Map address = addresses[index];
 //                              bool isSelected =
 //                                  address.toString() == selectedInfo.toString();
-                               bool isSelected = address["selected"];
+                              bool isSelected = address["selected"];
 
                               return ListTile(
                                 onTap: () async {

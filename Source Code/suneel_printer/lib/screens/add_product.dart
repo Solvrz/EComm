@@ -17,7 +17,6 @@ import 'package:suneel_printer/models/variation.dart';
 // TODO FIXME: Has A Ton Of Error
 //  TODO: Discard CHanges Dialog
 
-
 class AddProductScreen extends StatefulWidget {
   @override
   _AddProductScreenState createState() => _AddProductScreenState();
@@ -483,6 +482,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                             .center,
                                                     children: [
                                                       GestureDetector(
+                                                        
                                                         behavior:
                                                             HitTestBehavior
                                                                 .translucent,
@@ -746,6 +746,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                 ),
                                               ),
                                               GestureDetector(
+                                               
                                                 behavior:
                                                     HitTestBehavior.translucent,
                                                 onTap: () {

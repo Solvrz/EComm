@@ -18,6 +18,7 @@ class PastOrderScreen extends StatelessWidget {
             child: Row(
               children: [
                 GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => Navigator.pop(context),
                   child: Padding(
                     padding: EdgeInsets.all(8),
@@ -42,6 +43,7 @@ class PastOrderScreen extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: null,
                   child: Icon(Icons.clear, color: Colors.transparent),
                 ),

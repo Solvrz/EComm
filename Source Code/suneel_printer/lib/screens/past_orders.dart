@@ -23,6 +23,7 @@ class PastOrdersScreen extends StatelessWidget {
               Row(
                 children: [
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () => Navigator.pop(context),
                     child: Padding(
                       padding: EdgeInsets.all(8),
@@ -45,6 +46,7 @@ class PastOrdersScreen extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: null,
                     child: Icon(Icons.clear, color: Colors.transparent),
                   ),
@@ -62,7 +64,8 @@ class PastOrdersScreen extends StatelessWidget {
                         return GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           onTap: () {
-                            Navigator.pushNamed(context, "/order", arguments: PastOrderDetailArguments(currOrder));
+                            Navigator.pushNamed(context, "/order",
+                                arguments: PastOrderDetailArguments(currOrder));
                           },
                           child: Container(
                             margin: EdgeInsets.symmetric(vertical: 8),
@@ -106,8 +109,7 @@ class PastOrdersScreen extends StatelessWidget {
                                                     color: kUIDarkText
                                                         .withOpacity(0.7),
                                                     fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w800,
+                                                    fontWeight: FontWeight.w800,
                                                     fontFamily:
                                                         "sans-serif-condensed"),
                                               ),

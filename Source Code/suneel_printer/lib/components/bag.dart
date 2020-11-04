@@ -362,7 +362,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         "time": Timestamp.now().toString(),
         "price": widget.price.toString(),
         "payment_mode":
-        pod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
+            pod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
         "products": bag.products.map((e) {
           return {"product": e.product.toJson(), "quantity": e.quantity};
         }).toList()

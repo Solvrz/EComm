@@ -28,6 +28,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
               child: Row(
                 children: [
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: () => Navigator.pop(context),
                     child: Padding(
                       padding: EdgeInsets.all(8),
@@ -50,6 +51,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     ),
                   ),
                   GestureDetector(
+                    behavior: HitTestBehavior.translucent,
                     onTap: null,
                     child: Icon(Icons.clear, color: Colors.transparent),
                   ),
@@ -97,6 +99,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         key: ObjectKey(wishlist.products[index]),
         actionPane: SlidableDrawerActionPane(),
         child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () => Navigator.pushNamed(
             context,
             "/product",
@@ -169,6 +172,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         ),
         secondaryActions: [
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               Timer(Duration(milliseconds: 200), () {
                 wishlist.removeProduct(product);
