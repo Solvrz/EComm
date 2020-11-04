@@ -289,8 +289,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               selectedInfo["phone"],
                               widget.price);
 
-                          print(status);
-
                           if (status != false) {
                             String msg;
                             bool success;
