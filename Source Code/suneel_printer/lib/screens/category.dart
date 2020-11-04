@@ -4,12 +4,8 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/category_product.dart';
 import 'package:suneel_printer/screens/order.dart';
 
-class CategoryScreen extends StatefulWidget {
-  @override
-  _CategoryScreenState createState() => _CategoryScreenState();
-}
-
-class _CategoryScreenState extends State<CategoryScreen> {
+// ignore: must_be_immutable
+class CategoryScreen extends StatelessWidget {
   String title;
   dynamic screen;
   CircularProgressIndicator indicator = CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),);

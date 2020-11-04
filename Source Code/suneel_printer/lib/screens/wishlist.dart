@@ -174,6 +174,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 wishlist.removeProduct(product);
                 setState(() {});
               });
+
               _listKey.currentState.removeItem(
                 index,
                 (context, animation) => _buildItem(context, index, animation),

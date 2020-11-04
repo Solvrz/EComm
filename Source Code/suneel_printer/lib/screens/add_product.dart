@@ -14,6 +14,8 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/models/variation.dart';
 
+// TODO FIXME: Has A Ton Of Error
+
 class AddProductScreen extends StatefulWidget {
   @override
   _AddProductScreenState createState() => _AddProductScreenState();
@@ -30,12 +32,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
   List<Variation> variations = [];
 
   int _currentImage = 0;
+
   FocusNode _priceNode = FocusNode();
   FocusNode _mrpNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
-    final AddProductArguments args = ModalRoute.of(context).settings.arguments;
+    AddProductArguments args = ModalRoute.of(context).settings.arguments;
 
     if (args.product != null) {
       name = args.product.name;
@@ -270,9 +273,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 fontWeight: FontWeight.w600,
                                 fontFamily: "sans-serif-condensed"),
                           ),
-                          onChanged: (value) => name = value,
-                          onSubmitted: (_) =>
-                              FocusScope.of(context).autofocus(_mrpNode),
+                          onSubmitted: (value) {
+                            setState(() => name = value);
+                            FocusScope.of(context).autofocus(_mrpNode);
+                          },
                           style: TextStyle(
                               color: kUIDarkText,
                               fontSize: 28,
@@ -356,7 +360,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     ),
                                   ],
                                   options: CarouselOptions(
-                                      autoPlay: images.length > 0,
+                                      autoPlay: false,
                                       enlargeCenterPage: true,
                                       aspectRatio: 2,
                                       onPageChanged: (index, reason) {
@@ -437,10 +441,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       children: [
                                         Expanded(
                                           child: TextField(
-                                            onChanged: (value) => variations[
-                                                    variations
-                                                        .indexOf(variation)]
-                                                .name = value.trim(),
+                                            onSubmitted: (value) => setState(
+                                              () => variations[variations
+                                                      .indexOf(variation)]
+                                                  .name = value.trim(),
+                                            ),
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
                                               hintText: "Name",
@@ -815,10 +820,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 fontFamily: "sans-serif-condensed",
                                 letterSpacing: -0.4),
                           ),
-                          onSubmitted: (_) =>
-                              FocusScope.of(context).autofocus(_priceNode),
+                          onSubmitted: (value) {
+                            setState(() => mrp = value);
+                            FocusScope.of(context).autofocus(_priceNode);
+                          },
                           cursorColor: Colors.grey,
-                          onChanged: (value) => mrp = value,
                           style: TextStyle(
                               color: kUIDarkText,
                               fontSize: 20,
@@ -863,7 +869,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 letterSpacing: -0.4),
                           ),
                           cursorColor: Colors.grey,
-                          onChanged: (value) => price = value,
+                          onSubmitted: (value) => setState(() => price = value),
                           style: TextStyle(
                               color: kUIDarkText,
                               fontSize: 20,

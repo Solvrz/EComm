@@ -88,7 +88,7 @@ class _InformationSheetState extends State<InformationSheet> {
                         ? ListView.separated(
                             padding: EdgeInsets.zero,
                             itemCount: addresses.length,
-                            itemBuilder: (context, int index) {
+                            itemBuilder: (BuildContext context, int index) {
                               Map address = addresses[index];
 //                              bool isSelected =
 //                                  address.toString() == selectedInfo.toString();
@@ -178,8 +178,9 @@ class _InformationSheetState extends State<InformationSheet> {
                                 ),
                               );
                             },
-                            separatorBuilder: (context, int index) => Divider(
-                                thickness: 0.75, color: Colors.grey[400]),
+                            separatorBuilder:
+                                (BuildContext context, int index) => Divider(
+                                    thickness: 0.75, color: Colors.grey[400]),
                           )
                         : Center(
                             child: Text(
@@ -498,25 +499,26 @@ class _SearchCardState extends State<SearchCard> {
                         ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => setState(
-                    () => wishlist.containsProduct(widget.product)
-                        ? wishlist.removeProduct(widget.product)
-                        : wishlist.addProduct(widget.product),
-                  ),
-                  child: Icon(
-                    wishlist.containsProduct(widget.product)
-                        ? Icons.favorite
-                        : Icons.favorite_outline,
-                    color: wishlist.containsProduct(widget.product)
-                        ? kUIAccent
-                        : kUIDarkText,
+              if (!admin)
+                Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () => setState(
+                      () => wishlist.containsProduct(widget.product)
+                          ? wishlist.removeProduct(widget.product)
+                          : wishlist.addProduct(widget.product),
+                    ),
+                    child: Icon(
+                      wishlist.containsProduct(widget.product)
+                          ? Icons.favorite
+                          : Icons.favorite_outline,
+                      color: wishlist.containsProduct(widget.product)
+                          ? kUIAccent
+                          : kUIDarkText,
+                    ),
                   ),
                 ),
-              ),
             ]),
           ),
           SizedBox(height: 18),

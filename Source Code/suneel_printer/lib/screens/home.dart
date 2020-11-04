@@ -166,19 +166,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                         height: 30),
                                   ),
                                 ),
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () {
-                                    Navigator.pushNamed(context, "/bag");
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Image.asset(
-                                        "assets/images/ShoppingBag.png",
-                                        width: 30,
-                                        height: 30),
+                                if (!admin)
+                                  GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    onTap: () {
+                                      Navigator.pushNamed(context, "/bag");
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Image.asset(
+                                          "assets/images/ShoppingBag.png",
+                                          width: 30,
+                                          height: 30),
+                                    ),
                                   ),
-                                ),
                               ]),
                         )
                       ],
@@ -235,7 +236,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   query != ""
                       ? StreamBuilder<QuerySnapshot>(
                           stream: database.collection("products").snapshots(),
-                          builder: (context, future) {
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> future) {
                             if (future.hasData) {
                               List docs = future.data.docs
                                   .where(
@@ -277,18 +279,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     );
                             } else {
                               return Center(
-                                  child: Text(
-                                "Loading ...",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: kUIDarkText,
-                                    fontFamily: "sans-serif-condensed"),
-                              ));
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.grey[700]),
+                                ),
+                              );
                             }
                           })
                       : FutureBuilder<QuerySnapshot>(
                           future: database.collection("carouselImages").get(),
-                          builder: (context, future) {
+                          builder:
+                              (BuildContext context, AsyncSnapshot future) {
                             List carouselImages = [
                               "https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"
                             ];
@@ -304,7 +305,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Column(children: [
                               CarouselSlider.builder(
                                 itemCount: carouselImages.length,
-                                itemBuilder: (context, index) => ClipRRect(
+                                itemBuilder:
+                                    (BuildContext context, int index) =>
+                                        ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Container(
                                     decoration: BoxDecoration(
