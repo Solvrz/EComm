@@ -52,7 +52,6 @@ class _InformationSheetState extends State<InformationSheet> {
           padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
@@ -91,9 +90,9 @@ class _InformationSheetState extends State<InformationSheet> {
                             itemCount: addresses.length,
                             itemBuilder: (context, int index) {
                               Map address = addresses[index];
-                              bool isSelected =
-                                  address.toString() == selectedInfo.toString();
-                              // bool isSelected = address["selected"];
+//                              bool isSelected =
+//                                  address.toString() == selectedInfo.toString();
+                               bool isSelected = address["selected"];
 
                               return ListTile(
                                 onTap: () async {
@@ -134,36 +133,21 @@ class _InformationSheetState extends State<InformationSheet> {
                                     SizedBox(width: 12),
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
-                                      // onTap: () async {
-                                      //   if (isSelected) {
-                                      //     if (addresses.length == 1) {
-                                      //       address["selected"] = false;
-                                      //       selectedInfo = null;
-                                      //     } else {
-                                      //       Map newAddress = addresses[
-                                      //           index - 1 >= 0
-                                      //               ? index - 1
-                                      //               : index + 1];
-                                      //       address["selected"] = false;
-                                      //       newAddress["selected"] = true;
-                                      //       selectedInfo = newAddress;
-                                      //     }
-
-                                      // TODO: Save Selected Info to Shared Prefrences
-                                      //   }
-
                                       onTap: () async {
                                         if (isSelected) {
-                                          if (addresses.length == 1)
+                                          if (addresses.length == 1) {
+                                            address["selected"] = false;
                                             selectedInfo = null;
-                                          else
-                                            selectedInfo = addresses[
+                                          } else {
+                                            Map newAddress = addresses[
                                                 index - 1 >= 0
                                                     ? index - 1
                                                     : index + 1];
+                                            address["selected"] = false;
+                                            newAddress["selected"] = true;
+                                            selectedInfo = newAddress;
+                                          }
                                         }
-
-                                        addresses.removeAt(index);
                                         setState(() {});
                                       },
                                       child: Icon(Icons.delete,

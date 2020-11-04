@@ -127,6 +127,7 @@ class Product {
     if (_name != other.name) difference.add("name");
     if (_images.toString() != other.images.toString()) difference.add("images");
     if (_price != other.price) difference.add("price");
+    if (_mrp != other.mrp) difference.add("mrp");
     if (_variations
             .map(
               (e) => e.toString(),

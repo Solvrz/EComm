@@ -10,9 +10,36 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  FlareActor flareAnimation;
+  bool isCompleted = false;
+  bool isProcessing = false;
+
   @override
   Widget build(BuildContext context) {
     PaymentArguments args = ModalRoute.of(context).settings.arguments;
+
+    if (!isProcessing) {
+      isProcessing = true;
+      args.process().then((_) => setState(() {
+            isCompleted = true;
+            flareAnimation = FlareActor(
+              args.success
+                  ? "assets/animation/Success.flr"
+                  : "assets/animation/Failure.flr",
+              animation: "forward",
+              fit: BoxFit.contain,
+              callback: (_) {
+                Timer(
+                  Duration(milliseconds: 800),
+                  () => Navigator.popAndPushNamed(
+                    context,
+                    "/home",
+                  ),
+                );
+              },
+            );
+          }));
+    }
 
     return WillPopScope(
       onWillPop: () async {
@@ -23,30 +50,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
           resizeToAvoidBottomInset: false,
           backgroundColor: kUIColor,
           body: Container(
+            padding: EdgeInsets.all(16),
             width: MediaQuery.of(context).size.width,
             child: Column(children: [
+              if (!isCompleted) SizedBox(height: 150),
               Container(
-                height: 500,
-                width: 500,
-                child: FlareActor(
-                  args.success
-                      ? "assets/animation/Success.flr"
-                      : "assets/animation/Failure.flr",
-                  animation: "forward",
-                  fit: BoxFit.contain,
-                  callback: (_) {
-                    Timer(
-                      Duration(milliseconds: 800),
-                      () => Navigator.popAndPushNamed(
-                        context,
-                        "/home",
-                      ),
-                    );
-                  },
-                ),
+                height: isCompleted ? 500 : 200,
+                width: isCompleted ? 500 : 200,
+                child: isCompleted
+                    ? flareAnimation
+                    : CircularProgressIndicator(
+                      strokeWidth: 14,
+                    ),
               ),
+              if (!isCompleted) SizedBox(height: 150),
               Text(
                 args.success ? "Order Placed Successfully" : "Payment Failed",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kUIDarkText,
                   fontSize: 36,
@@ -75,9 +95,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
 class PaymentArguments {
   final bool success;
+  final Function process;
   final String msg;
 
-  PaymentArguments(
-      {@required this.success,
-      this.msg = "You will soon recieve a conformation mail from us."});
+  PaymentArguments({
+    @required this.success,
+    @required this.process,
+    this.msg = "You will soon receive a confirmation mail from us.",
+  });
 }

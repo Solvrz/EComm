@@ -116,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     behavior: HitTestBehavior.translucent,
                                     onTap: () async {
                                       await showModalBottomSheet(
+                                        isScrollControlled: true,
                                         backgroundColor: Colors.transparent,
                                         context: context,
                                         builder: (_) => InformationSheet(),
@@ -155,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 GestureDetector(
                                   behavior: HitTestBehavior.translucent,
                                   onTap: () {
-                                    // TODO: Past Orders Screen
+                                    Navigator.pushNamed(context, "/past_orders");
                                   },
                                   child: Padding(
                                     padding: EdgeInsets.all(8),
@@ -385,13 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   "/category",
                                                   arguments: CategoryArguments(
                                                     data,
-                                                    await database
-                                                        .collection(
-                                                            "categories")
-                                                        .where("uId",
-                                                            isEqualTo:
-                                                                data["uId"])
-                                                        .get(),
+                                                    data["uId"],
                                                   ),
                                                 );
                                               },
