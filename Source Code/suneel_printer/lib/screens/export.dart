@@ -6,3 +6,4 @@ export 'past_order.dart';
 export 'product.dart';
 export 'splash.dart';
 export 'wishlist.dart';
+export 'payment.dart';

@@ -108,229 +108,35 @@ class PastOrderScreen extends StatelessWidget {
                               ],
                               child: Container(
                                 margin: EdgeInsets.symmetric(vertical: 8),
-                                height:
-                                    MediaQuery.of(context).size.height / 3.2,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     color: Colors.grey[200]),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(16),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Name: ",
-                                                style: TextStyle(
-                                                  color: kUIDarkText,
-                                                  fontSize: 20,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Column(
+                                    children: [
+                                      InfoWidget(order: orders[index]),
+                                      Center(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "Tap for More Details",
+                                              overflow:
+                                              TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color: kUIDarkText,
+                                                fontSize: 18,
+                                                fontFamily:
+                                                "sans-serif-condensed",
+                                                fontWeight: FontWeight.w500,
                                               ),
-                                              Expanded(
-                                                child: Text(
-                                                  "${orders[index]['name'].toString().capitalize()}",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: kUIDarkText,
-                                                    fontFamily:
-                                                        "sans-serif-condensed",
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Date: ",
-                                                    style: TextStyle(
-                                                      color: kUIDarkText,
-                                                      fontSize: 20,
-                                                      fontFamily:
-                                                          "sans-serif-condensed",
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "${orders[index]['time'].toDate().toString().split(" ")[0].split("-").reversed.join("-")}",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      color: kUIDarkText,
-                                                      fontSize: 18,
-                                                      fontFamily:
-                                                          "sans-serif-condensed",
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Phone: ",
-                                                style: TextStyle(
-                                                  color: kUIDarkText,
-                                                  fontSize: 20,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                "${orders[index]['phone']}",
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: kUIDarkText,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Email: ",
-                                                style: TextStyle(
-                                                  color: kUIDarkText,
-                                                  fontSize: 20,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                "${orders[index]['email']}",
-                                                style: TextStyle(
-                                                  color: kUIDarkText,
-                                                  fontSize: 18,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Address: ",
-                                                style: TextStyle(
-                                                  color: kUIDarkText,
-                                                  fontSize: 20,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  "${orders[index]['address'].toString().capitalize()}, ${orders[index]['pincode']}",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    color: kUIDarkText,
-                                                    fontSize: 18,
-                                                    fontFamily:
-                                                        "sans-serif-condensed",
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Divider(height: 15, thickness: 2),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Payment Mode: ",
-                                                style: TextStyle(
-                                                  color: kUIDarkText,
-                                                  fontSize: 20,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                "${orders[index]['payment_mode']}",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: kUIDarkText,
-                                                  fontSize: 18,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Total Price: ",
-                                                style: TextStyle(
-                                                  color: kUIDarkText,
-                                                  fontSize: 20,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                "₹ ${orders[index]['price']}",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: kUIDarkText,
-                                                  fontSize: 18,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Divider(height: 15, thickness: 2),
-                                          SizedBox(height: 8),
-                                          Center(
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  "Tap for More Details",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    color: kUIDarkText,
-                                                    fontSize: 18,
-                                                    fontFamily:
-                                                        "sans-serif-condensed",
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                Icon(Icons.keyboard_arrow_down)
-                                              ],
                                             ),
-                                          ),
-                                        ],
+                                            Icon(Icons.keyboard_arrow_down)
+                                          ],
+                                        ),
                                       ),
-                                    )
-                                  ],
+                                    ]
+                                  ),
                                 ),
                               ),
                             ),
