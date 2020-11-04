@@ -34,6 +34,7 @@ Bag bag = Bag();
 Wishlist wishlist = Wishlist();
 Payment payment = Payment();
 SharedPreferences preferences;
+
 Map selectedInfo;
 List<Map> addresses;
 
@@ -69,6 +70,8 @@ List<Map<String, dynamic>> categories = [
     "image": "assets/images/Binding.png",
   },
 ];
+
+List onOrder = ["Printing", "Binding"];
 
 extension StringExtension on String {
   String capitalize() {

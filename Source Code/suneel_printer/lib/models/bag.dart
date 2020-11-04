@@ -61,11 +61,7 @@ class Bag {
 
   void increaseQuantity(Product product, {int increase = 1}) {
     _products.forEach((BagItem bagItem) {
-      if (bagItem.product == product) {
-        bagItem.quantity += increase;
-
-        if (bagItem.quantity > 15) bagItem.quantity = 15;
-      }
+      if (bagItem.product == product) bagItem.quantity += increase;
     });
     _save();
   }

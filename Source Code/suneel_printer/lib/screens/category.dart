@@ -24,8 +24,11 @@ class CategoryScreen extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             dynamic screen;
 
+            // TODO: Dont Push On Order in Admin
+            // TODO: OnOrder Not Working
+
             if (snapshot.hasData)
-              screen = title != "Printing" && title != "Binding"
+              screen = !onOrder.contains(title)
                   ? CategoryProductPage(
                       title,
                       snapshot.data.docs

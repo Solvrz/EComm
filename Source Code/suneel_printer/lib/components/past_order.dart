@@ -14,7 +14,7 @@ class PastOrderSheet extends StatelessWidget {
       child: Container(
         height: order["products"].length > 3
             ? MediaQuery.of(context).size.height / 1.05
-            : MediaQuery.of(context).size.height / 1.25,
+            : MediaQuery.of(context).size.height / 1.2,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
@@ -263,6 +263,7 @@ class PastOrderSheet extends StatelessWidget {
                         child: Text(
                           "${order['address'].toString().capitalize()}, ${order['pincode']}",
                           overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
                           style: TextStyle(
                             color: kUIDarkText,
                             fontSize: 18,

@@ -271,6 +271,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   ],
                 ),
               ),
+
+              // TODO: Bag.clear() Validation
+
               Center(
                 child: MaterialButton(
                   onPressed: pod
@@ -347,6 +350,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         "name": selectedInfo["name"],
         "phone": selectedInfo["phone"],
         "address": selectedInfo["address"],
+        "pincode": selectedInfo["pincode"],
         "email": selectedInfo["email"],
         "time": Timestamp.now().toString(),
         "price": widget.price.toString(),
@@ -363,6 +367,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
       "name": selectedInfo["name"],
       "phone": selectedInfo["phone"],
       "address": selectedInfo["address"],
+      "pincode": selectedInfo["pincode"],
       "email": selectedInfo["email"],
       "time": Timestamp.now(),
       "price": widget.price.toString(),
