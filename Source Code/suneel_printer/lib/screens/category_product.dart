@@ -125,9 +125,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
               height: MediaQuery.of(context).size.height / 1.5,
               width: MediaQuery.of(context).size.width * 0.9,
               child: Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),
-                ),
+                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),),
               ),
             );
           }

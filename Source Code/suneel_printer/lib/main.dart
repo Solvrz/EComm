@@ -11,6 +11,8 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/export.dart';
+import 'package:suneel_printer/screens/past_order_detail.dart';
+import 'package:suneel_printer/screens/past_orders.dart';
 import 'package:suneel_printer/screens/payment.dart';
 
 void main() async {
@@ -77,8 +79,9 @@ class SuneelPrinter extends StatelessWidget {
         "/payment": (BuildContext context) => PaymentScreen(),
         "/wishlist": (BuildContext context) => WishlistScreen(),
         "/category": (BuildContext context) => CategoryScreen(),
-        "/orders": (BuildContext context) => PastOrderScreen(),
-        "/add_product": (BuildContext context) => AddProductScreen(),
+        "/add_prdouct": (BuildContext context) => AddProductScreen(),
+        "/past_orders": (BuildContext context) => PastOrdersScreen(),
+        "/order": (BuildContext context) => PastOrderDetailScreen()
       },
     );
   }

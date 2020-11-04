@@ -116,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     behavior: HitTestBehavior.translucent,
                                     onTap: () async {
                                       await showModalBottomSheet(
+                                        isScrollControlled: true,
                                         backgroundColor: Colors.transparent,
                                         context: context,
                                         builder: (_) => InformationSheet(),
@@ -154,8 +155,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 GestureDetector(
                                   behavior: HitTestBehavior.translucent,
-                                  onTap: () =>
-                                      Navigator.pushNamed(context, "/orders"),
+                                  onTap: () {
+                                    Navigator.pushNamed(context, "/past_orders");
+                                  },
                                   child: Padding(
                                     padding: EdgeInsets.all(8),
                                     child: Image.asset(
@@ -387,13 +389,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   "/category",
                                                   arguments: CategoryArguments(
                                                     data,
-                                                    await database
-                                                        .collection(
-                                                            "categories")
-                                                        .where("uId",
-                                                            isEqualTo:
-                                                                data["uId"])
-                                                        .get(),
+                                                    data["uId"],
                                                   ),
                                                 );
                                               },

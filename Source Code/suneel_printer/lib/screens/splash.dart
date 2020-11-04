@@ -38,8 +38,8 @@ class _SplashScreenState extends State<SplashScreen>
             (e) => jsonDecode(e),
           )
           .toList();
-      // List<Map> selected = addresses.where((e) => e["selected"]).toList();
-      // if (selected.length > 0) selectedInfo = selected.first;
+       List<Map> selected = addresses.where((e) => e["selected"]).toList();
+       if (selected.length > 0) selectedInfo = selected.first;
     });
 
     _controller = AnimationController(

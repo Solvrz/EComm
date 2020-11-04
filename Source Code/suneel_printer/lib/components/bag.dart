@@ -19,7 +19,12 @@ class CheckoutSheet extends StatefulWidget {
 }
 
 class _CheckoutSheetState extends State<CheckoutSheet> {
-  bool pod = true;
+  static List<String> paymentMethods = [
+    "Pay On Delivery",
+    "PayTM, Credit Card, Debit Card & Net Banking"
+  ];
+
+  String pod = paymentMethods.first;
 
   @override
   Widget build(BuildContext context) {
@@ -197,38 +202,27 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         ),
                         Container(
                           height: 120,
-                          child: ListView(children: [
-                            CheckboxListTile(
-                              title: Text(
-                                "Pay on Delivery",
-                                style: TextStyle(
-                                  color: kUIDarkText,
-                                  fontSize: 18,
-                                  fontFamily: "sans-serif-condensed",
-                                  fontWeight: FontWeight.bold,
+                          child: ListView(
+                              children: paymentMethods.map<Widget>(
+                            (value) {
+                              return RadioListTile(
+                                title: Text(
+                                  value,
+                                  style: TextStyle(
+                                    color: kUIDarkText,
+                                    fontSize: 18,
+                                    fontFamily: "sans-serif-condensed",
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              value: pod,
-                              onChanged: (_) {
-                                setState(() => pod = !pod);
-                              },
-                            ),
-                            CheckboxListTile(
-                              title: Text(
-                                "PayTM, Credit Card, Debit Card & Net Banking",
-                                style: TextStyle(
-                                  color: kUIDarkText,
-                                  fontSize: 18,
-                                  fontFamily: "sans-serif-condensed",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              value: !pod,
-                              onChanged: (_) {
-                                setState(() => pod = !pod);
-                              },
-                            )
-                          ]),
+                                value: value,
+                                groupValue: pod,
+                                onChanged: (_) {
+                                  if (pod != value) setState(() => pod = value);
+                                },
+                              );
+                            },
+                          ).toList()),
                         ),
                         Divider(height: 20, thickness: 2),
                         Row(
@@ -276,8 +270,18 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
               Center(
                 child: MaterialButton(
-                  onPressed: pod
-                      ? () async => await placeOrder()
+                  onPressed: pod == paymentMethods.first
+                      ? () async {
+                          Navigator.popAndPushNamed(
+                            context,
+                            "/payment",
+                            arguments: PaymentArguments(
+                                success: true,
+                                process: () async {
+                                  await placeOrder();
+                                }),
+                          );
+                        }
                       : () async {
                           FocusScope.of(context).unfocus();
 
@@ -296,7 +300,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 36),
                   color: kUIAccent,
                   child: Text(
-                    pod ? "Proceed To Buy" : "Proceed To Pay",
+                    pod == paymentMethods.first
+                        ? "Proceed To Buy"
+                        : "Proceed To Pay",
                     style: TextStyle(
                         fontSize: 24,
                         fontFamily: "sans-serif-condensed",
@@ -324,7 +330,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         "phone": selectedInfo["phone"],
         "address": selectedInfo["address"],
         "email": selectedInfo["email"],
-        "payment_mode": pod ? "Pay On Delivery" : "Prepaid",
+        "payment_mode":
+            pod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
         "price": widget.price.toString(),
         "product_list": bag.products
             .map<String>((BagItem bagItem) {
@@ -354,7 +361,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         "email": selectedInfo["email"],
         "time": Timestamp.now().toString(),
         "price": widget.price.toString(),
-        "payment_mode": pod ? "Pay On Delivery" : "Prepaid",
+        "payment_mode":
+        pod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
         "products": bag.products.map((e) {
           return {"product": e.product.toJson(), "quantity": e.quantity};
         }).toList()
@@ -369,9 +377,10 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
       "address": selectedInfo["address"],
       "pincode": selectedInfo["pincode"],
       "email": selectedInfo["email"],
+      "payment_mode":
+          pod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
       "time": Timestamp.now(),
       "price": widget.price.toString(),
-      "payment_mode": pod ? "Pay On Delivery" : "Prepaid",
       "status": false,
       "products": bag.products.map((e) {
         return {"product": e.product.toJson(), "quantity": e.quantity};
