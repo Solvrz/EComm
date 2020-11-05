@@ -19,9 +19,7 @@ class _ProductScreenState extends State<ProductScreen> {
     ProductArguments args = ModalRoute.of(context).settings.arguments;
 
     if (product == null) {
-      product = Product.fromJson(
-        args.product.toJson(),
-      );
+      product = Product.fromJson(args.product.toJson());
       variations = List.generate(
         args.product.variations.length,
         (index) => OptionRadioTile(
