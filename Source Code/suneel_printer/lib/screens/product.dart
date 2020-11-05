@@ -19,7 +19,9 @@ class _ProductScreenState extends State<ProductScreen> {
     ProductArguments args = ModalRoute.of(context).settings.arguments;
 
     if (product == null) {
-      product = Product.fromJson(args.product.toJson());
+      product = Product.fromJson(
+        args.product.toJson(),
+      );
       variations = List.generate(
         args.product.variations.length,
         (index) => OptionRadioTile(
@@ -77,7 +79,9 @@ class _ProductScreenState extends State<ProductScreen> {
                               Positioned(
                                 left: 11,
                                 top: 10,
-                                child: Text(bag.products.length.toString()),
+                                child: Text(
+                                  bag.products.length.toString(),
+                                ),
                               )
                             ],
                           ),
@@ -152,11 +156,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                           }),
                                     )
                                   : Center(
-                                      child: Text("No Images Available",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontFamily: "sans-serif-condensed",
-                                              fontWeight: FontWeight.bold))),
+                                      child: Text(
+                                        "No Images Available",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: "sans-serif-condensed",
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,

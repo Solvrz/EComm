@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/models/variation.dart';
 
-// TODO: Fix No Image Available
-
 class Product {
   String _uId;
   String _name;
@@ -77,7 +75,7 @@ class Product {
     return {
       "uId": _uId,
       "name": _name,
-      // "imgs": _images.map((e) => e.url).toList(),
+      "imgs": _images.map((e) => e.url).toList(),
       "price": _price,
       "mrp": _mrp,
       "variations": _variations

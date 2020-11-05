@@ -140,9 +140,9 @@ class _InformationSheetState extends State<InformationSheet> {
                                             selectedInfo = null;
                                           } else {
                                             Map newAddress = addresses[
-                                            index - 1 >= 0
-                                                ? index - 1
-                                                : index + 1];
+                                                index - 1 >= 0
+                                                    ? index - 1
+                                                    : index + 1];
                                             addresses.remove(address);
                                             newAddress["selected"] = true;
                                             selectedInfo = newAddress;
@@ -459,7 +459,9 @@ class _SearchCardState extends State<SearchCard> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
+        FocusScope.of(context).requestFocus(
+          FocusNode(),
+        );
 
         Navigator.pushNamed(
           context,

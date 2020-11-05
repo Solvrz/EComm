@@ -95,15 +95,13 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             if (future.data.docs.isNotEmpty) {
               return Expanded(
                 child: ProductList(
-                  products: future.data.docs
-                      .map<Product>(
-                        (DocumentSnapshot e) {
-                          return Product.fromJson(
-                          e.data(),
-                        );
-                        },
-                      )
-                      .toList(),
+                  products: future.data.docs.map<Product>(
+                    (DocumentSnapshot e) {
+                      return Product.fromJson(
+                        e.data(),
+                      );
+                    },
+                  ).toList(),
                   args: AddProductArguments(
                       tabsData: widget.tabsData,
                       tabs: widget.tabs,

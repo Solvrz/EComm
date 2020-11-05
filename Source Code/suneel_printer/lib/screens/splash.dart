@@ -39,6 +39,8 @@ class _SplashScreenState extends State<SplashScreen>
           )
           .toList();
 
+      // TODO: Save SelectedInfo in sharedPreferences
+
       List<Map> selected = addresses.where((e) => e["selected"]).toList();
       if (selected.length > 0) selectedInfo = selected.first;
     });

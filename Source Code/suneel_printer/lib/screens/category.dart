@@ -99,9 +99,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   onTap: admin
                                       ? () {}
                                       : () async {
-                                        await Navigator.pushNamed(context, "/bag");
-                                        setState(() {});
-                                      },
+                                          await Navigator.pushNamed(
+                                              context, "/bag");
+                                          setState(() {});
+                                        },
                                   child: Padding(
                                     padding: EdgeInsets.all(8),
                                     child: admin
@@ -115,8 +116,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                               Positioned(
                                                 left: 11,
                                                 top: 10,
-                                                child: Text(bag.products.length
-                                                    .toString()),
+                                                child: Text(
+                                                  bag.products.length
+                                                      .toString(),
+                                                ),
                                               )
                                             ],
                                           ),

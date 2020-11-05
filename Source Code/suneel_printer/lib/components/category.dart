@@ -80,9 +80,10 @@ class _ProductCardState extends State<ProductCard>
         padding: EdgeInsets.fromLTRB(12, admin ? 12 : 24, 12, 0),
         decoration: BoxDecoration(
           border: Border(
-              right: BorderSide(color: Colors.grey[400], width: 1),
-              left: BorderSide(color: Colors.grey[400], width: 1),
-              bottom: BorderSide(color: Colors.grey[400], width: 1)),
+            right: BorderSide(color: Colors.grey[400], width: 1),
+            left: BorderSide(color: Colors.grey[400], width: 1),
+            bottom: BorderSide(color: Colors.grey[400], width: 1),
+          ),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Align(

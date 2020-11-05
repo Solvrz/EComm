@@ -67,11 +67,13 @@ class _BagScreenState extends State<BagScreen> {
                           color: kUIDarkText),
                     ),
                     SizedBox(width: 12),
-                    Text("(${bag.products.length} items)",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[600])),
+                    Text(
+                      "(${bag.products.length} items)",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600]),
+                    ),
                   ],
                 ),
               ),

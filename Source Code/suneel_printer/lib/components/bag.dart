@@ -203,26 +203,28 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         Container(
                           height: 120,
                           child: ListView(
-                              children: paymentMethods.map<Widget>(
-                            (value) {
-                              return RadioListTile(
-                                title: Text(
-                                  value,
-                                  style: TextStyle(
-                                    color: kUIDarkText,
-                                    fontSize: 18,
-                                    fontFamily: "sans-serif-condensed",
-                                    fontWeight: FontWeight.bold,
+                            children: paymentMethods.map<Widget>(
+                              (value) {
+                                return RadioListTile(
+                                  title: Text(
+                                    value,
+                                    style: TextStyle(
+                                      color: kUIDarkText,
+                                      fontSize: 18,
+                                      fontFamily: "sans-serif-condensed",
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                value: value,
-                                groupValue: pod,
-                                onChanged: (_) {
-                                  if (pod != value) setState(() => pod = value);
-                                },
-                              );
-                            },
-                          ).toList()),
+                                  value: value,
+                                  groupValue: pod,
+                                  onChanged: (_) {
+                                    if (pod != value)
+                                      setState(() => pod = value);
+                                  },
+                                );
+                              },
+                            ).toList(),
+                          ),
                         ),
                         Divider(height: 20, thickness: 2),
                         Row(
@@ -285,8 +287,11 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           FocusScope.of(context).unfocus();
 
                           Map<String, dynamic> status =
-                              await payment.startPayment(context, selectedInfo["email"],
-                                  selectedInfo["phone"], widget.price);
+                              await payment.startPayment(
+                                  context,
+                                  selectedInfo["email"],
+                                  selectedInfo["phone"],
+                                  widget.price);
 
                           Navigator.popAndPushNamed(
                             context,
@@ -339,10 +344,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         "product_list": bag.products
             .map<String>((BagItem bagItem) {
               Product product = bagItem.product;
-
-              String variationText = product.selected.length > 0 ? " (${product.selected.values.map((value) => value.label).toList().join(", ")})" : "";
-
-              print(variationText);
+              String variationText = product.selected.length > 0
+                  ? " (${product.selected.values.map((value) => value.label).toList().join(", ")})"
+                  : "";
 
               return '''
                     <tr>

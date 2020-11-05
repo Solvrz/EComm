@@ -67,10 +67,14 @@ class PastOrderScreen extends StatelessWidget {
                         future.data.docs.forEach((element) {
                           if (element.data() != null) {
                             if (element.data()["status"]) {
-                              delivered.add(element.data());
+                              delivered.add(
+                                element.data(),
+                              );
                               deliveredIds.add(element.id);
                             } else {
-                              unDelivered.add(element.data());
+                              unDelivered.add(
+                                element.data(),
+                              );
                               unDeliveredIds.add(element.id);
                             }
                           }
@@ -176,7 +180,8 @@ class PastOrderScreen extends StatelessWidget {
                                           padding:
                                               MediaQuery.of(context).viewInsets,
                                           child: PastOrderSheet(
-                                              jsonDecode(orders[index])),
+                                            jsonDecode(orders[index]),
+                                          ),
                                         ),
                                       );
                                     },
@@ -190,7 +195,8 @@ class PastOrderScreen extends StatelessWidget {
                                         padding: EdgeInsets.all(16),
                                         child: Column(children: [
                                           InfoWidget(
-                                              order: jsonDecode(orders[index])),
+                                            order: jsonDecode(orders[index]),
+                                          ),
                                           Center(
                                             child: Column(
                                               children: [

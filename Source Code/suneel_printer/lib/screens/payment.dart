@@ -21,28 +21,30 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     if (!isProcessing) {
       isProcessing = true;
-      args.process().then((_) => setState(() {
-            isCompleted = true;
+      args.process().then(
+            (_) => setState(() {
+              isCompleted = true;
 
-            flareAnimation = FlareActor(
-              args.success
-                  ? "assets/animation/Success.flr"
-                  : "assets/animation/Failure.flr",
-              animation: "forward",
-              fit: BoxFit.contain,
-              callback: (_) {
-                Timer(
-                  Duration(milliseconds: 800),
-                  () => Navigator.popAndPushNamed(
-                    context,
-                    "/home",
-                  ),
-                );
+              flareAnimation = FlareActor(
+                args.success
+                    ? "assets/animation/Success.flr"
+                    : "assets/animation/Failure.flr",
+                animation: "forward",
+                fit: BoxFit.contain,
+                callback: (_) {
+                  Timer(
+                    Duration(milliseconds: 800),
+                    () => Navigator.popAndPushNamed(
+                      context,
+                      "/home",
+                    ),
+                  );
 
-                if (args.success) bag.clear();
-              },
-            );
-          }));
+                  if (args.success) bag.clear();
+                },
+              );
+            }),
+          );
     }
 
     return WillPopScope(

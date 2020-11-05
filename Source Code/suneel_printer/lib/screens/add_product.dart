@@ -564,7 +564,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   void _addProduct(BuildContext context, String title, Product product,
       List<DocumentReference> tabs, List<Map> tabsData, int currentTab) async {
-
     List<String> urls = product != null ? product.images.map((e) => e.url) : [];
     bool noError = true;
 
@@ -778,7 +777,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   void _buildDiscardChangesDialog(BuildContext context) async {
-    FocusScope.of(context).requestFocus(FocusNode());
+    FocusScope.of(context).requestFocus(
+      FocusNode(),
+    );
 
     showDialog(
       context: context,

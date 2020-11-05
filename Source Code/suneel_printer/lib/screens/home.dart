@@ -48,7 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        FocusScope.of(context).requestFocus(FocusNode());
+        FocusScope.of(context).requestFocus(
+          FocusNode(),
+        );
 
         if (query != "") {
           setState(() {
@@ -187,7 +189,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             left: 11,
                                             top: 10,
                                             child: Text(
-                                                bag.products.length.toString()),
+                                              bag.products.length.toString(),
+                                            ),
                                           )
                                         ],
                                       ),
@@ -237,7 +240,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           behavior: HitTestBehavior.translucent,
                           onTap: () {
                             setState(() {
-                              FocusScope.of(context).requestFocus(FocusNode());
+                              FocusScope.of(context).requestFocus(
+                                FocusNode(),
+                              );
                               query = "";
                               controller.clear();
                             });
@@ -257,13 +262,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   (element) => element
                                       .data()["name"]
                                       .toLowerCase()
-                                      .contains(query.toLowerCase().trim()),
+                                      .contains(
+                                        query.toLowerCase().trim(),
+                                      ),
                                 )
                                 .toList();
 
                             List<Product> products = List.generate(
                               docs.length,
-                              (index) => Product.fromJson(docs[index].data()),
+                              (index) => Product.fromJson(
+                                docs[index].data(),
+                              ),
                             );
 
                             return products.length > 0
@@ -395,15 +404,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   admin
                                               ? () {
                                                   Scaffold.of(context)
-                                                      .showSnackBar(SnackBar(
-                                                    elevation: 10,
-                                                    backgroundColor: kUIAccent,
-                                                    content: Text(
-                                                      "Sorry, ${data["name"]} screen is not available in Admin Mode",
-                                                      textAlign:
-                                                          TextAlign.center,
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      elevation: 10,
+                                                      backgroundColor:
+                                                          kUIAccent,
+                                                      content: Text(
+                                                        "Sorry, ${data["name"]} screen is not available in Admin Mode",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
                                                     ),
-                                                  ));
+                                                  );
                                                 }
                                               : () => Navigator.pushNamed(
                                                     context,
