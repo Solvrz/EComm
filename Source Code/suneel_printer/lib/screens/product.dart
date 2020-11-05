@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/components/product.dart';
 import 'package:suneel_printer/constant.dart';
@@ -19,9 +18,7 @@ class _ProductScreenState extends State<ProductScreen> {
     ProductArguments args = ModalRoute.of(context).settings.arguments;
 
     if (product == null) {
-      product = Product.fromJson(
-        args.product.toJson(),
-      );
+      product = Product.fromJson(args.product.toJson());
       variations = List.generate(
         args.product.variations.length,
         (index) => OptionRadioTile(
@@ -133,49 +130,49 @@ class _ProductScreenState extends State<ProductScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
-                              child: CarouselSlider(
-                                items: product.images
-                                    .map<Widget>(
-                                      (NetworkImage image) =>
-                                          Image(image: image),
-                                    )
-                                    .toList(),
-                                options: CarouselOptions(
-                                    autoPlay: product.images.length > 1,
-                                    enlargeCenterPage: true,
-                                    aspectRatio: 2,
-                                    onPageChanged: (index, reason) {
-                                      setState(() {
-                                        _currentImage = index;
-                                      });
-                                    }),
-                              ),
-                            ),
-                            Stack(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    product.images.length,
-                                    (int index) => AnimatedContainer(
-                                      duration: Duration(milliseconds: 400),
-                                      width: _currentImage == index ? 16 : 8,
-                                      height: _currentImage == index ? 6 : 8,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 3),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: _currentImage == index
-                                            ? Color.fromRGBO(0, 0, 0, 0.9)
-                                            : Color.fromRGBO(0, 0, 0, 0.4),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // Container(
+                            //   padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
+                            //   child: CarouselSlider(
+                            //     items: product.images
+                            //         .map<Widget>(
+                            //           (NetworkImage image) =>
+                            //               Image(image: image),
+                            //         )
+                            //         .toList(),
+                            //     options: CarouselOptions(
+                            //         autoPlay: product.images.length > 1,
+                            //         enlargeCenterPage: true,
+                            //         aspectRatio: 2,
+                            //         onPageChanged: (index, reason) {
+                            //           setState(() {
+                            //             _currentImage = index;
+                            //           });
+                            //         }),
+                            //   ),
+                            // ),
+                            // Stack(
+                            //   children: [
+                            //     Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: List.generate(
+                            //         product.images.length,
+                            //         (int index) => AnimatedContainer(
+                            //           duration: Duration(milliseconds: 400),
+                            //           width: _currentImage == index ? 16 : 8,
+                            //           height: _currentImage == index ? 6 : 8,
+                            //           margin: EdgeInsets.symmetric(
+                            //               vertical: 10, horizontal: 3),
+                            //           decoration: BoxDecoration(
+                            //             borderRadius: BorderRadius.circular(15),
+                            //             color: _currentImage == index
+                            //                 ? Color.fromRGBO(0, 0, 0, 0.9)
+                            //                 : Color.fromRGBO(0, 0, 0, 0.4),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ]),
                     )
                   ],

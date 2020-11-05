@@ -109,7 +109,6 @@ class _InformationSheetState extends State<InformationSheet> {
                                 trailing: SizedBox(
                                   width: 60,
                                   child: Row(children: [
-                                    // TODO FIXME: Buttons not working
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () async {
