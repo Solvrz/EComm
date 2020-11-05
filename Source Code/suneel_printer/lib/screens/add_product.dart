@@ -26,6 +26,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
   String price = "";
   String mrp = "";
 
+  List<Color> colors = [
+    Color(0xFFF44336),
+    Color(0xFF2196F3),
+    Color(0xFF4CAF50),
+    Color(0xFFFFEB3B),
+    Color(0xFF03A9F4),
+    Color(0xFF8BC34A),
+    Color(0xFFFFC107),
+    Color(0xFFFF4081),
+    Color(0xFF9C27B0),
+    Color(0xFF000000),
+    Color(0xFF9E9E9E),
+    Color(0xFFFFFFFF),
+    Colors.transparent
+  ];
+
   List<Image> images = [];
   List<File> imageFiles = [];
 
@@ -55,31 +71,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     return WillPopScope(
       onWillPop: () async {
-        FocusScope.of(context).requestFocus(FocusNode());
-
-        showDialog(
-          context: context,
-          builder: (_) => RoundedAlertDialog(
-            title: "Do you want to discard the changes?",
-            buttonsList: [
-              AlertButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                titleColor: kUIColor,
-                title: "No",
-              ),
-              AlertButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                titleColor: kUIColor,
-                title: "Yes",
-              )
-            ],
-          ),
-        );
+        _buildDiscardChangesDialog(context);
 
         return true;
       },
@@ -104,7 +96,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         children: [
                           GestureDetector(
                             behavior: HitTestBehavior.translucent,
-                            onTap: () => Navigator.pop(context),
+                            onTap: () {
+                              _buildDiscardChangesDialog(context);
+                            },
                             child: Container(
                               decoration: BoxDecoration(
                                 border: Border.all(color: kUIColor),
@@ -128,145 +122,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 ? () async {
                                     Navigator.pop(context);
 
-                                    List<String> urls = args.product != null
-                                        ? args.product.images.map((e) => e.url)
-                                        : [];
-                                    bool noError = true;
-
-                                    for (File file in imageFiles) {
-                                      final StorageReference storageReference =
-                                          FirebaseStorage.instance.ref().child(
-                                              "Products/${args.title}/${args.tabsData[args.currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf");
-                                      final StorageTaskSnapshot snapshot =
-                                          await storageReference
-                                              .putFile(file)
-                                              .onComplete;
-
-                                      if (snapshot.error != null) {
-                                        noError = false;
-                                      } else {
-                                        final String url =
-                                            await snapshot.ref.getDownloadURL();
-
-                                        urls.add(url);
-                                        file.delete();
-                                      }
-                                    }
-
-                                    if (noError) {
-                                      QuerySnapshot query = await args
-                                          .tabs[args.currentTab]
-                                          .collection("products")
-                                          .get();
-
-                                      int maxId = 0;
-
-                                      query.docs.forEach((element) {
-                                        int currId = element
-                                            .data()["uId"]
-                                            .split("/")
-                                            .last
-                                            .toInt();
-                                        if (currId > maxId) maxId = currId;
-                                      });
-
-                                      if (args.product != null) {
-                                        QuerySnapshot query = await args
-                                            .tabs[args.currentTab]
-                                            .collection("products")
-                                            .where("uId",
-                                                isEqualTo: args.product.uId)
-                                            .get();
-                                        await query.docs.first.reference
-                                            .update({
-                                          "uId": "1/1/${maxId + 1}",
-                                          "imgs": urls,
-                                          "mrp": mrp.toDouble(),
-                                          "price": price.toDouble(),
-                                          "name": name.trim(),
-                                          "variations": variations
-                                              .map(
-                                                (e) => e.toJson(),
-                                              )
-                                              .toList()
-                                        });
-
-                                        query = await database
-                                            .collection("products")
-                                            .where("uId",
-                                                isEqualTo: args.product.uId)
-                                            .get();
-                                        await query.docs.first.reference
-                                            .update({
-                                          "uId": "1/1/${maxId + 1}",
-                                          "imgs": urls,
-                                          "mrp": mrp.toDouble(),
-                                          "price": price.toDouble(),
-                                          "name": name.trim(),
-                                          "variations": variations
-                                              .map(
-                                                (e) => e.toJson(),
-                                              )
-                                              .toList()
-                                        });
-                                      } else {
-                                        await args.tabs[args.currentTab]
-                                            .collection("products")
-                                            .add({
-                                          "uId": "1/1/${maxId + 1}",
-                                          "imgs": urls,
-                                          "mrp": mrp.toDouble(),
-                                          "price": price.toDouble(),
-                                          "name": name.trim(),
-                                          "variations": variations
-                                              .map(
-                                                (e) => e.toJson(),
-                                              )
-                                              .toList()
-                                        });
-
-                                        await database
-                                            .collection("products")
-                                            .add({
-                                          "uId": "1/1/${maxId + 1}",
-                                          "imgs": urls,
-                                          "mrp": mrp.toDouble(),
-                                          "price": price.toDouble(),
-                                          "name": name.trim(),
-                                          "variations": variations
-                                              .map(
-                                                (e) => e.toJson(),
-                                              )
-                                              .toList()
-                                        });
-                                      }
-
-                                      Scaffold.of(context)
-                                          .removeCurrentSnackBar();
-                                      Scaffold.of(context).showSnackBar(
-                                        SnackBar(
-                                          elevation: 10,
-                                          backgroundColor: kUIAccent,
-                                          content: Text(
-                                            "Product added successfully",
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      Scaffold.of(context)
-                                          .removeCurrentSnackBar();
-                                      Scaffold.of(context).showSnackBar(
-                                        SnackBar(
-                                          elevation: 10,
-                                          backgroundColor: kUIAccent,
-                                          content: Text(
-                                            "Sorry, The product couldn't be added",
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      );
-                                    }
+                                    _addProduct(
+                                        context,
+                                        args.title,
+                                        args.product,
+                                        args.tabs,
+                                        args.tabsData,
+                                        args.currentTab);
                                   }
                                 : null,
                             child: Container(
@@ -439,350 +301,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               ...variations.map(
                                 (Variation variation) => Padding(
                                   padding: EdgeInsets.symmetric(vertical: 2),
-                                  child: Slidable(
-                                    key: ValueKey(
-                                      variation.toString(),
-                                    ),
-                                    actionPane: SlidableDrawerActionPane(),
-                                    secondaryActions: [
-                                      GestureDetector(
-                                        behavior: HitTestBehavior.translucent,
-                                        onTap: () {
-                                          setState(() {
-                                            variations.remove(variation);
-                                          });
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.only(left: 12),
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              6,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(25),
-                                              color: kUIAccent),
-                                          child: Icon(Icons.delete,
-                                              color: kUILightText, size: 32),
-                                        ),
-                                      )
-                                    ],
-                                    child: Container(
-                                      height: 76,
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 12),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: TextField(
-                                              onSubmitted: (value) => setState(
-                                                () => variations[variations
-                                                        .indexOf(variation)]
-                                                    .name = value.trim(),
-                                              ),
-                                              decoration: InputDecoration(
-                                                border: InputBorder.none,
-                                                hintText: "Name",
-                                                hintStyle: TextStyle(
-                                                    color: kUIDarkText,
-                                                    fontSize: 22,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontFamily:
-                                                        "sans-serif-condensed",
-                                                    letterSpacing: 0.2),
-                                              ),
-                                              style: TextStyle(
-                                                  color: kUIDarkText,
-                                                  fontSize: 22,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  letterSpacing: 0.2),
-                                            ),
-                                          ),
-                                          Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                ...List.generate(
-                                                  variation.options.length,
-                                                  (index) => Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 3),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        GestureDetector(
-                                                          behavior:
-                                                              HitTestBehavior
-                                                                  .translucent,
-                                                          onTap: () {
-                                                            final TextEditingController
-                                                                labelController =
-                                                                TextEditingController(
-                                                                    text: variation
-                                                                        .options[
-                                                                            index]
-                                                                        .label);
-                                                            showDialog(
-                                                              context: context,
-                                                              builder: (_) =>
-                                                                  WillPopScope(
-                                                                onWillPop:
-                                                                    () async {
-                                                                  setState(() {
-                                                                    if (variation.options[index].label !=
-                                                                            labelController
-                                                                                .text &&
-                                                                        labelController.text !=
-                                                                            "") {
-                                                                      variations[variations.indexOf(
-                                                                              variation)]
-                                                                          .options[
-                                                                              index]
-                                                                          .label = labelController.text.trim();
-                                                                    }
-                                                                  });
-                                                                  return true;
-                                                                },
-                                                                child:
-                                                                    RoundedAlertDialog(
-                                                                  title:
-                                                                      "Edit Option",
-                                                                  otherWidgets: [
-                                                                    TextField(
-                                                                      controller:
-                                                                          labelController,
-                                                                      decoration:
-                                                                          kInputDialogDecoration
-                                                                              .copyWith(
-                                                                        suffixIcon:
-                                                                            IconButton(
-                                                                          icon:
-                                                                              Icon(Icons.clear),
-                                                                          onPressed: () =>
-                                                                              labelController.clear(),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                        height:
-                                                                            12),
-                                                                    BlockPicker(
-                                                                        availableColors: [
-                                                                          Color(
-                                                                              0xFFF44336),
-                                                                          Color(
-                                                                              0xFF2196F3),
-                                                                          Color(
-                                                                              0xFF4CAF50),
-                                                                          Color(
-                                                                              0xFFFFEB3B),
-                                                                          Color(
-                                                                              0xFF03A9F4),
-                                                                          Color(
-                                                                              0xFF8BC34A),
-                                                                          Color(
-                                                                              0xFFFFC107),
-                                                                          Color(
-                                                                              0xFFFF4081),
-                                                                          Color(
-                                                                              0xFF9C27B0),
-                                                                          Color(
-                                                                              0xFF000000),
-                                                                          Color(
-                                                                              0xFF9E9E9E),
-                                                                          Color(
-                                                                              0xFFFFFFFF),
-                                                                          Colors
-                                                                              .transparent
-                                                                        ],
-                                                                        itemBuilder: (color,
-                                                                            isCurrentColor,
-                                                                            changeColor) {
-                                                                          final bool
-                                                                              notTrans =
-                                                                              color != Colors.transparent;
-                                                                          return Container(
-                                                                            margin:
-                                                                                EdgeInsets.all(5),
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(50),
-                                                                              color: notTrans ? color : kUIColor,
-                                                                              boxShadow: notTrans
-                                                                                  ? [
-                                                                                      BoxShadow(
-                                                                                        color: color != kUIColor && notTrans ? color.withOpacity(0.8) : Colors.grey[600],
-                                                                                        offset: Offset(1, 2),
-                                                                                        blurRadius: 5,
-                                                                                      ),
-                                                                                    ]
-                                                                                  : null,
-                                                                            ),
-                                                                            child:
-                                                                                Material(
-                                                                              color: Colors.transparent,
-                                                                              child: InkWell(
-                                                                                onTap: changeColor,
-                                                                                borderRadius: BorderRadius.circular(50),
-                                                                                child: notTrans
-                                                                                    ? AnimatedOpacity(
-                                                                                        duration: Duration(milliseconds: 210),
-                                                                                        opacity: isCurrentColor ? 1 : 0,
-                                                                                        child: Icon(
-                                                                                          Icons.done,
-                                                                                          color: useWhiteForeground(color) ? kUIColor : Colors.black,
-                                                                                        ),
-                                                                                      )
-                                                                                    : Icon(Icons.clear),
-                                                                              ),
-                                                                            ),
-                                                                          );
-                                                                        },
-                                                                        pickerColor: variation.options[index].color ??
-                                                                            Colors
-                                                                                .redAccent,
-                                                                        onColorChanged:
-                                                                            (color) {
-                                                                          if (color !=
-                                                                              Colors.transparent)
-                                                                            variations[variations.indexOf(variation)].options[index].color =
-                                                                                color;
-                                                                          else
-                                                                            variations[variations.indexOf(variation)].options[index].color =
-                                                                                null;
-                                                                        })
-                                                                  ],
-                                                                  isExpanded:
-                                                                      false,
-                                                                  buttonsList: [
-                                                                    AlertButton(
-                                                                        title:
-                                                                            "Done",
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          setState(
-                                                                              () {
-                                                                            if (variation.options[index].label !=
-                                                                                labelController.text) {
-                                                                              variations[variations.indexOf(variation)].options[index].label = labelController.text.trim();
-                                                                            }
-                                                                          });
-                                                                        })
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                          onLongPress: () {
-                                                            setState(() {
-                                                              variations[variations.indexOf(
-                                                                              variation)]
-                                                                          .options
-                                                                          .length >
-                                                                      1
-                                                                  ? variations[variations
-                                                                          .indexOf(
-                                                                              variation)]
-                                                                      .options
-                                                                      .removeAt(
-                                                                          index)
-                                                                  : variations
-                                                                      .remove(
-                                                                          variation);
-                                                            });
-                                                          },
-                                                          child: Container(
-                                                            margin: EdgeInsets
-                                                                .fromLTRB(
-                                                                    2, 0, 2, 4),
-                                                            width: 32,
-                                                            height: 32,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              border: 0 == index
-                                                                  ? Border.all(
-                                                                      color: Colors
-                                                                              .grey[
-                                                                          400],
-                                                                      width: 2)
-                                                                  : null,
-                                                            ),
-                                                            child: Center(
-                                                              child:
-                                                                  CircleAvatar(
-                                                                radius: 10,
-                                                                backgroundColor: variation
-                                                                        .options[
-                                                                            index]
-                                                                        .color ??
-                                                                    Colors.grey[
-                                                                        400],
-                                                                child: variation
-                                                                            .options[index]
-                                                                            .color ==
-                                                                        null
-                                                                    ? Text(
-                                                                        variation
-                                                                            .options[index]
-                                                                            .label[0]
-                                                                            .toUpperCase(),
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                "sans-serif-condensed",
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight:
-                                                                                FontWeight.w600,
-                                                                            color: kUIDarkText),
-                                                                      )
-                                                                    : null,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Text(variation
-                                                            .options[index]
-                                                            .label),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                GestureDetector(
-                                                  behavior: HitTestBehavior
-                                                      .translucent,
-                                                  onTap: () {
-                                                    setState(() {
-                                                      variations[variations
-                                                              .indexOf(
-                                                                  variation)]
-                                                          .options
-                                                          .add(
-                                                            Option(
-                                                                label: "Label"),
-                                                          );
-                                                    });
-                                                  },
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(8),
-                                                    child: Icon(Icons.add),
-                                                  ),
-                                                )
-                                              ])
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                  child: _buildVariation(context, variation),
                                 ),
                               ),
                               Padding(
@@ -903,6 +422,399 @@ class _AddProductScreenState extends State<AddProductScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildVariation(BuildContext context, Variation variation) {
+    return Slidable(
+      key: ValueKey(
+        variation.toString(),
+      ),
+      actionPane: SlidableDrawerActionPane(),
+      secondaryActions: [
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            setState(() {
+              variations.remove(variation);
+            });
+          },
+          child: Container(
+            margin: EdgeInsets.only(left: 12),
+            height: MediaQuery.of(context).size.height / 6,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25), color: kUIAccent),
+            child: Icon(Icons.delete, color: kUILightText, size: 32),
+          ),
+        )
+      ],
+      child: Container(
+        height: 76,
+        padding: EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: TextField(
+                onSubmitted: (value) => setState(
+                  () => variations[variations.indexOf(variation)].name =
+                      value.trim(),
+                ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Name",
+                  hintStyle: TextStyle(
+                      color: kUIDarkText,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: "sans-serif-condensed",
+                      letterSpacing: 0.2),
+                ),
+                style: TextStyle(
+                    color: kUIDarkText,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: "sans-serif-condensed",
+                    letterSpacing: 0.2),
+              ),
+            ),
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              ...List.generate(
+                variation.options.length,
+                (index) => Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 3),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          final TextEditingController labelController =
+                              TextEditingController(
+                                  text: variation.options[index].label);
+
+                          _buildVariationDialog(
+                              labelController, variation, index);
+                        },
+                        onLongPress: () {
+                          setState(() {
+                            variations[variations.indexOf(variation)]
+                                        .options
+                                        .length >
+                                    1
+                                ? variations[variations.indexOf(variation)]
+                                    .options
+                                    .removeAt(index)
+                                : variations.remove(variation);
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(2, 0, 2, 4),
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: 0 == index
+                                ? Border.all(color: Colors.grey[400], width: 2)
+                                : null,
+                          ),
+                          child: Center(
+                            child: CircleAvatar(
+                              radius: 10,
+                              backgroundColor: variation.options[index].color ??
+                                  Colors.grey[400],
+                              child: variation.options[index].color == null
+                                  ? Text(
+                                      variation.options[index].label[0]
+                                          .toUpperCase(),
+                                      style: TextStyle(
+                                          fontFamily: "sans-serif-condensed",
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: kUIDarkText),
+                                    )
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text(variation.options[index].label),
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  setState(() {
+                    variations[variations.indexOf(variation)].options.add(
+                          Option(label: "Label"),
+                        );
+                  });
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.add),
+                ),
+              )
+            ])
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _addProduct(BuildContext context, String title, Product product,
+      List<DocumentReference> tabs, List<Map> tabsData, int currentTab) async {
+    Navigator.pop(context);
+
+    List<String> urls = product != null ? product.images.map((e) => e.url) : [];
+    bool noError = true;
+
+    for (File file in imageFiles) {
+      final StorageReference storageReference = FirebaseStorage.instance
+          .ref()
+          .child(
+              "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf");
+      final StorageTaskSnapshot snapshot =
+          await storageReference.putFile(file).onComplete;
+
+      if (snapshot.error != null) {
+        noError = false;
+      } else {
+        final String url = await snapshot.ref.getDownloadURL();
+
+        urls.add(url);
+        file.delete();
+      }
+    }
+
+    if (noError) {
+      QuerySnapshot query = await tabs[currentTab].collection("products").get();
+
+      int maxId = 0;
+
+      query.docs.forEach((element) {
+        int currId = element.data()["uId"].split("/").last.toInt();
+        if (currId > maxId) maxId = currId;
+      });
+
+      if (product != null) {
+        QuerySnapshot query = await tabs[currentTab]
+            .collection("products")
+            .where("uId", isEqualTo: product.uId)
+            .get();
+        await query.docs.first.reference.update({
+          "uId": "1/1/${maxId + 1}",
+          "imgs": urls,
+          "mrp": mrp.toDouble(),
+          "price": price.toDouble(),
+          "name": name.trim(),
+          "variations": variations
+              .map(
+                (e) => e.toJson(),
+              )
+              .toList()
+        });
+
+        query = await database
+            .collection("products")
+            .where("uId", isEqualTo: product.uId)
+            .get();
+        await query.docs.first.reference.update({
+          "uId": "1/1/${maxId + 1}",
+          "imgs": urls,
+          "mrp": mrp.toDouble(),
+          "price": price.toDouble(),
+          "name": name.trim(),
+          "variations": variations
+              .map(
+                (e) => e.toJson(),
+              )
+              .toList()
+        });
+      } else {
+        await tabs[currentTab].collection("products").add({
+          "uId": "1/1/${maxId + 1}",
+          "imgs": urls,
+          "mrp": mrp.toDouble(),
+          "price": price.toDouble(),
+          "name": name.trim(),
+          "variations": variations
+              .map(
+                (e) => e.toJson(),
+              )
+              .toList()
+        });
+
+        await database.collection("products").add({
+          "uId": "1/1/${maxId + 1}",
+          "imgs": urls,
+          "mrp": mrp.toDouble(),
+          "price": price.toDouble(),
+          "name": name.trim(),
+          "variations": variations
+              .map(
+                (e) => e.toJson(),
+              )
+              .toList()
+        });
+      }
+
+      Scaffold.of(context).removeCurrentSnackBar();
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          elevation: 10,
+          backgroundColor: kUIAccent,
+          content: Text(
+            "Product added successfully",
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    } else {
+      Scaffold.of(context).removeCurrentSnackBar();
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          elevation: 10,
+          backgroundColor: kUIAccent,
+          content: Text(
+            "Sorry, The product couldn't be added",
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+  }
+
+  void _buildVariationDialog(
+      TextEditingController labelController, Variation variation, int index) {
+    showDialog(
+      context: context,
+      builder: (_) => WillPopScope(
+        onWillPop: () async {
+          setState(() {
+            if (variation.options[index].label != labelController.text &&
+                labelController.text != "") {
+              variations[variations.indexOf(variation)].options[index].label =
+                  labelController.text.trim();
+            }
+          });
+          return true;
+        },
+        child: RoundedAlertDialog(
+          title: "Edit Option",
+          otherWidgets: [
+            TextField(
+              controller: labelController,
+              decoration: kInputDialogDecoration.copyWith(
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () => labelController.clear(),
+                ),
+              ),
+            ),
+            SizedBox(height: 12),
+            BlockPicker(
+                availableColors: colors,
+                itemBuilder: (color, isCurrentColor, changeColor) {
+                  final bool notTrans = color != Colors.transparent;
+                  return Container(
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: notTrans ? color : kUIColor,
+                      boxShadow: notTrans
+                          ? [
+                              BoxShadow(
+                                color: color != kUIColor && notTrans
+                                    ? color.withOpacity(0.8)
+                                    : Colors.grey[600],
+                                offset: Offset(1, 2),
+                                blurRadius: 5,
+                              ),
+                            ]
+                          : null,
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: changeColor,
+                        borderRadius: BorderRadius.circular(50),
+                        child: notTrans
+                            ? AnimatedOpacity(
+                                duration: Duration(milliseconds: 210),
+                                opacity: isCurrentColor ? 1 : 0,
+                                child: Icon(
+                                  Icons.done,
+                                  color: useWhiteForeground(color)
+                                      ? kUIColor
+                                      : Colors.black,
+                                ),
+                              )
+                            : Icon(Icons.clear),
+                      ),
+                    ),
+                  );
+                },
+                pickerColor: variation.options[index].color ?? Colors.redAccent,
+                onColorChanged: (color) {
+                  if (color != Colors.transparent)
+                    variations[variations.indexOf(variation)]
+                        .options[index]
+                        .color = color;
+                  else
+                    variations[variations.indexOf(variation)]
+                        .options[index]
+                        .color = null;
+                })
+          ],
+          isExpanded: false,
+          buttonsList: [
+            AlertButton(
+                title: "Done",
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    if (variation.options[index].label !=
+                        labelController.text) {
+                      variations[variations.indexOf(variation)]
+                          .options[index]
+                          .label = labelController.text.trim();
+                    }
+                  });
+                })
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _buildDiscardChangesDialog(BuildContext context) async {
+    FocusScope.of(context).requestFocus(FocusNode());
+
+    showDialog(
+      context: context,
+      builder: (_) => RoundedAlertDialog(
+        title: "Do you want to discard the changes?",
+        buttonsList: [
+          AlertButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            titleColor: kUIColor,
+            title: "No",
+          ),
+          AlertButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            titleColor: kUIColor,
+            title: "Yes",
+          )
+        ],
       ),
     );
   }

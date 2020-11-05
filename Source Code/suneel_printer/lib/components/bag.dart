@@ -284,118 +284,20 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       : () async {
                           FocusScope.of(context).unfocus();
 
-                          dynamic status = await payment.startPayment(
-                              selectedInfo["email"],
-                              selectedInfo["phone"],
-                              widget.price);
+                          Map<String, dynamic> status =
+                              await payment.startPayment(selectedInfo["email"],
+                                  selectedInfo["phone"], widget.price);
 
-                          if (status != false) {
-                            String msg;
-                            bool success;
-
-                            switch (status) {
-                              case "01":
-                                {
-                                  success = true;
-                                  msg =
-                                      "You will soon receive a confirmation mail from us.";
-                                }
-                                break;
-                              case "227":
-                                {
-                                  success = false;
-                                  msg =
-                                      "Payment was declined by your Bank. Please contact your bank for any queries.";
-                                }
-                                break;
-                              case "235":
-                                {
-                                  success = false;
-                                  msg = "Insufficent Balance";
-                                }
-                                break;
-                              case "295":
-                                {
-                                  success = false;
-                                  msg = "UPI ID was inccorect";
-                                }
-                                break;
-
-                              case "334":
-                                {
-                                  success = false;
-                                  msg = "Server Error";
-                                }
-                                break;
-                              case "335":
-                                {
-                                  success = false;
-                                  msg = "Server Error. Try Again Later";
-                                }
-                                break;
-
-                              case "400":
-                                {
-                                  success = false;
-                                  msg =
-                                      "Your Transaction Status is not Confirmed. Please Contact Us or Try a Diffrent Payment Method";
-                                }
-                                break;
-                              case "401":
-                                {
-                                  success = false;
-                                  msg =
-                                      "Payment was declined by your Bank. Please contact your bank for any queries.";
-                                }
-                                break;
-                              case "402":
-                                {
-                                  success = false;
-                                  msg =
-                                      "Your Transaction Status is not Confirmed. Please Contact Us or Try a Diffrent Payment Method";
-                                }
-                                break;
-                              case "501":
-                                {
-                                  success = false;
-                                  msg = "Server Down. Try Again Later";
-                                }
-                                break;
-                              case "810":
-                                {
-                                  success = false;
-                                  msg = "Transaction Failed";
-                                }
-                                break;
-
-                              default:
-                                {
-                                  success = false;
-                                  msg = "An Unknown Error Occurred";
-                                }
-                                break;
-                            }
-
-                            Navigator.popAndPushNamed(
-                              context,
-                              "/payment",
-                              arguments: PaymentArguments(
-                                  success: success,
-                                  msg: msg,
-                                  process: () async {
-                                    if (success) await placeOrder();
-                                  }),
-                            );
-                          } else {
-                            Navigator.popAndPushNamed(
-                              context,
-                              "/payment",
-                              arguments: PaymentArguments(
-                                  success: false,
-                                  msg: "The Transaction was cancelled",
-                                  process: () async {}),
-                            );
-                          }
+                          Navigator.popAndPushNamed(
+                            context,
+                            "/payment",
+                            arguments: PaymentArguments(
+                                success: status["success"],
+                                msg: status["msg"],
+                                process: () async {
+                                  if (status["success"]) await placeOrder();
+                                }),
+                          );
                         },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),

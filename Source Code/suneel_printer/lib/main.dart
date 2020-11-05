@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -20,6 +21,11 @@ void main() async {
   RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);
 
   Firebase.initializeApp().whenComplete(() {
+    if (admin)
+      FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: "admin-suneelprinters@gmail.com",
+          password: "SuneelPrinters37");
+
     FirebasePerformance.instance
         .setPerformanceCollectionEnabled(false)
         .whenComplete(() {

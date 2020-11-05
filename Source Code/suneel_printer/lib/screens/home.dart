@@ -297,7 +297,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                           })
                       : FutureBuilder<QuerySnapshot>(
-                          future: database.collection("carouselImages").get(),
+                          future: database
+                              .collection("carouselImages")
+                              .orderBy("sequence")
+                              .get(),
                           builder:
                               (BuildContext context, AsyncSnapshot future) {
                             List carouselImages = [
