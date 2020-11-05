@@ -34,12 +34,11 @@ class Product {
       Map selected}) {
     _uId = uId;
     _name = name;
-    if (images.length > 0)
-      _images = images
-          .map(
-            (e) => NetworkImage(e),
-          )
-          .toList();
+    _images = images
+        .map(
+          (e) => NetworkImage(e),
+        )
+        .toList();
     _price = price;
     _mrp = mrp;
     _variations = variations;

@@ -97,9 +97,11 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                 child: ProductList(
                   products: future.data.docs
                       .map<Product>(
-                        (DocumentSnapshot e) => Product.fromJson(
+                        (DocumentSnapshot e) {
+                          return Product.fromJson(
                           e.data(),
-                        ),
+                        );
+                        },
                       )
                       .toList(),
                   args: AddProductArguments(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:suneel_printer/constant.dart';
@@ -8,7 +9,8 @@ class Payment {
   static MethodChannel _channel =
       MethodChannel("com.suneel37.suneel_printer/allInOne");
 
-  Future startPayment(String email, String phone, double amount) async {
+  Future startPayment(
+      BuildContext context, String email, String phone, double amount) async {
     try {
       http.Response token = await http.post(
         "https://suneel-printers.herokuapp.com/payment",
@@ -18,8 +20,8 @@ class Payment {
         body: jsonEncode(<String, dynamic>{
           "cust": email,
           "phone": phone,
-          "value": amount,
-          "staging": staging,
+          "value": amount.toString(),
+          "staging": staging.toString(),
         }),
       );
 
@@ -28,11 +30,28 @@ class Payment {
 
         var arguments = <String, dynamic>{
           "mid": "MoShyC80984595390154",
-          "amount": amount,
+          "amount": amount.toString(),
           "orderId": tokenResponse["orderId"],
           "txnToken": tokenResponse["body"]["txnToken"],
           "isStaging": staging
         };
+
+        showDialog(
+          context: context,
+          //TODO: TextSTyleTheme and Theme (for the app) By: Yug as told by Yug who is Yug and is called Yug by us. SO yeah he is YUG
+          builder: (BuildContext context) => Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20), color: Colors.white),
+            child: Column(children: [
+              indicator,
+              Text(
+                "Payment is being processed",
+                style:
+                    TextStyle(fontSize: 16, fontFamily: "sans-serif-condensed"),
+              )
+            ]),
+          ),
+        );
 
         await _channel.invokeMethod("pay", arguments);
 
@@ -43,7 +62,7 @@ class Payment {
           },
           body: jsonEncode(<String, dynamic>{
             "orderId": tokenResponse["orderId"],
-            "staging": staging,
+            "staging": staging.toString(),
           }),
         );
 
@@ -70,13 +89,13 @@ class Payment {
             case "235":
               {
                 success = false;
-                msg = "Insufficent Balance";
+                msg = "Insufficient Balance";
               }
               break;
             case "295":
               {
                 success = false;
-                msg = "UPI ID was inccorect";
+                msg = "UPI ID was incorrect";
               }
               break;
 
@@ -97,7 +116,7 @@ class Payment {
               {
                 success = false;
                 msg =
-                    "Your Transaction Status is not Confirmed. Please Contact Us or Try a Diffrent Payment Method";
+                    "Your Transaction Status is not Confirmed. Please Contact Us or Try a different Payment Method";
               }
               break;
             case "401":
@@ -111,7 +130,7 @@ class Payment {
               {
                 success = false;
                 msg =
-                    "Your Transaction Status is not Confirmed. Please Contact Us or Try a Diffrent Payment Method";
+                    "Your Transaction Status is not Confirmed. Please Contact Us or Try a different Payment Method";
               }
               break;
             case "501":

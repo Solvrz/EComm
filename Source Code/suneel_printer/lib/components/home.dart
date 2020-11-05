@@ -90,9 +90,8 @@ class _InformationSheetState extends State<InformationSheet> {
                             itemCount: addresses.length,
                             itemBuilder: (BuildContext context, int index) {
                               Map address = addresses[index];
-                              // bool isSelected =
-                              //     address.toString() == selectedInfo.toString();
-                              bool isSelected = address["selected"];
+                              bool isSelected =
+                                  address.toString() == selectedInfo.toString();
 
                               return ListTile(
                                 onTap: () async {
@@ -109,12 +108,12 @@ class _InformationSheetState extends State<InformationSheet> {
                                 trailing: SizedBox(
                                   width: 60,
                                   child: Row(children: [
-                                    // TODO FIXME: Buttons not working
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () async {
                                         await showModalBottomSheet(
                                           backgroundColor: Colors.transparent,
+                                          isScrollControlled: true,
                                           context: context,
                                           builder: (_) => Padding(
                                             padding: MediaQuery.of(context)
@@ -137,14 +136,14 @@ class _InformationSheetState extends State<InformationSheet> {
                                       onTap: () async {
                                         if (isSelected) {
                                           if (addresses.length == 1) {
-                                            address["selected"] = false;
+                                            addresses.remove(address);
                                             selectedInfo = null;
                                           } else {
                                             Map newAddress = addresses[
-                                                index - 1 >= 0
-                                                    ? index - 1
-                                                    : index + 1];
-                                            address["selected"] = false;
+                                            index - 1 >= 0
+                                                ? index - 1
+                                                : index + 1];
+                                            addresses.remove(address);
                                             newAddress["selected"] = true;
                                             selectedInfo = newAddress;
                                           }
@@ -239,7 +238,7 @@ class _InformationSheetState extends State<InformationSheet> {
 class AddInformationSheet extends StatefulWidget {
   final List<Map> addresses;
   final bool edit;
-  final Map<String, dynamic> data;
+  final Map data;
 
   AddInformationSheet({this.addresses, this.edit = false, this.data});
 
@@ -284,7 +283,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
 
     if ((widget.data ?? {}).length > 0) {
       widget.data.forEach((key, value) {
-        fields[key].controller.text = value;
+        if (key != "selected") fields[key].value = value;
       });
     }
   }
@@ -352,7 +351,8 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                     "phone": phone,
                     "address": address,
                     "email": email,
-                    "pincode": pincode
+                    "pincode": pincode,
+                    "selected": false
                   });
                   selectedInfo = widget.addresses[index];
                 } else {
@@ -479,7 +479,7 @@ class _SearchCardState extends State<SearchCard> {
               Center(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 15, 12, 0),
-                  child: widget.product.images != null
+                  child: widget.product.images.length > 0
                       ? Container(
                           height: height / 1.7,
                           constraints: BoxConstraints(maxWidth: width - 64),
@@ -493,7 +493,7 @@ class _SearchCardState extends State<SearchCard> {
                           child: Image(image: widget.product.images[0]),
                         )
                       : Container(
-                          height: height / 2,
+                          height: height / 1.7,
                           child: Center(
                             child: Text("No Image Provided"),
                           ),

@@ -121,7 +121,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                       children: [
                         product.images.length > 0
                             ? Image(image: product.images[0])
-                            : Text("No Image Provided"),
+                            : Text("No Image"),
                         SizedBox(width: 24),
                         Expanded(
                           child: Column(

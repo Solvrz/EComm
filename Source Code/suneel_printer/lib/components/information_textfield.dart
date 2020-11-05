@@ -21,6 +21,10 @@ class InformationTextField extends StatelessWidget {
 
   String get value => controller.text;
 
+  set value(String value) {
+    this.controller.text = value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

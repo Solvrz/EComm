@@ -135,46 +135,49 @@ class _ProductScreenState extends State<ProductScreen> {
                           children: [
                             Container(
                               padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
-                              child: CarouselSlider(
-                                items: product.images
-                                    .map<Widget>(
-                                      (NetworkImage image) =>
-                                          Image(image: image),
+                              child: product.images.length > 0
+                                  ? CarouselSlider(
+                                      items: product.images
+                                          .map<Widget>(
+                                            (NetworkImage image) =>
+                                                Image(image: image),
+                                          )
+                                          .toList(),
+                                      options: CarouselOptions(
+                                          autoPlay: product.images.length > 1,
+                                          enlargeCenterPage: true,
+                                          aspectRatio: 2,
+                                          onPageChanged: (index, reason) {
+                                            setState(() {
+                                              _currentImage = index;
+                                            });
+                                          }),
                                     )
-                                    .toList(),
-                                options: CarouselOptions(
-                                    autoPlay: product.images.length > 1,
-                                    enlargeCenterPage: true,
-                                    aspectRatio: 2,
-                                    onPageChanged: (index, reason) {
-                                      setState(() {
-                                        _currentImage = index;
-                                      });
-                                    }),
-                              ),
+                                  : Center(
+                                      child: Text("No Images Available",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: "sans-serif-condensed",
+                                              fontWeight: FontWeight.bold))),
                             ),
-                            Stack(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    product.images.length,
-                                    (int index) => AnimatedContainer(
-                                      duration: Duration(milliseconds: 400),
-                                      width: _currentImage == index ? 16 : 8,
-                                      height: _currentImage == index ? 6 : 8,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 3),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: _currentImage == index
-                                            ? Color.fromRGBO(0, 0, 0, 0.9)
-                                            : Color.fromRGBO(0, 0, 0, 0.4),
-                                      ),
-                                    ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                product.images.length,
+                                (int index) => AnimatedContainer(
+                                  duration: Duration(milliseconds: 400),
+                                  width: _currentImage == index ? 16 : 8,
+                                  height: _currentImage == index ? 6 : 8,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 3),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: _currentImage == index
+                                        ? Color.fromRGBO(0, 0, 0, 0.9)
+                                        : Color.fromRGBO(0, 0, 0, 0.4),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
                           ]),
                     )

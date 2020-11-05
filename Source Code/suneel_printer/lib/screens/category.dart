@@ -5,8 +5,14 @@ import 'package:suneel_printer/screens/category_product.dart';
 import 'package:suneel_printer/screens/order.dart';
 
 // ignore: must_be_immutable
-class CategoryScreen extends StatelessWidget {
+class CategoryScreen extends StatefulWidget {
+  @override
+  _CategoryScreenState createState() => _CategoryScreenState();
+}
+
+class _CategoryScreenState extends State<CategoryScreen> {
   String title;
+
   dynamic screen;
 
   @override
@@ -92,8 +98,10 @@ class CategoryScreen extends StatelessWidget {
                                   behavior: HitTestBehavior.translucent,
                                   onTap: admin
                                       ? () {}
-                                      : () =>
-                                          Navigator.pushNamed(context, "/bag"),
+                                      : () async {
+                                        await Navigator.pushNamed(context, "/bag");
+                                        setState(() {});
+                                      },
                                   child: Padding(
                                     padding: EdgeInsets.all(8),
                                     child: admin
@@ -105,8 +113,6 @@ class CategoryScreen extends StatelessWidget {
                                                   width: 30,
                                                   height: 30),
                                               Positioned(
-                                                // TODO FIXME: Bag amount not updating
-
                                                 left: 11,
                                                 top: 10,
                                                 child: Text(bag.products.length

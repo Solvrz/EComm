@@ -289,11 +289,14 @@ class _BagScreenState extends State<BagScreen> {
         actionPane: SlidableDrawerActionPane(),
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
-          onTap: () => Navigator.pushNamed(
-            context,
-            "/product",
-            arguments: ProductArguments(bag.products[index].product),
-          ),
+          onTap: () async {
+            await Navigator.pushNamed(
+              context,
+              "/product",
+              arguments: ProductArguments(bag.products[index].product),
+            );
+            setState(() {});
+          },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8),
             height: MediaQuery.of(context).size.height / 6,
@@ -310,7 +313,7 @@ class _BagScreenState extends State<BagScreen> {
                       children: [
                         product.images.length > 0
                             ? Image(image: product.images[0])
-                            : Text("No Image Provided"),
+                            : Text("No Image"),
                         SizedBox(width: 24),
                         Expanded(
                           child: Column(

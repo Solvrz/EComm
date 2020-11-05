@@ -285,7 +285,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           FocusScope.of(context).unfocus();
 
                           Map<String, dynamic> status =
-                              await payment.startPayment(selectedInfo["email"],
+                              await payment.startPayment(context, selectedInfo["email"],
                                   selectedInfo["phone"], widget.price);
 
                           Navigator.popAndPushNamed(
@@ -340,9 +340,13 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
             .map<String>((BagItem bagItem) {
               Product product = bagItem.product;
 
+              String variationText = product.selected.length > 0 ? " (${product.selected.values.map((value) => value.label).toList().join(", ")})" : "";
+
+              print(variationText);
+
               return '''
                     <tr>
-                        <td>${product.name}</td>
+                        <td>${product.name}$variationText</td>
                         <td class="righty">${bagItem.quantity}</td>
                         <td class="righty">${(product.price.toDouble() * bagItem.quantity).toStringAsFixed(2)}</td>
                     </tr>

@@ -246,204 +246,210 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                     ]),
                   ),
-                  query != ""
-                      ? StreamBuilder<QuerySnapshot>(
-                          stream: database.collection("products").snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> future) {
-                            if (future.hasData) {
-                              List docs = future.data.docs
-                                  .where(
-                                    (element) => element
-                                        .data()["name"]
-                                        .toLowerCase()
-                                        .contains(query.toLowerCase().trim()),
-                                  )
-                                  .toList();
+                  if (query != "")
+                    StreamBuilder<QuerySnapshot>(
+                        stream: database.collection("products").snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> future) {
+                          if (future.hasData) {
+                            List docs = future.data.docs
+                                .where(
+                                  (element) => element
+                                      .data()["name"]
+                                      .toLowerCase()
+                                      .contains(query.toLowerCase().trim()),
+                                )
+                                .toList();
 
-                              List<Product> products = List.generate(
-                                docs.length,
-                                (index) => Product.fromJson(docs[index].data()),
-                              );
+                            List<Product> products = List.generate(
+                              docs.length,
+                              (index) => Product.fromJson(docs[index].data()),
+                            );
 
-                              return products.length > 0
-                                  ? GridView.count(
-                                      shrinkWrap: true,
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 0.725,
-                                      children: List.generate(
-                                        products.length,
-                                        (index) => SearchCard(
-                                            product: products[index]),
-                                      ),
-                                    )
-                                  : Center(
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                1.25,
-                                        child: EmptyListWidget(
-                                          packageImage: PackageImage.Image_1,
-                                          title: "No Results",
-                                          subTitle:
-                                              "No results found for your search",
-                                        ),
-                                      ),
-                                    );
-                            } else {
-                              return Center(
-                                child: indicator,
-                              );
-                            }
-                          })
-                      : FutureBuilder<QuerySnapshot>(
-                          future: database
-                              .collection("carouselImages")
-                              .orderBy("sequence")
-                              .get(),
-                          builder:
-                              (BuildContext context, AsyncSnapshot future) {
-                            List carouselImages = [
-                              "https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"
-                            ];
-
-                            if (future.hasData) {
-                              carouselImages = future.data.docs
-                                  .map(
-                                    (e) => e.get("url"),
-                                  )
-                                  .toList();
-                            }
-
-                            return Column(children: [
-                              CarouselSlider.builder(
-                                itemCount: carouselImages.length,
-                                itemBuilder:
-                                    (BuildContext context, int index) =>
-                                        ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              carouselImages[index]),
-                                          fit: BoxFit.cover),
+                            return products.length > 0
+                                ? GridView.count(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 0.725,
+                                    children: List.generate(
+                                      products.length,
+                                      (index) =>
+                                          SearchCard(product: products[index]),
                                     ),
-                                  ),
+                                  )
+                                : Center(
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width /
+                                          1.25,
+                                      child: EmptyListWidget(
+                                        packageImage: PackageImage.Image_1,
+                                        title: "No Results",
+                                        subTitle:
+                                            "No results found for your search",
+                                      ),
+                                    ),
+                                  );
+                          } else {
+                            return Center(
+                              child: indicator,
+                            );
+                          }
+                        })
+                  else
+                    FutureBuilder<QuerySnapshot>(
+                      future: database
+                          .collection("carouselImages")
+                          .orderBy("sequence")
+                          .get(),
+                      builder: (BuildContext context, AsyncSnapshot future) {
+                        List carouselImages = [
+                          "https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"
+                        ];
+
+                        if (future.hasData) {
+                          carouselImages = future.data.docs
+                              .map(
+                                (e) => e.get("url"),
+                              )
+                              .toList();
+                        }
+
+                        return Column(children: [
+                          CarouselSlider.builder(
+                            itemCount: carouselImages.length,
+                            itemBuilder: (BuildContext context, int index) =>
+                                ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  image: DecorationImage(
+                                      image:
+                                          NetworkImage(carouselImages[index]),
+                                      fit: BoxFit.cover),
                                 ),
-                                options: CarouselOptions(
-                                    autoPlay: carouselImages.length > 1
-                                        ? true
-                                        : false,
-                                    enlargeCenterPage: true,
-                                    aspectRatio: 2,
-                                    onPageChanged: (index, reason) {
-                                      setState(() {
-                                        _current = index;
-                                      });
-                                    }),
                               ),
-                              SizedBox(height: 12),
-                              if (carouselImages.length > 1)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    carouselImages.length,
-                                    (int index) => AnimatedContainer(
-                                      duration: Duration(milliseconds: 400),
-                                      width: _current == index ? 16 : 8,
-                                      height: _current == index ? 6 : 8,
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 3),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: _current == index
-                                            ? Color.fromRGBO(0, 0, 0, 0.9)
-                                            : Color.fromRGBO(0, 0, 0, 0.4),
-                                      ),
-                                    ),
+                            ),
+                            options: CarouselOptions(
+                                autoPlay:
+                                    carouselImages.length > 1 ? true : false,
+                                enlargeCenterPage: true,
+                                aspectRatio: 2,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _current = index;
+                                  });
+                                }),
+                          ),
+                          SizedBox(height: 12),
+                          if (carouselImages.length > 1)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                carouselImages.length,
+                                (int index) => AnimatedContainer(
+                                  duration: Duration(milliseconds: 400),
+                                  width: _current == index ? 16 : 8,
+                                  height: _current == index ? 6 : 8,
+                                  margin: EdgeInsets.symmetric(horizontal: 3),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: _current == index
+                                        ? Color.fromRGBO(0, 0, 0, 0.9)
+                                        : Color.fromRGBO(0, 0, 0, 0.4),
                                   ),
                                 ),
-                              SizedBox(height: 18),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 6),
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Categories",
-                                        style: TextStyle(
-                                            fontFamily: "sans-serif-condensed",
-                                            fontSize: 32,
-                                            letterSpacing: 0.2,
-                                            fontWeight: FontWeight.bold,
-                                            color: kUIDarkText),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(top: 22),
-                                        child: GridView.count(
-                                          shrinkWrap: true,
-                                          crossAxisCount: 3,
-                                          mainAxisSpacing: 12,
-                                          crossAxisSpacing: 12,
-                                          childAspectRatio: 0.9,
-                                          children: List.generate(
-                                              categories.length, (int index) {
-                                            Map<String, dynamic> data =
-                                                categories[index];
-                                            return GestureDetector(
-                                              behavior:
-                                                  HitTestBehavior.translucent,
-                                              onTap: () async {
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  "/category",
-                                                  arguments: CategoryArguments(
-                                                    data,
-                                                    data["uId"],
-                                                  ),
-                                                );
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(8),
-                                                decoration: BoxDecoration(
-                                                  color: Color(0xffFFEBEB),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(data["image"],
-                                                        height: 50, width: 50),
-                                                    SizedBox(height: 8),
-                                                    Text(
-                                                      data["name"],
+                              ),
+                            ),
+                          SizedBox(height: 18),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 6),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Categories",
+                                    style: TextStyle(
+                                        fontFamily: "sans-serif-condensed",
+                                        fontSize: 32,
+                                        letterSpacing: 0.2,
+                                        fontWeight: FontWeight.bold,
+                                        color: kUIDarkText),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 22),
+                                    child: GridView.count(
+                                      shrinkWrap: true,
+                                      crossAxisCount: 3,
+                                      mainAxisSpacing: 12,
+                                      crossAxisSpacing: 12,
+                                      childAspectRatio: 0.9,
+                                      children: List.generate(categories.length,
+                                          (int index) {
+                                        Map<String, dynamic> data =
+                                            categories[index];
+                                        return GestureDetector(
+                                          behavior: HitTestBehavior.translucent,
+                                          onTap: onOrder
+                                                      .contains(data["name"]) &&
+                                                  admin
+                                              ? () {
+                                                  Scaffold.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    elevation: 10,
+                                                    backgroundColor: kUIAccent,
+                                                    content: Text(
+                                                      "Sorry, ${data["name"]} screen is not available in Admin Mode",
                                                       textAlign:
                                                           TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            "sans-serif-condensed",
-                                                        color: kUIDarkText,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
                                                     ),
-                                                  ],
+                                                  ));
+                                                }
+                                              : () => Navigator.pushNamed(
+                                                    context,
+                                                    "/category",
+                                                    arguments:
+                                                        CategoryArguments(
+                                                      data,
+                                                      data["uId"],
+                                                    ),
+                                                  ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: Color(0xffFFEBEB),
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Image.asset(data["image"],
+                                                    height: 50, width: 50),
+                                                SizedBox(height: 8),
+                                                Text(
+                                                  data["name"],
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontFamily:
+                                                        "sans-serif-condensed",
+                                                    color: kUIDarkText,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          }),
-                                        ),
-                                      ),
-                                    ]),
-                              ),
-                            ]);
-                          },
-                        ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  ),
+                                ]),
+                          ),
+                        ]);
+                      },
+                    ),
                 ]),
               ),
             ],

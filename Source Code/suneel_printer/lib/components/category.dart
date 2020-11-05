@@ -68,12 +68,13 @@ class _ProductCardState extends State<ProductCard>
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () {
-        Navigator.pushNamed(
+      onTap: () async {
+        await Navigator.pushNamed(
           context,
           "/product",
           arguments: ProductArguments(widget.product),
         );
+        setState(() {});
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(12, admin ? 12 : 24, 12, 0),
@@ -91,7 +92,7 @@ class _ProductCardState extends State<ProductCard>
                 Center(
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 15, 12, 0),
-                    child: widget.product.images != null
+                    child: widget.product.images.length > 0
                         ? Container(
                             height: height / 1.6,
                             decoration: BoxDecoration(boxShadow: [
@@ -104,7 +105,7 @@ class _ProductCardState extends State<ProductCard>
                             child: Image(image: widget.product.images[0]),
                           )
                         : Container(
-                            height: height / 2,
+                            height: height / 1.6,
                             child: Center(
                               child: Text("No Image Provided"),
                             ),

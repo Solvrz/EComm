@@ -14,8 +14,6 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/models/variation.dart';
 
-// TODO FIXME: Has A Ton Of Error
-
 class AddProductScreen extends StatefulWidget {
   @override
   _AddProductScreenState createState() => _AddProductScreenState();
@@ -56,7 +54,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     AddProductArguments args = ModalRoute.of(context).settings.arguments;
 
-    if (args.product != null) {
+    if (args.product != null && name == "") {
       name = args.product.name;
       price = args.product.price;
       mrp = args.product.mrp;
@@ -457,10 +455,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
           children: [
             Expanded(
               child: TextField(
-                onSubmitted: (value) => setState(
-                  () => variations[variations.indexOf(variation)].name =
-                      value.trim(),
-                ),
+                controller: TextEditingController(text: variation.name),
+                onChanged: (value) => variations[variations.indexOf(variation)]
+                    .name = value.trim(),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: "Name",
@@ -567,7 +564,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   void _addProduct(BuildContext context, String title, Product product,
       List<DocumentReference> tabs, List<Map> tabsData, int currentTab) async {
-    Navigator.pop(context);
 
     List<String> urls = product != null ? product.images.map((e) => e.url) : [];
     bool noError = true;
@@ -662,17 +658,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         });
       }
 
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          elevation: 10,
-          backgroundColor: kUIAccent,
-          content: Text(
-            "Product added successfully",
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
+      Navigator.pop(context);
     } else {
       Scaffold.of(context).removeCurrentSnackBar();
       Scaffold.of(context).showSnackBar(
