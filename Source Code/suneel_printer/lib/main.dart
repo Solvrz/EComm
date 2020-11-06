@@ -54,8 +54,11 @@ class SuneelPrinter extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme:
-          ThemeData(primaryColor: kUIAccent, highlightColor: Colors.blueGrey),
+      theme: ThemeData(
+        primaryColor: kUIAccent,
+        highlightColor: Colors.blueGrey,
+        fontFamily: "sans-serif-condensed",
+      ),
       builder: (BuildContext context, Widget widget) =>
           ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(

@@ -71,7 +71,6 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                       ),
                       duration: Duration(milliseconds: 150),
                       style: TextStyle(
-                          fontFamily: "sans-serif-condensed",
                           fontSize: index == widget._currentTab ? 16 : 14,
                           fontWeight: index == widget._currentTab
                               ? FontWeight.w600

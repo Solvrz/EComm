@@ -31,10 +31,7 @@ class InformationTextField extends StatelessWidget {
       Text(
         title,
         style: TextStyle(
-            fontFamily: "sans-serif-condensed",
-            color: kUIDarkText,
-            fontSize: 16,
-            fontWeight: FontWeight.bold),
+            color: kUIDarkText, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       TextField(
         decoration: InputDecoration(
@@ -46,18 +43,12 @@ class InformationTextField extends StatelessWidget {
         minLines: 1,
         maxLines: maxLines,
         style: TextStyle(
-            fontFamily: "sans-serif-condensed",
-            color: kUIDarkText,
-            fontSize: 17,
-            fontWeight: FontWeight.w500),
+            color: kUIDarkText, fontSize: 17, fontWeight: FontWeight.w500),
       ),
       if (error) ...[
         Text(
           errorMessage,
-          style: TextStyle(
-              fontFamily: "sans-serif-condensed",
-              fontSize: 15,
-              color: kUIAccent),
+          style: TextStyle(fontSize: 15, color: kUIAccent),
         ),
         SizedBox(height: 8),
       ],

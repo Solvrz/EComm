@@ -38,7 +38,6 @@ class Payment {
 
         showDialog(
           context: context,
-          //TODO: TextSTyleTheme and Theme (for the app) By: Yug as told by Yug who is Yug and is called Yug by us. SO yeah he is YUG
           builder: (BuildContext context) => Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20), color: Colors.white),

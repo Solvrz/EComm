@@ -33,7 +33,6 @@ class RoundedAlertDialog extends StatelessWidget {
               title,
               textAlign: centerTitle ? TextAlign.center : TextAlign.left,
               style: TextStyle(
-                  fontFamily: "sans-serif-condensed",
                   color: kUIDarkText,
                   fontSize: titleSize,
                   fontWeight: FontWeight.bold),
@@ -44,10 +43,7 @@ class RoundedAlertDialog extends StatelessWidget {
           Text(
             description,
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontFamily: "sans-serif-condensed",
-                color: kUIDarkText,
-                fontSize: descriptionSize),
+            style: TextStyle(color: kUIDarkText, fontSize: descriptionSize),
           ),
         if (otherWidgets != null)
           Column(

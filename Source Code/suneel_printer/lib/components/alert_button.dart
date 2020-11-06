@@ -29,7 +29,6 @@ class AlertButton extends StatelessWidget {
       child: Text(
         title,
         style: TextStyle(
-            fontFamily: "sans-serif-condensed",
             color: titleColor,
             fontSize: titleSize,
             fontWeight: FontWeight.bold),

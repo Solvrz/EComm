@@ -57,7 +57,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   Text(
                     "Check Out",
                     style: TextStyle(
-                        fontFamily: "sans-serif-condensed",
                         color: kUIDarkText,
                         fontSize: 24,
                         fontWeight: FontWeight.bold),
@@ -79,7 +78,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               style: TextStyle(
                                 color: kUIDarkText,
                                 fontSize: 20,
-                                fontFamily: "sans-serif-condensed",
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -88,7 +86,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               style: TextStyle(
                                 fontSize: 18,
                                 color: kUIDarkText,
-                                fontFamily: "sans-serif-condensed",
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -124,7 +121,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           style: TextStyle(
                             color: kUIDarkText,
                             fontSize: 20,
-                            fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -133,7 +129,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           style: TextStyle(
                             fontSize: 18,
                             color: kUIDarkText,
-                            fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -146,7 +141,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           style: TextStyle(
                             color: kUIDarkText,
                             fontSize: 20,
-                            fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -155,7 +149,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           style: TextStyle(
                             color: kUIDarkText,
                             fontSize: 18,
-                            fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -168,7 +161,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           style: TextStyle(
                             color: kUIDarkText,
                             fontSize: 20,
-                            fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -179,7 +171,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             style: TextStyle(
                               color: kUIDarkText,
                               fontSize: 18,
-                              fontFamily: "sans-serif-condensed",
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -196,7 +187,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           style: TextStyle(
                             color: kUIDarkText,
                             fontSize: 22,
-                            fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -211,7 +201,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                     style: TextStyle(
                                       color: kUIDarkText,
                                       fontSize: 18,
-                                      fontFamily: "sans-serif-condensed",
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -235,7 +224,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                 style: TextStyle(
                                   color: kUIDarkText,
                                   fontSize: 24,
-                                  fontFamily: "sans-serif-condensed",
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -244,18 +232,16 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               "₹ ",
                               style: TextStyle(
                                 color: kUIDarkText,
-                                fontFamily: "sans-serif-condensed",
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
                               widget.price - widget.price.toInt() == 0
-                                  ? widget.price.toInt().toString()
+                                  ? widget.price.toInt()
                                   : widget.price.toStringAsFixed(2),
                               style: TextStyle(
                                 color: kUIDarkText,
                                 fontSize: 24,
-                                fontFamily: "sans-serif-condensed",
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -315,7 +301,6 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         : "Proceed To Pay",
                     style: TextStyle(
                         fontSize: 24,
-                        fontFamily: "sans-serif-condensed",
                         fontWeight: FontWeight.w600,
                         color: kUILightText),
                   ),
@@ -352,7 +337,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                     <tr>
                         <td>${product.name}$variationText</td>
                         <td class="righty">${bagItem.quantity}</td>
-                        <td class="righty">${(product.price.toDouble() * bagItem.quantity).toStringAsFixed(2)}</td>
+                        <td class="righty">${(double.parse(product.price) * bagItem.quantity).toStringAsFixed(2)}</td>
                     </tr>
                     ''';
             })

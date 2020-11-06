@@ -134,7 +134,6 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                 style: TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.w500,
-                                    fontFamily: "sans-serif-condensed",
                                     letterSpacing: -0.4),
                               ),
                               Row(

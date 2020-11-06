@@ -52,7 +52,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                           style: TextStyle(
                             color: kUIDarkText,
                             fontSize: 20,
-                            fontFamily: "sans-serif-condensed",
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -116,7 +115,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                               style: TextStyle(
                                 color: kUIDarkText,
                                 fontSize: 20,
-                                fontFamily: "sans-serif-condensed",
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -136,7 +134,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                         style: TextStyle(
                                           color: kUIDarkText,
                                           fontSize: 20,
-                                          fontFamily: "sans-serif-condensed",
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -145,7 +142,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                         style: TextStyle(
                                           fontSize: 18,
                                           color: Colors.grey[900],
-                                          fontFamily: "sans-serif-condensed",
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -182,7 +178,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     style: TextStyle(
                                       color: kUIDarkText,
                                       fontSize: 20,
-                                      fontFamily: "sans-serif-condensed",
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -191,7 +186,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     style: TextStyle(
                                       fontSize: 18,
                                       color: Colors.grey[900],
-                                      fontFamily: "sans-serif-condensed",
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -204,7 +198,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     style: TextStyle(
                                       color: kUIDarkText,
                                       fontSize: 20,
-                                      fontFamily: "sans-serif-condensed",
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -213,7 +206,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     style: TextStyle(
                                       fontSize: 18,
                                       color: Colors.grey[900],
-                                      fontFamily: "sans-serif-condensed",
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -226,7 +218,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     style: TextStyle(
                                       color: kUIDarkText,
                                       fontSize: 20,
-                                      fontFamily: "sans-serif-condensed",
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -237,7 +228,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.grey[900],
-                                        fontFamily: "sans-serif-condensed",
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -293,7 +283,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                     Text(
                       "Place Order",
                       style: TextStyle(
-                          fontFamily: "sans-serif-condensed",
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.grey[200]),

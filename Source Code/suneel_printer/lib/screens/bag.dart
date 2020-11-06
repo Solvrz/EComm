@@ -23,8 +23,10 @@ class _BagScreenState extends State<BagScreen> {
   Widget build(BuildContext context) {
     double price = 0;
 
+    // TODO FIXME: Not getting removed from Bag & WIshlist after being remived from the store
+
     bag.products.forEach((BagItem bagItem) {
-      price += bagItem.product.price.toDouble() * bagItem.quantity;
+      price += double.parse(bagItem.product.price) * bagItem.quantity;
     });
 
     return SafeArea(
@@ -52,7 +54,6 @@ class _BagScreenState extends State<BagScreen> {
                       style: TextStyle(
                         color: kUIDarkText,
                         fontSize: 16,
-                        fontFamily: "sans-serif-condensed",
                       ),
                     ),
                     Text(
@@ -62,7 +63,6 @@ class _BagScreenState extends State<BagScreen> {
                       style: TextStyle(
                           fontSize: 34,
                           fontWeight: FontWeight.bold,
-                          fontFamily: "sans-serif-condensed",
                           letterSpacing: -2,
                           color: kUIDarkText),
                     ),
@@ -92,7 +92,6 @@ class _BagScreenState extends State<BagScreen> {
                     Text(
                       "Checkout",
                       style: TextStyle(
-                          fontFamily: "sans-serif-condensed",
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.grey[200]),
@@ -152,7 +151,6 @@ class _BagScreenState extends State<BagScreen> {
                       child: Text(
                         "My Bag",
                         style: TextStyle(
-                            fontFamily: "sans-serif-condensed",
                             color: kUIDarkText,
                             fontSize: 24,
                             fontWeight: FontWeight.bold),
@@ -329,7 +327,6 @@ class _BagScreenState extends State<BagScreen> {
                                     color: kUIDarkText,
                                     fontSize: 22,
                                     fontWeight: FontWeight.w500,
-                                    fontFamily: "sans-serif-condensed",
                                     letterSpacing: -0.4),
                               ),
                               Row(
@@ -383,7 +380,6 @@ class _BagScreenState extends State<BagScreen> {
                                           .label[0]
                                           .toUpperCase(),
                                       style: TextStyle(
-                                          fontFamily: "sans-serif-condensed",
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
                                           color: kUIDarkText),
@@ -419,7 +415,6 @@ class _BagScreenState extends State<BagScreen> {
                       Text(
                         bag.getQuantity(product).toString(),
                         style: TextStyle(
-                            fontFamily: "sans-serif-condensed",
                             color: kUIColor,
                             fontSize: 18,
                             fontWeight: FontWeight.w500),

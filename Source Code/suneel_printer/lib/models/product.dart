@@ -53,7 +53,7 @@ class Product {
     return Product(
         uId: data["uId"],
         name: data["name"],
-        images: data["imgs"],
+        images: data["imgs"] ?? [],
         price: data["price"].toString(),
         mrp: data["mrp"].toString(),
         variations: (data["variations"] ?? [])

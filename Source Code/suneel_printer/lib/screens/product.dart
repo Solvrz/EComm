@@ -160,7 +160,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                         "No Images Available",
                                         style: TextStyle(
                                             fontSize: 20,
-                                            fontFamily: "sans-serif-condensed",
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
@@ -212,7 +211,6 @@ class _ProductScreenState extends State<ProductScreen> {
                             color: kUIDarkText,
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
-                            fontFamily: "sans-serif-condensed",
                             letterSpacing: 0.2),
                       ),
                     ),
@@ -222,7 +220,6 @@ class _ProductScreenState extends State<ProductScreen> {
                           color: kUIDarkText,
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
-                          fontFamily: "sans-serif-condensed",
                           letterSpacing: -0.4),
                     )
                   ],
@@ -239,7 +236,6 @@ class _ProductScreenState extends State<ProductScreen> {
                             color: kUIDarkText,
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
-                            fontFamily: "sans-serif-condensed",
                             letterSpacing: 0.2),
                       ),
                     ),
@@ -250,17 +246,15 @@ class _ProductScreenState extends State<ProductScreen> {
                           decoration: TextDecoration.lineThrough,
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
-                          fontFamily: "sans-serif-condensed",
                           letterSpacing: -0.4),
                     ),
                     SizedBox(width: 12),
                     Text(
-                      "Save: ₹ ${product.mrp.toDouble() - product.price.toDouble()}",
+                      "Save: ₹ ${double.parse(product.mrp) - double.parse(product.price)}",
                       style: TextStyle(
                           color: Colors.orangeAccent,
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
-                          fontFamily: "sans-serif-condensed",
                           letterSpacing: -0.4),
                     )
                   ],
@@ -291,9 +285,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 Text(
                                   bag.getQuantity(product).toString(),
                                   style: TextStyle(
-                                      fontFamily: "sans-serif-condensed",
-                                      fontSize: 22,
-                                      color: kUIDarkText),
+                                      fontSize: 22, color: kUIDarkText),
                                 ),
                                 GestureDetector(
                                   behavior: HitTestBehavior.translucent,
@@ -321,7 +313,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                 ? "IN BAG"
                                 : "ADD TO BAG",
                             style: TextStyle(
-                                fontFamily: "sans-serif-condensed",
                                 fontSize: 20,
                                 color: kUIColor,
                                 fontWeight: FontWeight.bold),

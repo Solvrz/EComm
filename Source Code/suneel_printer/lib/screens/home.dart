@@ -219,7 +219,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             border: InputBorder.none,
                             hintText: "Search for Products",
                             hintStyle: TextStyle(
-                              fontFamily: "sans-serif-condensed",
                               color: Colors.grey[600],
                               fontWeight: FontWeight.bold,
                             ),
@@ -229,7 +228,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             setState(() => query = value);
                           },
                           style: TextStyle(
-                            fontFamily: "sans-serif-condensed",
                             color: Colors.grey[800],
                             fontWeight: FontWeight.bold,
                           ),
@@ -379,7 +377,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text(
                                     "Categories",
                                     style: TextStyle(
-                                        fontFamily: "sans-serif-condensed",
                                         fontSize: 32,
                                         letterSpacing: 0.2,
                                         fontWeight: FontWeight.bold,

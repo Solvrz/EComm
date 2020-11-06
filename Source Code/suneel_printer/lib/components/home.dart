@@ -59,7 +59,6 @@ class _InformationSheetState extends State<InformationSheet> {
                     child: Text(
                       "Delivery Information",
                       style: TextStyle(
-                          fontFamily: "sans-serif-condensed",
                           color: kUIDarkText,
                           fontSize: 24,
                           fontWeight: FontWeight.bold),
@@ -163,7 +162,6 @@ class _InformationSheetState extends State<InformationSheet> {
                                           : Colors.grey[600],
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
-                                      fontFamily: "sans-serif-condensed",
                                       letterSpacing: 0.2),
                                 ),
                                 subtitle: Padding(
@@ -171,9 +169,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                   child: Text(
                                     address["address"],
                                     style: TextStyle(
-                                        color: kUIDarkText,
-                                        fontFamily: "sans-serif-condensed",
-                                        letterSpacing: 0.2),
+                                        color: kUIDarkText, letterSpacing: 0.2),
                                   ),
                                 ),
                               );
@@ -186,7 +182,6 @@ class _InformationSheetState extends State<InformationSheet> {
                             child: Text(
                               "No Information Added",
                               style: TextStyle(
-                                  fontFamily: "sans-serif-condensed",
                                   color: kUIDarkText,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500),
@@ -217,7 +212,6 @@ class _InformationSheetState extends State<InformationSheet> {
                         child: Text(
                           "Add Information",
                           style: TextStyle(
-                              fontFamily: "sans-serif-condensed",
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: kUIColor),
@@ -319,7 +313,6 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                 Text(
                   "${widget.edit ? "Edit" : "Add"} Information",
                   style: TextStyle(
-                      fontFamily: "sans-serif-condensed",
                       color: kUIDarkText,
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
@@ -387,7 +380,6 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                   child: Text(
                     "${widget.edit ? "Save" : "Add"} Information",
                     style: TextStyle(
-                      fontFamily: "sans-serif-condensed",
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: kUIColor,

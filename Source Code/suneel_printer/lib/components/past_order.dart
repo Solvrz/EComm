@@ -22,7 +22,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 20,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -33,7 +32,6 @@ class InfoWidget extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   color: kUIDarkText,
-                  fontFamily: "sans-serif-condensed",
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -45,7 +43,6 @@ class InfoWidget extends StatelessWidget {
                   style: TextStyle(
                     color: kUIDarkText,
                     fontSize: 20,
-                    fontFamily: "sans-serif-condensed",
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -56,17 +53,15 @@ class InfoWidget extends StatelessWidget {
                         style: TextStyle(
                           color: kUIDarkText,
                           fontSize: 18,
-                          fontFamily: "sans-serif-condensed",
                           fontWeight: FontWeight.w500,
                         ),
                       )
                     : Text(
-                        "${DateTime.fromMicrosecondsSinceEpoch(order['time'].split("(")[1].split("=")[1].split(",")[0].toString().toInt() * 1000000 + order['time'].split("(")[1].split("=")[2].split(")")[0].toString().toInt() ~/ 1000).toString().split(" ")[0].split("-").reversed.join("-")}",
+                        "${DateTime.fromMicrosecondsSinceEpoch(int.parse(order['time'].split("(")[1].split("=")[1].split(",")[0].toString()) * 1000000 + int.parse(order['time'].split("(")[1].split("=")[2].split(")")[0].toString()) ~/ 1000).toString().split(" ")[0].split("-").reversed.join("-")}",
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: kUIDarkText,
                           fontSize: 18,
-                          fontFamily: "sans-serif-condensed",
                           fontWeight: FontWeight.w500,
                         ),
                       )
@@ -81,7 +76,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 20,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -90,7 +84,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 color: kUIDarkText,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -103,7 +96,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 20,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -112,7 +104,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 18,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -126,7 +117,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 20,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -138,7 +128,6 @@ class InfoWidget extends StatelessWidget {
                 style: TextStyle(
                   color: kUIDarkText,
                   fontSize: 18,
-                  fontFamily: "sans-serif-condensed",
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -153,7 +142,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 20,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -163,7 +151,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 18,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -176,7 +163,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 20,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -186,7 +172,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 18,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -199,7 +184,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 20,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -209,7 +193,6 @@ class InfoWidget extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 18,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -247,7 +230,6 @@ class PastOrderSheet extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 32,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -350,7 +332,6 @@ class PastOrderSheet extends StatelessWidget {
               style: TextStyle(
                 color: kUIDarkText,
                 fontSize: 26,
-                fontFamily: "sans-serif-condensed",
                 fontWeight: FontWeight.bold,
               ),
             ),

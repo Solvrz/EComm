@@ -79,7 +79,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   style: TextStyle(
                     color: kUIDarkText,
                     fontSize: 28,
-                    fontFamily: "sans-serif-condensed",
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -90,7 +89,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   style: TextStyle(
                     color: kUIDarkText,
                     fontSize: 20,
-                    fontFamily: "sans-serif-condensed",
                     fontWeight: FontWeight.bold,
                   ),
                 ),

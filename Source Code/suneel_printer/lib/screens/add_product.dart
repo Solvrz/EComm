@@ -118,8 +118,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             behavior: HitTestBehavior.translucent,
                             onTap: name != "" && price != "" && mrp != ""
                                 ? () async {
-                                    Navigator.pop(context);
-
                                     _addProduct(
                                         context,
                                         args.title,
@@ -127,6 +125,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         args.tabs,
                                         args.tabsData,
                                         args.currentTab);
+
+                                    Navigator.pop(context);
                                   }
                                 : null,
                             child: Container(
@@ -332,7 +332,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 color: kUIDarkText,
                                 fontSize: 22,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: "sans-serif-condensed",
                                 letterSpacing: 0.2),
                           ),
                         ),
@@ -350,7 +349,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   color: kUIDarkText,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
-                                  fontFamily: "sans-serif-condensed",
                                   letterSpacing: -0.4),
                             ),
                             onSubmitted: (value) {
@@ -362,7 +360,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 color: kUIDarkText,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: "sans-serif-condensed",
                                 letterSpacing: -0.4),
                           ),
                         )
@@ -380,7 +377,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 color: kUIDarkText,
                                 fontSize: 22,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: "sans-serif-condensed",
                                 letterSpacing: 0.2),
                           ),
                         ),
@@ -398,7 +394,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   color: kUIDarkText,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
-                                  fontFamily: "sans-serif-condensed",
                                   letterSpacing: -0.4),
                             ),
                             cursorColor: Colors.grey,
@@ -408,7 +403,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 color: kUIDarkText,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: "sans-serif-condensed",
                                 letterSpacing: -0.4),
                           ),
                         )
@@ -465,14 +459,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       color: kUIDarkText,
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
-                      fontFamily: "sans-serif-condensed",
                       letterSpacing: 0.2),
                 ),
                 style: TextStyle(
                     color: kUIDarkText,
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
-                    fontFamily: "sans-serif-condensed",
                     letterSpacing: 0.2),
               ),
             ),
@@ -526,7 +518,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       variation.options[index].label[0]
                                           .toUpperCase(),
                                       style: TextStyle(
-                                          fontFamily: "sans-serif-condensed",
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600,
                                           color: kUIDarkText),
@@ -564,7 +555,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   void _addProduct(BuildContext context, String title, Product product,
       List<DocumentReference> tabs, List<Map> tabsData, int currentTab) async {
-    List<String> urls = product != null ? product.images.map((e) => e.url) : [];
+    List<String> urls =
+        product != null ? product.images.map((e) => e.url).toList() : [];
     bool noError = true;
 
     for (File file in imageFiles) {
@@ -591,7 +583,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       int maxId = 0;
 
       query.docs.forEach((element) {
-        int currId = element.data()["uId"].split("/").last.toInt();
+        int currId = int.parse(element.data()["uId"].split("/").last);
         if (currId > maxId) maxId = currId;
       });
 
@@ -603,8 +595,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
         await query.docs.first.reference.update({
           "uId": "1/1/${maxId + 1}",
           "imgs": urls,
-          "mrp": mrp.toDouble(),
-          "price": price.toDouble(),
+          "mrp": double.parse(mrp),
+          "price": double.parse(price),
           "name": name.trim(),
           "variations": variations
               .map(
@@ -620,8 +612,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
         await query.docs.first.reference.update({
           "uId": "1/1/${maxId + 1}",
           "imgs": urls,
-          "mrp": mrp.toDouble(),
-          "price": price.toDouble(),
+          "mrp": double.parse(mrp),
+          "price": double.parse(price),
           "name": name.trim(),
           "variations": variations
               .map(
@@ -633,8 +625,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
         await tabs[currentTab].collection("products").add({
           "uId": "1/1/${maxId + 1}",
           "imgs": urls,
-          "mrp": mrp.toDouble(),
-          "price": price.toDouble(),
+          "mrp": double.parse(mrp),
+          "price": double.parse(price),
           "name": name.trim(),
           "variations": variations
               .map(
@@ -646,8 +638,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
         await database.collection("products").add({
           "uId": "1/1/${maxId + 1}",
           "imgs": urls,
-          "mrp": mrp.toDouble(),
-          "price": price.toDouble(),
+          "mrp": double.parse(mrp),
+          "price": double.parse(price),
           "name": name.trim(),
           "variations": variations
               .map(

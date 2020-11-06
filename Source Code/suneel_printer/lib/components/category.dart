@@ -191,7 +191,8 @@ class _ProductCardState extends State<ProductCard>
                                                   .collection("categories")
                                                   .where(
                                                     "uId",
-                                                    isEqualTo: uIds[0].toInt(),
+                                                    isEqualTo:
+                                                        int.parse(uIds[0]),
                                                   )
                                                   .get();
 
@@ -200,7 +201,7 @@ class _ProductCardState extends State<ProductCard>
                                               .collection("tabs")
                                               .where(
                                                 "uId",
-                                                isEqualTo: uIds[1].toInt(),
+                                                isEqualTo: int.parse(uIds[1]),
                                               )
                                               .get();
 

@@ -39,7 +39,6 @@ class PastOrderScreen extends StatelessWidget {
                         fontSize: 24,
                         color: kUIDarkText,
                         fontWeight: FontWeight.bold,
-                        fontFamily: "sans-serif-condensed",
                       ),
                     ),
                   ),
@@ -103,7 +102,6 @@ class PastOrderScreen extends StatelessWidget {
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: kUIDarkText,
-                                            fontFamily: "sans-serif-condensed",
                                           ),
                                         ),
                                       ),
@@ -114,7 +112,6 @@ class PastOrderScreen extends StatelessWidget {
                                       fontSize: 24,
                                       color: kUIDarkText,
                                       fontWeight: FontWeight.bold,
-                                      fontFamily: "sans-serif-condensed",
                                     ),
                                   ),
                                   Column(
@@ -307,7 +304,6 @@ class PastOrderScreen extends StatelessWidget {
                             style: TextStyle(
                               color: kUIDarkText,
                               fontSize: 18,
-                              fontFamily: "sans-serif-condensed",
                               fontWeight: FontWeight.w500,
                             ),
                           ),

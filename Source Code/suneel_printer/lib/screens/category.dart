@@ -87,7 +87,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     child: Text(
                                       title,
                                       style: TextStyle(
-                                          fontFamily: "sans-serif-condensed",
                                           fontSize: 24,
                                           color: kUIDarkText,
                                           fontWeight: FontWeight.bold),
