@@ -4,6 +4,7 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:suneel_printer/components/bag.dart';
+import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
@@ -31,6 +32,24 @@ class _BagScreenState extends State<BagScreen> {
       child: Scaffold(
         backgroundColor: kUIColor,
         resizeToAvoidBottomInset: true,
+        appBar: CustomAppBar(
+          parent: context,
+          title: "My Bag",
+          trailing: [
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () => Navigator.pushNamed(context, "/wishlist"),
+              child: Padding(
+                padding: EdgeInsets.all(18),
+                child: Icon(
+                  Icons.favorite_border,
+                  color: kUIDarkText,
+                  size: 28,
+                ),
+              ),
+            )
+          ],
+        ),
         bottomNavigationBar: Container(
           padding: EdgeInsets.symmetric(horizontal: 24),
           decoration: BoxDecoration(
@@ -128,48 +147,6 @@ class _BagScreenState extends State<BagScreen> {
         ),
         body: Column(
           children: [
-            Container(
-              padding: EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () => Navigator.pop(context),
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: kUIDarkText,
-                        size: 26,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        "My Bag",
-                        style: TextStyle(
-                            color: kUIDarkText,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () => Navigator.pushNamed(context, "/wishlist"),
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Icon(
-                        Icons.favorite_border,
-                        color: kUIDarkText,
-                        size: 28,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
             if (bag.changeLog.isNotEmpty)
               GestureDetector(
                 behavior: HitTestBehavior.translucent,

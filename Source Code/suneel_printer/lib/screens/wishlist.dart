@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/product.dart';
@@ -21,43 +22,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
       child: Scaffold(
         backgroundColor: kUIColor,
         resizeToAvoidBottomInset: true,
+        appBar: CustomAppBar(parent: context, title: "My Wishlist"),
         body: Column(
           children: [
-            Container(
-              padding: EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () => Navigator.pop(context),
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: kUIDarkText,
-                        size: 26,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        "My Wishlist",
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: kUIDarkText,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: null,
-                    child: Icon(Icons.clear, color: Colors.transparent),
-                  ),
-                ],
-              ),
-            ),
             Expanded(
               child: wishlist.products.isNotEmpty
                   ? Padding(

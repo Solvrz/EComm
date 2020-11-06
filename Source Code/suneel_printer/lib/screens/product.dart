@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/components/product.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -37,60 +38,45 @@ class _ProductScreenState extends State<ProductScreen> {
       child: Scaffold(
         backgroundColor: kUIColor,
         resizeToAvoidBottomInset: true,
+        appBar: CustomAppBar(
+          parent: context,
+          title: "",
+          trailing: [
+            if (!admin)
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () async {
+                  await Navigator.pushNamed(context, "/bag");
+                  setState(() {});
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: kUIColor),
+                  ),
+                  padding: EdgeInsets.all(8),
+                  child: Stack(
+                    children: [
+                      Image.asset("assets/images/ShoppingBag.png",
+                          width: 30, height: 30),
+                      Positioned(
+                        left: 11,
+                        top: 10,
+                        child: Text(
+                          bag.products.length.toString(),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+          ],
+        ),
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: kUIColor),
-                        ),
-                        padding: EdgeInsets.all(8),
-                        child: Icon(Icons.arrow_back_ios,
-                            color: kUIDarkText, size: 26),
-                      ),
-                    ),
-                    if (!admin)
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () async {
-                          await Navigator.pushNamed(context, "/bag");
-                          setState(() {});
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: kUIColor),
-                          ),
-                          padding: EdgeInsets.all(8),
-                          child: Stack(
-                            children: [
-                              Image.asset("assets/images/ShoppingBag.png",
-                                  width: 30, height: 30),
-                              Positioned(
-                                left: 11,
-                                top: 10,
-                                child: Text(
-                                  bag.products.length.toString(),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                  ],
-                ),
-              ),
-              Divider(thickness: 2, height: 20),
               Padding(
                 padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: Column(

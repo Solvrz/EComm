@@ -30,8 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if (!hasShown)
-      Timer(Duration(seconds: 5), () {
+    if (!hasShown && !admin)
+      Timer(Duration(seconds: 1), () {
         if (addresses.length == 0) {
           hasShown = true;
           showModalBottomSheet(
@@ -87,6 +87,41 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           backgroundColor: kUIColor,
           resizeToAvoidBottomInset: false,
+          bottomNavigationBar: Container(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+              ),
+            ),
+            height: MediaQuery.of(context).size.height * 58.3 / 816,
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Icon(Icons.call, size: 52, color: kUIAccent),
+                SizedBox(width: 15),
+                Column(
+                  children: [
+                    Text(
+                      "Call or Whatsapp",
+                      style:
+                          TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
+                    ),
+                    Text(
+                      "1234567890",
+                      style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                          color: kUIAccent),
+                    ),
+                  ],
+                ),
+              ]),
+            ),
+          ),
           body: Column(
             children: [
               Padding(
@@ -389,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       crossAxisCount: 3,
                                       mainAxisSpacing: 12,
                                       crossAxisSpacing: 12,
-                                      childAspectRatio: 0.9,
+                                      childAspectRatio: 0.98,
                                       children: List.generate(categories.length,
                                           (int index) {
                                         Map<String, dynamic> data =

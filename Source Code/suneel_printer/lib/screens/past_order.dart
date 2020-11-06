@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/components/past_order.dart';
 import 'package:suneel_printer/constant.dart';
 
@@ -13,44 +14,11 @@ class PastOrderScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: kUIColor,
         resizeToAvoidBottomInset: true,
+        appBar: CustomAppBar(
+            parent: context,
+            title: admin ? "Undelivered Orders" : "My Orders",
+            elevation: 0),
         body: Column(children: [
-          Container(
-            height: 70,
-            padding: EdgeInsets.all(16),
-            child: Row(
-              children: [
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => Navigator.pop(context),
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      color: kUIDarkText,
-                      size: 26,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      admin ? "Undelivered Orders" : "My Orders",
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: kUIDarkText,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: null,
-                  child: Icon(Icons.clear, color: Colors.transparent),
-                ),
-              ],
-            ),
-          ),
           admin
               ? StreamBuilder(
                   stream: database.collection("orders").snapshots(),
@@ -164,24 +132,25 @@ class PastOrderScreen extends StatelessWidget {
                             Column(
                               children: List.generate(
                                 orders.length,
-                                (index) => Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 12),
-                                  child: GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    onTap: () async {
-                                      await showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.transparent,
-                                        context: context,
-                                        builder: (_) => Padding(
-                                          padding:
-                                              MediaQuery.of(context).viewInsets,
-                                          child: PastOrderSheet(
-                                            jsonDecode(orders[index]),
-                                          ),
+                                (index) => GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () async {
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      context: context,
+                                      builder: (_) => Padding(
+                                        padding:
+                                            MediaQuery.of(context).viewInsets,
+                                        child: PastOrderSheet(
+                                          jsonDecode(orders[index]),
                                         ),
-                                      );
-                                    },
+                                      ),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 12),
                                     child: Container(
                                       margin: EdgeInsets.symmetric(vertical: 8),
                                       decoration: BoxDecoration(
@@ -245,21 +214,21 @@ class PastOrderScreen extends StatelessWidget {
   }
 
   Widget _buildItem(BuildContext context, String id, Map order) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () async {
-          await showModalBottomSheet(
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            context: context,
-            builder: (_) => Padding(
-              padding: MediaQuery.of(context).viewInsets,
-              child: PastOrderSheet(order),
-            ),
-          );
-        },
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () async {
+        await showModalBottomSheet(
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          context: context,
+          builder: (_) => Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: PastOrderSheet(order),
+          ),
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12),
         child: Slidable(
           key: ValueKey(order["time"]),
           actionPane: SlidableDrawerActionPane(),

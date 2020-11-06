@@ -9,6 +9,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:suneel_printer/components/alert_button.dart';
+import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -41,12 +42,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
   ];
 
   List<Image> images = [];
+  List<String> urls = [];
   List<File> imageFiles = [];
 
   List<Variation> variations = [];
 
   int _currentImage = 0;
 
+  TextEditingController nameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
   TextEditingController mrpController = TextEditingController();
 
   @override
@@ -55,15 +59,27 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     if (args.product != null && name == "") {
       name = args.product.name;
+      nameController.text = name;
+
       price = args.product.price;
+      priceController.text = price;
+
       mrp = args.product.mrp;
       mrpController.text = mrp;
-      if (args.product.images != null)
+
+      if (args.product.images != null) {
         images = args.product.images
             .map(
               (e) => Image(image: e),
             )
             .toList();
+        urls = args.product.images
+            .map(
+              (e) => e.url,
+            )
+            .toList();
+      }
+
       variations = args.product.variations;
     }
 
@@ -77,75 +93,54 @@ class _AddProductScreenState extends State<AddProductScreen> {
         child: Scaffold(
           backgroundColor: kUIColor,
           resizeToAvoidBottomInset: true,
+          appBar: CustomAppBar(
+            parent: context,
+            title: args.product != null ? "Edit" : "Preview",
+            leading: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                _buildDiscardChangesDialog(context);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: kUIColor),
+                ),
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.arrow_back_ios, color: kUIDarkText, size: 26),
+              ),
+            ),
+            trailing: [
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: name != "" && price != "" && mrp != ""
+                    ? () async {
+                        _addProduct(context, args.title, args.product,
+                            args.tabs, args.tabsData, args.currentTab);
+
+                        Navigator.pop(context);
+                      }
+                    : null,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: kUIColor),
+                  ),
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.arrow_forward_ios,
+                      color: name != "" && price != "" && mrp != ""
+                          ? kUIDarkText
+                          : Colors.grey[400],
+                      size: 26),
+                ),
+              ),
+            ],
+          ),
           body: SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height * 730 / 816,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Builder(
-                    builder: (BuildContext context) => Container(
-                      padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: () {
-                              _buildDiscardChangesDialog(context);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: kUIColor),
-                              ),
-                              padding: EdgeInsets.all(8),
-                              child: Icon(Icons.arrow_back_ios,
-                                  color: kUIDarkText, size: 26),
-                            ),
-                          ),
-                          Text(
-                            args.product != null ? "Edit" : "Preview",
-                            style: TextStyle(
-                                color: kUIDarkText,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "sans-serif-condensed"),
-                          ),
-                          GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: name != "" && price != "" && mrp != ""
-                                ? () async {
-                                    _addProduct(
-                                        context,
-                                        args.title,
-                                        args.product,
-                                        args.tabs,
-                                        args.tabsData,
-                                        args.currentTab);
-
-                                    Navigator.pop(context);
-                                  }
-                                : null,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: kUIColor),
-                              ),
-                              padding: EdgeInsets.all(8),
-                              child: Icon(Icons.arrow_forward_ios,
-                                  color: name != "" && price != "" && mrp != ""
-                                      ? kUIDarkText
-                                      : Colors.grey[400],
-                                  size: 26),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Divider(thickness: 2, height: 20),
                   Padding(
                     padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
                     child: Column(
@@ -157,7 +152,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             children: [
                               Expanded(
                                 child: TextField(
-                                  controller: TextEditingController(text: name),
+                                  controller: nameController,
                                   cursorColor: Colors.grey,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
@@ -168,9 +163,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
-                                  onSubmitted: (value) {
-                                    setState(() => name = value);
-                                  },
+                                  onChanged: (value) =>
+                                      setState(() => name = value),
                                   style: TextStyle(
                                       color: kUIDarkText,
                                       fontSize: 28,
@@ -259,8 +253,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                           GestureDetector(
                                                                         onTap:
                                                                             () {
+                                                                          // if (urls.isNotEmpty &&
+                                                                          //     args.product != null)
+                                                                          //   FirebaseStorage.instance.getReferenceFromUrl(urls[index]).then(
+                                                                          //         (value) => value.delete(),
+                                                                          //       );
+
+                                                                          // TODO: Delete image from firestore
+
                                                                           images
                                                                               .removeAt(index);
+
                                                                           Navigator.pop(
                                                                               context);
                                                                         },
@@ -378,23 +381,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   child: _buildVariation(context, variation),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8),
-                                child: AlertButton(
-                                  backgroundColor: kUIColor,
-                                  titleColor: kUIAccent,
-                                  title: "Add Variation",
-                                  onPressed: () => setState(() {
-                                    variations.add(
-                                      Variation(
-                                          name: "",
-                                          options: [Option(label: "Label")]),
-                                    );
-                                  }),
-                                ),
-                              ),
                             ]),
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: AlertButton(
+                      backgroundColor: kUIColor,
+                      titleColor: kUIAccent,
+                      title: "Add Variation",
+                      onPressed: () => setState(() {
+                        variations.add(
+                          Variation(
+                              name: "", options: [Option(label: "Label")]),
+                        );
+                      }),
                     ),
                   ),
                   Padding(
@@ -426,9 +428,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: -0.4),
                             ),
-                            onChanged: (value) {
-                              setState(() => mrp = value);
-                            },
+                            onChanged: (value) => setState(() => mrp = value),
                             cursorColor: Colors.grey,
                             style: TextStyle(
                                 color: kUIDarkText,
@@ -458,7 +458,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           width: 80,
                           child: TextField(
                             keyboardType: TextInputType.number,
-                            controller: TextEditingController(text: price),
+                            controller: priceController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               prefixText: "₹ ",
@@ -470,8 +470,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   letterSpacing: -0.4),
                             ),
                             cursorColor: Colors.grey,
-                            onSubmitted: (value) =>
-                                setState(() => price = value),
+                            onChanged: (value) => setState(() => price = value),
                             style: TextStyle(
                                 color: kUIDarkText,
                                 fontSize: 20,
@@ -654,6 +653,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       QuerySnapshot query = await tabs[currentTab].collection("products").get();
 
       int maxId = 0;
+
+      // TODO FIX: Make me work for every category
 
       query.docs.forEach((element) {
         int currId = int.parse(element.data()["uId"].split("/").last);

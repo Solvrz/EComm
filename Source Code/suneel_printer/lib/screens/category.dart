@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/category_product.dart';
 import 'package:suneel_printer/screens/order.dart';
@@ -61,74 +62,48 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       return Scaffold(
                         backgroundColor: kUIColor,
                         resizeToAvoidBottomInset: false,
+                        appBar: CustomAppBar(
+                          parent: context,
+                          title: title,
+                          trailing: [
+                            GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: admin
+                                  ? null
+                                  : () async {
+                                      await Navigator.pushNamed(
+                                          context, "/bag");
+                                      setState(() {});
+                                    },
+                              child: Padding(
+                                padding: EdgeInsets.all(18),
+                                child: admin
+                                    ? SizedBox(height: 34, width: 34)
+                                    : Stack(
+                                        children: [
+                                          Image.asset(
+                                              "assets/images/ShoppingBag.png",
+                                              width: 30,
+                                              height: 30),
+                                          Positioned(
+                                            left: 11,
+                                            top: 10,
+                                            child: Text(
+                                              bag.products.length.toString(),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                              ),
+                            )
+                          ],
+                        ),
                         floatingActionButton: admin && screen != null
                             ? Builder(
                                 builder: (context) => screen.getFab(context),
                               )
                             : null,
-                        body: Column(children: [
-                          Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Icon(Icons.arrow_back_ios,
-                                        color: kUIDarkText, size: 26),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      title,
-                                      style: TextStyle(
-                                          fontSize: 24,
-                                          color: kUIDarkText,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: admin
-                                      ? () {}
-                                      : () async {
-                                          await Navigator.pushNamed(
-                                              context, "/bag");
-                                          setState(() {});
-                                        },
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: admin
-                                        ? SizedBox(height: 34, width: 34)
-                                        : Stack(
-                                            children: [
-                                              Image.asset(
-                                                  "assets/images/ShoppingBag.png",
-                                                  width: 30,
-                                                  height: 30),
-                                              Positioned(
-                                                left: 11,
-                                                top: 10,
-                                                child: Text(
-                                                  bag.products.length
-                                                      .toString(),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Expanded(child: screen)
-                        ]),
+                        body: Column(children: [Expanded(child: screen)]),
                       );
                     } else {
                       return Center(

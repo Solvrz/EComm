@@ -54,16 +54,16 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
           child: Row(
             children: [
               ...List.generate(widget.tabs.length, (int index) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      if (index == widget._currentTab) return;
-                      setState(() {
-                        widget._currentTab = index;
-                      });
-                    },
+                return GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    if (index == widget._currentTab) return;
+                    setState(() {
+                      widget._currentTab = index;
+                    });
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
                     child: AnimatedDefaultTextStyle(
                       child: Text(
                         widget.tabsData[index]["name"].split("\\n").join("\n"),
