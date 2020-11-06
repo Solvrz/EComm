@@ -5,7 +5,7 @@ class RoundedAlertDialog extends StatelessWidget {
   final String title;
   final String description;
   final List<Widget> buttonsList;
-  final List<Widget> otherWidgets;
+  final List<Widget> widgets;
   final bool isExpanded;
   final bool centerTitle;
   final double titleSize;
@@ -15,7 +15,7 @@ class RoundedAlertDialog extends StatelessWidget {
       {@required this.title,
       this.description = "",
       this.buttonsList = const [],
-      this.otherWidgets,
+      this.widgets,
       this.isExpanded = true,
       this.centerTitle = true,
       this.titleSize = 24,
@@ -45,10 +45,10 @@ class RoundedAlertDialog extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(color: kUIDarkText, fontSize: descriptionSize),
           ),
-        if (otherWidgets != null)
+        if (widgets != null)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: otherWidgets,
+            children: widgets,
           ),
         if (buttonsList.length > 0)
           Row(

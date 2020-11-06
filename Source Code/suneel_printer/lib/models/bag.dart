@@ -32,6 +32,7 @@ class Bag {
   List<String> _changeLog = [];
 
   List<BagItem> get products => _products;
+
   List<String> get changeLog => _changeLog;
 
   bool get hasNoProducts => !(_products.length > 0);
@@ -50,7 +51,10 @@ class Bag {
   }
 
   void removeProduct(Product product) {
-    _products.removeWhere((BagItem bagItem) => bagItem.product == product);
+    _products.removeWhere((BagItem bagItem) {
+      print(bagItem.product.toJson());
+      return bagItem.product == product;
+    });
     _save();
   }
 
@@ -129,9 +133,11 @@ class Bag {
             .get();
 
         if (products.docs.isEmpty) {
+          print("REMOVING");
           _changeLog.add(
               "The product '${item.product.name}' has been removed from the store");
-          bag.removeProduct(item.product);
+          wishlist.removeProduct(item.product);
+          items[items.indexOf(item)] = null;
         } else {
           Map productData = products.docs.first.data();
           List<String> diff = item.product.difference(
@@ -167,6 +173,8 @@ class Bag {
           item.product = Product.fromJson(updatedData);
         }
       }
+
+      items.removeWhere((element) => element == null);
 
       _products = items;
 

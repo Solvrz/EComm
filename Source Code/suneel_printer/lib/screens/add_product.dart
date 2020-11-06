@@ -47,8 +47,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   int _currentImage = 0;
 
-  FocusNode _priceNode = FocusNode();
-  FocusNode _mrpNode = FocusNode();
+  TextEditingController mrpController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +57,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       name = args.product.name;
       price = args.product.price;
       mrp = args.product.mrp;
+      mrpController.text = mrp;
       if (args.product.images != null)
         images = args.product.images
             .map(
@@ -152,138 +152,214 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(right: 44, bottom: 36),
-                          child: TextField(
-                            controller: TextEditingController(text: name),
-                            cursorColor: Colors.grey,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Product Name",
-                              hintStyle: TextStyle(
-                                  color: kUIDarkText,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "sans-serif-condensed"),
-                            ),
-                            onSubmitted: (value) {
-                              setState(() => name = value);
-                              FocusScope.of(context).autofocus(_mrpNode);
-                            },
-                            style: TextStyle(
-                                color: kUIDarkText,
-                                fontSize: 28,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "sans-serif-condensed"),
+                          padding: EdgeInsets.only(right: 18, bottom: 36),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: TextEditingController(text: name),
+                                  cursorColor: Colors.grey,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Product Name",
+                                    hintStyle: TextStyle(
+                                        color: kUIDarkText,
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: "sans-serif-condensed"),
+                                  ),
+                                  onSubmitted: (value) {
+                                    setState(() => name = value);
+                                  },
+                                  style: TextStyle(
+                                      color: kUIDarkText,
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "sans-serif-condensed"),
+                                ),
+                              ),
+                              GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () async {
+                                  FilePickerResult result =
+                                      await FilePicker.platform.pickFiles(
+                                          type: FileType.custom,
+                                          allowedExtensions: ["png", "jpg"],
+                                          allowMultiple: true);
+
+                                  List<Image> compImages = [];
+                                  List<File> compFiles = [];
+
+                                  for (String path in result.paths) {
+                                    File file = File(path);
+                                    List<String> splits =
+                                        file.absolute.path.split("/");
+
+                                    File compFile = await FlutterImageCompress
+                                        .compressAndGetFile(
+                                      file.absolute.path,
+                                      splits
+                                              .getRange(0, splits.length - 1)
+                                              .join("/") +
+                                          "/Compressed" +
+                                          Timestamp.now().toDate().toString() +
+                                          ".jpeg",
+                                      format: CompressFormat.jpeg,
+                                    );
+                                    compFiles.add(compFile);
+                                    compImages.add(
+                                      Image.file(compFile),
+                                    );
+                                  }
+
+                                  images.addAll(compImages);
+                                  imageFiles.addAll(compFiles);
+                                  setState(() {
+                                    _currentImage = 0;
+                                  });
+                                },
+                                child: Icon(Icons.add_photo_alternate,
+                                    color: kUIAccent, size: 32),
+                              )
+                            ],
                           ),
                         ),
                         Container(
                           height: MediaQuery.of(context).size.height * 0.3,
                           width: MediaQuery.of(context).size.width,
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
-                                  child: CarouselSlider(
-                                    items: [
-                                      ...images
-                                          .map<Widget>((Image image) => image)
-                                          .toList(),
-                                      GestureDetector(
-                                        behavior: HitTestBehavior.translucent,
-                                        onTap: () async {
-                                          FilePickerResult result =
-                                              await FilePicker
-                                                  .platform
-                                                  .pickFiles(
-                                                      type: FileType.custom,
-                                                      allowedExtensions: [
-                                                        "png",
-                                                        "jpg"
-                                                      ],
-                                                      allowMultiple: true);
-
-                                          List<Image> compImages = [];
-                                          List<File> compFiles = [];
-
-                                          for (String path in result.paths) {
-                                            File file = File(path);
-                                            List<String> splits =
-                                                file.absolute.path.split("/");
-
-                                            File compFile =
-                                                await FlutterImageCompress
-                                                    .compressAndGetFile(
-                                              file.absolute.path,
-                                              splits
-                                                      .getRange(
-                                                          0, splits.length - 1)
-                                                      .join("/") +
-                                                  "/Compressed" +
-                                                  Timestamp.now()
-                                                      .toDate()
-                                                      .toString() +
-                                                  ".jpeg",
-                                              format: CompressFormat.jpeg,
-                                            );
-                                            compFiles.add(compFile);
-                                            compImages.add(
-                                              Image.file(compFile),
-                                            );
-                                          }
-
-                                          images.addAll(compImages);
-                                          imageFiles.addAll(compFiles);
-                                          setState(() {
-                                            _currentImage = 0;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 120,
-                                          margin: EdgeInsets.all(24),
-                                          padding: EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            color: Colors.white70,
-                                          ),
-                                          child: Icon(Icons.post_add,
-                                              color: kUIAccent, size: 32),
-                                        ),
-                                      ),
-                                    ],
-                                    options: CarouselOptions(
-                                        autoPlay: false,
-                                        enlargeCenterPage: true,
-                                        aspectRatio: 2,
-                                        onPageChanged: (index, reason) {
-                                          setState(() {
-                                            _currentImage = index;
-                                          });
-                                        }),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    images.length + 1,
-                                    (int index) => AnimatedContainer(
-                                      duration: Duration(milliseconds: 400),
-                                      width: _currentImage == index ? 16 : 8,
-                                      height: _currentImage == index ? 6 : 8,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 3),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: _currentImage == index
-                                            ? Color.fromRGBO(0, 0, 0, 0.9)
-                                            : Color.fromRGBO(0, 0, 0, 0.4),
-                                      ),
+                          child: images.length > 0
+                              ? Stack(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: GestureDetector(
+                                          behavior: HitTestBehavior.translucent,
+                                          onTap: () async {
+                                            await showDialog(
+                                                context: context,
+                                                builder:
+                                                    (_) => RoundedAlertDialog(
+                                                          title:
+                                                              "Select the image you want to delete",
+                                                          centerTitle: true,
+                                                          widgets: [
+                                                            SingleChildScrollView(
+                                                              child: Container(
+                                                                  height: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .height /
+                                                                      2,
+                                                                  child: Column(
+                                                                    children: List
+                                                                        .generate(
+                                                                      images
+                                                                          .length,
+                                                                      (int index) =>
+                                                                          GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          images
+                                                                              .removeAt(index);
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                        child: Container(
+                                                                            padding: EdgeInsets.symmetric(vertical: 8),
+                                                                            margin: EdgeInsets.symmetric(vertical: 8),
+                                                                            height: MediaQuery.of(context).size.height / 8,
+                                                                            decoration: BoxDecoration(
+                                                                              color: Colors.grey[100],
+                                                                              borderRadius: BorderRadius.circular(20),
+                                                                            ),
+                                                                            child: Center(child: images[index])),
+                                                                      ),
+                                                                    ),
+                                                                  )),
+                                                            )
+                                                          ],
+                                                        ));
+                                            setState(() {});
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                right: 18, bottom: 9),
+                                            child: Icon(Icons.delete,
+                                                color: kUIDarkText
+                                                    .withOpacity(0.6)),
+                                          )),
                                     ),
-                                  ),
-                                ),
-                              ]),
+                                    Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.fromLTRB(
+                                                8, 16, 8, 8),
+                                            child: CarouselSlider(
+                                              items: images
+                                                  .map<Widget>(
+                                                      (Image image) => image)
+                                                  .toList(),
+                                              options: CarouselOptions(
+                                                  autoPlay: images.length > 1
+                                                      ? true
+                                                      : false,
+                                                  enlargeCenterPage: true,
+                                                  aspectRatio: 2,
+                                                  onPageChanged:
+                                                      (index, reason) {
+                                                    setState(() {
+                                                      _currentImage = index;
+                                                    });
+                                                  }),
+                                            ),
+                                          ),
+                                          if (images.length > 1)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: List.generate(
+                                                images.length,
+                                                (int index) =>
+                                                    AnimatedContainer(
+                                                  duration: Duration(
+                                                      milliseconds: 400),
+                                                  width: _currentImage == index
+                                                      ? 16
+                                                      : 8,
+                                                  height: _currentImage == index
+                                                      ? 6
+                                                      : 8,
+                                                  margin: EdgeInsets.symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 3),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    color:
+                                                        _currentImage == index
+                                                            ? Color.fromRGBO(
+                                                                0, 0, 0, 0.9)
+                                                            : Color.fromRGBO(
+                                                                0, 0, 0, 0.4),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ]),
+                                  ],
+                                )
+                              : Center(
+                                  child: Text("No Images Added\nAdd One",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ))),
                         )
                       ],
                     ),
@@ -339,8 +415,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           width: 80,
                           child: TextField(
                             keyboardType: TextInputType.number,
-                            controller: TextEditingController(text: mrp),
-                            focusNode: _mrpNode,
+                            controller: mrpController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               prefixText: "₹ ",
@@ -351,9 +426,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: -0.4),
                             ),
-                            onSubmitted: (value) {
+                            onChanged: (value) {
                               setState(() => mrp = value);
-                              FocusScope.of(context).autofocus(_priceNode);
                             },
                             cursorColor: Colors.grey,
                             style: TextStyle(
@@ -385,7 +459,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           child: TextField(
                             keyboardType: TextInputType.number,
                             controller: TextEditingController(text: price),
-                            focusNode: _priceNode,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               prefixText: "₹ ",
@@ -648,8 +721,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
               .toList()
         });
       }
-
-      Navigator.pop(context);
     } else {
       Scaffold.of(context).removeCurrentSnackBar();
       Scaffold.of(context).showSnackBar(
@@ -682,7 +753,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         },
         child: RoundedAlertDialog(
           title: "Edit Option",
-          otherWidgets: [
+          widgets: [
             TextField(
               controller: labelController,
               decoration: kInputDialogDecoration.copyWith(

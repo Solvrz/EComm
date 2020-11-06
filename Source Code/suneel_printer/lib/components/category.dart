@@ -139,8 +139,10 @@ class _ProductCardState extends State<ProductCard>
                                 _animationController.reverse();
 
                                 widget.args.product = widget.product;
-                                Navigator.pushNamed(context, "/add_product",
+                                await Navigator.pushNamed(
+                                    context, "/add_product",
                                     arguments: widget.args);
+                                setState(() {});
                               },
                               child: Padding(
                                 padding:

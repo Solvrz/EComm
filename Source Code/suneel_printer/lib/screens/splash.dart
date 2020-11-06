@@ -30,8 +30,8 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      bag.load();
       wishlist.load();
+      bag.load();
 
       addresses = (preferences.getStringList("info") ?? [])
           .map<Map>(

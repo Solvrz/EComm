@@ -23,8 +23,6 @@ class _BagScreenState extends State<BagScreen> {
   Widget build(BuildContext context) {
     double price = 0;
 
-    // TODO FIXME: Not getting removed from Bag & WIshlist after being remived from the store
-
     bag.products.forEach((BagItem bagItem) {
       price += double.parse(bagItem.product.price) * bagItem.quantity;
     });
@@ -185,7 +183,7 @@ class _BagScreenState extends State<BagScreen> {
                         );
                         return true;
                       },
-                      child: RoundedAlertDialog(title: "Alerts", otherWidgets: [
+                      child: RoundedAlertDialog(title: "Alerts", widgets: [
                         Container(
                           height:
                               MediaQuery.of(context).size.height * 200 / 816,
