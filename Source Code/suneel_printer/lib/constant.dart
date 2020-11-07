@@ -5,7 +5,6 @@ import 'package:suneel_printer/models/bag.dart';
 import 'package:suneel_printer/models/payment.dart';
 import 'package:suneel_printer/models/wishlist.dart';
 
-bool admin = true;
 bool staging = true;
 
 const kUIAccent = Colors.redAccent;

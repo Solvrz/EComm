@@ -68,18 +68,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           trailing: [
                             GestureDetector(
                               behavior: HitTestBehavior.translucent,
-                              onTap: admin
-                                  ? null
-                                  : () async {
+                              onTap:() async {
                                       await Navigator.pushNamed(
                                           context, "/bag");
                                       setState(() {});
                                     },
                               child: Padding(
                                 padding: EdgeInsets.all(18),
-                                child: admin
-                                    ? SizedBox(height: 34, width: 34)
-                                    : Stack(
+                                child:
+                                    Stack(
                                         children: [
                                           Image.asset(
                                               "assets/images/ShoppingBag.png",
@@ -98,11 +95,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             )
                           ],
                         ),
-                        floatingActionButton: admin && screen != null
-                            ? Builder(
-                                builder: (context) => screen.getFab(context),
-                              )
-                            : null,
+                      
                         body: Column(children: [Expanded(child: screen)]),
                       );
                     } else {

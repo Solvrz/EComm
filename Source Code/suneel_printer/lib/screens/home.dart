@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if (!hasShown && !admin)
+    if (!hasShown )
       Timer(Duration(seconds: 1), () {
         if (addresses.length == 0) {
           hasShown = true;
@@ -206,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         height: 30),
                                   ),
                                 ),
-                                if (!admin)
+                                
                                   GestureDetector(
                                     behavior: HitTestBehavior.translucent,
                                     onTap: () {
@@ -431,25 +431,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             categories[index];
                                         return GestureDetector(
                                           behavior: HitTestBehavior.translucent,
-                                          onTap: onOrder
-                                                      .contains(data["name"]) &&
-                                                  admin
-                                              ? () {
-                                                  Scaffold.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      elevation: 10,
-                                                      backgroundColor:
-                                                          kUIAccent,
-                                                      content: Text(
-                                                        "Sorry, ${data["name"]} screen is not available in Admin Mode",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-                                              : () => Navigator.pushNamed(
+                                          onTap:() => Navigator.pushNamed(
                                                     context,
                                                     "/category",
                                                     arguments:
