@@ -68,34 +68,29 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           trailing: [
                             GestureDetector(
                               behavior: HitTestBehavior.translucent,
-                              onTap:() async {
-                                      await Navigator.pushNamed(
-                                          context, "/bag");
-                                      setState(() {});
-                                    },
+                              onTap: () async {
+                                await Navigator.pushNamed(context, "/bag");
+                                setState(() {});
+                              },
                               child: Padding(
                                 padding: EdgeInsets.all(18),
-                                child:
-                                    Stack(
-                                        children: [
-                                          Image.asset(
-                                              "assets/images/ShoppingBag.png",
-                                              width: 30,
-                                              height: 30),
-                                          Positioned(
-                                            left: 11,
-                                            top: 10,
-                                            child: Text(
-                                              bag.products.length.toString(),
-                                            ),
-                                          )
-                                        ],
+                                child: Stack(
+                                  children: [
+                                    Image.asset("assets/images/ShoppingBag.png",
+                                        width: 30, height: 30),
+                                    Positioned(
+                                      left: 11,
+                                      top: 10,
+                                      child: Text(
+                                        bag.products.length.toString(),
                                       ),
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                           ],
                         ),
-                      
                         body: Column(children: [Expanded(child: screen)]),
                       );
                     } else {

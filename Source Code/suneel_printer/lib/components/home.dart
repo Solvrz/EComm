@@ -462,7 +462,7 @@ class _SearchCardState extends State<SearchCard> {
         );
       },
       child: Container(
-        padding: EdgeInsets.fromLTRB(12,  24, 12, 0),
+        padding: EdgeInsets.fromLTRB(12, 24, 12, 0),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey[400], width: 0.5),
         ),
@@ -494,26 +494,25 @@ class _SearchCardState extends State<SearchCard> {
                         ),
                 ),
               ),
-              if (!admin)
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () => setState(
-                      () => wishlist.containsProduct(widget.product)
-                          ? wishlist.removeProduct(widget.product)
-                          : wishlist.addProduct(widget.product),
-                    ),
-                    child: Icon(
-                      wishlist.containsProduct(widget.product)
-                          ? Icons.favorite
-                          : Icons.favorite_outline,
-                      color: wishlist.containsProduct(widget.product)
-                          ? kUIAccent
-                          : kUIDarkText,
-                    ),
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => setState(
+                    () => wishlist.containsProduct(widget.product)
+                        ? wishlist.removeProduct(widget.product)
+                        : wishlist.addProduct(widget.product),
+                  ),
+                  child: Icon(
+                    wishlist.containsProduct(widget.product)
+                        ? Icons.favorite
+                        : Icons.favorite_outline,
+                    color: wishlist.containsProduct(widget.product)
+                        ? kUIAccent
+                        : kUIDarkText,
                   ),
                 ),
+              ),
             ]),
           ),
           SizedBox(height: 18),

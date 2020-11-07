@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:suneel_printer/components/category.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
-import 'package:suneel_printer/screens/add_product.dart';
 
 // ignore: must_be_immutable
 class CategoryProductPage extends StatefulWidget {
@@ -14,23 +13,6 @@ class CategoryProductPage extends StatefulWidget {
   int _currentTab = 0;
 
   CategoryProductPage(this.title, this.tabsData, this.tabs);
-
-  Widget getFab(BuildContext context) => FloatingActionButton(
-        elevation: 10,
-        backgroundColor: kUIColor,
-        child: Icon(Icons.add, color: kUIAccent, size: 30),
-        onPressed: () async {
-          Navigator.pushNamed(
-            context,
-            "/add_product",
-            arguments: AddProductArguments(
-                tabsData: tabsData,
-                tabs: tabs,
-                title: title,
-                currentTab: _currentTab),
-          );
-        },
-      );
 
   @override
   _CategoryProductPageState createState() => _CategoryProductPageState();
@@ -101,11 +83,6 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                       );
                     },
                   ).toList(),
-                  args: AddProductArguments(
-                      tabsData: widget.tabsData,
-                      tabs: widget.tabs,
-                      title: widget.title,
-                      currentTab: widget._currentTab),
                 ),
               );
             } else {

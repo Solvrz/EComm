@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if (!hasShown )
+    if (!hasShown)
       Timer(Duration(seconds: 1), () {
         if (addresses.length == 0) {
           hasShown = true;
@@ -206,31 +206,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                         height: 30),
                                   ),
                                 ),
-                                
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    onTap: () {
-                                      Navigator.pushNamed(context, "/bag");
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Stack(
-                                        children: [
-                                          Image.asset(
-                                              "assets/images/ShoppingBag.png",
-                                              width: 30,
-                                              height: 30),
-                                          Positioned(
-                                            left: 11,
-                                            top: 10,
-                                            child: Text(
-                                              bag.products.length.toString(),
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    Navigator.pushNamed(context, "/bag");
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Stack(
+                                      children: [
+                                        Image.asset(
+                                            "assets/images/ShoppingBag.png",
+                                            width: 30,
+                                            height: 30),
+                                        Positioned(
+                                          left: 11,
+                                          top: 10,
+                                          child: Text(
+                                            bag.products.length.toString(),
+                                          ),
+                                        )
+                                      ],
                                     ),
                                   ),
+                                ),
                               ]),
                         )
                       ],
@@ -431,15 +430,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             categories[index];
                                         return GestureDetector(
                                           behavior: HitTestBehavior.translucent,
-                                          onTap:() => Navigator.pushNamed(
-                                                    context,
-                                                    "/category",
-                                                    arguments:
-                                                        CategoryArguments(
-                                                      data,
-                                                      data["uId"],
-                                                    ),
-                                                  ),
+                                          onTap: () => Navigator.pushNamed(
+                                            context,
+                                            "/category",
+                                            arguments: CategoryArguments(
+                                              data,
+                                              data["uId"],
+                                            ),
+                                          ),
                                           child: Container(
                                             padding: EdgeInsets.all(8),
                                             decoration: BoxDecoration(

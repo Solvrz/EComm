@@ -46,15 +46,15 @@ class InfoWidget extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-            Text(
-                        "${DateTime.fromMicrosecondsSinceEpoch(int.parse(order['time'].split("(")[1].split("=")[1].split(",")[0].toString()) * 1000000 + int.parse(order['time'].split("(")[1].split("=")[2].split(")")[0].toString()) ~/ 1000).toString().split(" ")[0].split("-").reversed.join("-")}",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: kUIDarkText,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
+                Text(
+                  "${DateTime.fromMicrosecondsSinceEpoch(int.parse(order['time'].split("(")[1].split("=")[1].split(",")[0].toString()) * 1000000 + int.parse(order['time'].split("(")[1].split("=")[2].split(")")[0].toString()) ~/ 1000).toString().split(" ")[0].split("-").reversed.join("-")}",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: kUIDarkText,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
               ],
             ),
           ],
