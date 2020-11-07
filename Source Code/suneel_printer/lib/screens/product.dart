@@ -42,7 +42,7 @@ class _ProductScreenState extends State<ProductScreen> {
           parent: context,
           title: "",
           trailing: [
-            if (!admin)
+            
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () async {
@@ -93,7 +93,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               fontWeight: FontWeight.w600,
                               fontFamily: "sans-serif-condensed"),
                         ),
-                        if (!admin)
+                       
                           GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: () {
@@ -246,7 +246,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   ],
                 ),
               ),
-              if (!admin)
+             
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                   child: Row(

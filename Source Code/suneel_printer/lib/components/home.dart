@@ -462,7 +462,7 @@ class _SearchCardState extends State<SearchCard> {
         );
       },
       child: Container(
-        padding: EdgeInsets.fromLTRB(12, admin ? 12 : 24, 12, 0),
+        padding: EdgeInsets.fromLTRB(12,  24, 12, 0),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey[400], width: 0.5),
         ),

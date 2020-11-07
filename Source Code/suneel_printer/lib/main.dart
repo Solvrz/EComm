@@ -21,10 +21,7 @@ void main() async {
   RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);
 
   Firebase.initializeApp().whenComplete(() {
-    if (admin)
-      FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: "admin-suneelprinters@gmail.com",
-          password: "SuneelPrinters37");
+   
 
     FirebasePerformance.instance
         .setPerformanceCollectionEnabled(false)

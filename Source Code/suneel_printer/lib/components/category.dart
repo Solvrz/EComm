@@ -77,7 +77,7 @@ class _ProductCardState extends State<ProductCard>
         setState(() {});
       },
       child: Container(
-        padding: EdgeInsets.fromLTRB(12, admin ? 12 : 24, 12, 0),
+        padding: EdgeInsets.fromLTRB(12,  24, 12, 0),
         decoration: BoxDecoration(
           border: Border(
             right: BorderSide(color: Colors.grey[400], width: 1),
