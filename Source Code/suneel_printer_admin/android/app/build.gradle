@@ -35,7 +35,7 @@ android {
     }
 
     defaultConfig {
-        applicationId 'com.solvrz.suneel_printer'
+        applicationId 'com.solvrz.suneel_printer_admin'
         minSdkVersion 18
         targetSdkVersion 29
         multiDexEnabled true

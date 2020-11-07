@@ -1,4 +1,4 @@
-package com.suneel37.suneel_printer
+package com.solvrz.suneel_printer
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle

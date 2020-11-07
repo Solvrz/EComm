@@ -1,0 +1,40 @@
+name: suneel_printer
+description: A new Flutter project.
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  firebase_core: ^0.5.1
+  firebase_auth: ^0.18.2
+  cloud_firestore: ^0.14.2
+  firebase_storage: ^4.0.1
+  firebase_crashlytics: ^0.2.2
+  firebase_performance: ^0.4.1
+  flutter_image_compress: ^0.7.0
+  responsive_framework: ^0.0.11
+  flutter_colorpicker: ^0.3.4
+  shared_preferences: ^0.5.12+4
+  flutter_slidable: ^0.5.7
+  carousel_slider: ^2.3.1
+  googleapis_auth: ^0.2.12
+  flare_flutter: ^2.0.6
+  empty_widget: ^0.0.1
+  file_picker: ^2.0.12
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/animation/
