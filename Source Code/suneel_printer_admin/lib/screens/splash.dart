@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/screens/home.dart';
+import 'package:suneel_printer_admin/constant.dart';
+import 'package:suneel_printer_admin/screens/home.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -28,22 +27,6 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      wishlist.load();
-      bag.load();
-
-      addresses = (preferences.getStringList("info") ?? [])
-          .map<Map>(
-            (e) => jsonDecode(e),
-          )
-          .toList();
-
-      // TODO: Save SelectedInfo in sharedPreferences
-
-      List<Map> selected = addresses.where((e) => e["selected"]).toList();
-      if (selected.length > 0) selectedInfo = selected.first;
-    });
 
     _controller = AnimationController(
       duration: Duration(seconds: 2),

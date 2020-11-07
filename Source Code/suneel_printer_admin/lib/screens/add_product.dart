@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:suneel_printer/components/alert_button.dart';
-import 'package:suneel_printer/components/custom_app_bar.dart';
-import 'package:suneel_printer/components/rounded_alert_dialog.dart';
-import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/models/product.dart';
-import 'package:suneel_printer/models/variation.dart';
+import 'package:suneel_printer_admin/components/alert_button.dart';
+import 'package:suneel_printer_admin/components/custom_app_bar.dart';
+import 'package:suneel_printer_admin/components/rounded_alert_dialog.dart';
+import 'package:suneel_printer_admin/constant.dart';
+import 'package:suneel_printer_admin/models/product.dart';
+import 'package:suneel_printer_admin/models/variation.dart';
 
 class AddProductScreen extends StatefulWidget {
   @override

@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:suneel_printer/components/custom_app_bar.dart';
-import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/screens/category_product.dart';
-import 'package:suneel_printer/screens/order.dart';
+import 'package:suneel_printer_admin/components/custom_app_bar.dart';
+import 'package:suneel_printer_admin/constant.dart';
+import 'package:suneel_printer_admin/screens/category_product.dart';
 
 // ignore: must_be_immutable
 class CategoryScreen extends StatefulWidget {
@@ -37,27 +36,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       .get(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      dynamic screen = !onOrder.contains(title)
-                          ? CategoryProductPage(
-                              title,
-                              snapshot.data.docs
-                                  .map<Map>(
-                                    (DocumentSnapshot e) => e.data(),
-                                  )
-                                  .toList(),
-                              snapshot.data.docs
-                                  .map<DocumentReference>(
-                                      (DocumentSnapshot e) => e.reference)
-                                  .toList(),
+                      dynamic screen = CategoryProductPage(
+                        title,
+                        snapshot.data.docs
+                            .map<Map>(
+                              (DocumentSnapshot e) => e.data(),
                             )
-                          : OrderProductPage(
-                              title: title,
-                              tabsData: snapshot.data.docs
-                                  .map<Map>(
-                                    (DocumentSnapshot e) => e.data(),
-                                  )
-                                  .toList(),
-                            );
+                            .toList(),
+                        snapshot.data.docs
+                            .map<DocumentReference>(
+                                (DocumentSnapshot e) => e.reference)
+                            .toList(),
+                      );
 
                       return Scaffold(
                         backgroundColor: kUIColor,
@@ -65,40 +55,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         appBar: CustomAppBar(
                           parent: context,
                           title: title,
-                          trailing: [
-                            GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: admin
-                                  ? null
-                                  : () async {
-                                      await Navigator.pushNamed(
-                                          context, "/bag");
-                                      setState(() {});
-                                    },
-                              child: Padding(
-                                padding: EdgeInsets.all(18),
-                                child: admin
-                                    ? SizedBox(height: 34, width: 34)
-                                    : Stack(
-                                        children: [
-                                          Image.asset(
-                                              "assets/images/ShoppingBag.png",
-                                              width: 30,
-                                              height: 30),
-                                          Positioned(
-                                            left: 11,
-                                            top: 10,
-                                            child: Text(
-                                              bag.products.length.toString(),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                              ),
-                            )
-                          ],
                         ),
-                        floatingActionButton: admin && screen != null
+                        floatingActionButton: screen != null
                             ? Builder(
                                 builder: (context) => screen.getFab(context),
                               )

@@ -9,9 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/screens/export.dart';
+import 'package:suneel_printer_admin/constant.dart';
+import 'package:suneel_printer_admin/screens/export.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,10 +20,8 @@ void main() async {
   RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);
 
   Firebase.initializeApp().whenComplete(() {
-    if (admin)
-      FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: "admin-suneelprinters@gmail.com",
-          password: "SuneelPrinters37");
+    FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: "admin-suneelprinters@gmail.com", password: "SuneelPrinters37");
 
     FirebasePerformance.instance
         .setPerformanceCollectionEnabled(false)
@@ -34,16 +31,12 @@ void main() async {
           .whenComplete(() {
         FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-        SharedPreferences.getInstance()
-            .then((value) => preferences = value)
-            .whenComplete(() {
-          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-              .whenComplete(
-            () => runApp(
-              SuneelPrinter(),
-            ),
-          );
-        });
+        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+            .whenComplete(
+          () => runApp(
+            SuneelPrinter(),
+          ),
+        );
       });
     });
   });
@@ -82,10 +75,7 @@ class SuneelPrinter extends StatelessWidget {
       routes: {
         "/": (BuildContext context) => SplashScreen(),
         "/home": (BuildContext context) => HomeScreen(),
-        "/bag": (BuildContext context) => BagScreen(),
         "/product": (BuildContext context) => ProductScreen(),
-        "/payment": (BuildContext context) => PaymentScreen(),
-        "/wishlist": (BuildContext context) => WishlistScreen(),
         "/category": (BuildContext context) => CategoryScreen(),
         "/add_product": (BuildContext context) => AddProductScreen(),
         "/past_orders": (BuildContext context) => PastOrderScreen(),

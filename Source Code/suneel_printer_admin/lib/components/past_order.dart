@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/models/product.dart';
-import 'package:suneel_printer/screens/product.dart';
+import 'package:suneel_printer_admin/constant.dart';
+import 'package:suneel_printer_admin/models/product.dart';
+import 'package:suneel_printer_admin/screens/product.dart';
 
 class InfoWidget extends StatelessWidget {
   final Map order;
@@ -46,25 +46,15 @@ class InfoWidget extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                admin
-                    ? Text(
-                        "${order['time'].toDate().toString().split(" ")[0].split("-").reversed.join("-")}",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: kUIDarkText,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
-                    : Text(
-                        "${DateTime.fromMicrosecondsSinceEpoch(int.parse(order['time'].split("(")[1].split("=")[1].split(",")[0].toString()) * 1000000 + int.parse(order['time'].split("(")[1].split("=")[2].split(")")[0].toString()) ~/ 1000).toString().split(" ")[0].split("-").reversed.join("-")}",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: kUIDarkText,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
+                Text(
+                  "${order['time'].toDate().toString().split(" ")[0].split("-").reversed.join("-")}",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: kUIDarkText,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
               ],
             ),
           ],

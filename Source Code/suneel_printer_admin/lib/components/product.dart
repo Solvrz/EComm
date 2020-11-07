@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/models/variation.dart';
+import 'package:suneel_printer_admin/constant.dart';
+import 'package:suneel_printer_admin/models/variation.dart';
 
 // ignore: must_be_immutable
 class OptionRadioTile extends StatefulWidget {

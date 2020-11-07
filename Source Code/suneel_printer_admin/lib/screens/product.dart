@@ -1,9 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:suneel_printer/components/custom_app_bar.dart';
-import 'package:suneel_printer/components/product.dart';
-import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/models/product.dart';
+import 'package:suneel_printer_admin/components/custom_app_bar.dart';
+import 'package:suneel_printer_admin/components/product.dart';
+import 'package:suneel_printer_admin/constant.dart';
+import 'package:suneel_printer_admin/models/product.dart';
 
 class ProductScreen extends StatefulWidget {
   @override
@@ -41,35 +41,6 @@ class _ProductScreenState extends State<ProductScreen> {
         appBar: CustomAppBar(
           parent: context,
           title: "",
-          trailing: [
-            if (!admin)
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () async {
-                  await Navigator.pushNamed(context, "/bag");
-                  setState(() {});
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kUIColor),
-                  ),
-                  padding: EdgeInsets.all(8),
-                  child: Stack(
-                    children: [
-                      Image.asset("assets/images/ShoppingBag.png",
-                          width: 30, height: 30),
-                      Positioned(
-                        left: 11,
-                        top: 10,
-                        child: Text(
-                          bag.products.length.toString(),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-          ],
         ),
         body: Container(
           height: MediaQuery.of(context).size.height,
@@ -93,25 +64,6 @@ class _ProductScreenState extends State<ProductScreen> {
                               fontWeight: FontWeight.w600,
                               fontFamily: "sans-serif-condensed"),
                         ),
-                        if (!admin)
-                          GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: () {
-                              wishlist.containsProduct(product)
-                                  ? wishlist.removeProduct(product)
-                                  : wishlist.addProduct(product);
-
-                              setState(() {});
-                            },
-                            child: Icon(
-                                wishlist.containsProduct(product)
-                                    ? Icons.favorite
-                                    : Icons.favorite_outline,
-                                color: wishlist.containsProduct(product)
-                                    ? kUIAccent
-                                    : kUIDarkText,
-                                size: 30),
-                          )
                       ],
                     ),
                     Container(
@@ -246,76 +198,6 @@ class _ProductScreenState extends State<ProductScreen> {
                   ],
                 ),
               ),
-              if (!admin)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                  child: Row(
-                    children: [
-                      if (bag.containsProduct(product))
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: kUIDarkText),
-                          ),
-                          child: IntrinsicWidth(
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () => setState(
-                                    () => bag.increaseQuantity(product),
-                                  ),
-                                  child: Icon(Icons.add, size: 30),
-                                ),
-                                Text(
-                                  bag.getQuantity(product).toString(),
-                                  style: TextStyle(
-                                      fontSize: 22, color: kUIDarkText),
-                                ),
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () => setState(
-                                    () => bag.decreaseQuantity(product),
-                                  ),
-                                  child: Icon(Icons.remove, size: 30),
-                                ),
-                              ],
-                            ),
-                          ),
-                          margin: EdgeInsets.only(right: 16),
-                        ),
-                      Expanded(
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          color: bag.containsProduct(product)
-                              ? Colors.grey[600]
-                              : kUIAccent,
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          child: Text(
-                            bag.containsProduct(product)
-                                ? "IN BAG"
-                                : "ADD TO BAG",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: kUIColor,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          onPressed: () {
-                            if (!bag.containsProduct(product)) {
-                              bag.addProduct(product);
-                            } else {
-                              Navigator.pushNamed(context, "/bag");
-                            }
-                            setState(() {});
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                )
             ],
           ),
         ),

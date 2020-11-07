@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:suneel_printer/models/variation.dart';
+import 'package:suneel_printer_admin/models/variation.dart';
 
 class Product {
   String _uId;

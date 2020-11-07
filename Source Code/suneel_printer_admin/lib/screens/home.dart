@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,12 +5,12 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:suneel_printer/components/alert_button.dart';
-import 'package:suneel_printer/components/home.dart';
-import 'package:suneel_printer/components/rounded_alert_dialog.dart';
-import 'package:suneel_printer/constant.dart';
-import 'package:suneel_printer/models/product.dart';
-import 'package:suneel_printer/screens/category.dart';
+import 'package:suneel_printer_admin/components/alert_button.dart';
+import 'package:suneel_printer_admin/components/home.dart';
+import 'package:suneel_printer_admin/components/rounded_alert_dialog.dart';
+import 'package:suneel_printer_admin/constant.dart';
+import 'package:suneel_printer_admin/models/product.dart';
+import 'package:suneel_printer_admin/screens/category.dart';
 
 bool hasShown = false;
 
@@ -26,23 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String query = "";
 
   TextEditingController controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    if (!hasShown && !admin)
-      Timer(Duration(seconds: 1), () {
-        if (addresses.length == 0) {
-          hasShown = true;
-          showModalBottomSheet(
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            context: context,
-            builder: (_) => InformationSheet(),
-          );
-        }
-      });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,13 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   GestureDetector(
                                     behavior: HitTestBehavior.translucent,
                                     onTap: () async {
-                                      await showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.transparent,
-                                        context: context,
-                                        builder: (_) => InformationSheet(),
-                                      );
-                                      setState(() {});
+                                      // TODO: Put something else here
                                     },
                                     child: ConstrainedBox(
                                       constraints: BoxConstraints(
@@ -170,9 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   24) /
                                               2.1),
                                       child: Text(
-                                        selectedInfo != null
-                                            ? selectedInfo["address"]
-                                            : "Not Selected",
+                                        "Not Selected",
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontSize: 18,
@@ -206,31 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         height: 30),
                                   ),
                                 ),
-                                if (!admin)
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    onTap: () {
-                                      Navigator.pushNamed(context, "/bag");
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Stack(
-                                        children: [
-                                          Image.asset(
-                                              "assets/images/ShoppingBag.png",
-                                              width: 30,
-                                              height: 30),
-                                          Positioned(
-                                            left: 11,
-                                            top: 10,
-                                            child: Text(
-                                              bag.products.length.toString(),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
                               ]),
                         )
                       ],
@@ -431,9 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             categories[index];
                                         return GestureDetector(
                                           behavior: HitTestBehavior.translucent,
-                                          onTap: onOrder
-                                                      .contains(data["name"]) &&
-                                                  admin
+                                          onTap: onOrder.contains(data["name"])
                                               ? () {
                                                   Scaffold.of(context)
                                                       .showSnackBar(
