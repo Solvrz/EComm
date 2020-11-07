@@ -259,7 +259,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                           //         (value) => value.delete(),
                                                                           //       );
 
-                                                                          // TODO: Delete image from firestore
 
                                                                           images
                                                                               .removeAt(index);
@@ -654,7 +653,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
       int maxId = 0;
 
-      // TODO FIX: Make me work for every category
 
       query.docs.forEach((element) {
         int currId = int.parse(element.data()["uId"].split("/").last);
