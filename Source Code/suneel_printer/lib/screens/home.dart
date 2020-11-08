@@ -15,8 +15,6 @@ import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/category.dart';
 
-bool hasShown = false;
-
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -30,19 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (!hasShown)
-      Timer(Duration(seconds: 2), () {
-        if (addresses.length == 0) {
-          hasShown = true;
-          showModalBottomSheet(
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            context: context,
-            builder: (_) => InformationSheet(),
-          );
-        }
-      });
-
     return WillPopScope(
       onWillPop: () async {
         FocusScope.of(context).requestFocus(
