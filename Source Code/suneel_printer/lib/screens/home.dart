@@ -29,12 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController controller = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-
-    // TODO Fixme: Getting shown too early and if delayed getting state errors
+  Widget build(BuildContext context) {
     if (!hasShown)
-      Timer(Duration(seconds: 4), () {
+      Timer(Duration(seconds: 2), () {
         if (addresses.length == 0) {
           hasShown = true;
           showModalBottomSheet(
@@ -45,10 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
       });
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         FocusScope.of(context).requestFocus(

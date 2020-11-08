@@ -137,7 +137,6 @@ class _InformationSheetState extends State<InformationSheet> {
                                             addresses.remove(address);
                                             selectedInfo = null;
                                           } else {
-                                            // TODO: Address not deleting if not selected
                                             Map newAddress = addresses[
                                                 index - 1 >= 0
                                                     ? index - 1
@@ -146,6 +145,8 @@ class _InformationSheetState extends State<InformationSheet> {
                                             newAddress["selected"] = true;
                                             selectedInfo = newAddress;
                                           }
+                                        } else {
+                                          addresses.remove(address);
                                         }
                                         setState(() {});
                                       },

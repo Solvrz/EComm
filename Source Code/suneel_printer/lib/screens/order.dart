@@ -251,27 +251,6 @@ class _OrderProductPageState extends State<OrderProductPage> {
                               msg:
                                   "You will soon receive a confirmation mail from us.",
                               process: () async {
-                                //                                 List<String> pastOrders = preferences.getStringList("orders") ?? [];
-
-                                // pastOrders.add(
-                                //   jsonEncode({
-                                //     "name": selectedInfo["name"],
-                                //     "phone": selectedInfo["phone"],
-                                //     "address": selectedInfo["address"],
-                                //     "pincode": selectedInfo["pincode"],
-                                //     "email": selectedInfo["email"],
-                                //     "time": Timestamp.now().toString(),
-                                //     "price": "",
-                                //     "payment_mode":
-                                //         "Pay On Completion",
-                                //     "products": [],
-                                //   }),
-                                // );
-
-                                // preferences.setStringList("orders", pastOrders);
-
-                                // TODO: Save On Orders in Past Orders
-
                                 await http.post(
                                   "https://suneel-printers.herokuapp.com/on_order",
                                   headers: <String, String>{
