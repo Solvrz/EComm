@@ -41,8 +41,6 @@ class _SplashScreenState extends State<SplashScreen>
 
       List<Map> selected = addresses.where((e) => e["selected"]).toList();
       if (selected.length > 0) selectedInfo = selected.first;
-
-      print(addresses);
     });
 
     _controller = AnimationController(

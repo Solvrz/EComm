@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: kUIColor,
           resizeToAvoidBottomInset: false,
           bottomNavigationBar: Container(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 24),
             decoration: BoxDecoration(
               color: Colors.grey[200],
               borderRadius: BorderRadius.only(
@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 topRight: Radius.circular(25),
               ),
             ),
-            height: getHeight(context, 58.3),
+            height: getHeight(context, 62),
             width: MediaQuery.of(context).size.width,
             child: Center(
               child:
@@ -316,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         return Column(children: [
                           Container(
-                            height: getHeight(context, 150),
+                            height: getHeight(context, 180),
                             width: MediaQuery.of(context).size.width,
                             child: CarouselSlider.builder(
                               itemCount: carouselImages.length,
