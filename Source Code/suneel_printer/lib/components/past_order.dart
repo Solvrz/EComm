@@ -227,8 +227,8 @@ class PastOrderSheet extends StatelessWidget {
             SizedBox(height: 10),
             Container(
               height: order["products"].length > 3
-                  ? MediaQuery.of(context).size.height * 375 / 816
-                  : MediaQuery.of(context).size.height * 275 / 816,
+                  ? getHeight(context, 375)
+                  : getHeight(context, 275),
               child: ListView.builder(
                   itemCount: order["products"].length,
                   itemBuilder: (BuildContext context, int index) {

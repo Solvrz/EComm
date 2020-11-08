@@ -191,7 +191,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           ),
                         ),
                         Container(
-                          height: 120,
+                          height: getHeight(context, 120),
                           child: ListView(
                             children: paymentMethods.map<Widget>(
                               (value) {
@@ -237,7 +237,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             ),
                             Text(
                               widget.price - widget.price.toInt() == 0
-                                  ? widget.price.toInt()
+                                  ? widget.price.toString()
                                   : widget.price.toStringAsFixed(2),
                               style: TextStyle(
                                 color: kUIDarkText,

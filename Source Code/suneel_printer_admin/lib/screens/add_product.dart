@@ -632,21 +632,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
     bool noError = true;
 
     for (File file in imageFiles) {
-      final StorageReference storageReference = FirebaseStorage.instance
+      final UploadTask task = FirebaseStorage.instance
           .ref()
           .child(
-              "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf");
-      final StorageTaskSnapshot snapshot =
-          await storageReference.putFile(file).onComplete;
+              "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf")
+          .putFile(file);
 
-      if (snapshot.error != null) {
+      task.snapshotEvents.listen((TaskSnapshot snapshot) {
+        if (snapshot.state.toString() == "complete")
+          task.then((TaskSnapshot snapshot) async {
+            final String url = await snapshot.ref.getDownloadURL();
+
+            urls.add(url);
+            file.delete();
+          }).catchError((Object e) {
+            noError = false;
+          });
+      }, onError: (Object e) {
         noError = false;
-      } else {
-        final String url = await snapshot.ref.getDownloadURL();
-
-        urls.add(url);
-        file.delete();
-      }
+      });
     }
 
     if (noError) {
@@ -666,6 +670,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             .collection("products")
             .where("uId", isEqualTo: product.uId)
             .get();
+
         await query.docs.first.reference.update({
           "uId": "1/1/${maxId + 1}",
           "imgs": urls,
@@ -683,6 +688,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             .collection("products")
             .where("uId", isEqualTo: product.uId)
             .get();
+
         await query.docs.first.reference.update({
           "uId": "1/1/${maxId + 1}",
           "imgs": urls,

@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:suneel_printer/components/alert_button.dart';
+import 'package:suneel_printer/components/category.dart';
 import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
@@ -96,24 +97,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 topRight: Radius.circular(25),
               ),
             ),
-            height: MediaQuery.of(context).size.height * 58.3 / 816,
+            height: getHeight(context, 58.3),
             width: MediaQuery.of(context).size.width,
             child: Center(
               child:
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(Icons.call, size: 52, color: kUIAccent),
+                Icon(Icons.call,
+                    size: getHeight(context, 52), color: kUIAccent),
                 SizedBox(width: 15),
                 Column(
                   children: [
                     Text(
                       "Call or Whatsapp",
-                      style:
-                          TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
+                      style: TextStyle(
+                          fontSize: getHeight(context, 20),
+                          fontWeight: FontWeight.w400),
                     ),
                     Text(
                       "1234567890",
                       style: TextStyle(
-                          fontSize: 23,
+                          fontSize: getHeight(context, 22),
                           fontWeight: FontWeight.bold,
                           color: kUIAccent),
                     ),
@@ -122,123 +125,106 @@ class _HomeScreenState extends State<HomeScreen> {
               ]),
             ),
           ),
+          appBar: AppBar(
+              elevation: 0,
+              backgroundColor: kUIColor,
+              automaticallyImplyLeading: false,
+              title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 4),
+                      child: Text(
+                        "Deliver To",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.2,
+                            fontFamily: "sans-serif-condensed"),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on_outlined,
+                            color: kUIDarkText, size: 20),
+                        SizedBox(width: 2),
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () async {
+                            await showModalBottomSheet(
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (_) => InformationSheet(),
+                            );
+                            setState(() {});
+                          },
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    (MediaQuery.of(context).size.width - 24) /
+                                        2.1),
+                            child: Text(
+                              selectedInfo != null
+                                  ? selectedInfo["address"]
+                                  : "Not Selected",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: kUIDarkText,
+                                  letterSpacing: 0.2,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "sans-serif-condensed"),
+                            ),
+                          ),
+                        ),
+                        Icon(Icons.arrow_drop_down, color: Colors.grey[600])
+                      ],
+                    )
+                  ]),
+              actions: [
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    Navigator.pushNamed(context, "/past_orders");
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Image.asset("assets/images/YourOrders.png",
+                        width: 30, height: 30),
+                  ),
+                ),
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    Navigator.pushNamed(context, "/bag");
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(14),
+                    child: Stack(
+                      children: [
+                        Image.asset("assets/images/ShoppingBag.png",
+                            width: 30, height: 30),
+                        Positioned(
+                          left: 11,
+                          top: 10,
+                          child: Text(bag.products.length.toString(),
+                              style: TextStyle(color: kUIDarkText)),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ]),
           body: Column(
             children: [
               Padding(
                 padding: EdgeInsets.all(16),
                 child: Column(children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 4),
-                                child: Text(
-                                  "Deliver To",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey[600],
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 0.2,
-                                      fontFamily: "sans-serif-condensed"),
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on_outlined,
-                                      color: kUIDarkText, size: 20),
-                                  SizedBox(width: 2),
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    onTap: () async {
-                                      await showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.transparent,
-                                        context: context,
-                                        builder: (_) => InformationSheet(),
-                                      );
-                                      setState(() {});
-                                    },
-                                    child: ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                          maxWidth: (MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  24) /
-                                              2.1),
-                                      child: Text(
-                                        selectedInfo != null
-                                            ? selectedInfo["address"]
-                                            : "Not Selected",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            color: kUIDarkText,
-                                            letterSpacing: 0.2,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: "sans-serif-condensed"),
-                                      ),
-                                    ),
-                                  ),
-                                  Icon(Icons.arrow_drop_down,
-                                      color: Colors.grey[600])
-                                ],
-                              )
-                            ]),
-                        Expanded(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, "/past_orders");
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Image.asset(
-                                        "assets/images/YourOrders.png",
-                                        width: 30,
-                                        height: 30),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () {
-                                    Navigator.pushNamed(context, "/bag");
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Stack(
-                                      children: [
-                                        Image.asset(
-                                            "assets/images/ShoppingBag.png",
-                                            width: 30,
-                                            height: 30),
-                                        Positioned(
-                                          left: 11,
-                                          top: 10,
-                                          child: Text(
-                                            bag.products.length.toString(),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ]),
-                        )
-                      ],
-                    ),
-                  ),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    margin: EdgeInsets.symmetric(vertical: 24),
+                    height: getHeight(context, 50),
                     padding: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
@@ -283,6 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                     ]),
                   ),
+                  SizedBox(height: getHeight(context, 25)),
                   if (query != "")
                     StreamBuilder<QuerySnapshot>(
                         stream: database.collection("products").snapshots(),
@@ -308,16 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
 
                             return products.length > 0
-                                ? GridView.count(
-                                    shrinkWrap: true,
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 0.725,
-                                    children: List.generate(
-                                      products.length,
-                                      (index) =>
-                                          SearchCard(product: products[index]),
-                                    ),
-                                  )
+                                ? ProductList(products: products)
                                 : Center(
                                     child: Container(
                                       width: MediaQuery.of(context).size.width /
@@ -356,31 +334,35 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
 
                         return Column(children: [
-                          CarouselSlider.builder(
-                            itemCount: carouselImages.length,
-                            itemBuilder: (BuildContext context, int index) =>
-                                ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  image: DecorationImage(
-                                      image:
-                                          NetworkImage(carouselImages[index]),
-                                      fit: BoxFit.cover),
+                          Container(
+                            height: getHeight(context, 150),
+                            width: MediaQuery.of(context).size.width,
+                            child: CarouselSlider.builder(
+                              itemCount: carouselImages.length,
+                              itemBuilder: (BuildContext context, int index) =>
+                                  ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    image: DecorationImage(
+                                        image:
+                                            NetworkImage(carouselImages[index]),
+                                        fit: BoxFit.cover),
+                                  ),
                                 ),
                               ),
+                              options: CarouselOptions(
+                                  autoPlay:
+                                      carouselImages.length > 1 ? true : false,
+                                  enlargeCenterPage: true,
+                                  aspectRatio: 2,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _current = index;
+                                    });
+                                  }),
                             ),
-                            options: CarouselOptions(
-                                autoPlay:
-                                    carouselImages.length > 1 ? true : false,
-                                enlargeCenterPage: true,
-                                aspectRatio: 2,
-                                onPageChanged: (index, reason) {
-                                  setState(() {
-                                    _current = index;
-                                  });
-                                }),
                           ),
                           SizedBox(height: 12),
                           if (carouselImages.length > 1)
@@ -402,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                          SizedBox(height: 18),
+                          SizedBox(height: getHeight(context, 12)),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 6),
                             child: Column(
@@ -411,63 +393,65 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text(
                                     "Categories",
                                     style: TextStyle(
-                                        fontSize: 32,
+                                        fontSize: getHeight(context, 32),
                                         letterSpacing: 0.2,
                                         fontWeight: FontWeight.bold,
                                         color: kUIDarkText),
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 22),
-                                    child: GridView.count(
-                                      shrinkWrap: true,
-                                      crossAxisCount: 3,
-                                      mainAxisSpacing: 12,
-                                      crossAxisSpacing: 12,
-                                      childAspectRatio: 0.98,
-                                      children: List.generate(categories.length,
-                                          (int index) {
-                                        Map<String, dynamic> data =
-                                            categories[index];
-                                        return GestureDetector(
-                                          behavior: HitTestBehavior.translucent,
-                                          onTap: () => Navigator.pushNamed(
-                                            context,
-                                            "/category",
-                                            arguments: CategoryArguments(
-                                              data,
-                                              data["uId"],
-                                            ),
+                                  SizedBox(height: getHeight(context, 12)),
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 3,
+                                    mainAxisSpacing: 12,
+                                    crossAxisSpacing: 12,
+                                    childAspectRatio: 0.98,
+                                    children: List.generate(categories.length,
+                                        (int index) {
+                                      Map<String, dynamic> data =
+                                          categories[index];
+                                      return GestureDetector(
+                                        behavior: HitTestBehavior.translucent,
+                                        onTap: () => Navigator.pushNamed(
+                                          context,
+                                          "/category",
+                                          arguments: CategoryArguments(
+                                            data,
+                                            data["uId"],
                                           ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Color(0xffFFEBEB),
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Image.asset(data["image"],
-                                                    height: 50, width: 50),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  data["name"],
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        "sans-serif-condensed",
-                                                    color: kUIDarkText,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xffFFEBEB),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(data["image"],
+                                                  height:
+                                                      getHeight(context, 50),
+                                                  width: 50),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                data["name"],
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      "sans-serif-condensed",
+                                                  fontSize:
+                                                      getHeight(context, 14),
+                                                  color: kUIDarkText,
+                                                  fontWeight: FontWeight.w600,
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        );
-                                      }),
-                                    ),
+                                        ),
+                                      );
+                                    }),
                                   ),
                                 ]),
                           ),
