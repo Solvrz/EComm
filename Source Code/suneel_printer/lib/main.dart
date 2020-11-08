@@ -12,6 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/export.dart';
 
+// TODO: Put Padding in Every Gesture Detector
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GestureBinding.instance.resamplingEnabled = true;
