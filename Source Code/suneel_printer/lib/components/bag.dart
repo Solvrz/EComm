@@ -191,7 +191,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           ),
                         ),
                         Container(
-                          height: 120,
+                          height: getHeight(context, 120),
                           child: ListView(
                             children: paymentMethods.map<Widget>(
                               (value) {

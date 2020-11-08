@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:suneel_printer/components/information_textfield.dart';
 import 'package:suneel_printer/constant.dart';
 
 class InformationSheet extends StatefulWidget {
@@ -87,13 +86,13 @@ class _InformationSheetState extends State<InformationSheet> {
                             itemCount: addresses.length,
                             itemBuilder: (BuildContext context, int index) {
                               Map address = addresses[index];
-                              bool isSelected =
-                                  address.toString() == selectedInfo.toString();
+                              bool isSelected = address["selected"];
 
                               return ListTile(
                                 onTap: () async {
-                                  await save();
                                   selectedInfo = address;
+                                  addresses[index]["selected"] = true;
+                                  await save();
                                   setState(() {});
                                   Navigator.pop(context);
                                 },
@@ -122,6 +121,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                             ),
                                           ),
                                         );
+                                        await save();
                                         setState(() {});
                                       },
                                       child: Icon(Icons.edit,
@@ -131,13 +131,11 @@ class _InformationSheetState extends State<InformationSheet> {
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () async {
-                                        print("WTF U TAPPED");
                                         if (isSelected) {
                                           if (addresses.length == 1) {
                                             addresses.remove(address);
                                             selectedInfo = null;
                                           } else {
-                                            // TODO: Address not deleting if not selected
                                             Map newAddress = addresses[
                                                 index - 1 >= 0
                                                     ? index - 1
@@ -146,7 +144,10 @@ class _InformationSheetState extends State<InformationSheet> {
                                             newAddress["selected"] = true;
                                             selectedInfo = newAddress;
                                           }
+                                        } else {
+                                          addresses.remove(address);
                                         }
+                                        await save();
                                         setState(() {});
                                       },
                                       child: Icon(Icons.delete,
@@ -234,52 +235,58 @@ class AddInformationSheet extends StatefulWidget {
   final bool edit;
   final Map data;
 
-  AddInformationSheet({this.addresses, this.edit = false, this.data});
+  AddInformationSheet({
+    this.addresses,
+    this.edit = false,
+    this.data = const {},
+  });
 
   @override
   _AddInformationSheetState createState() => _AddInformationSheetState();
 }
 
 class _AddInformationSheetState extends State<AddInformationSheet> {
-  Map<String, InformationTextField> fields = {
-    "name": InformationTextField(
-        title: "Name",
-        placeholder: "Your Name",
-        errorMessage: "Please enter a name"),
-    "phone": InformationTextField(
-      title: "Phone Number",
-      placeholder: "Your Phone Number",
-      errorMessage: "Please enter a valid phone number",
-      inputType: TextInputType.number,
-    ),
-    "email": InformationTextField(
-      title: "Email Address",
-      placeholder: "Your Email Address",
-      errorMessage: "Please enter a valid email address",
-      inputType: TextInputType.emailAddress,
-    ),
-    "address": InformationTextField(
-      title: "Shipping Address",
-      placeholder: "Your Address",
-      errorMessage: "Please enter an address",
-    ),
-    "pincode": InformationTextField(
-      title: "Pincode",
-      placeholder: "Your Pincode",
-      errorMessage: "Please enter a valid pincode",
-      inputType: TextInputType.number,
-    )
+  Map<String, Map> fields = {
+    "name": {
+      "title": "Name",
+      "placeholder": "Your Name",
+      "errorMessage": "Please enter a name"
+    },
+    "phone": {
+      "title": "Phone Number",
+      "placeholder": "Your Phone Number",
+      "errorMessage": "Please enter a valid phone number",
+      "inputType": TextInputType.number,
+    },
+    "email": {
+      "title": "Email Address",
+      "placeholder": "Your Email Address",
+      "errorMessage": "Please enter a valid email address",
+      "inputType": TextInputType.emailAddress,
+    },
+    "address": {
+      "title": "Shipping Address",
+      "placeholder": "Your Address",
+      "errorMessage": "Please enter an address",
+    },
+    "pincode": {
+      "title": "Pincode",
+      "placeholder": "Your Pincode",
+      "errorMessage": "Please enter a valid pincode",
+      "inputType": TextInputType.number,
+    }
   };
+
+  Map<String, TextEditingController> controllers;
+  Map<String, bool> error;
 
   @override
   void initState() {
     super.initState();
 
-    if ((widget.data ?? {}).length > 0) {
-      widget.data.forEach((key, value) {
-        if (key != "selected") fields[key].value = value;
-      });
-    }
+    controllers = fields.map((key, _) =>
+        MapEntry(key, TextEditingController(text: widget.data[key] ?? "")));
+    error = fields.map((key, _) => MapEntry(key, false));
   }
 
   @override
@@ -320,55 +327,95 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
               ],
             ),
             SizedBox(height: 12),
-            ...fields.values.toList(),
+            ...List.generate(fields.length, (int index) {
+              String field = fields.keys.elementAt(index);
+              Map data = fields.values.elementAt(index);
+              TextEditingController controller = controllers[field];
+
+              return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data["title"],
+                      style: TextStyle(
+                          color: kUIDarkText,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          focusedBorder: InputBorder.none,
+                          border: InputBorder.none,
+                          hintText: data["placeholder"]),
+                      controller: controller,
+                      keyboardType: data["inputType"] ?? TextInputType.name,
+                      minLines: 1,
+                      maxLines: data["maxLines"] ?? 3,
+                      style: TextStyle(
+                          color: kUIDarkText,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    if (error[field]) ...[
+                      Text(
+                        data["errorMessage"],
+                        style: TextStyle(fontSize: 15, color: kUIAccent),
+                      ),
+                      SizedBox(height: 8),
+                    ],
+                    Divider(
+                      height: 8,
+                      thickness: 2,
+                    ),
+                    SizedBox(height: 12),
+                  ]);
+            }),
             GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () async {
-                if (await validateFields() == false)
+                if (await validateFields() == false) {
                   return;
-                else
-                  setState(() {});
-                //TODO FIXME: Doesn't show error till hot refresh
-
-                String name = fields["name"].value;
-                String phone = fields["phone"].value;
-                String address = fields["address"].value;
-                String email = fields["email"].value;
-                String pincode = fields["pincode"].value;
-
-                if (widget.edit) {
-                  int index = widget.addresses.indexOf(widget.data);
-                  widget.addresses.removeAt(index);
-                  widget.addresses.insert(index, {
-                    "name": name,
-                    "phone": phone,
-                    "address": address,
-                    "email": email,
-                    "pincode": pincode,
-                    "selected": false
-                  });
-                  selectedInfo = widget.addresses[index];
                 } else {
-                  widget.addresses.add({
-                    "name": name,
-                    "phone": phone,
-                    "address": address,
-                    "email": email,
-                    "pincode": pincode,
-                    "selected": false
-                  });
+                  String name = controllers["name"].text;
+                  String phone = controllers["phone"].text;
+                  String address = controllers["address"].text;
+                  String email = controllers["email"].text;
+                  String pincode = controllers["pincode"].text;
+
+                  if (widget.edit) {
+                    int index = widget.addresses.indexOf(widget.data);
+                    widget.addresses.removeAt(index);
+                    widget.addresses.insert(index, {
+                      "name": name,
+                      "phone": phone,
+                      "address": address,
+                      "email": email,
+                      "pincode": pincode,
+                      "selected": false
+                    });
+                    selectedInfo = widget.addresses[index];
+                  } else {
+                    widget.addresses.add({
+                      "name": name,
+                      "phone": phone,
+                      "address": address,
+                      "email": email,
+                      "pincode": pincode,
+                      "selected": false
+                    });
+                  }
+
+                  await preferences.setStringList(
+                    "info",
+                    widget.addresses
+                        .map(
+                          (e) => jsonEncode(e),
+                        )
+                        .toList(),
+                  );
+
+                  Navigator.pop(context);
                 }
-
-                await preferences.setStringList(
-                  "info",
-                  widget.addresses
-                      .map(
-                        (e) => jsonEncode(e),
-                      )
-                      .toList(),
-                );
-
-                Navigator.pop(context);
               },
               child: Container(
                 height: 40,
@@ -395,40 +442,42 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
   }
 
   Future<bool> validateFields() async {
-    String name = fields["name"].value;
-    String phone = fields["phone"].value;
-    String address = fields["address"].value;
-    String email = fields["email"].value;
-    String pincode = fields["pincode"].value;
+    String name = controllers["name"].text;
+    String phone = controllers["phone"].text;
+    String address = controllers["address"].text;
+    String email = controllers["email"].text;
+    String pincode = controllers["pincode"].text;
 
     if (name.trim() == "")
-      fields["name"].error = true;
+      error["name"] = true;
     else
-      fields["name"].error = false;
+      error["name"] = false;
 
     if (!RegExp(r"^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$").hasMatch(phone))
-      fields["phone"].error = true;
+      error["phone"] = true;
     else
-      fields["phone"].error = false;
+      error["phone"] = false;
 
     if (address.trim() == "")
-      fields["address"].error = true;
+      error["address"] = true;
     else
-      fields["address"].error = false;
+      error["address"] = false;
 
     if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email))
-      fields["email"].error = true;
+      error["email"] = true;
     else
-      fields["email"].error = false;
+      error["email"] = false;
 
     http.Response result =
         await http.get("https://api.postalpincode.in/pincode/$pincode");
 
     if (jsonDecode(result.body)[0]["Status"] == "Error" || pincode.trim() == "")
-      fields["pincode"].error = true;
+      error["pincode"] = true;
     else
-      fields["pincode"].error = false;
+      error["pincode"] = false;
 
-    return !fields.values.toList().map((e) => e.error).toList().contains(true);
+    setState(() {});
+
+    return !error.values.toList().contains(true);
   }
 }

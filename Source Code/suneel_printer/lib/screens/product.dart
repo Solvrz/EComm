@@ -52,7 +52,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 decoration: BoxDecoration(
                   border: Border.all(color: kUIColor),
                 ),
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(18),
                 child: Stack(
                   children: [
                     Image.asset("assets/images/ShoppingBag.png",
@@ -60,9 +60,8 @@ class _ProductScreenState extends State<ProductScreen> {
                     Positioned(
                       left: 11,
                       top: 10,
-                      child: Text(
-                        bag.products.length.toString(),
-                      ),
+                      child: Text(bag.products.length.toString(),
+                          style: TextStyle(color: kUIDarkText)),
                     )
                   ],
                 ),
@@ -132,7 +131,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       options: CarouselOptions(
                                           autoPlay: product.images.length > 1,
                                           enlargeCenterPage: true,
-                                          aspectRatio: 2,
+                                          aspectRatio: 2.5,
                                           onPageChanged: (index, reason) {
                                             setState(() {
                                               _currentImage = index;
@@ -179,69 +178,74 @@ class _ProductScreenState extends State<ProductScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: variations,
+                      children: [
+                        ...variations,
+                        Divider(thickness: 2, height: 2),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 18),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "Price",
+                                  style: TextStyle(
+                                      color: kUIDarkText,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.2),
+                                ),
+                              ),
+                              Text(
+                                "₹ ${product.price}",
+                                style: TextStyle(
+                                    color: kUIDarkText,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: -0.4),
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 18),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "MRP",
+                                  style: TextStyle(
+                                      color: kUIDarkText,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.2),
+                                ),
+                              ),
+                              Text(
+                                "₹ ${product.mrp}",
+                                style: TextStyle(
+                                    color: kUIDarkText,
+                                    decoration: TextDecoration.lineThrough,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: -0.4),
+                              ),
+                              SizedBox(width: 12),
+                              Text(
+                                "Save: ₹ ${double.parse(product.mrp) - double.parse(product.price)}",
+                                style: TextStyle(
+                                    color: Colors.orangeAccent,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: -0.4),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 15),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Price",
-                        style: TextStyle(
-                            color: kUIDarkText,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.2),
-                      ),
-                    ),
-                    Text(
-                      "₹ ${product.price}",
-                      style: TextStyle(
-                          color: kUIDarkText,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.4),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 18),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "MRP",
-                        style: TextStyle(
-                            color: kUIDarkText,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.2),
-                      ),
-                    ),
-                    Text(
-                      "₹ ${product.mrp}",
-                      style: TextStyle(
-                          color: kUIDarkText,
-                          decoration: TextDecoration.lineThrough,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.4),
-                    ),
-                    SizedBox(width: 12),
-                    Text(
-                      "Save: ₹ ${double.parse(product.mrp) - double.parse(product.price)}",
-                      style: TextStyle(
-                          color: Colors.orangeAccent,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.4),
-                    )
-                  ],
                 ),
               ),
               Padding(

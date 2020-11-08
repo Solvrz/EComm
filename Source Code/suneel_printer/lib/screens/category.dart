@@ -82,8 +82,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       left: 11,
                                       top: 10,
                                       child: Text(
-                                        bag.products.length.toString(),
-                                      ),
+                                          bag.products.length.toString(),
+                                          style: TextStyle(color: kUIDarkText)),
                                     )
                                   ],
                                 ),

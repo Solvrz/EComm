@@ -106,131 +106,74 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Column(children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 4),
-                                child: Text(
-                                  "Deliver To",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey[600],
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 0.2,
-                                      fontFamily: "sans-serif-condensed"),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 50,
+                          margin: EdgeInsets.symmetric(vertical: 24),
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(children: [
+                            Icon(Icons.search, color: Colors.grey[600]),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Search for Products",
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                controller: controller,
+                                onChanged: (value) {
+                                  setState(() => query = value);
+                                },
+                                style: TextStyle(
+                                  color: Colors.grey[800],
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on_outlined,
-                                      color: kUIDarkText, size: 20),
-                                  SizedBox(width: 2),
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    onTap: () async {
-                                      // TODO: Put something else here
-                                    },
-                                    child: ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                          maxWidth: (MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  24) /
-                                              2.1),
-                                      child: Text(
-                                        "Not Selected",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            color: kUIDarkText,
-                                            letterSpacing: 0.2,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: "sans-serif-condensed"),
-                                      ),
-                                    ),
-                                  ),
-                                  Icon(Icons.arrow_drop_down,
-                                      color: Colors.grey[600])
-                                ],
-                              )
-                            ]),
-                        Expanded(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, "/past_orders");
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Image.asset(
-                                        "assets/images/YourOrders.png",
-                                        width: 30,
-                                        height: 30),
-                                  ),
-                                ),
-                              ]),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    margin: EdgeInsets.symmetric(vertical: 24),
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(children: [
-                      Icon(Icons.search, color: Colors.grey[600]),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Search for Products",
-                            hintStyle: TextStyle(
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                          controller: controller,
-                          onChanged: (value) {
-                            setState(() => query = value);
-                          },
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontWeight: FontWeight.bold,
-                          ),
+                            if (query != "")
+                              GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  setState(() {
+                                    FocusScope.of(context).requestFocus(
+                                      FocusNode(),
+                                    );
+                                    query = "";
+                                    controller.clear();
+                                  });
+                                },
+                                child:
+                                    Icon(Icons.clear, color: Colors.grey[600]),
+                              )
+                          ]),
                         ),
                       ),
-                      if (query != "")
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            setState(() {
-                              FocusScope.of(context).requestFocus(
-                                FocusNode(),
-                              );
-                              query = "";
-                              controller.clear();
-                            });
-                          },
-                          child: Icon(Icons.clear, color: Colors.grey[600]),
-                        )
-                    ]),
+                      SizedBox(width: 16),
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          Navigator.pushNamed(context, "/past_orders");
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Image.asset("assets/images/YourOrders.png",
+                              width: 30, height: 30),
+                        ),
+                      )
+                    ],
                   ),
                   if (query != "")
                     StreamBuilder<QuerySnapshot>(

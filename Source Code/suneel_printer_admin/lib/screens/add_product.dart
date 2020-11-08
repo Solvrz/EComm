@@ -253,13 +253,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                           GestureDetector(
                                                                         onTap:
                                                                             () {
-                                                                          // if (urls.isNotEmpty &&
-                                                                          //     args.product != null)
-                                                                          //   FirebaseStorage.instance.getReferenceFromUrl(urls[index]).then(
-                                                                          //         (value) => value.delete(),
-                                                                          //       );
+                                                                          if (urls.isNotEmpty &&
+                                                                              args.product != null) {
+                                                                            Reference
+                                                                                storageReference =
+                                                                                FirebaseStorage.instance.refFromURL(urls[index]);
+                                                                            storageReference.delete();
 
-                                                                          // TODO: Delete image from firestore
+                                                                            urls.removeAt(index);
+                                                                          }
 
                                                                           images
                                                                               .removeAt(index);
@@ -632,29 +634,33 @@ class _AddProductScreenState extends State<AddProductScreen> {
     bool noError = true;
 
     for (File file in imageFiles) {
-      final StorageReference storageReference = FirebaseStorage.instance
+      final UploadTask task = FirebaseStorage.instance
           .ref()
           .child(
-              "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf");
-      final StorageTaskSnapshot snapshot =
-          await storageReference.putFile(file).onComplete;
+              "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf")
+          .putFile(file);
 
-      if (snapshot.error != null) {
+      task.snapshotEvents.listen((TaskSnapshot snapshot) {
+        if (snapshot.state.toString() == "complete")
+          task.then((TaskSnapshot snapshot) async {
+            final String url = await snapshot.ref.getDownloadURL();
+
+            urls.add(url);
+            file.delete();
+          }).catchError((Object e) {
+            noError = false;
+          });
+      }, onError: (Object e) {
         noError = false;
-      } else {
-        final String url = await snapshot.ref.getDownloadURL();
-
-        urls.add(url);
-        file.delete();
-      }
+      });
     }
 
     if (noError) {
+      DocumentSnapshot category = await tabs[currentTab].parent.parent.get();
+      int categoryId = category.get("uId");
       QuerySnapshot query = await tabs[currentTab].collection("products").get();
 
       int maxId = 0;
-
-      // TODO FIX: Make me work for every category
 
       query.docs.forEach((element) {
         int currId = int.parse(element.data()["uId"].split("/").last);
@@ -666,8 +672,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
             .collection("products")
             .where("uId", isEqualTo: product.uId)
             .get();
+
         await query.docs.first.reference.update({
-          "uId": "1/1/${maxId + 1}",
+          "uId": "$categoryId/${tabsData[currentTab]["uId"]}/${maxId + 1}",
           "imgs": urls,
           "mrp": double.parse(mrp),
           "price": double.parse(price),
@@ -683,8 +690,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
             .collection("products")
             .where("uId", isEqualTo: product.uId)
             .get();
+
         await query.docs.first.reference.update({
-          "uId": "1/1/${maxId + 1}",
+          "uId": "$categoryId/${tabsData[currentTab]["uId"]}/${maxId + 1}",
           "imgs": urls,
           "mrp": double.parse(mrp),
           "price": double.parse(price),
@@ -697,7 +705,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         });
       } else {
         await tabs[currentTab].collection("products").add({
-          "uId": "1/1/${maxId + 1}",
+          "uId": "$categoryId/${tabsData[currentTab]["uId"]}/${maxId + 1}",
           "imgs": urls,
           "mrp": double.parse(mrp),
           "price": double.parse(price),
@@ -710,7 +718,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         });
 
         await database.collection("products").add({
-          "uId": "1/1/${maxId + 1}",
+          "uId": "$categoryId/${tabsData[currentTab]["uId"]}/${maxId + 1}",
           "imgs": urls,
           "mrp": double.parse(mrp),
           "price": double.parse(price),

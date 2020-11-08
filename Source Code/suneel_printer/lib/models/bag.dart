@@ -52,7 +52,6 @@ class Bag {
 
   void removeProduct(Product product) {
     _products.removeWhere((BagItem bagItem) {
-      print(bagItem.product.toJson());
       return bagItem.product == product;
     });
     _save();
@@ -133,7 +132,6 @@ class Bag {
             .get();
 
         if (products.docs.isEmpty) {
-          print("REMOVING");
           _changeLog.add(
               "The product '${item.product.name}' has been removed from the store");
           wishlist.removeProduct(item.product);

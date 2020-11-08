@@ -10,11 +10,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^0.5.1
-  cloud_firestore: ^0.14.2
+  firebase_core: ^0.5.2
+  cloud_firestore: ^0.14.3
   firebase_storage: ^4.0.1
-  firebase_crashlytics: ^0.2.2
-  firebase_performance: ^0.4.1
+  firebase_crashlytics: ^0.2.3
+  firebase_performance: ^0.4.2
   responsive_framework: ^0.0.11
   shared_preferences: ^0.5.12+4
   flutter_slidable: ^0.5.7
