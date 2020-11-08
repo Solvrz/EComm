@@ -131,6 +131,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () async {
+                                        print("WTF U TAPPED");
                                         if (isSelected) {
                                           if (addresses.length == 1) {
                                             addresses.remove(address);
@@ -144,6 +145,8 @@ class _InformationSheetState extends State<InformationSheet> {
                                             newAddress["selected"] = true;
                                             selectedInfo = newAddress;
                                           }
+                                        } else {
+                                          addresses.remove(address);
                                         }
                                         setState(() {});
                                       },
