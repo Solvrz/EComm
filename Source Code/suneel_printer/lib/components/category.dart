@@ -39,7 +39,7 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width / 2;
+    final double width = MediaQuery.of(context).size.width / 3;
     final double height = width / 0.8;
 
     return GestureDetector(
@@ -142,7 +142,7 @@ class _ProductCardState extends State<ProductCard> {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   color: kUIDarkText,
-                  fontSize: 20,
+                  fontSize: height / 12.85,
                   letterSpacing: 0.3,
                   fontWeight: FontWeight.w800,
                   fontFamily: "sans-serif-condensed"),
