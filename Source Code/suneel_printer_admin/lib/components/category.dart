@@ -175,11 +175,11 @@ class _ProductCardState extends State<ProductCard>
 
                                     if (widget.product.images != null)
                                       widget.product.images.forEach((element) {
-                                        FirebaseStorage.instance
-                                            .getReferenceFromUrl(element.url)
-                                            .then(
-                                              (value) => value.delete(),
-                                            );
+                                        Reference storageReference =
+                                            FirebaseStorage.instance
+                                                .refFromURL(element.url);
+
+                                        storageReference.delete();
                                       });
 
                                     QuerySnapshot category = await database
