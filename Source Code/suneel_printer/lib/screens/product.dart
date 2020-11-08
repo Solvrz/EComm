@@ -176,7 +176,7 @@ class _ProductScreenState extends State<ProductScreen> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: variations,
@@ -185,7 +185,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 18),
+                padding: EdgeInsets.symmetric(vertical: 15),
                 child: Row(
                   children: [
                     Expanded(

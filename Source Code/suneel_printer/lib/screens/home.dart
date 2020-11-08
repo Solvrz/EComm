@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:suneel_printer/components/alert_button.dart';
+import 'package:suneel_printer/components/category.dart';
 import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
@@ -30,8 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    // TODO Fixme: Getting shown too early and if delayed getting state errors
     if (!hasShown)
-      Timer(Duration(seconds: 1), () {
+      Timer(Duration(seconds: 4), () {
         if (addresses.length == 0) {
           hasShown = true;
           showModalBottomSheet(
@@ -308,16 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
 
                             return products.length > 0
-                                ? GridView.count(
-                                    shrinkWrap: true,
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 0.725,
-                                    children: List.generate(
-                                      products.length,
-                                      (index) =>
-                                          SearchCard(product: products[index]),
-                                    ),
-                                  )
+                                ? ProductList(products: products)
                                 : Center(
                                     child: Container(
                                       width: MediaQuery.of(context).size.width /
