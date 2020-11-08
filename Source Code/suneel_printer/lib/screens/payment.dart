@@ -34,7 +34,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 callback: (_) {
                   Timer(
                     Duration(milliseconds: 800),
-                    () => Navigator.popAndPushNamed(
+                    () => Navigator.pushNamed(
                       context,
                       "/home",
                     ),

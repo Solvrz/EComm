@@ -40,7 +40,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey[200],
                 ),
-                height: MediaQuery.of(context).size.height * 100 / 816,
+                height: getHeight(context, 100),
                 width: MediaQuery.of(context).size.width / 1.5,
                 child: Padding(
                   padding: EdgeInsets.all(20),
@@ -89,7 +89,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey[200],
                 ),
-                height: MediaQuery.of(context).size.height * 130 / 816,
+                height: getHeight(context, 130),
                 width: MediaQuery.of(context).size.width / 1.5,
                 child: Padding(
                   padding: EdgeInsets.all(15),

@@ -162,8 +162,7 @@ class _BagScreenState extends State<BagScreen> {
                       },
                       child: RoundedAlertDialog(title: "Alerts", widgets: [
                         Container(
-                          height:
-                              MediaQuery.of(context).size.height * 200 / 816,
+                          height: getHeight(context, 280),
                           width: 300,
                           child: ListView.builder(
                             shrinkWrap: true,
@@ -274,7 +273,7 @@ class _BagScreenState extends State<BagScreen> {
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8),
-            height: MediaQuery.of(context).size.height / 6,
+            height: getHeight(context, 140),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 color: Colors.grey[200]),
@@ -394,19 +393,20 @@ class _BagScreenState extends State<BagScreen> {
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
                       ),
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          if (bag.getQuantity(product) > 1) {
-                            bag.decreaseQuantity(product);
-                          }
-                          setState(() {});
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Icon(Icons.remove, color: kUIColor, size: 20),
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            if (bag.getQuantity(product) > 1) {
+                              bag.decreaseQuantity(product);
+                            }
+                            setState(() {});
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child:
+                                Icon(Icons.remove, color: kUIColor, size: 20),
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 )
