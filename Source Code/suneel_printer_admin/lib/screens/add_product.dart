@@ -253,13 +253,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                           GestureDetector(
                                                                         onTap:
                                                                             () {
-                                                                           if (urls.isNotEmpty &&
-                                                                               args.product != null)
-                                                                             FirebaseStorage.instance.getReferenceFromUrl(urls[index]).then(
-                                                                                   (value) => value.delete(),
-                                                                                 );
+                                                                          if (urls.isNotEmpty &&
+                                                                              args.product != null) {
+                                                                            Reference
+                                                                                storageReference =
+                                                                                FirebaseStorage.instance.refFromURL(urls[index]);
+                                                                            storageReference.delete();
 
-                                                                          urls.removeAt(index);
+                                                                            urls.removeAt(index);
+                                                                          }
 
                                                                           images
                                                                               .removeAt(index);
