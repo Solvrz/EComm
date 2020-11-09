@@ -21,7 +21,7 @@ class AlertButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       highlightColor: Colors.transparent,
-      padding: EdgeInsets.only(top: 12, bottom: 12),
+      padding: EdgeInsets.symmetric(vertical: 12),
       color: backgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius ?? BorderRadius.circular(8),

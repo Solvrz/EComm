@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:suneel_printer_admin/constant.dart';
 import 'package:suneel_printer_admin/models/product.dart';
-import 'package:suneel_printer_admin/screens/product.dart';
 
 class InfoWidget extends StatelessWidget {
   final Map order;
@@ -250,16 +249,9 @@ class PastOrderSheet extends StatelessWidget {
                                   horizontal: 24, vertical: 18),
                               child: Row(
                                 children: [
-                                  GestureDetector(
-                                    onTap: () => Navigator.pushNamed(
-                                      context,
-                                      "/product",
-                                      arguments: ProductArguments(product),
-                                    ),
-                                    child: product.images.length > 0
-                                        ? Image(image: product.images[0])
-                                        : Text("No Image Provided"),
-                                  ),
+                                  product.images.length > 0
+                                      ? Image(image: product.images[0])
+                                      : Text("No Image Provided"),
                                   SizedBox(width: 24),
                                   Expanded(
                                     child: Column(

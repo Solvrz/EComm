@@ -41,17 +41,17 @@ class _OrderProductPageState extends State<OrderProductPage> {
                   color: Colors.grey[200],
                 ),
                 height: getHeight(context, 100),
-                width: MediaQuery.of(context).size.width / 1.5,
+                width: MediaQuery.of(context).size.width / 1.3,
                 child: Padding(
                   padding: EdgeInsets.all(20),
                   child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
                           "Service: ",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 20,
+                            fontSize: getHeight(context, 25),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -89,8 +89,8 @@ class _OrderProductPageState extends State<OrderProductPage> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey[200],
                 ),
-                height: getHeight(context, 130),
-                width: MediaQuery.of(context).size.width / 1.5,
+                height: getHeight(context, 200),
+                width: MediaQuery.of(context).size.width / 1.3,
                 child: Padding(
                   padding: EdgeInsets.all(15),
                   child: selectedInfo == null

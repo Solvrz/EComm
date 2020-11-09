@@ -297,9 +297,10 @@ class _BagScreenState extends State<BagScreen> {
                               Text(
                                 product.name,
                                 maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: kUIDarkText,
-                                    fontSize: 22,
+                                    fontSize: getHeight(context, 25),
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: -0.4),
                               ),
@@ -309,7 +310,7 @@ class _BagScreenState extends State<BagScreen> {
                                     "₹ ${product.price}",
                                     style: TextStyle(
                                         color: kUIDarkText,
-                                        fontSize: 20,
+                                        fontSize: getHeight(context, 24),
                                         fontWeight: FontWeight.bold,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
@@ -319,7 +320,7 @@ class _BagScreenState extends State<BagScreen> {
                                     style: TextStyle(
                                         color: kUIDarkText.withOpacity(0.7),
                                         decoration: TextDecoration.lineThrough,
-                                        fontSize: 18,
+                                        fontSize: getHeight(context, 20),
                                         fontWeight: FontWeight.w800,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
@@ -393,20 +394,17 @@ class _BagScreenState extends State<BagScreen> {
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
                       ),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            if (bag.getQuantity(product) > 1) {
-                              bag.decreaseQuantity(product);
-                            }
-                            setState(() {});
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child:
-                                Icon(Icons.remove, color: kUIColor, size: 20),
-                          ),
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          bag.decreaseQuantity(product);
+                          setState(() {});
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Icon(Icons.remove, color: kUIColor, size: 20),
                         ),
+                      ),
                     ],
                   ),
                 )

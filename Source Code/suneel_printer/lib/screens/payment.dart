@@ -61,7 +61,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
             child: Column(children: [
               if (!isCompleted) SizedBox(height: 150),
               Container(
-                height: isCompleted ? 500 : 200,
+                height: isCompleted
+                    ? getHeight(context, 500)
+                    : getHeight(context, 200),
                 width: isCompleted ? 500 : 200,
                 child: isCompleted
                     ? flareAnimation
@@ -71,14 +73,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             AlwaysStoppedAnimation<Color>(Colors.grey[700]),
                       ),
               ),
-              if (!isCompleted) SizedBox(height: 150),
+              if (!isCompleted) SizedBox(height: getHeight(context, 150)),
               if (isCompleted) ...[
                 Text(
                   args.success ? "Order Placed Successfully" : "Payment Failed",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: 28,
+                    fontSize: getHeight(context, 24),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -88,8 +90,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontSize: getHeight(context, 20),
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ]

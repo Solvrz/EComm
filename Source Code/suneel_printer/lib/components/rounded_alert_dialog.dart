@@ -60,7 +60,7 @@ class RoundedAlertDialog extends StatelessWidget {
               (index) => isExpanded
                   ? Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(left: 4, right: 4),
+                        padding: EdgeInsets.symmetric(horizontal: 4),
                         child: buttonsList[index],
                       ),
                     )
