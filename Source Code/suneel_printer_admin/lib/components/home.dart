@@ -73,7 +73,7 @@ class _SearchCardState extends State<SearchCard> {
                 "₹ ${widget.product.price}",
                 style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: 20,
+                    fontSize: 46,
                     fontWeight: FontWeight.bold,
                     fontFamily: "sans-serif-condensed"),
               ),
@@ -83,7 +83,7 @@ class _SearchCardState extends State<SearchCard> {
                 style: TextStyle(
                     color: kUIDarkText.withOpacity(0.7),
                     decoration: TextDecoration.lineThrough,
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.w800,
                     fontFamily: "sans-serif-condensed"),
               ),

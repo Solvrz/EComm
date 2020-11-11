@@ -56,13 +56,17 @@ class _ProductScreenState extends State<ProductScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          product.name,
-                          style: TextStyle(
-                              color: kUIDarkText,
-                              fontSize: 28,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "sans-serif-condensed"),
+                        Expanded(
+                          child: Text(
+                            product.name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: kUIDarkText,
+                                fontSize: 28,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "sans-serif-condensed"),
+                          ),
                         ),
                       ],
                     ),

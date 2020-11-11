@@ -338,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   autoPlay:
                                       carouselImages.length > 1 ? true : false,
                                   enlargeCenterPage: true,
-                                  aspectRatio: 2,
+                                  aspectRatio: 3,
                                   onPageChanged: (index, reason) {
                                     setState(() {
                                       _current = index;

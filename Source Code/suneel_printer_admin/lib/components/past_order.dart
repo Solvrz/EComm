@@ -299,6 +299,44 @@ class PastOrderSheet extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        right: 12,
+                                        left: 4,
+                                        top: 18,
+                                        bottom: 18),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: List.generate(
+                                        product.selected.length,
+                                        (index) => CircleAvatar(
+                                          radius: 12,
+                                          backgroundColor: product
+                                                  .selected.values
+                                                  .toList()[index]
+                                                  .color ??
+                                              Colors.grey[400],
+                                          child: product.selected.values
+                                                      .toList()[index]
+                                                      .color ==
+                                                  null
+                                              ? Text(
+                                                  product.selected.values
+                                                      .toList()[index]
+                                                      .label[0]
+                                                      .toUpperCase(),
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: kUIDarkText),
+                                                )
+                                              : null,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

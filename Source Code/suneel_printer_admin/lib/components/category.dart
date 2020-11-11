@@ -92,10 +92,10 @@ class _ProductCardState extends State<ProductCard>
               children: [
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 15, 12, 0),
+                    padding: EdgeInsets.fromLTRB(0, 15, 18, 0),
                     child: widget.product.images.length > 0
                         ? Container(
-                            height: height / 1.6,
+                            height: height / 1.675,
                             decoration: BoxDecoration(boxShadow: [
                               BoxShadow(
                                 color: Colors.grey[600],
@@ -106,7 +106,7 @@ class _ProductCardState extends State<ProductCard>
                             child: Image(image: widget.product.images[0]),
                           )
                         : Container(
-                            height: height / 1.6,
+                            height: height / 1.65,
                             child: Center(
                               child: Text("No Image Provided"),
                             ),
@@ -179,6 +179,7 @@ class _ProductCardState extends State<ProductCard>
                                             FirebaseStorage.instance
                                                 .refFromURL(element.url);
 
+                                        print(storageReference.name);
                                         storageReference.delete();
                                       });
 
@@ -243,7 +244,7 @@ class _ProductCardState extends State<ProductCard>
                 "₹ ${widget.product.price}",
                 style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: 20,
+                    fontSize: MediaQuery.of(context).size.height * 14 / 816,
                     fontWeight: FontWeight.bold,
                     fontFamily: "sans-serif-condensed"),
               ),
@@ -253,7 +254,7 @@ class _ProductCardState extends State<ProductCard>
                 style: TextStyle(
                     color: kUIDarkText.withOpacity(0.7),
                     decoration: TextDecoration.lineThrough,
-                    fontSize: 18,
+                    fontSize: MediaQuery.of(context).size.height * 12 / 816,
                     fontWeight: FontWeight.w800,
                     fontFamily: "sans-serif-condensed"),
               ),
@@ -267,7 +268,7 @@ class _ProductCardState extends State<ProductCard>
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   color: kUIDarkText,
-                  fontSize: 20,
+                  fontSize: MediaQuery.of(context).size.height * 14 / 816,
                   letterSpacing: 0.3,
                   fontWeight: FontWeight.w800,
                   fontFamily: "sans-serif-condensed"),

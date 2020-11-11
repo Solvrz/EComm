@@ -154,6 +154,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 child: TextField(
                                   controller: nameController,
                                   cursorColor: Colors.grey,
+                                  maxLines: 2,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Product Name",
@@ -634,25 +635,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
     bool noError = true;
 
     for (File file in imageFiles) {
-      final UploadTask task = FirebaseStorage.instance
-          .ref()
-          .child(
-              "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf")
-          .putFile(file);
+      try {
+        TaskSnapshot task = await FirebaseStorage.instance
+            .ref()
+            .child(
+                "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf")
+            .putFile(file);
 
-      task.snapshotEvents.listen((TaskSnapshot snapshot) {
-        if (snapshot.state.toString() == "complete")
-          task.then((TaskSnapshot snapshot) async {
-            final String url = await snapshot.ref.getDownloadURL();
+        String url = await task.ref.getDownloadURL();
 
-            urls.add(url);
-            file.delete();
-          }).catchError((Object e) {
-            noError = false;
-          });
-      }, onError: (Object e) {
+        urls.add(url);
+        file.delete();
+      } catch (e) {
         noError = false;
-      });
+      }
     }
 
     if (noError) {
