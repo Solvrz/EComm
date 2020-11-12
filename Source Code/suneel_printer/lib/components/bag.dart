@@ -58,7 +58,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                     "Check Out",
                     style: TextStyle(
                         color: kUIDarkText,
-                        fontSize: 24,
+                        fontSize: getHeight(context, 24),
                         fontWeight: FontWeight.bold),
                   )
                 ],
@@ -77,14 +77,14 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               "Name: ",
                               style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 20,
+                                fontSize: getHeight(context, 20),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
                               "${selectedInfo['name'].toString().capitalize()}",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: getHeight(context, 18),
                                 color: kUIDarkText,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -108,7 +108,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           },
                           child: Icon(
                             Icons.edit,
-                            size: 25,
+                            size: getHeight(context, 25),
                             color: kUIDarkText.withOpacity(0.8),
                           ),
                         ),
@@ -120,14 +120,14 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "Phone: ",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 20,
+                            fontSize: getHeight(context, 20),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           "${selectedInfo['phone']}",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: getHeight(context, 18),
                             color: kUIDarkText,
                             fontWeight: FontWeight.w500,
                           ),
@@ -140,7 +140,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "Email: ",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 20,
+                            fontSize: getHeight(context, 20),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -148,7 +148,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "${selectedInfo['email']}",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 18,
+                            fontSize: getHeight(context, 18),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -160,7 +160,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "Address: ",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 20,
+                            fontSize: getHeight(context, 20),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -170,7 +170,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: kUIDarkText,
-                              fontSize: 18,
+                              fontSize: getHeight(context, 18),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -186,7 +186,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "Payment Methods",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 22,
+                            fontSize: getHeight(context, 22),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -200,7 +200,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                     value,
                                     style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 18,
+                                      fontSize: getHeight(context, 18),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -223,7 +223,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                 "Total:",
                                 style: TextStyle(
                                   color: kUIDarkText,
-                                  fontSize: 24,
+                                  fontSize: getHeight(context, 24),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -241,7 +241,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                   : widget.price.toStringAsFixed(2),
                               style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 24,
+                                fontSize: getHeight(context, 24),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -300,7 +300,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         ? "Proceed To Buy"
                         : "Proceed To Pay",
                     style: TextStyle(
-                        fontSize: 24,
+                        fontSize: getHeight(context, 24),
                         fontWeight: FontWeight.w600,
                         color: kUILightText),
                   ),

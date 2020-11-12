@@ -34,7 +34,7 @@ class _OptionRadioTileState extends State<OptionRadioTile> {
               widget.variation.name,
               style: TextStyle(
                   color: kUIDarkText,
-                  fontSize: 22,
+                  fontSize: getHeight(context, 22),
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.2),
             ),
@@ -77,7 +77,7 @@ class _OptionRadioTileState extends State<OptionRadioTile> {
                                   widget.variation.options[index].label[0]
                                       .toUpperCase(),
                                   style: TextStyle(
-                                      fontSize: 12,
+                                      fontSize: getHeight(context, 13),
                                       fontWeight: FontWeight.w600,
                                       color: kUIDarkText),
                                 )
@@ -89,7 +89,9 @@ class _OptionRadioTileState extends State<OptionRadioTile> {
                       child: Text(widget.variation.options[index].label),
                       duration: Duration(milliseconds: 200),
                       style: widget.currIndex == index
-                          ? TextStyle(fontSize: 14, color: kUIDarkText)
+                          ? TextStyle(
+                              fontSize: getHeight(context, 15),
+                              color: kUIDarkText)
                           : TextStyle(color: kUIDarkText, fontSize: 0),
                     ),
                   ],

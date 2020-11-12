@@ -36,21 +36,7 @@ class Payment {
           "isStaging": staging
         };
 
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) => Container(
-        //     decoration: BoxDecoration(
-        //         borderRadius: BorderRadius.circular(20), color: Colors.white),
-        //     child: Column(children: [
-        //       indicator,
-        //       Text(
-        //         "Payment is being processed",
-        //         style:
-        //             TextStyle(fontSize: 16, fontFamily: "sans-serif-condensed"),
-        //       )
-        //     ]),
-        //   ),
-        // );
+        /// TODO: Put Loading Dialog
 
         await _channel.invokeMethod("pay", arguments);
 

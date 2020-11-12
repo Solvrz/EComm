@@ -63,7 +63,7 @@ class PastOrderScreen extends StatelessWidget {
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: kUIDarkText,
-                                              fontSize: 18,
+                                              fontSize: getHeight(context, 18),
                                               fontFamily:
                                                   "sans-serif-condensed",
                                               fontWeight: FontWeight.w500,

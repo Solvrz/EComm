@@ -63,7 +63,7 @@ class PastOrderScreen extends StatelessWidget {
                                   child: Text(
                                     "All Orders Delivered",
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: getHeight(context, 18),
                                       color: kUIDarkText,
                                     ),
                                   ),
@@ -72,7 +72,7 @@ class PastOrderScreen extends StatelessWidget {
                             Text(
                               "Delivered Orders",
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: getHeight(context, 24),
                                 color: kUIDarkText,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -179,7 +179,7 @@ class PastOrderScreen extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: kUIDarkText,
-                              fontSize: 18,
+                              fontSize: getHeight(context, 18),
                               fontWeight: FontWeight.w500,
                             ),
                           ),

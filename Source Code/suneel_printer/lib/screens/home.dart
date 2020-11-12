@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         "Deliver To",
                         style: TextStyle(
-                            fontSize: 18,
+                            fontSize: getHeight(context, 18),
                             color: Colors.grey[600],
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.2,
@@ -153,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   : "Not Selected",
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: getHeight(context, 18),
                                   color: kUIDarkText,
                                   letterSpacing: 0.2,
                                   fontWeight: FontWeight.bold,
@@ -317,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         return Column(children: [
                           Container(
-                            height: getHeight(context, 180),
+                            height: getHeight(context, 200),
                             width: MediaQuery.of(context).size.width,
                             child: CarouselSlider.builder(
                               itemCount: carouselImages.length,
@@ -338,7 +338,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   autoPlay:
                                       carouselImages.length > 1 ? true : false,
                                   enlargeCenterPage: true,
-                                  aspectRatio: 3,
+                                  aspectRatio:
+                                      1632 / MediaQuery.of(context).size.height,
                                   onPageChanged: (index, reason) {
                                     setState(() {
                                       _current = index;
@@ -386,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     crossAxisCount: 3,
                                     mainAxisSpacing: 12,
                                     crossAxisSpacing: 12,
-                                    childAspectRatio: 0.98,
+                                    childAspectRatio: getAspect(context, 0.98),
                                     children: List.generate(categories.length,
                                         (int index) {
                                       Map<String, dynamic> data =

@@ -70,7 +70,7 @@ class _BagScreenState extends State<BagScreen> {
                       "₹ ",
                       style: TextStyle(
                         color: kUIDarkText,
-                        fontSize: 16,
+                        fontSize: getHeight(context, 16),
                       ),
                     ),
                     Text(
@@ -78,7 +78,7 @@ class _BagScreenState extends State<BagScreen> {
                           ? price.toInt().toString()
                           : price.toStringAsFixed(2),
                       style: TextStyle(
-                          fontSize: 34,
+                          fontSize: getHeight(context, 34),
                           fontWeight: FontWeight.bold,
                           letterSpacing: -2,
                           color: kUIDarkText),
@@ -87,7 +87,7 @@ class _BagScreenState extends State<BagScreen> {
                     Text(
                       "(${bag.products.length} items)",
                       style: TextStyle(
-                          fontSize: 16,
+                          fontSize: getHeight(context, 16),
                           fontWeight: FontWeight.bold,
                           color: Colors.grey[600]),
                     ),
@@ -109,7 +109,7 @@ class _BagScreenState extends State<BagScreen> {
                     Text(
                       "Checkout",
                       style: TextStyle(
-                          fontSize: 16,
+                          fontSize: getHeight(context, 16),
                           fontWeight: FontWeight.w600,
                           color: Colors.grey[200]),
                     ),
@@ -175,7 +175,7 @@ class _BagScreenState extends State<BagScreen> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: kUIDarkText,
-                                        fontSize: 16,
+                                        fontSize: getHeight(context, 16),
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
@@ -207,7 +207,7 @@ class _BagScreenState extends State<BagScreen> {
                         "Alerts for items in your bag",
                         style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 20,
+                            fontSize: getHeight(context, 20),
                             fontWeight: FontWeight.w600,
                             fontFamily: "sans-serif-condensed"),
                       ),
@@ -315,14 +315,18 @@ class _BagScreenState extends State<BagScreen> {
                                         fontFamily: "sans-serif-condensed"),
                                   ),
                                   SizedBox(width: 12),
-                                  Text(
-                                    "₹ ${product.mrp}",
-                                    style: TextStyle(
-                                        color: kUIDarkText.withOpacity(0.7),
-                                        decoration: TextDecoration.lineThrough,
-                                        fontSize: getHeight(context, 20),
-                                        fontWeight: FontWeight.w800,
-                                        fontFamily: "sans-serif-condensed"),
+                                  Expanded(
+                                    child: Text(
+                                      "₹ ${product.mrp}",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: kUIDarkText.withOpacity(0.7),
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          fontSize: getHeight(context, 20),
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: "sans-serif-condensed"),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -355,7 +359,7 @@ class _BagScreenState extends State<BagScreen> {
                                           .label[0]
                                           .toUpperCase(),
                                       style: TextStyle(
-                                          fontSize: 13,
+                                          fontSize: getHeight(context, 13),
                                           fontWeight: FontWeight.w600,
                                           color: kUIDarkText),
                                     )
@@ -391,7 +395,7 @@ class _BagScreenState extends State<BagScreen> {
                         bag.getQuantity(product).toString(),
                         style: TextStyle(
                             color: kUIColor,
-                            fontSize: 18,
+                            fontSize: getHeight(context, 18),
                             fontWeight: FontWeight.w500),
                       ),
                       GestureDetector(

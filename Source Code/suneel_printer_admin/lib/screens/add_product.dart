@@ -136,7 +136,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           ),
           body: SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context).size.height * 730 / 816,
+              height: getHeight(context, 730),
               width: MediaQuery.of(context).size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -147,8 +147,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(right: 18, bottom: 36),
+                          padding: EdgeInsets.all(12),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
                                 child: TextField(
@@ -160,7 +161,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     hintText: "Product Name",
                                     hintStyle: TextStyle(
                                         color: kUIDarkText,
-                                        fontSize: 28,
+                                        fontSize: getHeight(context, 28),
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
@@ -168,7 +169,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       setState(() => name = value),
                                   style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 28,
+                                      fontSize: getHeight(context, 28),
                                       fontWeight: FontWeight.w600,
                                       fontFamily: "sans-serif-condensed"),
                                 ),
@@ -213,14 +214,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     _currentImage = 0;
                                   });
                                 },
-                                child: Icon(Icons.add_photo_alternate,
-                                    color: kUIAccent, size: 32),
+                                child: Padding(
+                                  padding: EdgeInsets.all(12),
+                                  child: Icon(Icons.add_photo_alternate,
+                                      color: kUIAccent, size: 28),
+                                ),
                               )
                             ],
                           ),
                         ),
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.3,
+                          height: MediaQuery.of(context).size.height * 0.25,
                           width: MediaQuery.of(context).size.width,
                           child: images.length > 0
                               ? Stack(
@@ -256,10 +260,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                                             () {
                                                                           if (urls.isNotEmpty &&
                                                                               args.product != null) {
-                                                                            Reference
-                                                                                storageReference =
-                                                                                FirebaseStorage.instance.refFromURL(urls[index]);
-                                                                            storageReference.delete();
+                                                                            // FirebaseStorage.instance.getReferenceFromUrl(urls[index]).then(
+                                                                            //       (value) => value.delete(),
+                                                                            //     );
 
                                                                             urls.removeAt(index);
                                                                           }
@@ -297,13 +300,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     ),
                                     Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.fromLTRB(
-                                                8, 16, 8, 8),
+                                            padding: EdgeInsets.all(8),
                                             child: CarouselSlider(
                                               items: images
                                                   .map<Widget>(
@@ -314,7 +316,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                       ? true
                                                       : false,
                                                   enlargeCenterPage: true,
-                                                  aspectRatio: 2,
+                                                  aspectRatio: getAspect(context, 2.5),
                                                   onPageChanged:
                                                       (index, reason) {
                                                     setState(() {
@@ -363,7 +365,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   child: Text("No Images Added\nAdd One",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: getHeight(context, 20),
                                         fontWeight: FontWeight.bold,
                                       ))),
                         )
@@ -411,7 +413,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             "MRP",
                             style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 22,
+                                fontSize: getHeight(context, 22),
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.2),
                           ),
@@ -427,7 +429,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               hintText: "MRP",
                               hintStyle: TextStyle(
                                   color: kUIDarkText,
-                                  fontSize: 20,
+                                  fontSize: getHeight(context, 20),
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: -0.4),
                             ),
@@ -435,7 +437,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             cursorColor: Colors.grey,
                             style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 20,
+                                fontSize: getHeight(context, 20),
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: -0.4),
                           ),
@@ -452,7 +454,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             "Actual Price",
                             style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 22,
+                                fontSize: getHeight(context, 22),
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.2),
                           ),
@@ -468,7 +470,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               hintText: "Price",
                               hintStyle: TextStyle(
                                   color: kUIDarkText,
-                                  fontSize: 20,
+                                  fontSize: getHeight(context, 20),
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: -0.4),
                             ),
@@ -476,7 +478,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             onChanged: (value) => setState(() => price = value),
                             style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 20,
+                                fontSize: getHeight(context, 20),
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: -0.4),
                           ),
@@ -532,13 +534,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   hintText: "Name",
                   hintStyle: TextStyle(
                       color: kUIDarkText,
-                      fontSize: 22,
+                      fontSize: getHeight(context, 22),
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.2),
                 ),
                 style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: 22,
+                    fontSize: getHeight(context, 22),
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.2),
               ),
@@ -635,20 +637,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
     bool noError = true;
 
     for (File file in imageFiles) {
-      try {
-        TaskSnapshot task = await FirebaseStorage.instance
-            .ref()
-            .child(
-                "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf")
-            .putFile(file);
+      // final StorageReference storageReference = FirebaseStorage.instance
+      //     .ref()
+      //     .child(
+      //         "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.jpeg");
+      // final StorageTaskSnapshot snapshot =
+      //     await storageReference.putFile(file).onComplete;
 
-        String url = await task.ref.getDownloadURL();
+      // if (snapshot.error != null) {
+      //   noError = false;
+      // } else {
+      //   final String url = await snapshot.ref.getDownloadURL();
 
-        urls.add(url);
-        file.delete();
-      } catch (e) {
-        noError = false;
-      }
+      //   urls.add(url);
+      //   file.delete();
+      // }
     }
 
     if (noError) {

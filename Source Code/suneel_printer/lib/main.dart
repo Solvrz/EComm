@@ -71,7 +71,7 @@ class SuneelPrinter extends StatelessWidget {
         ],
         background: Container(color: kUIColor),
       ),
-      title: 'SuneelPrinters',
+      title: 'Suneel Printers',
       initialRoute: "/",
       routes: {
         "/": (BuildContext context) => SplashScreen(),

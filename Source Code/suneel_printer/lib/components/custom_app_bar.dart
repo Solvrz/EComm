@@ -28,7 +28,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: TextStyle(
           color: kUIDarkText,
-          fontSize: 24,
+          fontSize: getHeight(parent, 24),
           fontWeight: FontWeight.bold,
           fontFamily: "sans-serif-condensed",
         ),

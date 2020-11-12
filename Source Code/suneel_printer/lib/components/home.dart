@@ -57,7 +57,7 @@ class _InformationSheetState extends State<InformationSheet> {
                       "Delivery Information",
                       style: TextStyle(
                           color: kUIDarkText,
-                          fontSize: 24,
+                          fontSize: getHeight(context, 24),
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -162,7 +162,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                           ? kUIDarkText
                                           : Colors.grey[600],
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                      fontSize: getHeight(context, 18),
                                       letterSpacing: 0.2),
                                 ),
                                 subtitle: Padding(
@@ -184,7 +184,7 @@ class _InformationSheetState extends State<InformationSheet> {
                               "No Information Added",
                               style: TextStyle(
                                   color: kUIDarkText,
-                                  fontSize: 20,
+                                  fontSize: getHeight(context, 20),
                                   fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -213,7 +213,7 @@ class _InformationSheetState extends State<InformationSheet> {
                         child: Text(
                           "Add Information",
                           style: TextStyle(
-                              fontSize: 18,
+                              fontSize: getHeight(context, 18),
                               fontWeight: FontWeight.bold,
                               color: kUIColor),
                         ),
@@ -321,7 +321,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                   "${widget.edit ? "Edit" : "Add"} Information",
                   style: TextStyle(
                       color: kUIDarkText,
-                      fontSize: 24,
+                      fontSize: getHeight(context, 24),
                       fontWeight: FontWeight.bold),
                 )
               ],
@@ -339,7 +339,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                       data["title"],
                       style: TextStyle(
                           color: kUIDarkText,
-                          fontSize: 16,
+                          fontSize: getHeight(context, 16),
                           fontWeight: FontWeight.bold),
                     ),
                     TextField(
@@ -353,13 +353,14 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                       maxLines: data["maxLines"] ?? 3,
                       style: TextStyle(
                           color: kUIDarkText,
-                          fontSize: 17,
+                          fontSize: getHeight(context, 16),
                           fontWeight: FontWeight.w500),
                     ),
                     if (error[field]) ...[
                       Text(
                         data["errorMessage"],
-                        style: TextStyle(fontSize: 15, color: kUIAccent),
+                        style: TextStyle(
+                            fontSize: getHeight(context, 15), color: kUIAccent),
                       ),
                       SizedBox(height: 8),
                     ],
@@ -427,7 +428,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                   child: Text(
                     "${widget.edit ? "Save" : "Add"} Information",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: getHeight(context, 18),
                       fontWeight: FontWeight.bold,
                       color: kUIColor,
                     ),

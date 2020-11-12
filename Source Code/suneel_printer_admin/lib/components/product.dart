@@ -34,7 +34,7 @@ class _OptionRadioTileState extends State<OptionRadioTile> {
               widget.variation.name,
               style: TextStyle(
                   color: kUIDarkText,
-                  fontSize: 22,
+                  fontSize: getHeight(context, 22),
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.2),
             ),

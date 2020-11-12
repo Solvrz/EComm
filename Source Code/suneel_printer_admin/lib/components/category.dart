@@ -24,7 +24,7 @@ class _ProductListState extends State<ProductList> {
     return GridView.count(
       shrinkWrap: true,
       crossAxisCount: 2,
-      childAspectRatio: 0.75,
+      childAspectRatio: getAspect(context, 0.75),
       children: List.generate(
         widget.products.length,
         (index) =>
@@ -173,15 +173,14 @@ class _ProductCardState extends State<ProductCard>
                                     List<String> uIds =
                                         widget.product.uId.split("/");
 
-                                    if (widget.product.images != null)
-                                      widget.product.images.forEach((element) {
-                                        Reference storageReference =
-                                            FirebaseStorage.instance
-                                                .refFromURL(element.url);
-
-                                        print(storageReference.name);
-                                        storageReference.delete();
-                                      });
+                                    // if (widget.product.images != null)
+                                    //   widget.product.images.forEach((element) {
+                                    //     FirebaseStorage.instance
+                                    //         .getReferenceFromUrl(element.url)
+                                    //         .then(
+                                    //           (value) => value.delete(),
+                                    //         );
+                                    //   });
 
                                     QuerySnapshot category = await database
                                         .collection("categories")
@@ -244,7 +243,7 @@ class _ProductCardState extends State<ProductCard>
                 "₹ ${widget.product.price}",
                 style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: MediaQuery.of(context).size.height * 14 / 816,
+                    fontSize: getHeight(context, 20),
                     fontWeight: FontWeight.bold,
                     fontFamily: "sans-serif-condensed"),
               ),
@@ -254,7 +253,7 @@ class _ProductCardState extends State<ProductCard>
                 style: TextStyle(
                     color: kUIDarkText.withOpacity(0.7),
                     decoration: TextDecoration.lineThrough,
-                    fontSize: MediaQuery.of(context).size.height * 12 / 816,
+                    fontSize: getHeight(context, 18),
                     fontWeight: FontWeight.w800,
                     fontFamily: "sans-serif-condensed"),
               ),
@@ -268,7 +267,7 @@ class _ProductCardState extends State<ProductCard>
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   color: kUIDarkText,
-                  fontSize: MediaQuery.of(context).size.height * 14 / 816,
+                  fontSize: getHeight(context, 20),
                   letterSpacing: 0.3,
                   fontWeight: FontWeight.w800,
                   fontFamily: "sans-serif-condensed"),

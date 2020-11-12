@@ -88,13 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       "Call or Whatsapp",
-                      style:
-                          TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
+                      style: TextStyle(
+                          fontSize: getHeight(context, 20),
+                          fontWeight: FontWeight.w400),
                     ),
                     Text(
                       "1234567890",
                       style: TextStyle(
-                          fontSize: 23,
+                          fontSize: getHeight(context, 24),
                           fontWeight: FontWeight.bold,
                           color: kUIAccent),
                     ),
@@ -203,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ? GridView.count(
                                     shrinkWrap: true,
                                     crossAxisCount: 2,
-                                    childAspectRatio: 0.725,
+                                    childAspectRatio: getAspect(context, 0.725),
                                     children: List.generate(
                                       products.length,
                                       (index) =>
@@ -267,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 autoPlay:
                                     carouselImages.length > 1 ? true : false,
                                 enlargeCenterPage: true,
-                                aspectRatio: 2,
+                                aspectRatio: getAspect(context, 2),
                                 onPageChanged: (index, reason) {
                                   setState(() {
                                     _current = index;
@@ -303,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text(
                                     "Categories",
                                     style: TextStyle(
-                                        fontSize: 32,
+                                        fontSize: getHeight(context, 32),
                                         letterSpacing: 0.2,
                                         fontWeight: FontWeight.bold,
                                         color: kUIDarkText),
@@ -315,7 +316,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       crossAxisCount: 3,
                                       mainAxisSpacing: 12,
                                       crossAxisSpacing: 12,
-                                      childAspectRatio: 0.98,
+                                      childAspectRatio:
+                                          getAspect(context, 0.98),
                                       children: List.generate(categories.length,
                                           (int index) {
                                         Map<String, dynamic> data =
@@ -365,6 +367,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   data["name"],
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
+                                                    fontSize:
+                                                        getHeight(context, 14),
                                                     fontFamily:
                                                         "sans-serif-condensed",
                                                     color: kUIDarkText,

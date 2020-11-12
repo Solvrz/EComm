@@ -18,7 +18,7 @@ class _ProductListState extends State<ProductList> {
     return GridView.count(
       shrinkWrap: true,
       crossAxisCount: 2,
-      childAspectRatio: 0.75,
+      childAspectRatio: getAspect(context, 0.75),
       children: List.generate(
         widget.products.length,
         (index) => ProductCard(product: widget.products[index]),
@@ -83,7 +83,7 @@ class _ProductCardState extends State<ProductCard> {
                             child: Image(image: widget.product.images[0]),
                           )
                         : Container(
-                            height: height / 1.8,
+                            height: height / 1.25,
                             child: Center(
                               child: Text("No Image Provided"),
                             ),

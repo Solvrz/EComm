@@ -70,7 +70,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                   child: Text(
                                     val,
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: getHeight(context, 18),
                                         color: Colors.grey[900],
                                         letterSpacing: 0.2,
                                         fontWeight: FontWeight.bold,
@@ -114,7 +114,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                               "Select Information",
                               style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 20,
+                                fontSize: getHeight(context, 20),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -133,14 +133,14 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                         "Name: ",
                                         style: TextStyle(
                                           color: kUIDarkText,
-                                          fontSize: 20,
+                                          fontSize: getHeight(context, 20),
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       Text(
                                         "${selectedInfo['name'].toString().capitalize()}",
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: getHeight(context, 18),
                                           color: Colors.grey[900],
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -177,14 +177,14 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     "Phone: ",
                                     style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 20,
+                                      fontSize: getHeight(context, 20),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
                                     "${selectedInfo['phone']}",
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: getHeight(context, 18),
                                       color: Colors.grey[900],
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -197,14 +197,14 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     "Email: ",
                                     style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 20,
+                                      fontSize: getHeight(context, 20),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
                                     "${selectedInfo['email']}",
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: getHeight(context, 18),
                                       color: Colors.grey[900],
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -217,7 +217,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     "Address: ",
                                     style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 20,
+                                      fontSize: getHeight(context, 20),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -226,7 +226,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                       "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}",
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: getHeight(context, 18),
                                         color: Colors.grey[900],
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -283,7 +283,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                     Text(
                       "Place Order",
                       style: TextStyle(
-                          fontSize: 16,
+                          fontSize: getHeight(context, 16),
                           fontWeight: FontWeight.w600,
                           color: Colors.grey[200]),
                     ),
