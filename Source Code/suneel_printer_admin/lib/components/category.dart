@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer_admin/components/alert_button.dart';
 import 'package:suneel_printer_admin/components/rounded_alert_dialog.dart';
@@ -173,14 +172,24 @@ class _ProductCardState extends State<ProductCard>
                                     List<String> uIds =
                                         widget.product.uId.split("/");
 
-                                    // if (widget.product.images != null)
-                                    //   widget.product.images.forEach((element) {
-                                    //     FirebaseStorage.instance
-                                    //         .getReferenceFromUrl(element.url)
-                                    //         .then(
-                                    //           (value) => value.delete(),
-                                    //         );
-                                    //   });
+                                    if (widget.product.images != null)
+                                      widget.product.images.forEach((element) =>
+                                          storage
+                                              .ref()
+                                              .child(element.url
+                                                  .replaceAll(
+                                                      RegExp(
+                                                          r'https://firebasestorage.googleapis.com/v0/b/suneelprinters37.appspot.com/o/'),
+                                                      '')
+                                                  .replaceAll(
+                                                      RegExp(r'%2F'), '/')
+                                                  .replaceAll(
+                                                      RegExp(r'(\?alt).*'), '')
+                                                  .replaceAll(
+                                                      RegExp(r'%20'), ' ')
+                                                  .replaceAll(
+                                                      RegExp(r'%3A'), ':'))
+                                              .delete());
 
                                     QuerySnapshot category = await database
                                         .collection("categories")

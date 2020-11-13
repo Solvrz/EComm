@@ -184,7 +184,8 @@ class _ProductScreenState extends State<ProductScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         ...variations,
-                        Divider(thickness: 2, height: 2),
+                        if (variations.isNotEmpty)
+                          Divider(thickness: 2, height: 2),
                         Padding(
                           padding: EdgeInsets.symmetric(
                               vertical: 15, horizontal: 18),

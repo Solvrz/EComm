@@ -110,28 +110,24 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
             ),
             trailing: [
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: name != "" && price != "" && mrp != ""
-                    ? () async {
-                        _addProduct(context, args.title, args.product,
-                            args.tabs, args.tabsData, args.currentTab);
+              if (name != "" && price != "" && mrp != "")
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    _addProduct(context, args.title, args.product, args.tabs,
+                        args.tabsData, args.currentTab);
 
-                        Navigator.pop(context);
-                      }
-                    : null,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kUIColor),
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: kUIColor),
+                    ),
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.arrow_forward_ios,
+                        color: kUIDarkText, size: 26),
                   ),
-                  padding: EdgeInsets.all(8),
-                  child: Icon(Icons.arrow_forward_ios,
-                      color: name != "" && price != "" && mrp != ""
-                          ? kUIDarkText
-                          : Colors.grey[400],
-                      size: 26),
                 ),
-              ),
             ],
           ),
           body: SingleChildScrollView(
@@ -227,138 +223,56 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           height: MediaQuery.of(context).size.height * 0.25,
                           width: MediaQuery.of(context).size.width,
                           child: images.length > 0
-                              ? Stack(
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: GestureDetector(
-                                          behavior: HitTestBehavior.translucent,
-                                          onTap: () async {
-                                            await showDialog(
-                                                context: context,
-                                                builder:
-                                                    (_) => RoundedAlertDialog(
-                                                          title:
-                                                              "Select the image you want to delete",
-                                                          centerTitle: true,
-                                                          widgets: [
-                                                            SingleChildScrollView(
-                                                              child: Container(
-                                                                  height: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .height /
-                                                                      2,
-                                                                  child: Column(
-                                                                    children: List
-                                                                        .generate(
-                                                                      images
-                                                                          .length,
-                                                                      (int index) =>
-                                                                          GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          if (urls.isNotEmpty &&
-                                                                              args.product != null) {
-                                                                            // FirebaseStorage.instance.getReferenceFromUrl(urls[index]).then(
-                                                                            //       (value) => value.delete(),
-                                                                            //     );
-
-                                                                            urls.removeAt(index);
-                                                                          }
-
-                                                                          images
-                                                                              .removeAt(index);
-
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                        child: Container(
-                                                                            padding: EdgeInsets.symmetric(vertical: 8),
-                                                                            margin: EdgeInsets.symmetric(vertical: 8),
-                                                                            height: MediaQuery.of(context).size.height / 8,
-                                                                            decoration: BoxDecoration(
-                                                                              color: Colors.grey[100],
-                                                                              borderRadius: BorderRadius.circular(20),
-                                                                            ),
-                                                                            child: Center(child: images[index])),
-                                                                      ),
-                                                                    ),
-                                                                  )),
-                                                            )
-                                                          ],
-                                                        ));
-                                            setState(() {});
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                right: 18, bottom: 9),
-                                            child: Icon(Icons.delete,
-                                                color: kUIDarkText
-                                                    .withOpacity(0.6)),
-                                          )),
+                                    Container(
+                                      padding: EdgeInsets.all(8),
+                                      child: CarouselSlider(
+                                        items: images
+                                            .map<Widget>((Image image) => image)
+                                            .toList(),
+                                        options: CarouselOptions(
+                                            autoPlay: images.length > 1
+                                                ? true
+                                                : false,
+                                            enlargeCenterPage: true,
+                                            aspectRatio:
+                                                getAspect(context, 2.5),
+                                            onPageChanged: (index, reason) {
+                                              setState(() {
+                                                _currentImage = index;
+                                              });
+                                            }),
+                                      ),
                                     ),
-                                    Column(
+                                    if (images.length > 1)
+                                      Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(8),
-                                            child: CarouselSlider(
-                                              items: images
-                                                  .map<Widget>(
-                                                      (Image image) => image)
-                                                  .toList(),
-                                              options: CarouselOptions(
-                                                  autoPlay: images.length > 1
-                                                      ? true
-                                                      : false,
-                                                  enlargeCenterPage: true,
-                                                  aspectRatio: getAspect(context, 2.5),
-                                                  onPageChanged:
-                                                      (index, reason) {
-                                                    setState(() {
-                                                      _currentImage = index;
-                                                    });
-                                                  }),
+                                            MainAxisAlignment.center,
+                                        children: List.generate(
+                                          images.length,
+                                          (int index) => AnimatedContainer(
+                                            duration:
+                                                Duration(milliseconds: 400),
+                                            width:
+                                                _currentImage == index ? 16 : 8,
+                                            height:
+                                                _currentImage == index ? 6 : 8,
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 3),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              color: _currentImage == index
+                                                  ? Color.fromRGBO(0, 0, 0, 0.9)
+                                                  : Color.fromRGBO(
+                                                      0, 0, 0, 0.4),
                                             ),
                                           ),
-                                          if (images.length > 1)
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: List.generate(
-                                                images.length,
-                                                (int index) =>
-                                                    AnimatedContainer(
-                                                  duration: Duration(
-                                                      milliseconds: 400),
-                                                  width: _currentImage == index
-                                                      ? 16
-                                                      : 8,
-                                                  height: _currentImage == index
-                                                      ? 6
-                                                      : 8,
-                                                  margin: EdgeInsets.symmetric(
-                                                      vertical: 10,
-                                                      horizontal: 3),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    color:
-                                                        _currentImage == index
-                                                            ? Color.fromRGBO(
-                                                                0, 0, 0, 0.9)
-                                                            : Color.fromRGBO(
-                                                                0, 0, 0, 0.4),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                        ]),
+                                        ),
+                                      ),
                                   ],
                                 )
                               : Center(
@@ -637,21 +551,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
     bool noError = true;
 
     for (File file in imageFiles) {
-      // final StorageReference storageReference = FirebaseStorage.instance
-      //     .ref()
-      //     .child(
-      //         "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.jpeg");
-      // final StorageTaskSnapshot snapshot =
-      //     await storageReference.putFile(file).onComplete;
+      try {
+        TaskSnapshot task = await storage
+            .ref()
+            .child(
+                "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.jpeg")
+            .putFile(file);
 
-      // if (snapshot.error != null) {
-      //   noError = false;
-      // } else {
-      //   final String url = await snapshot.ref.getDownloadURL();
+        String url = await task.ref.getDownloadURL();
 
-      //   urls.add(url);
-      //   file.delete();
-      // }
+        urls.add(url);
+        file.delete();
+      } catch (e) {
+        noError = false;
+      }
     }
 
     if (noError) {

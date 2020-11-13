@@ -72,7 +72,7 @@ class _ProductCardState extends State<ProductCard> {
                     padding: EdgeInsets.fromLTRB(0, 15, 12, 0),
                     child: widget.product.images.length > 0
                         ? Container(
-                            height: height / 1.8,
+                            height: height / getAspect(context, 1.8),
                             decoration: BoxDecoration(boxShadow: [
                               BoxShadow(
                                 color: Colors.grey[600],
@@ -83,7 +83,7 @@ class _ProductCardState extends State<ProductCard> {
                             child: Image(image: widget.product.images[0]),
                           )
                         : Container(
-                            height: height / 1.25,
+                            height: height / getAspect(context, 1.25),
                             child: Center(
                               child: Text("No Image Provided"),
                             ),

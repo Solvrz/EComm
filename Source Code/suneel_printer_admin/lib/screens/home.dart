@@ -311,75 +311,81 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(top: 22),
-                                    child: GridView.count(
-                                      shrinkWrap: true,
-                                      crossAxisCount: 3,
-                                      mainAxisSpacing: 12,
-                                      crossAxisSpacing: 12,
-                                      childAspectRatio:
-                                          getAspect(context, 0.98),
-                                      children: List.generate(categories.length,
-                                          (int index) {
-                                        Map<String, dynamic> data =
-                                            categories[index];
-                                        return GestureDetector(
-                                          behavior: HitTestBehavior.translucent,
-                                          onTap: onOrder.contains(data["name"])
-                                              ? () {
-                                                  Scaffold.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      elevation: 10,
-                                                      backgroundColor:
-                                                          kUIAccent,
-                                                      content: Text(
-                                                        "Sorry, ${data["name"]} screen is not available in Admin Mode",
-                                                        textAlign:
-                                                            TextAlign.center,
+                                    child: Container(
+                                      height: getHeight(context, 233),
+                                      child: GridView.count(
+                                        shrinkWrap: true,
+                                        crossAxisCount: 3,
+                                        mainAxisSpacing: getHeight(context, 12),
+                                        crossAxisSpacing: 12,
+                                        childAspectRatio:
+                                            getAspect(context, 0.8),
+                                        children: List.generate(
+                                            categories.length, (int index) {
+                                          Map<String, dynamic> data =
+                                              categories[index];
+                                          return GestureDetector(
+                                            behavior:
+                                                HitTestBehavior.translucent,
+                                            onTap: onOrder
+                                                    .contains(data["name"])
+                                                ? () {
+                                                    Scaffold.of(context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        elevation: 10,
+                                                        backgroundColor:
+                                                            kUIAccent,
+                                                        content: Text(
+                                                          "Sorry, ${data["name"]} screen is not available in Admin Mode",
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                : () => Navigator.pushNamed(
+                                                      context,
+                                                      "/category",
+                                                      arguments:
+                                                          CategoryArguments(
+                                                        data,
+                                                        data["uId"],
                                                       ),
                                                     ),
-                                                  );
-                                                }
-                                              : () => Navigator.pushNamed(
-                                                    context,
-                                                    "/category",
-                                                    arguments:
-                                                        CategoryArguments(
-                                                      data,
-                                                      data["uId"],
+                                            child: Container(
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: Color(0xffFFEBEB),
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(data["image"],
+                                                      height: 50, width: 50),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    data["name"],
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: getHeight(
+                                                          context, 14),
+                                                      fontFamily:
+                                                          "sans-serif-condensed",
+                                                      color: kUIDarkText,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                     ),
                                                   ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Color(0xffFFEBEB),
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
+                                                ],
+                                              ),
                                             ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Image.asset(data["image"],
-                                                    height: 50, width: 50),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  data["name"],
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                        getHeight(context, 14),
-                                                    fontFamily:
-                                                        "sans-serif-condensed",
-                                                    color: kUIDarkText,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }),
+                                          );
+                                        }),
+                                      ),
                                     ),
                                   ),
                                 ]),
