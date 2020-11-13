@@ -26,7 +26,10 @@ class _ProductScreenState extends State<ProductScreen> {
       variations = List.generate(
         args.product.variations.length,
         (index) => OptionRadioTile(
-          onChanged: (_) {},
+          onChanged: (option) {
+            product.select(args.product.variations[index].name, option);
+            setState(() {});
+          },
           variation: args.product.variations[index],
           currIndex: args.product.variations[index].options
               .indexOf(product.selected[args.product.variations[index].name]),

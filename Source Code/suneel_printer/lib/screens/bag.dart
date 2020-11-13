@@ -254,7 +254,7 @@ class _BagScreenState extends State<BagScreen> {
 
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
-    final Product product = bag.products[index].product;
+    final Product product = bag.products[index].product;  // TODO: FIx this shithole
 
     return SizeTransition(
       sizeFactor: animation,

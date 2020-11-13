@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +31,7 @@ InputDecoration kInputDialogDecoration = InputDecoration(
 
 FirebaseFirestore database = FirebaseFirestore.instance;
 FirebaseStorage storage = FirebaseStorage.instance;
+FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 CircularProgressIndicator indicator = CircularProgressIndicator(
   valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),
