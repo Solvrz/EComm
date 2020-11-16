@@ -13,9 +13,9 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:suneel_printer_admin/constant.dart';
 import 'package:suneel_printer_admin/screens/export.dart';
 
-Future<void> backgroundMsg(RemoteMessage message) async => null;
+Future<void> backgroundMsg(RemoteMessage message) async {}
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   GestureBinding.instance.resamplingEnabled = true;
 
@@ -33,15 +33,16 @@ void main() async {
           .setCrashlyticsCollectionEnabled(false)
           .whenComplete(() {
         FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+        messaging.subscribeToTopic("orders").whenComplete(() {
+          FirebaseMessaging.onBackgroundMessage(backgroundMsg);
 
-        FirebaseMessaging.onBackgroundMessage(backgroundMsg);
-
-        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-            .whenComplete(
-          () => runApp(
-            SuneelPrinter(),
-          ),
-        );
+          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+              .whenComplete(
+            () => runApp(
+              SuneelPrinter(),
+            ),
+          );
+        });
       });
     });
   });
