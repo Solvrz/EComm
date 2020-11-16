@@ -72,7 +72,7 @@ class _ProductCardState extends State<ProductCard> {
                     padding: EdgeInsets.fromLTRB(0, 15, 12, 0),
                     child: widget.product.images.length > 0
                         ? Container(
-                            height: height / getAspect(context, 1.8),
+                            height: height / getAspect(context, 1.2),
                             decoration: BoxDecoration(boxShadow: [
                               BoxShadow(
                                 color: Colors.grey[600],
@@ -83,7 +83,7 @@ class _ProductCardState extends State<ProductCard> {
                             child: Image(image: widget.product.images[0]),
                           )
                         : Container(
-                            height: height / getAspect(context, 1.25),
+                            height: height / getAspect(context, 1.2),
                             child: Center(
                               child: Text("No Image Provided"),
                             ),
@@ -124,21 +124,24 @@ class _ProductCardState extends State<ProductCard> {
                     fontFamily: "sans-serif-condensed"),
               ),
               SizedBox(width: 12),
-              Text(
-                "₹ ${widget.product.mrp}",
-                style: TextStyle(
-                    color: kUIDarkText.withOpacity(0.7),
-                    decoration: TextDecoration.lineThrough,
-                    fontSize: getHeight(context, 18),
-                    fontWeight: FontWeight.w800,
-                    fontFamily: "sans-serif-condensed"),
+              Expanded(
+                child: Text(
+                  "₹ ${widget.product.mrp}".replaceAll("", "\u{200B}"),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: kUIDarkText.withOpacity(0.7),
+                      decoration: TextDecoration.lineThrough,
+                      fontSize: getHeight(context, 18),
+                      fontWeight: FontWeight.w800,
+                      fontFamily: "sans-serif-condensed"),
+                ),
               ),
             ],
           ),
           Padding(
             padding: EdgeInsets.only(right: 12),
             child: Text(
-              widget.product.name,
+              widget.product.name.replaceAll("", "\u{200B}"),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(

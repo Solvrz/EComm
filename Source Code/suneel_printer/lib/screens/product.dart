@@ -44,33 +44,6 @@ class _ProductScreenState extends State<ProductScreen> {
         appBar: CustomAppBar(
           parent: context,
           title: "",
-          trailing: [
-            GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () async {
-                await Navigator.pushNamed(context, "/bag");
-                setState(() {});
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: kUIColor),
-                ),
-                padding: EdgeInsets.all(18),
-                child: Stack(
-                  children: [
-                    Image.asset("assets/images/ShoppingBag.png",
-                        width: 30, height: 30),
-                    Positioned(
-                      left: 11,
-                      top: 10,
-                      child: Text(bag.products.length.toString(),
-                          style: TextStyle(color: kUIDarkText)),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
         ),
         body: Container(
           height: MediaQuery.of(context).size.height,
@@ -88,7 +61,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            product.name,
+                            product.name.replaceAll("", "\u{200B}"),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

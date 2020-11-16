@@ -96,7 +96,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(
-                                product.name,
+                                product.name.replaceAll("", "\u{200B}"),
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(

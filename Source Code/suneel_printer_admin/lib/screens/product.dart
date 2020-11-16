@@ -58,7 +58,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            product.name,
+                            product.name.replaceAll("", "\u{200B}"),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

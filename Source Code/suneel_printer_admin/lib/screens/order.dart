@@ -5,7 +5,7 @@ import 'package:suneel_printer_admin/components/custom_app_bar.dart';
 import 'package:suneel_printer_admin/components/past_order.dart';
 import 'package:suneel_printer_admin/constant.dart';
 
-class PastOrderScreen extends StatelessWidget {
+class OrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -176,7 +176,6 @@ class PastOrderScreen extends StatelessWidget {
                         children: [
                           Text(
                             "Tap for More Details",
-                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: kUIDarkText,
                               fontSize: getHeight(context, 18),

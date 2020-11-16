@@ -347,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }),
                             ),
                           ),
-                          SizedBox(height: 12),
+                          SizedBox(height: getHeight(context, 12)),
                           if (carouselImages.length > 1)
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -356,7 +356,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 (int index) => AnimatedContainer(
                                   duration: Duration(milliseconds: 400),
                                   width: _current == index ? 16 : 8,
-                                  height: _current == index ? 6 : 8,
+                                  height: _current == index
+                                      ? getHeight(context, 6)
+                                      : getHeight(context, 8),
                                   margin: EdgeInsets.symmetric(horizontal: 3),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
@@ -382,62 +384,61 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: kUIDarkText),
                                   ),
                                   SizedBox(height: getHeight(context, 12)),
-                                  Container(
-                                    height: getHeight(context, 233),
-                                    child: GridView.count(
-                                      shrinkWrap: true,
-                                      crossAxisCount: 3,
-                                      mainAxisSpacing: getHeight(context, 12),
-                                      crossAxisSpacing: 12,
-                                      childAspectRatio: getAspect(context, 0.8),
-                                      children: List.generate(categories.length,
-                                          (int index) {
-                                        Map<String, dynamic> data =
-                                            categories[index];
-                                        return GestureDetector(
-                                          behavior: HitTestBehavior.translucent,
-                                          onTap: () => Navigator.pushNamed(
-                                            context,
-                                            "/category",
-                                            arguments: CategoryArguments(
-                                              data,
-                                              data["uId"],
-                                            ),
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 3,
+                                    mainAxisSpacing: getHeight(context, 12),
+                                    crossAxisSpacing: 12,
+                                    childAspectRatio: getAspect(context, 0.9),
+                                    children: List.generate(categories.length,
+                                        (int index) {
+                                      Map<String, dynamic> data =
+                                          categories[index];
+                                      return GestureDetector(
+                                        behavior: HitTestBehavior.translucent,
+                                        onTap: () => Navigator.pushNamed(
+                                          context,
+                                          "/category",
+                                          arguments: CategoryArguments(
+                                            data,
+                                            data["uId"],
                                           ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Color(0xffFFEBEB),
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Image.asset(data["image"],
-                                                    height:
-                                                        getHeight(context, 50),
-                                                    width: 50),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  data["name"],
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        "sans-serif-condensed",
-                                                    fontSize:
-                                                        getHeight(context, 14),
-                                                    color: kUIDarkText,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xffFFEBEB),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(data["image"],
+                                                  height:
+                                                      getHeight(context, 50),
+                                                  width: 50),
+                                              SizedBox(
+                                                  height:
+                                                      getHeight(context, 8)),
+                                              Text(
+                                                data["name"],
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      "sans-serif-condensed",
+                                                  fontSize:
+                                                      getHeight(context, 14),
+                                                  color: kUIDarkText,
+                                                  fontWeight: FontWeight.w600,
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        );
-                                      }),
-                                    ),
+                                        ),
+                                      );
+                                    }),
                                   ),
                                 ]),
                           ),

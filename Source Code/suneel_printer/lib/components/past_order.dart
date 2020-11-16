@@ -26,7 +26,8 @@ class InfoWidget extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "${order['name'].toString().capitalize()}",
+                "${order['name'].toString().capitalize()}"
+                    .replaceAll("", "\u{200B}"),
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: getHeight(context, 18),
@@ -46,7 +47,8 @@ class InfoWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${DateTime.fromMicrosecondsSinceEpoch(int.parse(order['time'].split("(")[1].split("=")[1].split(",")[0].toString()) * 1000000 + int.parse(order['time'].split("(")[1].split("=")[2].split(")")[0].toString()) ~/ 1000).toString().split(" ")[0].split("-").reversed.join("-")}",
+                  "${DateTime.fromMicrosecondsSinceEpoch(int.parse(order['time'].split("(")[1].split("=")[1].split(",")[0].toString()) * 1000000 + int.parse(order['time'].split("(")[1].split("=")[2].split(")")[0].toString()) ~/ 1000).toString().split(" ")[0].split("-").reversed.join("-")}"
+                      .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: kUIDarkText,
@@ -111,7 +113,8 @@ class InfoWidget extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "${order['address'].toString().capitalize()}, ${order['pincode']}",
+                "${order['address'].toString().capitalize()}, ${order['pincode']}"
+                    .replaceAll("", "\u{200B}"),
                 overflow: overflow ? null : TextOverflow.ellipsis,
                 maxLines: overflow ? 3 : 1,
                 style: TextStyle(
@@ -134,13 +137,15 @@ class InfoWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              "${order['payment_mode']}",
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: kUIDarkText,
-                fontSize: getHeight(context, 18),
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Text(
+                "${order['payment_mode']}".replaceAll("", "\u{200B}"),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: kUIDarkText,
+                  fontSize: getHeight(context, 18),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],
@@ -155,13 +160,15 @@ class InfoWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              "₹ ${order['price']}",
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: kUIDarkText,
-                fontSize: getHeight(context, 18),
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Text(
+                "₹ ${order['price']}".replaceAll("", "\u{200B}"),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: kUIDarkText,
+                  fontSize: getHeight(context, 18),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],
@@ -176,13 +183,15 @@ class InfoWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              "${order["products"].length} items",
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: kUIDarkText,
-                fontSize: getHeight(context, 18),
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Text(
+                "${order["products"].length} items".replaceAll("", "\u{200B}"),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: kUIDarkText,
+                  fontSize: getHeight(context, 18),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],

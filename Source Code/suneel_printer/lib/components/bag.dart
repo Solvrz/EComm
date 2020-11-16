@@ -166,7 +166,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         ),
                         Expanded(
                           child: Text(
-                            "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}",
+                            "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}"
+                                .replaceAll("", "\u{200B}"),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: kUIDarkText,

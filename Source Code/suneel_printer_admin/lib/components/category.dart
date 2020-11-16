@@ -271,7 +271,7 @@ class _ProductCardState extends State<ProductCard>
           Padding(
             padding: EdgeInsets.only(right: 12),
             child: Text(
-              widget.product.name,
+              widget.product.name.replaceAll("", "\u{200B}"),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(

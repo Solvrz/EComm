@@ -223,7 +223,8 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}",
+                                      "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}"
+                                          .replaceAll("", "\u{200B}"),
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontSize: getHeight(context, 18),

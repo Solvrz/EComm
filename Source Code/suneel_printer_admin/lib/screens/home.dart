@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
-                          Navigator.pushNamed(context, "/past_orders");
+                          Navigator.pushNamed(context, "/orders");
                         },
                         child: Padding(
                           padding: EdgeInsets.all(8),
@@ -312,14 +312,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Container(
                                     margin: EdgeInsets.only(top: 22),
                                     child: Container(
-                                      height: getHeight(context, 233),
+                                      height: getHeight(context, 290),
                                       child: GridView.count(
                                         shrinkWrap: true,
                                         crossAxisCount: 3,
                                         mainAxisSpacing: getHeight(context, 12),
                                         crossAxisSpacing: 12,
                                         childAspectRatio:
-                                            getAspect(context, 0.8),
+                                            getAspect(context, 0.9),
                                         children: List.generate(
                                             categories.length, (int index) {
                                           Map<String, dynamic> data =

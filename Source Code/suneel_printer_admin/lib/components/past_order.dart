@@ -26,7 +26,8 @@ class InfoWidget extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "${order['name'].toString().capitalize()}",
+                "${order['name'].toString().capitalize()}"
+                    .replaceAll("", "\u{200B}"),
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: getHeight(context, 18),
@@ -46,7 +47,8 @@ class InfoWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${order['time'].toDate().toString().split(" ")[0].split("-").reversed.join("-")}",
+                  "${order['time'].toDate().toString().split(" ")[0].split("-").reversed.join("-")}"
+                      .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: kUIDarkText,
@@ -111,7 +113,8 @@ class InfoWidget extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "${order['address'].toString().capitalize()}, ${order['pincode']}",
+                "${order['address'].toString().capitalize()}, ${order['pincode']}"
+                    .replaceAll("", "\u{200B}"),
                 overflow: overflow ? null : TextOverflow.ellipsis,
                 maxLines: overflow ? 3 : 1,
                 style: TextStyle(
@@ -135,7 +138,7 @@ class InfoWidget extends StatelessWidget {
               ),
             ),
             Text(
-              "${order['payment_mode']}",
+              "${order['payment_mode']}".replaceAll("", "\u{200B}"),
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: kUIDarkText,
@@ -156,7 +159,7 @@ class InfoWidget extends StatelessWidget {
               ),
             ),
             Text(
-              "₹ ${order['price']}",
+              "₹ ${order['price']}".replaceAll("", "\u{200B}"),
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: kUIDarkText,
@@ -177,7 +180,7 @@ class InfoWidget extends StatelessWidget {
               ),
             ),
             Text(
-              "${order["products"].length} items",
+              "${order["products"].length} items".replaceAll("", "\u{200B}"),
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: kUIDarkText,

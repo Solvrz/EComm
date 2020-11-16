@@ -60,7 +60,6 @@ class PastOrderScreen extends StatelessWidget {
                                         children: [
                                           Text(
                                             "Tap for More Details",
-                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: kUIDarkText,
                                               fontSize: getHeight(context, 18),

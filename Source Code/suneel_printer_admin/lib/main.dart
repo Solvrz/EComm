@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/services.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:suneel_printer_admin/constant.dart';
 import 'package:suneel_printer_admin/screens/export.dart';
+
+Future<void> backgroundMsg(RemoteMessage message) async => null;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +33,8 @@ void main() async {
           .setCrashlyticsCollectionEnabled(false)
           .whenComplete(() {
         FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
+        FirebaseMessaging.onBackgroundMessage(backgroundMsg);
 
         SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
             .whenComplete(
@@ -78,7 +83,7 @@ class SuneelPrinter extends StatelessWidget {
         "/product": (BuildContext context) => ProductScreen(),
         "/category": (BuildContext context) => CategoryScreen(),
         "/add_product": (BuildContext context) => AddProductScreen(),
-        "/past_orders": (BuildContext context) => PastOrderScreen(),
+        "/orders": (BuildContext context) => OrderScreen(),
       },
     );
   }
