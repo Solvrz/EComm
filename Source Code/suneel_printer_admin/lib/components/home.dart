@@ -20,16 +20,17 @@ class _SearchCardState extends State<SearchCard> {
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () {
+      onTap: () async {
         FocusScope.of(context).requestFocus(
           FocusNode(),
         );
 
-        Navigator.pushNamed(
+        await Navigator.pushNamed(
           context,
           "/product",
           arguments: ProductArguments(widget.product),
         );
+        if (mounted) setState(() {});
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
@@ -39,41 +40,42 @@ class _SearchCardState extends State<SearchCard> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Align(
             alignment: Alignment.center,
-            child: Stack(children: [
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 15, 12, 0),
-                  child: widget.product.images.length > 0
-                      ? Container(
-                          height: height / 1.7,
-                          constraints: BoxConstraints(maxWidth: width - 64),
-                          decoration: BoxDecoration(boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[600],
-                              blurRadius: 12,
-                              offset: Offset(2, 2),
-                            )
-                          ]),
-                          child: Image(image: widget.product.images[0]),
-                        )
-                      : Container(
-                          height: height / 1.7,
-                          child: Center(
-                            child: Text("No Image Provided"),
+            child: Stack(
+              children: [
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 15, 18, 0),
+                    child: widget.product.images.length > 0
+                        ? Container(
+                            height: height / 1.675,
+                            decoration: BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey[600],
+                                blurRadius: 12,
+                                offset: Offset(2, 2),
+                              )
+                            ]),
+                            child: Image(image: widget.product.images[0]),
+                          )
+                        : Container(
+                            height: height / 1.65,
+                            child: Center(
+                              child: Text("No Image Provided"),
+                            ),
                           ),
-                        ),
+                  ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ),
-          SizedBox(height: 18),
+          SizedBox(height: 22),
           Row(
             children: [
               Text(
                 "₹ ${widget.product.price}",
                 style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: getHeight(context, 46),
+                    fontSize: getHeight(context, 20),
                     fontWeight: FontWeight.bold,
                     fontFamily: "sans-serif-condensed"),
               ),
@@ -83,7 +85,7 @@ class _SearchCardState extends State<SearchCard> {
                 style: TextStyle(
                     color: kUIDarkText.withOpacity(0.7),
                     decoration: TextDecoration.lineThrough,
-                    fontSize: getHeight(context, 14),
+                    fontSize: getHeight(context, 18),
                     fontWeight: FontWeight.w800,
                     fontFamily: "sans-serif-condensed"),
               ),
