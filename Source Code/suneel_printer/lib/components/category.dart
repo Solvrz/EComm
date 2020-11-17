@@ -99,13 +99,15 @@ class _ProductCardState extends State<ProductCard> {
                           ? wishlist.removeProduct(widget.product)
                           : wishlist.addProduct(widget.product),
                     ),
-                    child: Icon(
-                      wishlist.containsProduct(widget.product)
-                          ? Icons.favorite
-                          : Icons.favorite_outline,
-                      color: wishlist.containsProduct(widget.product)
-                          ? kUIAccent
-                          : kUIDarkText,
+                    child: Container(
+                      child: Icon(
+                        wishlist.containsProduct(widget.product)
+                            ? Icons.favorite
+                            : Icons.favorite_outline,
+                        color: wishlist.containsProduct(widget.product)
+                            ? kUIAccent
+                            : kUIDarkText,
+                      ),
                     ),
                   ),
                 )

@@ -26,12 +26,14 @@ class AlertButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius ?? BorderRadius.circular(8),
       ),
-      child: Text(
-        title,
-        style: TextStyle(
-            color: titleColor,
-            fontSize: titleSize,
-            fontWeight: FontWeight.bold),
+      child: Container(
+        child: Text(
+          title,
+          style: TextStyle(
+              color: titleColor,
+              fontSize: titleSize,
+              fontWeight: FontWeight.bold),
+        ),
       ),
       onPressed: onPressed,
     );

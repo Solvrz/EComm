@@ -72,20 +72,22 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 await Navigator.pushNamed(context, "/bag");
                                 setState(() {});
                               },
-                              child: Padding(
-                                padding: EdgeInsets.all(18),
-                                child: Stack(
-                                  children: [
-                                    Image.asset("assets/images/ShoppingBag.png",
-                                        width: 30, height: 30),
-                                    Positioned(
-                                      left: 11,
-                                      top: 10,
-                                      child: Text(
-                                          bag.products.length.toString(),
-                                          style: TextStyle(color: kUIDarkText)),
-                                    )
-                                  ],
+                              child: Container(
+                                child: Padding(
+                                  padding: EdgeInsets.all(18),
+                                  child: Stack(
+                                    children: [
+                                      Image.asset("assets/images/ShoppingBag.png",
+                                          width: 30, height: 30),
+                                      Positioned(
+                                        left: 11,
+                                        top: 10,
+                                        child: Text(
+                                            bag.products.length.toString(),
+                                            style: TextStyle(color: kUIDarkText)),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             )

@@ -110,12 +110,14 @@ class _OrderProductPageState extends State<OrderProductPage> {
 
                               setState(() {});
                             },
-                            child: Text(
-                              "Select Information",
-                              style: TextStyle(
-                                color: kUIDarkText,
-                                fontSize: getHeight(context, 20),
-                                fontWeight: FontWeight.bold,
+                            child: Container(
+                              child: Text(
+                                "Select Information",
+                                style: TextStyle(
+                                  color: kUIDarkText,
+                                  fontSize: getHeight(context, 20),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -163,10 +165,12 @@ class _OrderProductPageState extends State<OrderProductPage> {
 
                                       setState(() {});
                                     },
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 25,
-                                      color: kUIDarkText.withOpacity(0.8),
+                                    child: Container(
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 25,
+                                        color: kUIDarkText.withOpacity(0.8),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -276,19 +280,21 @@ class _OrderProductPageState extends State<OrderProductPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.check_circle_outline, color: Colors.grey[200]),
-                    SizedBox(width: 8),
-                    Text(
-                      "Place Order",
-                      style: TextStyle(
-                          fontSize: getHeight(context, 16),
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[200]),
-                    ),
-                  ],
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.check_circle_outline, color: Colors.grey[200]),
+                      SizedBox(width: 8),
+                      Text(
+                        "Place Order",
+                        style: TextStyle(
+                            fontSize: getHeight(context, 16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[200]),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )

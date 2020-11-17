@@ -171,10 +171,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.pushNamed(context, "/past_orders");
                   },
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Image.asset("assets/images/YourOrders.png",
-                        width: 30, height: 30),
+                  child: Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Image.asset("assets/images/YourOrders.png",
+                          width: 30, height: 30),
+                    ),
                   ),
                 ),
                 GestureDetector(
@@ -182,19 +184,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.pushNamed(context, "/bag");
                   },
-                  child: Padding(
-                    padding: EdgeInsets.all(14),
-                    child: Stack(
-                      children: [
-                        Image.asset("assets/images/ShoppingBag.png",
-                            width: 30, height: 30),
-                        Positioned(
-                          left: 11,
-                          top: 10,
-                          child: Text(bag.products.length.toString(),
-                              style: TextStyle(color: kUIDarkText)),
-                        )
-                      ],
+                  child: Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(14),
+                      child: Stack(
+                        children: [
+                          Image.asset("assets/images/ShoppingBag.png",
+                              width: 30, height: 30),
+                          Positioned(
+                            left: 11,
+                            top: 10,
+                            child: Text(bag.products.length.toString(),
+                                style: TextStyle(color: kUIDarkText)),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -247,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               controller.clear();
                             });
                           },
-                          child: Icon(Icons.clear, color: Colors.grey[600]),
+                          child: Container(child: Icon(Icons.clear, color: Colors.grey[600])),
                         )
                     ]),
                   ),

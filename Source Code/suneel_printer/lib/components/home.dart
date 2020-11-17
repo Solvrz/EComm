@@ -68,9 +68,11 @@ class _InformationSheetState extends State<InformationSheet> {
                         await save();
                         Navigator.pop(context);
                       },
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Icon(Icons.close, color: kUIDarkText),
+                      child: Container(
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.close, color: kUIDarkText),
+                        ),
                       ),
                     ),
                 ],
@@ -124,8 +126,10 @@ class _InformationSheetState extends State<InformationSheet> {
                                         await save();
                                         setState(() {});
                                       },
-                                      child: Icon(Icons.edit,
-                                          color: Colors.grey[700]),
+                                      child: Container(
+                                        child: Icon(Icons.edit,
+                                            color: Colors.grey[700]),
+                                      ),
                                     ),
                                     SizedBox(width: 12),
                                     GestureDetector(
@@ -150,8 +154,10 @@ class _InformationSheetState extends State<InformationSheet> {
                                         await save();
                                         setState(() {});
                                       },
-                                      child: Icon(Icons.delete,
-                                          color: Colors.grey[700]),
+                                      child: Container(
+                                        child: Icon(Icons.delete,
+                                            color: Colors.grey[700]),
+                                      ),
                                     )
                                   ]),
                                 ),
@@ -312,9 +318,11 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
-                    child: Icon(Icons.arrow_back_ios, color: kUIDarkText),
+                  child: Container(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
+                      child: Icon(Icons.arrow_back_ios, color: kUIDarkText),
+                    ),
                   ),
                 ),
                 Text(

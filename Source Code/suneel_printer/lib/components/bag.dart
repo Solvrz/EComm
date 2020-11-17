@@ -49,9 +49,11 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Icon(Icons.close, color: kUIDarkText),
+                    child: Container(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Icon(Icons.close, color: kUIDarkText),
+                      ),
                     ),
                   ),
                   Text(
@@ -106,10 +108,12 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               ),
                             );
                           },
-                          child: Icon(
-                            Icons.edit,
-                            size: getHeight(context, 25),
-                            color: kUIDarkText.withOpacity(0.8),
+                          child: Container(
+                            child: Icon(
+                              Icons.edit,
+                              size: getHeight(context, 25),
+                              color: kUIDarkText.withOpacity(0.8),
+                            ),
                           ),
                         ),
                       ],
@@ -296,14 +300,16 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 36),
                   color: kUIAccent,
-                  child: Text(
-                    pod == paymentMethods.first
-                        ? "Proceed To Buy"
-                        : "Proceed To Pay",
-                    style: TextStyle(
-                        fontSize: getHeight(context, 24),
-                        fontWeight: FontWeight.w600,
-                        color: kUILightText),
+                  child: Container(
+                    child: Text(
+                      pod == paymentMethods.first
+                          ? "Proceed To Buy"
+                          : "Proceed To Pay",
+                      style: TextStyle(
+                          fontSize: getHeight(context, 24),
+                          fontWeight: FontWeight.w600,
+                          color: kUILightText),
+                    ),
                   ),
                 ),
               ),

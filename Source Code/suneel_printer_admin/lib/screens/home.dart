@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   });
                                 },
                                 child:
-                                    Icon(Icons.clear, color: Colors.grey[600]),
+                                    Container(child: Icon(Icons.clear, color: Colors.grey[600])),
                               )
                           ]),
                         ),
@@ -168,10 +168,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           Navigator.pushNamed(context, "/orders");
                         },
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Image.asset("assets/images/YourOrders.png",
-                              width: 30, height: 30),
+                        child: Container(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Image.asset("assets/images/YourOrders.png",
+                                width: 30, height: 30),
+                          ),
                         ),
                       )
                     ],

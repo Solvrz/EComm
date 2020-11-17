@@ -57,10 +57,12 @@ class _BagScreenState extends State<BagScreen> {
                 onTap: () => Navigator.pushNamed(context, "/wishlist"),
                 child: Padding(
                   padding: EdgeInsets.all(18),
-                  child: Icon(
-                    Icons.favorite_border,
-                    color: kUIDarkText,
-                    size: 28,
+                  child: Container(
+                    child: Icon(
+                      Icons.favorite_border,
+                      color: kUIDarkText,
+                      size: 28,
+                    ),
                   ),
                 ),
               )
@@ -117,19 +119,21 @@ class _BagScreenState extends State<BagScreen> {
                     borderRadius: BorderRadius.circular(25),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.check_circle_outline, color: Colors.grey[200]),
-                      SizedBox(width: 8),
-                      Text(
-                        "Checkout",
-                        style: TextStyle(
-                            fontSize: getHeight(context, 16),
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[200]),
-                      ),
-                    ],
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.check_circle_outline, color: Colors.grey[200]),
+                        SizedBox(width: 8),
+                        Text(
+                          "Checkout",
+                          style: TextStyle(
+                              fontSize: getHeight(context, 16),
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[200]),
+                        ),
+                      ],
+                    ),
                   ),
                   onPressed: bag.hasProducts
                       ? () async {
@@ -402,12 +406,14 @@ class _BagScreenState extends State<BagScreen> {
                           bag.increaseQuantity(product);
                           setState(() {});
                         },
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Icon(
-                            Icons.add,
-                            color: kUIColor,
-                            size: 20,
+                        child: Container(
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Icon(
+                              Icons.add,
+                              color: kUIColor,
+                              size: 20,
+                            ),
                           ),
                         ),
                       ),
@@ -426,9 +432,11 @@ class _BagScreenState extends State<BagScreen> {
                               : bag.removeProduct(product);
                           setState(() {});
                         },
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Icon(Icons.remove, color: kUIColor, size: 20),
+                        child: Container(
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Icon(Icons.remove, color: kUIColor, size: 20),
+                          ),
                         ),
                       ),
                     ],

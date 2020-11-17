@@ -126,9 +126,11 @@ class _ProductCardState extends State<ProductCard>
                               _animationController.forward();
                           }
                         },
-                        child: AnimatedIcon(
-                          icon: AnimatedIcons.menu_close,
-                          progress: _animation,
+                        child: Container(
+                          child: AnimatedIcon(
+                            icon: AnimatedIcons.menu_close,
+                            progress: _animation,
+                          ),
                         ),
                       ),
                       GestureDetector(
@@ -141,12 +143,14 @@ class _ProductCardState extends State<ProductCard>
                               arguments: widget.args);
                           setState(() {});
                         },
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 12 * _animation.value),
-                          child: Icon(
-                            Icons.edit,
-                            size: 20 * _animation.value,
-                            color: kUIDarkText.withOpacity(0.8),
+                        child: Container(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 12 * _animation.value),
+                            child: Icon(
+                              Icons.edit,
+                              size: 20 * _animation.value,
+                              color: kUIDarkText.withOpacity(0.8),
+                            ),
                           ),
                         ),
                       ),
@@ -230,12 +234,14 @@ class _ProductCardState extends State<ProductCard>
                             ),
                           );
                         },
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 8 * _animation.value),
-                          child: Icon(
-                            Icons.delete,
-                            size: 20 * _animation.value,
-                            color: kUIDarkText.withOpacity(0.8),
+                        child: Container(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 8 * _animation.value),
+                            child: Icon(
+                              Icons.delete,
+                              size: 20 * _animation.value,
+                              color: kUIDarkText.withOpacity(0.8),
+                            ),
                           ),
                         ),
                       )

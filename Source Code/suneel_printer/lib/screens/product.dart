@@ -80,14 +80,16 @@ class _ProductScreenState extends State<ProductScreen> {
 
                             setState(() {});
                           },
-                          child: Icon(
-                              wishlist.containsProduct(product)
-                                  ? Icons.favorite
-                                  : Icons.favorite_outline,
-                              color: wishlist.containsProduct(product)
-                                  ? kUIAccent
-                                  : kUIDarkText,
-                              size: 30),
+                          child: Container(
+                            child: Icon(
+                                wishlist.containsProduct(product)
+                                    ? Icons.favorite
+                                    : Icons.favorite_outline,
+                                color: wishlist.containsProduct(product)
+                                    ? kUIAccent
+                                    : kUIDarkText,
+                                size: 30),
+                          ),
                         )
                       ],
                     ),
@@ -248,7 +250,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 onTap: () => setState(
                                   () => bag.increaseQuantity(product),
                                 ),
-                                child: Icon(Icons.add, size: 30),
+                                child: Container(child: Icon(Icons.add, size: 30)),
                               ),
                               Text(
                                 bag.getQuantity(product).toString(),
@@ -261,7 +263,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 onTap: () => setState(
                                   () => bag.decreaseQuantity(product),
                                 ),
-                                child: Icon(Icons.remove, size: 30),
+                                child: Container(child: Icon(Icons.remove, size: 30)),
                               ),
                             ],
                           ),
@@ -277,14 +279,16 @@ class _ProductScreenState extends State<ProductScreen> {
                             ? Colors.grey[600]
                             : kUIAccent,
                         padding: EdgeInsets.symmetric(vertical: 16),
-                        child: Text(
-                          bag.containsProduct(product)
-                              ? "IN BAG"
-                              : "ADD TO BAG",
-                          style: TextStyle(
-                              fontSize: getHeight(context, 20),
-                              color: kUIColor,
-                              fontWeight: FontWeight.bold),
+                        child: Container(
+                          child: Text(
+                            bag.containsProduct(product)
+                                ? "IN BAG"
+                                : "ADD TO BAG",
+                            style: TextStyle(
+                                fontSize: getHeight(context, 20),
+                                color: kUIColor,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                         onPressed: () {
                           if (!bag.containsProduct(product)) {

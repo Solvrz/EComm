@@ -110,7 +110,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
             ),
             trailing: [
-              if (name != "" && price != "" && mrp != "")
+              if (name != "" && price != "" && mrp != "" && variations.where((e)=> e.name.trim()=='').toList().length >0)
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () {
@@ -210,10 +210,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     _currentImage = 0;
                                   });
                                 },
-                                child: Padding(
-                                  padding: EdgeInsets.all(12),
-                                  child: Icon(Icons.add_photo_alternate,
-                                      color: kUIAccent, size: 28),
+                                child: Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(12),
+                                    child: Icon(Icons.add_photo_alternate,
+                                        color: kUIAccent, size: 28),
+                                  ),
                                 ),
                               )
                             ],
@@ -532,9 +534,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         );
                   });
                 },
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Icon(Icons.add),
+                child: Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.add),
+                  ),
                 ),
               )
             ])
@@ -711,7 +715,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       child: InkWell(
                         onTap: changeColor,
                         borderRadius: BorderRadius.circular(50),
-                        child: notTrans
+                        child: Container(child :notTrans
                             ? AnimatedOpacity(
                                 duration: Duration(milliseconds: 210),
                                 opacity: isCurrentColor ? 1 : 0,
@@ -722,7 +726,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       : Colors.black,
                                 ),
                               )
-                            : Icon(Icons.clear),
+                            : Icon(Icons.clear)),
                       ),
                     ),
                   );

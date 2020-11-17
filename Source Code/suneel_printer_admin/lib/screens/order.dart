@@ -134,61 +134,63 @@ class OrderScreen extends StatelessWidget {
           ),
         );
       },
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12),
-        child: Slidable(
-          key: ValueKey(order["time"]),
-          actionPane: SlidableDrawerActionPane(),
-          secondaryActions: [
-            GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () => database
-                  .collection("orders")
-                  .doc(id)
-                  .update({"status": !order["status"]}),
-              child: Container(
-                margin: EdgeInsets.only(left: 12),
-                height: MediaQuery.of(context).size.height / 2.95,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: !order["status"] ? kUIAccent : Colors.greenAccent),
-                child: Icon(
-                    !order["status"] ? Icons.local_shipping : Icons.home,
-                    color: kUILightText,
-                    size: 32),
-              ),
-            )
-          ],
-          child: Container(
-            margin: EdgeInsets.symmetric(vertical: 8),
-            height: MediaQuery.of(context).size.height / 2.95,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey[200]),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(children: [
-                    InfoWidget(order: order),
-                    Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            "Tap for More Details",
-                            style: TextStyle(
-                              color: kUIDarkText,
-                              fontSize: getHeight(context, 18),
-                              fontWeight: FontWeight.w500,
+      child: Container(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12),
+          child: Slidable(
+            key: ValueKey(order["time"]),
+            actionPane: SlidableDrawerActionPane(),
+            secondaryActions: [
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () => database
+                    .collection("orders")
+                    .doc(id)
+                    .update({"status": !order["status"]}),
+                child: Container(
+                  margin: EdgeInsets.only(left: 12),
+                  height: MediaQuery.of(context).size.height / 2.95,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: !order["status"] ? kUIAccent : Colors.greenAccent),
+                  child: Icon(
+                      !order["status"] ? Icons.local_shipping : Icons.home,
+                      color: kUILightText,
+                      size: 32),
+                ),
+              )
+            ],
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 8),
+              height: MediaQuery.of(context).size.height / 2.95,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.grey[200]),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(children: [
+                      InfoWidget(order: order),
+                      Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              "Tap for More Details",
+                              style: TextStyle(
+                                color: kUIDarkText,
+                                fontSize: getHeight(context, 18),
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                          Icon(Icons.keyboard_arrow_down)
-                        ],
+                            Icon(Icons.keyboard_arrow_down)
+                          ],
+                        ),
                       ),
-                    ),
-                  ]),
-                )
-              ],
+                    ]),
+                  )
+                ],
+              ),
             ),
           ),
         ),
