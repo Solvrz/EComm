@@ -13,7 +13,7 @@ class Payment {
       BuildContext context, String email, String phone, double amount) async {
     try {
       http.Response token = await http.post(
-        "https://suneel-printers.herokuapp.com/payment",
+        "https://suneel-printers.herokuapp.com/payment_init",
         headers: <String, String>{
           "Content-Type": "application/json; charset=UTF-8",
         },
@@ -41,7 +41,7 @@ class Payment {
         await _channel.invokeMethod("pay", arguments);
 
         http.Response status = await http.post(
-          "https://suneel-printers.herokuapp.com/status",
+          "https://suneel-printers.herokuapp.com/payment_status",
           headers: <String, String>{
             "Content-Type": "application/json; charset=UTF-8",
           },

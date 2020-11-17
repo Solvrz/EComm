@@ -2,9 +2,11 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:suneel_printer_admin/components/alert_button.dart';
 import 'package:suneel_printer_admin/components/home.dart';
 import 'package:suneel_printer_admin/components/rounded_alert_dialog.dart';
@@ -26,18 +28,66 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController controller = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+
+    AndroidNotificationChannel channel = AndroidNotificationChannel(
+      "high_importance_channel",
+      "High Importance Notifications",
+      "This channel is used for important notifications.",
+      importance: Importance.max,
+    );
+
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    flutterLocalNotificationsPlugin.initialize(
+        InitializationSettings(
+            android: AndroidInitializationSettings("@mipmap/ic_launcher")),
+        onSelectNotification: (_) async =>
+            await Navigator.pushNamed(context, "/orders"));
+
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+
+      if (notification != null && android != null)
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                  channel.id, channel.name, channel.description,
+                  groupKey: "com.solvrz.suneel_printer_admin"),
+            ));
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      Navigator.pushNamed(
+        context,
+        '/orders',
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        FocusScope.of(context).requestFocus(
-          FocusNode(),
-        );
+        FocusScope.of(context).requestFocus(FocusNode());
 
         if (query != "") {
-          setState(() {
-            query = "";
-            controller.clear();
-          });
+          if (mounted)
+            setState(() {
+              query = "";
+              controller.clear();
+            });
           return false;
         } else {
           return showDialog(
@@ -136,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 controller: controller,
                                 onChanged: (value) {
-                                  setState(() => query = value);
+                                  if (mounted) setState(() => query = value);
                                 },
                                 style: TextStyle(
                                   color: Colors.grey[800],
@@ -148,16 +198,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               GestureDetector(
                                 behavior: HitTestBehavior.translucent,
                                 onTap: () {
-                                  setState(() {
-                                    FocusScope.of(context).requestFocus(
-                                      FocusNode(),
-                                    );
-                                    query = "";
-                                    controller.clear();
-                                  });
+                                  if (mounted)
+                                    setState(() {
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      query = "";
+                                      controller.clear();
+                                    });
                                 },
-                                child:
-                                    Container(child: Icon(Icons.clear, color: Colors.grey[600])),
+                                child: Container(
+                                    child: Icon(Icons.clear,
+                                        color: Colors.grey[600])),
                               )
                           ]),
                         ),
@@ -272,9 +323,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 enlargeCenterPage: true,
                                 aspectRatio: getAspect(context, 2),
                                 onPageChanged: (index, reason) {
-                                  setState(() {
-                                    _current = index;
-                                  });
+                                  if (mounted)
+                                    setState(() {
+                                      _current = index;
+                                    });
                                 }),
                           ),
                           SizedBox(height: 12),

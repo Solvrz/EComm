@@ -46,7 +46,7 @@ class _OptionRadioTileState extends State<OptionRadioTile> {
               (index) => GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
-                  if (widget.currIndex != index)
+                  if (widget.currIndex != index) if (mounted)
                     setState(() {
                       widget.currIndex = index;
                     });

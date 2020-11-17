@@ -50,7 +50,7 @@ class _ProductCardState extends State<ProductCard> {
           "/product",
           arguments: ProductArguments(widget.product),
         );
-        setState(() {});
+        if (mounted) setState(() {});
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(12, 24, 12, 0),
@@ -94,11 +94,14 @@ class _ProductCardState extends State<ProductCard> {
                   alignment: Alignment.topRight,
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    onTap: () => setState(
-                      () => wishlist.containsProduct(widget.product)
-                          ? wishlist.removeProduct(widget.product)
-                          : wishlist.addProduct(widget.product),
-                    ),
+                    onTap: () {
+                      if (mounted)
+                        setState(
+                          () => wishlist.containsProduct(widget.product)
+                              ? wishlist.removeProduct(widget.product)
+                              : wishlist.addProduct(widget.product),
+                        );
+                    },
                     child: Container(
                       child: Icon(
                         wishlist.containsProduct(widget.product)

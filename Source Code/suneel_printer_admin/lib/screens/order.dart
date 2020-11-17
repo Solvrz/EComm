@@ -2,120 +2,126 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:suneel_printer_admin/components/custom_app_bar.dart';
-import 'package:suneel_printer_admin/components/past_order.dart';
+import 'package:suneel_printer_admin/components/order.dart';
 import 'package:suneel_printer_admin/constant.dart';
 
 class OrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: kUIColor,
-        resizeToAvoidBottomInset: true,
-        appBar: CustomAppBar(
-            parent: context, title: "Undelivered Orders", elevation: 0),
-        body: Column(children: [
-          StreamBuilder(
-            stream: database.collection("orders").snapshots(),
-            builder: (BuildContext context, AsyncSnapshot future) {
-              if (future.hasData) {
-                if (future.data.docs.isNotEmpty) {
-                  List<Map> unDelivered = [];
-                  List<String> unDeliveredIds = [];
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushNamed(context, "/home");
+        return false;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: kUIColor,
+          resizeToAvoidBottomInset: true,
+          appBar: CustomAppBar(
+              parent: context, title: "Undelivered Orders", elevation: 0),
+          body: Column(children: [
+            StreamBuilder(
+              stream: database.collection("orders").orderBy("time").snapshots(),
+              builder: (BuildContext context, AsyncSnapshot future) {
+                if (future.hasData) {
+                  if (future.data.docs.isNotEmpty) {
+                    List<Map> unDelivered = [];
+                    List<String> unDeliveredIds = [];
 
-                  List<Map> delivered = [];
-                  List<String> deliveredIds = [];
+                    List<Map> delivered = [];
+                    List<String> deliveredIds = [];
 
-                  future.data.docs.forEach((element) {
-                    if (element.data() != null) {
-                      if (element.data()["status"]) {
-                        delivered.add(
-                          element.data(),
-                        );
-                        deliveredIds.add(element.id);
-                      } else {
-                        unDelivered.add(
-                          element.data(),
-                        );
-                        unDeliveredIds.add(element.id);
+                    future.data.docs.forEach((element) {
+                      if (element.data() != null) {
+                        if (element.data()["status"]) {
+                          delivered.add(
+                            element.data(),
+                          );
+                          deliveredIds.add(element.id);
+                        } else {
+                          unDelivered.add(
+                            element.data(),
+                          );
+                          unDeliveredIds.add(element.id);
+                        }
                       }
-                    }
-                  });
+                    });
 
-                  return Container(
-                    height: MediaQuery.of(context).size.height - 95,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          unDelivered.isNotEmpty
-                              ? Column(
-                                  children: List.generate(
-                                    unDelivered.length,
-                                    (index) => _buildItem(
-                                      context,
-                                      unDeliveredIds[index],
-                                      unDelivered[index],
+                    return Container(
+                      height: MediaQuery.of(context).size.height - 95,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            unDelivered.isNotEmpty
+                                ? Column(
+                                    children: List.generate(
+                                      unDelivered.length,
+                                      (index) => _buildItem(
+                                        context,
+                                        unDeliveredIds[index],
+                                        unDelivered[index],
+                                      ),
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: EdgeInsets.only(bottom: 15),
+                                    child: Text(
+                                      "All Orders Delivered",
+                                      style: TextStyle(
+                                        fontSize: getHeight(context, 18),
+                                        color: kUIDarkText,
+                                      ),
                                     ),
                                   ),
-                                )
-                              : Padding(
-                                  padding: EdgeInsets.only(bottom: 15),
-                                  child: Text(
-                                    "All Orders Delivered",
-                                    style: TextStyle(
-                                      fontSize: getHeight(context, 18),
-                                      color: kUIDarkText,
-                                    ),
+                            if (delivered.isNotEmpty) ...[
+                              Text(
+                                "Delivered Orders",
+                                style: TextStyle(
+                                  fontSize: getHeight(context, 24),
+                                  color: kUIDarkText,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Column(
+                                children: List.generate(
+                                  delivered.length,
+                                  (index) => _buildItem(
+                                    context,
+                                    deliveredIds[index],
+                                    delivered[index],
                                   ),
                                 ),
-                          if (delivered.isNotEmpty) ...[
-                            Text(
-                              "Delivered Orders",
-                              style: TextStyle(
-                                fontSize: getHeight(context, 24),
-                                color: kUIDarkText,
-                                fontWeight: FontWeight.bold,
                               ),
-                            ),
-                            Column(
-                              children: List.generate(
-                                delivered.length,
-                                (index) => _buildItem(
-                                  context,
-                                  deliveredIds[index],
-                                  delivered[index],
-                                ),
-                              ),
-                            ),
-                          ]
-                        ],
+                            ]
+                          ],
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    return Expanded(
+                      child: Center(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 1.25,
+                          child: EmptyListWidget(
+                            packageImage: PackageImage.Image_4,
+                            title: "No Orders",
+                            subTitle: "No Orders have been placed.",
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                 } else {
                   return Expanded(
                     child: Center(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width / 1.25,
-                        child: EmptyListWidget(
-                          packageImage: PackageImage.Image_4,
-                          title: "No Orders",
-                          subTitle: "No Orders have been placed.",
-                        ),
-                      ),
+                      child: indicator,
                     ),
                   );
                 }
-              } else {
-                return Expanded(
-                  child: Center(
-                    child: indicator,
-                  ),
-                );
-              }
-            },
-          ),
-        ]),
+              },
+            ),
+          ]),
+        ),
       ),
     );
   }

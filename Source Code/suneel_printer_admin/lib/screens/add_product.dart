@@ -110,7 +110,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
             ),
             trailing: [
-              if (name != "" && price != "" && mrp != "" && variations.where((e)=> e.name.trim()=='').toList().length >0)
+              if (name != "" &&
+                  price != "" &&
+                  mrp != "" &&
+                  (variations.isEmpty ||
+                      variations
+                              .where((e) => e.name.trim() == '')
+                              .toList()
+                              .length ==
+                          0))
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () {
@@ -161,8 +169,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
-                                  onChanged: (value) =>
-                                      setState(() => name = value),
+                                  onChanged: (value) {
+                                    if (mounted) setState(() => name = value);
+                                  },
                                   style: TextStyle(
                                       color: kUIDarkText,
                                       fontSize: getHeight(context, 28),
@@ -206,9 +215,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
                                   images.addAll(compImages);
                                   imageFiles.addAll(compFiles);
-                                  setState(() {
-                                    _currentImage = 0;
-                                  });
+                                  if (mounted)
+                                    setState(() {
+                                      _currentImage = 0;
+                                    });
                                 },
                                 child: Container(
                                   child: Padding(
@@ -243,9 +253,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                             aspectRatio:
                                                 getAspect(context, 2.5),
                                             onPageChanged: (index, reason) {
-                                              setState(() {
-                                                _currentImage = index;
-                                              });
+                                              if (mounted)
+                                                setState(() {
+                                                  _currentImage = index;
+                                                });
                                             }),
                                       ),
                                     ),
@@ -309,16 +320,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     child: AlertButton(
-                      backgroundColor: kUIColor,
-                      titleColor: kUIAccent,
-                      title: "Add Variation",
-                      onPressed: () => setState(() {
-                        variations.add(
-                          Variation(
-                              name: "", options: [Option(label: "Label")]),
-                        );
-                      }),
-                    ),
+                        backgroundColor: kUIColor,
+                        titleColor: kUIAccent,
+                        title: "Add Variation",
+                        onPressed: () {
+                          if (mounted)
+                            setState(() {
+                              variations.add(
+                                Variation(
+                                    name: "",
+                                    options: [Option(label: "Label")]),
+                              );
+                            });
+                        }),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(18, 20, 18, 0),
@@ -349,7 +363,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: -0.4),
                             ),
-                            onChanged: (value) => setState(() => mrp = value),
+                            onChanged: (value) {
+                              if (mounted) setState(() => mrp = value);
+                            },
                             cursorColor: Colors.grey,
                             style: TextStyle(
                                 color: kUIDarkText,
@@ -391,7 +407,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   letterSpacing: -0.4),
                             ),
                             cursorColor: Colors.grey,
-                            onChanged: (value) => setState(() => price = value),
+                            onChanged: (value) {
+                              if (mounted) setState(() => price = value);
+                            },
                             style: TextStyle(
                                 color: kUIDarkText,
                                 fontSize: getHeight(context, 20),
@@ -421,9 +439,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
         GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
-            setState(() {
-              variations.remove(variation);
-            });
+            if (mounted)
+              setState(() {
+                variations.remove(variation);
+              });
           },
           child: Container(
             margin: EdgeInsets.only(left: 12),
@@ -480,16 +499,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               labelController, variation, index);
                         },
                         onLongPress: () {
-                          setState(() {
-                            variations[variations.indexOf(variation)]
-                                        .options
-                                        .length >
-                                    1
-                                ? variations[variations.indexOf(variation)]
-                                    .options
-                                    .removeAt(index)
-                                : variations.remove(variation);
-                          });
+                          if (mounted)
+                            setState(() {
+                              variations[variations.indexOf(variation)]
+                                          .options
+                                          .length >
+                                      1
+                                  ? variations[variations.indexOf(variation)]
+                                      .options
+                                      .removeAt(index)
+                                  : variations.remove(variation);
+                            });
                         },
                         child: Container(
                           margin: EdgeInsets.fromLTRB(2, 0, 2, 4),
@@ -528,11 +548,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
-                  setState(() {
-                    variations[variations.indexOf(variation)].options.add(
-                          Option(label: "Label"),
-                        );
-                  });
+                  if (mounted)
+                    setState(() {
+                      variations[variations.indexOf(variation)].options.add(
+                            Option(label: "Label"),
+                          );
+                    });
                 },
                 child: Container(
                   child: Padding(
@@ -667,13 +688,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       context: context,
       builder: (_) => WillPopScope(
         onWillPop: () async {
-          setState(() {
-            if (variation.options[index].label != labelController.text &&
-                labelController.text != "") {
-              variations[variations.indexOf(variation)].options[index].label =
-                  labelController.text.trim();
-            }
-          });
+          if (mounted)
+            setState(() {
+              if (variation.options[index].label != labelController.text &&
+                  labelController.text != "") {
+                variations[variations.indexOf(variation)].options[index].label =
+                    labelController.text.trim();
+              }
+            });
           return true;
         },
         child: RoundedAlertDialog(
@@ -715,18 +737,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       child: InkWell(
                         onTap: changeColor,
                         borderRadius: BorderRadius.circular(50),
-                        child: Container(child :notTrans
-                            ? AnimatedOpacity(
-                                duration: Duration(milliseconds: 210),
-                                opacity: isCurrentColor ? 1 : 0,
-                                child: Icon(
-                                  Icons.done,
-                                  color: useWhiteForeground(color)
-                                      ? kUIColor
-                                      : Colors.black,
-                                ),
-                              )
-                            : Icon(Icons.clear)),
+                        child: Container(
+                            child: notTrans
+                                ? AnimatedOpacity(
+                                    duration: Duration(milliseconds: 210),
+                                    opacity: isCurrentColor ? 1 : 0,
+                                    child: Icon(
+                                      Icons.done,
+                                      color: useWhiteForeground(color)
+                                          ? kUIColor
+                                          : Colors.black,
+                                    ),
+                                  )
+                                : Icon(Icons.clear)),
                       ),
                     ),
                   );
@@ -749,14 +772,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 title: "Done",
                 onPressed: () {
                   Navigator.pop(context);
-                  setState(() {
-                    if (variation.options[index].label !=
-                        labelController.text) {
-                      variations[variations.indexOf(variation)]
-                          .options[index]
-                          .label = labelController.text.trim();
-                    }
-                  });
+                  if (mounted)
+                    setState(() {
+                      if (variation.options[index].label !=
+                          labelController.text) {
+                        variations[variations.indexOf(variation)]
+                            .options[index]
+                            .label = labelController.text.trim();
+                      }
+                    });
                 })
           ],
         ),

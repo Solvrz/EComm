@@ -55,7 +55,7 @@ class _ProductCardState extends State<ProductCard>
       vsync: this,
       duration: Duration(milliseconds: 200),
     )..addListener(() {
-        setState(() {});
+        if (mounted) setState(() {});
       });
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
   }
@@ -73,7 +73,7 @@ class _ProductCardState extends State<ProductCard>
           "/product",
           arguments: ProductArguments(widget.product),
         );
-        setState(() {});
+        if (mounted) setState(() {});
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
@@ -141,11 +141,12 @@ class _ProductCardState extends State<ProductCard>
                           widget.args.product = widget.product;
                           await Navigator.pushNamed(context, "/add_product",
                               arguments: widget.args);
-                          setState(() {});
+                          if (mounted) setState(() {});
                         },
                         child: Container(
                           child: Padding(
-                            padding: EdgeInsets.only(top: 12 * _animation.value),
+                            padding:
+                                EdgeInsets.only(top: 12 * _animation.value),
                             child: Icon(
                               Icons.edit,
                               size: 20 * _animation.value,

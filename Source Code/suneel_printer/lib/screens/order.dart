@@ -58,9 +58,10 @@ class _OrderProductPageState extends State<OrderProductPage> {
                         DropdownButton(
                           hint: Text(value),
                           onChanged: (val) {
-                            setState(() {
-                              value = val;
-                            });
+                            if (mounted)
+                              setState(() {
+                                value = val;
+                              });
                           },
                           items: List.generate(widget.tabsData.length,
                                   (index) => widget.tabsData[index]["name"])
@@ -108,7 +109,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                 ),
                               );
 
-                              setState(() {});
+                              if (mounted) setState(() {});
                             },
                             child: Container(
                               child: Text(
@@ -163,7 +164,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                         ),
                                       );
 
-                                      setState(() {});
+                                      if (mounted) setState(() {});
                                     },
                                     child: Container(
                                       child: Icon(
@@ -257,7 +258,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                   "You will soon receive a confirmation mail from us.",
                               process: () async {
                                 await http.post(
-                                  "https://suneel-printers.herokuapp.com/on_order",
+                                  "https://suneel-printers.herokuapp.com/request",
                                   headers: <String, String>{
                                     "Content-Type":
                                         "application/json; charset=UTF-8",

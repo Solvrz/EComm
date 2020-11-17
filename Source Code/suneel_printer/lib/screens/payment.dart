@@ -22,7 +22,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
     if (!isProcessing) {
       isProcessing = true;
       args.process().then(
-            (_) => setState(() {
+        (_) {
+          if (mounted)
+            setState(() {
               isCompleted = true;
 
               flareAnimation = FlareActor(
@@ -43,8 +45,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   if (args.success) bag.clear();
                 },
               );
-            }),
-          );
+            });
+        },
+      );
     }
 
     return WillPopScope(

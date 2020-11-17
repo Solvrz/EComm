@@ -123,7 +123,8 @@ class _BagScreenState extends State<BagScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.check_circle_outline, color: Colors.grey[200]),
+                        Icon(Icons.check_circle_outline,
+                            color: Colors.grey[200]),
                         SizedBox(width: 8),
                         Text(
                           "Checkout",
@@ -158,7 +159,7 @@ class _BagScreenState extends State<BagScreen> {
                                     child: CheckoutSheet(price: price),
                                   ),
                                 );
-                          setState(() {});
+                          if (mounted) setState(() {});
                         }
                       : null,
                 )
@@ -175,9 +176,10 @@ class _BagScreenState extends State<BagScreen> {
                       context: context,
                       builder: (_) => WillPopScope(
                         onWillPop: () async {
-                          setState(
-                            () => bag.changeLog.clear(),
-                          );
+                          if (mounted)
+                            setState(
+                              () => bag.changeLog.clear(),
+                            );
                           return true;
                         },
                         child: RoundedAlertDialog(title: "Alerts", widgets: [
@@ -290,7 +292,7 @@ class _BagScreenState extends State<BagScreen> {
               "/product",
               arguments: ProductArguments(bag.products[index].product),
             );
-            setState(() {});
+            if (mounted) setState(() {});
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8),
@@ -404,7 +406,7 @@ class _BagScreenState extends State<BagScreen> {
                         behavior: HitTestBehavior.translucent,
                         onTap: () async {
                           bag.increaseQuantity(product);
-                          setState(() {});
+                          if (mounted) setState(() {});
                         },
                         child: Container(
                           child: Padding(
@@ -430,12 +432,13 @@ class _BagScreenState extends State<BagScreen> {
                           bag.getQuantity(product) > 1
                               ? bag.decreaseQuantity(product)
                               : bag.removeProduct(product);
-                          setState(() {});
+                          if (mounted) setState(() {});
                         },
                         child: Container(
                           child: Padding(
                             padding: EdgeInsets.all(10),
-                            child: Icon(Icons.remove, color: kUIColor, size: 20),
+                            child:
+                                Icon(Icons.remove, color: kUIColor, size: 20),
                           ),
                         ),
                       ),
@@ -452,7 +455,7 @@ class _BagScreenState extends State<BagScreen> {
             onTap: () {
               Timer(Duration(milliseconds: 200), () {
                 bag.removeProduct(product);
-                setState(() {});
+                if (mounted) setState(() {});
               });
               _listKey.currentState.removeItem(
                 index,

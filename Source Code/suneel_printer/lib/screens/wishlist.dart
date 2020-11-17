@@ -144,7 +144,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
             onTap: () {
               Timer(Duration(milliseconds: 200), () {
                 wishlist.removeProduct(product);
-                setState(() {});
+                if (mounted) setState(() {});
               });
 
               _listKey.currentState.removeItem(

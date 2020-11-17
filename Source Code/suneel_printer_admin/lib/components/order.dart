@@ -10,6 +10,8 @@ class InfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String timestamp = order['time'].toDate().toString();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -47,7 +49,7 @@ class InfoWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${order['time'].toDate().toString().split(" ")[0].split("-").reversed.join("-")}"
+                  "${timestamp.split(" ")[0].split("-").reversed.join("-")}"
                       .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -61,6 +63,7 @@ class InfoWidget extends StatelessWidget {
           ],
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               "Phone: ",
@@ -70,13 +73,37 @@ class InfoWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              "${order['phone']}",
-              style: TextStyle(
-                fontSize: getHeight(context, 18),
-                color: kUIDarkText,
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Text(
+                "${order['phone']}",
+                style: TextStyle(
+                  fontSize: getHeight(context, 18),
+                  color: kUIDarkText,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
+            ),
+            Row(
+              children: [
+                Text(
+                  "Time: ",
+                  style: TextStyle(
+                    color: kUIDarkText,
+                    fontSize: getHeight(context, 20),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "${timestamp.split(" ")[1].split(".")[0].split(":")[0]}:${timestamp.split(" ")[1].split(".")[0].split(":")[1]}"
+                      .replaceAll("", "\u{200B}"),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: kUIDarkText,
+                    fontSize: getHeight(context, 18),
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              ],
             ),
           ],
         ),

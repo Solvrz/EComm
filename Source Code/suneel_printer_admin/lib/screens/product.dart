@@ -92,9 +92,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                           enlargeCenterPage: true,
                                           aspectRatio: getAspect(context, 2),
                                           onPageChanged: (index, reason) {
-                                            setState(() {
-                                              _currentImage = index;
-                                            });
+                                            if (mounted)
+                                              setState(() {
+                                                _currentImage = index;
+                                              });
                                           }),
                                     )
                                   : Center(

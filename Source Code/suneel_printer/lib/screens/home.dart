@@ -33,10 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
         );
 
         if (query != "") {
-          setState(() {
-            query = "";
-            controller.clear();
-          });
+          if (mounted)
+            setState(() {
+              query = "";
+              controller.clear();
+            });
           return false;
         } else {
           return showDialog(
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context: context,
                               builder: (_) => InformationSheet(),
                             );
-                            setState(() {});
+                            if (mounted) setState(() {});
                           },
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
@@ -231,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           controller: controller,
                           onChanged: (value) {
-                            setState(() => query = value);
+                            if (mounted) setState(() => query = value);
                           },
                           style: TextStyle(
                             color: Colors.grey[800],
@@ -243,15 +244,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           onTap: () {
-                            setState(() {
-                              FocusScope.of(context).requestFocus(
-                                FocusNode(),
-                              );
-                              query = "";
-                              controller.clear();
-                            });
+                            if (mounted)
+                              setState(() {
+                                FocusScope.of(context).requestFocus(
+                                  FocusNode(),
+                                );
+                                query = "";
+                                controller.clear();
+                              });
                           },
-                          child: Container(child: Icon(Icons.clear, color: Colors.grey[600])),
+                          child: Container(
+                              child:
+                                  Icon(Icons.clear, color: Colors.grey[600])),
                         )
                     ]),
                   ),
@@ -345,9 +349,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   aspectRatio:
                                       1632 / MediaQuery.of(context).size.height,
                                   onPageChanged: (index, reason) {
-                                    setState(() {
-                                      _current = index;
-                                    });
+                                    if (mounted)
+                                      setState(() {
+                                        _current = index;
+                                      });
                                   }),
                             ),
                           ),

@@ -212,7 +212,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                   value: value,
                                   groupValue: pod,
                                   onChanged: (_) {
-                                    if (pod != value)
+                                    if (pod != value) if (mounted)
                                       setState(() => pod = value);
                                   },
                                 );
@@ -321,7 +321,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
   Future placeOrder() async {
     await http.post(
-      "https://suneel-printers.herokuapp.com/order_request",
+      "https://suneel-printers.herokuapp.com/order",
       headers: <String, String>{
         "Content-Type": "application/json; charset=UTF-8",
       },

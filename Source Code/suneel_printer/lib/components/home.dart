@@ -95,7 +95,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                   selectedInfo = address;
                                   addresses[index]["selected"] = true;
                                   await save();
-                                  setState(() {});
+                                  if (mounted) setState(() {});
                                   Navigator.pop(context);
                                 },
                                 leading: Icon(Icons.home_outlined,
@@ -124,7 +124,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                           ),
                                         );
                                         await save();
-                                        setState(() {});
+                                        if (mounted) setState(() {});
                                       },
                                       child: Container(
                                         child: Icon(Icons.edit,
@@ -152,7 +152,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                           addresses.remove(address);
                                         }
                                         await save();
-                                        setState(() {});
+                                        if (mounted) setState(() {});
                                       },
                                       child: Container(
                                         child: Icon(Icons.delete,
@@ -207,7 +207,7 @@ class _InformationSheetState extends State<InformationSheet> {
                           child: AddInformationSheet(addresses: addresses),
                         ),
                       );
-                      setState(() {});
+                      if (mounted) setState(() {});
                     },
                     child: Container(
                       height: 40,
@@ -485,7 +485,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
     else
       error["pincode"] = false;
 
-    setState(() {});
+    if (mounted) setState(() {});
 
     return !error.values.toList().contains(true);
   }

@@ -28,7 +28,7 @@ class _ProductScreenState extends State<ProductScreen> {
         (index) => OptionRadioTile(
           onChanged: (option) {
             product.select(args.product.variations[index].name, option);
-            setState(() {});
+            if (mounted) setState(() {});
           },
           variation: args.product.variations[index],
           currIndex: args.product.variations[index].options
@@ -78,7 +78,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 ? wishlist.removeProduct(product)
                                 : wishlist.addProduct(product);
 
-                            setState(() {});
+                            if (mounted) setState(() {});
                           },
                           child: Container(
                             child: Icon(
@@ -115,9 +115,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                           enlargeCenterPage: true,
                                           aspectRatio: getAspect(context, 2.5),
                                           onPageChanged: (index, reason) {
-                                            setState(() {
-                                              _currentImage = index;
-                                            });
+                                            if (mounted)
+                                              setState(() {
+                                                _currentImage = index;
+                                              });
                                           }),
                                     )
                                   : Center(
@@ -247,10 +248,14 @@ class _ProductScreenState extends State<ProductScreen> {
                             children: [
                               GestureDetector(
                                 behavior: HitTestBehavior.translucent,
-                                onTap: () => setState(
-                                  () => bag.increaseQuantity(product),
-                                ),
-                                child: Container(child: Icon(Icons.add, size: 30)),
+                                onTap: () {
+                                  if (mounted)
+                                    setState(
+                                      () => bag.increaseQuantity(product),
+                                    );
+                                },
+                                child:
+                                    Container(child: Icon(Icons.add, size: 30)),
                               ),
                               Text(
                                 bag.getQuantity(product).toString(),
@@ -260,10 +265,14 @@ class _ProductScreenState extends State<ProductScreen> {
                               ),
                               GestureDetector(
                                 behavior: HitTestBehavior.translucent,
-                                onTap: () => setState(
-                                  () => bag.decreaseQuantity(product),
-                                ),
-                                child: Container(child: Icon(Icons.remove, size: 30)),
+                                onTap: () {
+                                  if (mounted)
+                                    setState(
+                                      () => bag.decreaseQuantity(product),
+                                    );
+                                },
+                                child: Container(
+                                    child: Icon(Icons.remove, size: 30)),
                               ),
                             ],
                           ),
@@ -296,7 +305,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           } else {
                             Navigator.pushNamed(context, "/bag");
                           }
-                          setState(() {});
+                          if (mounted) setState(() {});
                         },
                       ),
                     ),

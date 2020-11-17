@@ -58,16 +58,19 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                   behavior: HitTestBehavior.translucent,
                   onTap: () {
                     if (index == widget._currentTab) return;
-                    setState(() {
-                      widget._currentTab = index;
-                    });
+                    if (mounted)
+                      setState(() {
+                        widget._currentTab = index;
+                      });
                   },
                   child: Container(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24),
                       child: AnimatedDefaultTextStyle(
                         child: Text(
-                          widget.tabsData[index]["name"].split("\\n").join("\n"),
+                          widget.tabsData[index]["name"]
+                              .split("\\n")
+                              .join("\n"),
                           textAlign: TextAlign.center,
                         ),
                         duration: Duration(milliseconds: 150),
