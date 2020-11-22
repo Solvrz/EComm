@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/bag.dart';
@@ -21,10 +22,55 @@ class CheckoutSheet extends StatefulWidget {
 class _CheckoutSheetState extends State<CheckoutSheet> {
   static List<String> paymentMethods = [
     "Pay On Delivery",
-    "PayTM, Credit Card, Debit Card & Net Banking"
+    "Wallets, Credit Card, Debit Card & Net Banking"
   ];
 
   String pod = paymentMethods.first;
+  Razorpay _razorpay;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _razorpay = Razorpay();
+
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+        (PaymentSuccessResponse response) {
+      Navigator.popAndPushNamed(
+        context,
+        "/payment",
+        arguments: PaymentArguments(
+            success: true,
+            msg: "You will soon receive a confirmation mail from us.",
+            process: () async {
+              await placeOrder();
+            }),
+      );
+    });
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
+        (PaymentFailureResponse response) {
+      Navigator.popAndPushNamed(
+        context,
+        "/payment",
+        arguments: PaymentArguments(
+            success: false, msg: response.message, process: () async {}),
+      );
+    });
+    _razorpay.on(Razorpay.PAYMENT_CANCELLED.toString(), () {
+      Navigator.popAndPushNamed(
+        context,
+        "/payment",
+        arguments: PaymentArguments(
+            success: false, msg: "Payment Cancelled", process: () async {}),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _razorpay.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -277,23 +323,27 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       : () async {
                           FocusScope.of(context).unfocus();
 
-                          Map<String, dynamic> status =
-                              await payment.startPayment(
-                                  context,
-                                  selectedInfo["email"],
-                                  selectedInfo["phone"],
-                                  widget.price);
-
-                          Navigator.popAndPushNamed(
-                            context,
-                            "/payment",
-                            arguments: PaymentArguments(
-                                success: status["success"],
-                                msg: status["msg"],
-                                process: () async {
-                                  if (status["success"]) await placeOrder();
-                                }),
-                          );
+                          _razorpay.open({
+                            'key': 'rzp_test_3XFNUiX9RPskxm',
+                            'order_id': 'ORDER_1000',
+                            'amount': widget.price * 100,
+                            'name': 'Suneel Printers',
+                            'description': 'Order Payment',
+                            'timeout': 120,
+                            'prefill': {
+                              'contact': '${selectedInfo["phone"]}',
+                              'email': '${selectedInfo["email"]}'
+                            },
+                            'external': {
+                              'wallets': [
+                                'paytm',
+                                'phonepe',
+                                'paypal',
+                                'payzapp',
+                                'amazonpay'
+                              ]
+                            }
+                          });
                         },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),

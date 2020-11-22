@@ -2,9 +2,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven {
-            url "https://artifactory.paytm.in/libs-release-local"
-            }
     }
 
     dependencies {
@@ -19,9 +16,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven {
-            url "https://artifactory.paytm.in/libs-release-local"
-            }
     }
 }
 
