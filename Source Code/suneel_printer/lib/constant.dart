@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/models/bag.dart';
 import 'package:suneel_printer/models/wishlist.dart';
 
 bool staging = true;
+
+Razorpay razorpay;
 
 const kUIAccent = Colors.redAccent;
 const kUIColor = Colors.white;

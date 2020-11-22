@@ -11,66 +11,50 @@ import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/payment.dart';
 
 class CheckoutSheet extends StatefulWidget {
+  
   final double price;
 
   CheckoutSheet({@required this.price});
+
 
   @override
   _CheckoutSheetState createState() => _CheckoutSheetState();
 }
 
 class _CheckoutSheetState extends State<CheckoutSheet> {
+    initState(){
+    super.initState();
+             razorpay = Razorpay();
+
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+        (PaymentSuccessResponse response) {
+          status['success'] = true;
+          status['msg'] = 'The payment was successful';
+    });
+  razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
+        (PaymentFailureResponse response) {
+          status['msg'] = response.message;
+          status['success'] = false;
+      print("ERROR: " + response.code.toString() + " - " + response.message);
+    });
+    razorpay.on(Razorpay.PAYMENT_CANCELLED.toString(), () {
+      status['msg'] = 'The payment was cancelled';
+          status['success'] = false;
+    });
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
+        (ExternalWalletResponse response) {
+          status['success'] = true;
+          status['msg'] = 'The payment was successfully conducted via ${response.walletName}';
+      print("EXTERNAL_WALLET: " + response.walletName);
+    });
+  }
   static List<String> paymentMethods = [
     "Pay On Delivery",
-    "Wallets, Credit Card, Debit Card & Net Banking"
+    "PayTM, Credit Card, Debit Card & Net Banking"
   ];
 
   String pod = paymentMethods.first;
-  Razorpay _razorpay;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _razorpay = Razorpay();
-
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-        (PaymentSuccessResponse response) {
-      Navigator.popAndPushNamed(
-        context,
-        "/payment",
-        arguments: PaymentArguments(
-            success: true,
-            msg: "You will soon receive a confirmation mail from us.",
-            process: () async {
-              await placeOrder();
-            }),
-      );
-    });
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
-        (PaymentFailureResponse response) {
-      Navigator.popAndPushNamed(
-        context,
-        "/payment",
-        arguments: PaymentArguments(
-            success: false, msg: response.message, process: () async {}),
-      );
-    });
-    _razorpay.on(Razorpay.PAYMENT_CANCELLED.toString(), () {
-      Navigator.popAndPushNamed(
-        context,
-        "/payment",
-        arguments: PaymentArguments(
-            success: false, msg: "Payment Cancelled", process: () async {}),
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _razorpay.clear();
-  }
+  Map status = {};
 
   @override
   Widget build(BuildContext context) {
@@ -322,28 +306,40 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         }
                       : () async {
                           FocusScope.of(context).unfocus();
+                    
+                         
+                               razorpay.open({
+                    'key': 'rzp_test_3XFNUiX9RPskxm',
+                    'order_id' : 'ORDER_${DateTime.now()}',
+                    'amount': widget.price * 100,
+                    'name': 'Suneel Printers.',
+                    'description': 'Pay to Suneel Printers',
+                    'prefill': {
+                      'contact': selectedInfo['phone'],
+                      'email': selectedInfo['email'],
+                    },
+                    'external': {
+                      'wallets': [
+                        'paytm',
+                        'phonepe',
+                        'paypal',
+                        'payzapp',
+                        'amazonpay'
+                      ]
+                    }
+                  });
+                  razorpay.close();
 
-                          _razorpay.open({
-                            'key': 'rzp_test_3XFNUiX9RPskxm',
-                            'order_id': 'ORDER_1000',
-                            'amount': widget.price * 100,
-                            'name': 'Suneel Printers',
-                            'description': 'Order Payment',
-                            'timeout': 120,
-                            'prefill': {
-                              'contact': '${selectedInfo["phone"]}',
-                              'email': '${selectedInfo["email"]}'
-                            },
-                            'external': {
-                              'wallets': [
-                                'paytm',
-                                'phonepe',
-                                'paypal',
-                                'payzapp',
-                                'amazonpay'
-                              ]
-                            }
-                          });
+                          Navigator.popAndPushNamed(
+                            context,
+                            "/payment",
+                            arguments: PaymentArguments(
+                                success: status["success"],
+                                msg: status["msg"],
+                                process: () async {
+                                  if (status["success"]) await placeOrder();
+                                }),
+                          );
                         },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
