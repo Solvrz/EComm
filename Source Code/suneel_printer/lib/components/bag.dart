@@ -328,7 +328,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       ]
                     }
                   });
-                  razorpay.close();
+                  razorpay.clear();
 
                           Navigator.popAndPushNamed(
                             context,
