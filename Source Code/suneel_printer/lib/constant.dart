@@ -1,13 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/models/bag.dart';
 import 'package:suneel_printer/models/wishlist.dart';
 
-bool staging = true;
+bool testing = true;
 
-Razorpay razorpay;
+FirebaseFirestore database = FirebaseFirestore.instance;
+
+Bag bag = Bag();
+Wishlist wishlist = Wishlist();
+SharedPreferences preferences;
+
+Map selectedInfo;
+List<Map> addresses;
 
 const kUIAccent = Colors.redAccent;
 const kUIColor = Colors.white;
@@ -35,18 +41,11 @@ InputDecoration kInputDialogDecoration = InputDecoration(
   ),
 );
 
-FirebaseFirestore database = FirebaseFirestore.instance;
-
-Bag bag = Bag();
-Wishlist wishlist = Wishlist();
-SharedPreferences preferences;
-
-Map selectedInfo;
-List<Map> addresses;
-
 CircularProgressIndicator indicator = CircularProgressIndicator(
   valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),
 );
+
+List onOrder = ["Printing", "Binding"];
 
 List<Map<String, dynamic>> categories = [
   {
@@ -80,8 +79,6 @@ List<Map<String, dynamic>> categories = [
     "image": "assets/images/Binding.png",
   },
 ];
-
-List onOrder = ["Printing", "Binding"];
 
 extension StringExtension on String {
   String capitalize() {

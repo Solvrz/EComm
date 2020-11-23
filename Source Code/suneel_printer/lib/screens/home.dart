@@ -28,9 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        FocusScope.of(context).requestFocus(
-          FocusNode(),
-        );
+        FocusScope.of(context).requestFocus(FocusNode());
 
         if (query != "") {
           if (mounted)
