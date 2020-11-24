@@ -80,36 +80,13 @@ class _ProductScreenState extends State<ProductScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          product.name,
-                          style: TextStyle(
-                              color: kUIDarkText,
-                              fontSize: 28,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "sans-serif-condensed"),
-                        ),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            wishlist.containsProduct(product)
-                                ? wishlist.removeProduct(product)
-                                : wishlist.addProduct(product);
-
-                            setState(() {});
-                          },
-                          child: Icon(
-                              wishlist.containsProduct(product)
-                                  ? Icons.favorite
-                                  : Icons.favorite_outline,
-                              color: wishlist.containsProduct(product)
-                                  ? kUIAccent
-                                  : kUIDarkText,
-                              size: 30),
-                        )
-                      ],
+                    Text(
+                      product.name,
+                      style: TextStyle(
+                          color: kUIDarkText,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "sans-serif-condensed"),
                     ),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.3,
@@ -180,10 +157,12 @@ class _ProductScreenState extends State<ProductScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         ...variations,
-                        Divider(thickness: 2, height: 2),
+                        if (variations.length > 0)
+                          Divider(thickness: 2, height: 2),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 18),
+                              vertical: variations.length > 0 ? 15 : 0,
+                              horizontal: 18),
                           child: Row(
                             children: [
                               Expanded(
@@ -252,40 +231,64 @@ class _ProductScreenState extends State<ProductScreen> {
                 padding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                 child: Row(
                   children: [
-                    if (bag.containsProduct(product))
-                      Container(
-                        padding: EdgeInsets.all(5),
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        wishlist.containsProduct(product)
+                            ? wishlist.removeProduct(product)
+                            : wishlist.addProduct(product);
+
+                        setState(() {});
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: kUIDarkText),
+                          color: wishlist.containsProduct(product)
+                              ? kUIAccent.withOpacity(0.9)
+                              : Colors.grey[200],
+                          shape: BoxShape.circle,
                         ),
-                        child: IntrinsicWidth(
-                          child: Column(
-                            children: [
-                              GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () => setState(
-                                  () => bag.increaseQuantity(product),
-                                ),
-                                child: Icon(Icons.add, size: 30),
-                              ),
-                              Text(
-                                bag.getQuantity(product).toString(),
-                                style:
-                                    TextStyle(fontSize: 22, color: kUIDarkText),
-                              ),
-                              GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () => setState(
-                                  () => bag.decreaseQuantity(product),
-                                ),
-                                child: Icon(Icons.remove, size: 30),
-                              ),
-                            ],
-                          ),
+                        child: Icon(
+                          Icons.favorite_outline,
+                          color: wishlist.containsProduct(product)
+                              ? kUILightText.withOpacity(0.8)
+                              : kUIDarkText.withOpacity(0.3),
+                          size: 28,
                         ),
-                        margin: EdgeInsets.only(right: 16),
                       ),
+                    ),
+                    VerticalDivider(),
+                    // if (bag.containsProduct(product))
+                    //   Column(
+                    //     children: [
+                    //       GestureDetector(
+                    //         behavior: HitTestBehavior.translucent,
+                    //         onTap: () => setState(
+                    //           () => bag.increaseQuantity(product),
+                    //         ),
+                    //         child: Container(
+                    //           padding: EdgeInsets.all(6),
+                    //           decoration: BoxDecoration(
+                    //             color: kUIDarkText,
+                    //             borderRadius: BorderRadius.circular(5),
+                    //           ),
+                    //           child: Icon(Icons.add,
+                    //               size: 26, color: kUILightText),
+                    //         ),
+                    //       ),
+                    //       Text(
+                    //         bag.getQuantity(product).toString(),
+                    //         style: TextStyle(fontSize: 22, color: kUIDarkText),
+                    //       ),
+                    //       GestureDetector(
+                    //         behavior: HitTestBehavior.translucent,
+                    //         onTap: () => setState(
+                    //           () => bag.decreaseQuantity(product),
+                    //         ),
+                    //         child: Icon(Icons.remove, size: 30),
+                    //       ),
+                    //     ],
+                    //   ),
                     Expanded(
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
@@ -293,7 +296,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         ),
                         color: bag.containsProduct(product)
                             ? Colors.grey[600]
-                            : kUIAccent,
+                            : kUIAccent.withOpacity(0.9),
                         padding: EdgeInsets.symmetric(vertical: 16),
                         child: Text(
                           bag.containsProduct(product)
@@ -304,12 +307,19 @@ class _ProductScreenState extends State<ProductScreen> {
                               color: kUIColor,
                               fontWeight: FontWeight.bold),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (!bag.containsProduct(product)) {
                             bag.addProduct(product);
+                            await showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  AddProductSheet(product),
+                            );
                           } else {
-                            Navigator.pushNamed(context, "/bag");
+                            await Navigator.pushNamed(context, "/bag");
                           }
+
                           setState(() {});
                         },
                       ),

@@ -151,7 +151,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: kUIDarkText,
+                                  color: selectedInfo != null
+                                      ? kUIDarkText
+                                      : kUIAccent.withOpacity(0.8),
                                   letterSpacing: 0.2,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: "sans-serif-condensed"),
@@ -200,244 +202,257 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Padding(
                 padding: EdgeInsets.all(16),
-                child: Column(children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: getHeight(context, 50),
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(children: [
-                      Icon(Icons.search, color: Colors.grey[600]),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Search for Products",
-                            hintStyle: TextStyle(
-                              color: Colors.grey[600],
+                child: Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: getHeight(context, 50),
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(children: [
+                        Icon(Icons.search, color: Colors.grey[600]),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Search for Products",
+                              hintStyle: TextStyle(
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            controller: controller,
+                            onChanged: (value) {
+                              setState(() => query = value);
+                            },
+                            style: TextStyle(
+                              color: Colors.grey[800],
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          controller: controller,
-                          onChanged: (value) {
-                            setState(() => query = value);
-                          },
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontWeight: FontWeight.bold,
-                          ),
                         ),
-                      ),
-                      if (query != "")
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            setState(() {
-                              FocusScope.of(context).requestFocus(
-                                FocusNode(),
+                        if (query != "")
+                          GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () {
+                              setState(() {
+                                FocusScope.of(context).requestFocus(
+                                  FocusNode(),
+                                );
+                                query = "";
+                                controller.clear();
+                              });
+                            },
+                            child: Icon(Icons.clear, color: Colors.grey[600]),
+                          )
+                      ]),
+                    ),
+                    SizedBox(height: getHeight(context, 25)),
+                    if (query != "")
+                      StreamBuilder<QuerySnapshot>(
+                          stream: database.collection("products").snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> future) {
+                            if (future.hasData) {
+                              List docs = future.data.docs
+                                  .where(
+                                    (element) => element
+                                        .data()["name"]
+                                        .toLowerCase()
+                                        .contains(
+                                          query.toLowerCase().trim(),
+                                        ),
+                                  )
+                                  .toList();
+
+                              List<Product> products = List.generate(
+                                docs.length,
+                                (index) => Product.fromJson(
+                                  docs[index].data(),
+                                ),
                               );
-                              query = "";
-                              controller.clear();
-                            });
-                          },
-                          child: Icon(Icons.clear, color: Colors.grey[600]),
-                        )
-                    ]),
-                  ),
-                  SizedBox(height: getHeight(context, 25)),
-                  if (query != "")
-                    StreamBuilder<QuerySnapshot>(
-                        stream: database.collection("products").snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> future) {
-                          if (future.hasData) {
-                            List docs = future.data.docs
-                                .where(
-                                  (element) => element
-                                      .data()["name"]
-                                      .toLowerCase()
-                                      .contains(
-                                        query.toLowerCase().trim(),
+
+                              return products.length > 0
+                                  ? ProductList(products: products)
+                                  : Center(
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.25,
+                                        child: EmptyListWidget(
+                                          packageImage: PackageImage.Image_1,
+                                          title: "No Results",
+                                          subTitle:
+                                              "No results found for your search",
+                                        ),
                                       ),
+                                    );
+                            } else {
+                              return Center(
+                                child: indicator,
+                              );
+                            }
+                          })
+                    else
+                      FutureBuilder<QuerySnapshot>(
+                        future: database
+                            .collection("carouselImages")
+                            .orderBy("sequence")
+                            .get(),
+                        builder: (BuildContext context, AsyncSnapshot future) {
+                          List carouselImages = [
+                            "https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"
+                          ];
+
+                          if (future.hasData) {
+                            carouselImages = future.data.docs
+                                .map(
+                                  (e) => e.get("url"),
                                 )
                                 .toList();
+                          }
 
-                            List<Product> products = List.generate(
-                              docs.length,
-                              (index) => Product.fromJson(
-                                docs[index].data(),
-                              ),
-                            );
-
-                            return products.length > 0
-                                ? ProductList(products: products)
-                                : Center(
+                          return Column(
+                            children: [
+                              Container(
+                                height: getHeight(context, 180),
+                                width: MediaQuery.of(context).size.width,
+                                child: CarouselSlider.builder(
+                                  itemCount: carouselImages.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) =>
+                                          ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
                                     child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          1.25,
-                                      child: EmptyListWidget(
-                                        packageImage: PackageImage.Image_1,
-                                        title: "No Results",
-                                        subTitle:
-                                            "No results found for your search",
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                carouselImages[index]),
+                                            fit: BoxFit.cover),
                                       ),
                                     ),
-                                  );
-                          } else {
-                            return Center(
-                              child: indicator,
-                            );
-                          }
-                        })
-                  else
-                    FutureBuilder<QuerySnapshot>(
-                      future: database
-                          .collection("carouselImages")
-                          .orderBy("sequence")
-                          .get(),
-                      builder: (BuildContext context, AsyncSnapshot future) {
-                        List carouselImages = [
-                          "https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"
-                        ];
-
-                        if (future.hasData) {
-                          carouselImages = future.data.docs
-                              .map(
-                                (e) => e.get("url"),
-                              )
-                              .toList();
-                        }
-
-                        return Column(children: [
-                          Container(
-                            height: getHeight(context, 180),
-                            width: MediaQuery.of(context).size.width,
-                            child: CarouselSlider.builder(
-                              itemCount: carouselImages.length,
-                              itemBuilder: (BuildContext context, int index) =>
-                                  ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    image: DecorationImage(
-                                        image:
-                                            NetworkImage(carouselImages[index]),
-                                        fit: BoxFit.cover),
                                   ),
+                                  options: CarouselOptions(
+                                      autoPlay: carouselImages.length > 1
+                                          ? true
+                                          : false,
+                                      enlargeCenterPage: true,
+                                      aspectRatio: 2,
+                                      onPageChanged: (index, reason) {
+                                        setState(() {
+                                          _current = index;
+                                        });
+                                      }),
                                 ),
                               ),
-                              options: CarouselOptions(
-                                  autoPlay:
-                                      carouselImages.length > 1 ? true : false,
-                                  enlargeCenterPage: true,
-                                  aspectRatio: 2,
-                                  onPageChanged: (index, reason) {
-                                    setState(() {
-                                      _current = index;
-                                    });
-                                  }),
-                            ),
-                          ),
-                          SizedBox(height: 12),
-                          if (carouselImages.length > 1)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(
-                                carouselImages.length,
-                                (int index) => AnimatedContainer(
-                                  duration: Duration(milliseconds: 400),
-                                  width: _current == index ? 16 : 8,
-                                  height: _current == index ? 6 : 8,
-                                  margin: EdgeInsets.symmetric(horizontal: 3),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: _current == index
-                                        ? Color.fromRGBO(0, 0, 0, 0.9)
-                                        : Color.fromRGBO(0, 0, 0, 0.4),
+                              SizedBox(height: 12),
+                              if (carouselImages.length > 1)
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                    carouselImages.length,
+                                    (int index) => AnimatedContainer(
+                                      duration: Duration(milliseconds: 400),
+                                      width: _current == index ? 16 : 8,
+                                      height: _current == index ? 6 : 8,
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 3),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: _current == index
+                                            ? Color.fromRGBO(0, 0, 0, 0.9)
+                                            : Color.fromRGBO(0, 0, 0, 0.4),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          SizedBox(height: getHeight(context, 12)),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 6),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Categories",
-                                    style: TextStyle(
-                                        fontSize: getHeight(context, 32),
-                                        letterSpacing: 0.2,
-                                        fontWeight: FontWeight.bold,
-                                        color: kUIDarkText),
-                                  ),
-                                  SizedBox(height: getHeight(context, 12)),
-                                  GridView.count(
-                                    shrinkWrap: true,
-                                    crossAxisCount: 3,
-                                    mainAxisSpacing: 12,
-                                    crossAxisSpacing: 12,
-                                    childAspectRatio: 0.98,
-                                    children: List.generate(categories.length,
+                              SizedBox(height: getHeight(context, 14)),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 6),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Categories",
+                                      style: TextStyle(
+                                          fontSize: getHeight(context, 30),
+                                          letterSpacing: 0.2,
+                                          fontWeight: FontWeight.bold,
+                                          color: kUIDarkText),
+                                    ),
+                                    SizedBox(height: getHeight(context, 14)),
+                                    GridView.count(
+                                      shrinkWrap: true,
+                                      crossAxisCount: 3,
+                                      mainAxisSpacing: 12,
+                                      crossAxisSpacing: 12,
+                                      childAspectRatio: 0.98,
+                                      children: List.generate(
+                                        categories.length,
                                         (int index) {
-                                      Map<String, dynamic> data =
-                                          categories[index];
-                                      return GestureDetector(
-                                        behavior: HitTestBehavior.translucent,
-                                        onTap: () => Navigator.pushNamed(
-                                          context,
-                                          "/category",
-                                          arguments: CategoryArguments(
-                                            data,
-                                            data["uId"],
-                                          ),
-                                        ),
-                                        child: Container(
-                                          padding: EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            color: Color(0xffFFEBEB),
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Image.asset(data["image"],
-                                                  height:
-                                                      getHeight(context, 50),
-                                                  width: 50),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                data["name"],
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontSize:
-                                                      getHeight(context, 14),
-                                                  color: kUIDarkText,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                          Map<String, dynamic> data =
+                                              categories[index];
+                                          return GestureDetector(
+                                            behavior:
+                                                HitTestBehavior.translucent,
+                                            onTap: () => Navigator.pushNamed(
+                                              context,
+                                              "/category",
+                                              arguments: CategoryArguments(
+                                                data,
+                                                data["uId"],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                                  ),
-                                ]),
-                          ),
-                        ]);
-                      },
-                    ),
-                ]),
+                                            ),
+                                            child: Container(
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: Color(0xffFFEBEB),
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(data["image"],
+                                                      height: getHeight(
+                                                          context, 50),
+                                                      width: 50),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    data["name"],
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontFamily:
+                                                          "sans-serif-condensed",
+                                                      fontSize: getHeight(
+                                                          context, 16),
+                                                      color: kUIDarkText,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                  ],
+                ),
               ),
             ],
           ),

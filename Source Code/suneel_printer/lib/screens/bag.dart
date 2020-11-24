@@ -287,7 +287,10 @@ class _BagScreenState extends State<BagScreen> {
                       children: [
                         product.images.length > 0
                             ? Image(image: product.images[0])
-                            : Text("No Image"),
+                            : Text(
+                                "No Image",
+                                style: TextStyle(fontSize: 20),
+                              ),
                         SizedBox(width: 24),
                         Expanded(
                           child: Column(
@@ -393,20 +396,19 @@ class _BagScreenState extends State<BagScreen> {
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
                       ),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            if (bag.getQuantity(product) > 1) {
-                              bag.decreaseQuantity(product);
-                            }
-                            setState(() {});
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child:
-                                Icon(Icons.remove, color: kUIColor, size: 20),
-                          ),
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          if (bag.getQuantity(product) > 1) {
+                            bag.decreaseQuantity(product);
+                          }
+                          setState(() {});
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Icon(Icons.remove, color: kUIColor, size: 20),
                         ),
+                      ),
                     ],
                   ),
                 )
