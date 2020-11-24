@@ -57,7 +57,7 @@ class _InformationSheetState extends State<InformationSheet> {
                       "Delivery Information",
                       style: TextStyle(
                           color: kUIDarkText,
-                          fontSize: 24,
+                          fontSize: getHeight(context, 24),
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -68,9 +68,11 @@ class _InformationSheetState extends State<InformationSheet> {
                         await save();
                         Navigator.pop(context);
                       },
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Icon(Icons.close, color: kUIDarkText),
+                      child: Container(
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(Icons.close, color: kUIDarkText),
+                        ),
                       ),
                     ),
                 ],
@@ -93,7 +95,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                   selectedInfo = address;
                                   addresses[index]["selected"] = true;
                                   await save();
-                                  setState(() {});
+                                  if (mounted) setState(() {});
                                   Navigator.pop(context);
                                 },
                                 leading: Icon(Icons.home_outlined,
@@ -122,10 +124,12 @@ class _InformationSheetState extends State<InformationSheet> {
                                           ),
                                         );
                                         await save();
-                                        setState(() {});
+                                        if (mounted) setState(() {});
                                       },
-                                      child: Icon(Icons.edit,
-                                          color: Colors.grey[700]),
+                                      child: Container(
+                                        child: Icon(Icons.edit,
+                                            color: Colors.grey[700]),
+                                      ),
                                     ),
                                     SizedBox(width: 12),
                                     GestureDetector(
@@ -148,10 +152,12 @@ class _InformationSheetState extends State<InformationSheet> {
                                           addresses.remove(address);
                                         }
                                         await save();
-                                        setState(() {});
+                                        if (mounted) setState(() {});
                                       },
-                                      child: Icon(Icons.delete,
-                                          color: Colors.grey[700]),
+                                      child: Container(
+                                        child: Icon(Icons.delete,
+                                            color: Colors.grey[700]),
+                                      ),
                                     )
                                   ]),
                                 ),
@@ -162,7 +168,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                           ? kUIDarkText
                                           : Colors.grey[600],
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                      fontSize: getHeight(context, 18),
                                       letterSpacing: 0.2),
                                 ),
                                 subtitle: Padding(
@@ -184,7 +190,7 @@ class _InformationSheetState extends State<InformationSheet> {
                               "No Information Added",
                               style: TextStyle(
                                   color: kUIDarkText,
-                                  fontSize: 20,
+                                  fontSize: getHeight(context, 20),
                                   fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -201,7 +207,7 @@ class _InformationSheetState extends State<InformationSheet> {
                           child: AddInformationSheet(addresses: addresses),
                         ),
                       );
-                      setState(() {});
+                      if (mounted) setState(() {});
                     },
                     child: Container(
                       height: 40,
@@ -213,7 +219,7 @@ class _InformationSheetState extends State<InformationSheet> {
                         child: Text(
                           "Add Information",
                           style: TextStyle(
-                              fontSize: 18,
+                              fontSize: getHeight(context, 18),
                               fontWeight: FontWeight.bold,
                               color: kUIColor),
                         ),
@@ -312,16 +318,18 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
-                    child: Icon(Icons.arrow_back_ios, color: kUIDarkText),
+                  child: Container(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 8, 8, 8),
+                      child: Icon(Icons.arrow_back_ios, color: kUIDarkText),
+                    ),
                   ),
                 ),
                 Text(
                   "${widget.edit ? "Edit" : "Add"} Information",
                   style: TextStyle(
                       color: kUIDarkText,
-                      fontSize: 24,
+                      fontSize: getHeight(context, 24),
                       fontWeight: FontWeight.bold),
                 )
               ],
@@ -339,7 +347,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                       data["title"],
                       style: TextStyle(
                           color: kUIDarkText,
-                          fontSize: 16,
+                          fontSize: getHeight(context, 16),
                           fontWeight: FontWeight.bold),
                     ),
                     TextField(
@@ -353,13 +361,14 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                       maxLines: data["maxLines"] ?? 3,
                       style: TextStyle(
                           color: kUIDarkText,
-                          fontSize: 17,
+                          fontSize: getHeight(context, 16),
                           fontWeight: FontWeight.w500),
                     ),
                     if (error[field]) ...[
                       Text(
                         data["errorMessage"],
-                        style: TextStyle(fontSize: 15, color: kUIAccent),
+                        style: TextStyle(
+                            fontSize: getHeight(context, 15), color: kUIAccent),
                       ),
                       SizedBox(height: 8),
                     ],
@@ -427,7 +436,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                   child: Text(
                     "${widget.edit ? "Save" : "Add"} Information",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: getHeight(context, 18),
                       fontWeight: FontWeight.bold,
                       color: kUIColor,
                     ),
@@ -476,7 +485,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
     else
       error["pincode"] = false;
 
-    setState(() {});
+    if (mounted) setState(() {});
 
     return !error.values.toList().contains(true);
   }

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer_admin/components/alert_button.dart';
 import 'package:suneel_printer_admin/components/rounded_alert_dialog.dart';
@@ -24,7 +23,7 @@ class _ProductListState extends State<ProductList> {
     return GridView.count(
       shrinkWrap: true,
       crossAxisCount: 2,
-      childAspectRatio: 0.75,
+      childAspectRatio: getAspect(context, 0.75),
       children: List.generate(
         widget.products.length,
         (index) =>
@@ -56,7 +55,7 @@ class _ProductCardState extends State<ProductCard>
       vsync: this,
       duration: Duration(milliseconds: 200),
     )..addListener(() {
-        setState(() {});
+        if (mounted) setState(() {});
       });
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
   }
@@ -74,7 +73,7 @@ class _ProductCardState extends State<ProductCard>
           "/product",
           arguments: ProductArguments(widget.product),
         );
-        setState(() {});
+        if (mounted) setState(() {});
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
@@ -92,10 +91,10 @@ class _ProductCardState extends State<ProductCard>
               children: [
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 15, 12, 0),
+                    padding: EdgeInsets.fromLTRB(0, 15, 18, 0),
                     child: widget.product.images.length > 0
                         ? Container(
-                            height: height / 1.6,
+                            height: height / 1.675,
                             decoration: BoxDecoration(boxShadow: [
                               BoxShadow(
                                 color: Colors.grey[600],
@@ -106,7 +105,7 @@ class _ProductCardState extends State<ProductCard>
                             child: Image(image: widget.product.images[0]),
                           )
                         : Container(
-                            height: height / 1.6,
+                            height: height / 1.65,
                             child: Center(
                               child: Text("No Image Provided"),
                             ),
@@ -127,9 +126,11 @@ class _ProductCardState extends State<ProductCard>
                               _animationController.forward();
                           }
                         },
-                        child: AnimatedIcon(
-                          icon: AnimatedIcons.menu_close,
-                          progress: _animation,
+                        child: Container(
+                          child: AnimatedIcon(
+                            icon: AnimatedIcons.menu_close,
+                            progress: _animation,
+                          ),
                         ),
                       ),
                       GestureDetector(
@@ -140,14 +141,17 @@ class _ProductCardState extends State<ProductCard>
                           widget.args.product = widget.product;
                           await Navigator.pushNamed(context, "/add_product",
                               arguments: widget.args);
-                          setState(() {});
+                          if (mounted) setState(() {});
                         },
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 12 * _animation.value),
-                          child: Icon(
-                            Icons.edit,
-                            size: 20 * _animation.value,
-                            color: kUIDarkText.withOpacity(0.8),
+                        child: Container(
+                          child: Padding(
+                            padding:
+                                EdgeInsets.only(top: 12 * _animation.value),
+                            child: Icon(
+                              Icons.edit,
+                              size: 20 * _animation.value,
+                              color: kUIDarkText.withOpacity(0.8),
+                            ),
                           ),
                         ),
                       ),
@@ -174,13 +178,23 @@ class _ProductCardState extends State<ProductCard>
                                         widget.product.uId.split("/");
 
                                     if (widget.product.images != null)
-                                      widget.product.images.forEach((element) {
-                                        Reference storageReference =
-                                            FirebaseStorage.instance
-                                                .refFromURL(element.url);
-
-                                        storageReference.delete();
-                                      });
+                                      widget.product.images.forEach((element) =>
+                                          storage
+                                              .ref()
+                                              .child(element.url
+                                                  .replaceAll(
+                                                      RegExp(
+                                                          r'https://firebasestorage.googleapis.com/v0/b/suneelprinters37.appspot.com/o/'),
+                                                      '')
+                                                  .replaceAll(
+                                                      RegExp(r'%2F'), '/')
+                                                  .replaceAll(
+                                                      RegExp(r'(\?alt).*'), '')
+                                                  .replaceAll(
+                                                      RegExp(r'%20'), ' ')
+                                                  .replaceAll(
+                                                      RegExp(r'%3A'), ':'))
+                                              .delete());
 
                                     QuerySnapshot category = await database
                                         .collection("categories")
@@ -221,12 +235,14 @@ class _ProductCardState extends State<ProductCard>
                             ),
                           );
                         },
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 8 * _animation.value),
-                          child: Icon(
-                            Icons.delete,
-                            size: 20 * _animation.value,
-                            color: kUIDarkText.withOpacity(0.8),
+                        child: Container(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 8 * _animation.value),
+                            child: Icon(
+                              Icons.delete,
+                              size: 20 * _animation.value,
+                              color: kUIDarkText.withOpacity(0.8),
+                            ),
                           ),
                         ),
                       )
@@ -243,7 +259,7 @@ class _ProductCardState extends State<ProductCard>
                 "₹ ${widget.product.price}",
                 style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: 20,
+                    fontSize: getHeight(context, 20),
                     fontWeight: FontWeight.bold,
                     fontFamily: "sans-serif-condensed"),
               ),
@@ -253,7 +269,7 @@ class _ProductCardState extends State<ProductCard>
                 style: TextStyle(
                     color: kUIDarkText.withOpacity(0.7),
                     decoration: TextDecoration.lineThrough,
-                    fontSize: 18,
+                    fontSize: getHeight(context, 18),
                     fontWeight: FontWeight.w800,
                     fontFamily: "sans-serif-condensed"),
               ),
@@ -262,12 +278,12 @@ class _ProductCardState extends State<ProductCard>
           Padding(
             padding: EdgeInsets.only(right: 12),
             child: Text(
-              widget.product.name,
+              widget.product.name.replaceAll("", "\u{200B}"),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   color: kUIDarkText,
-                  fontSize: 20,
+                  fontSize: getHeight(context, 20),
                   letterSpacing: 0.3,
                   fontWeight: FontWeight.w800,
                   fontFamily: "sans-serif-condensed"),

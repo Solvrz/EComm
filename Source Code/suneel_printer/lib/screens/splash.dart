@@ -19,9 +19,10 @@ class _SplashScreenState extends State<SplashScreen>
   Animation<Color> holeColor;
 
   void didChangeDependencies() {
-    setState(() {
-      size = MediaQuery.of(context).size;
-    });
+    if (mounted)
+      setState(() {
+        size = MediaQuery.of(context).size;
+      });
     super.didChangeDependencies();
   }
 
@@ -57,13 +58,14 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _controller.addListener(() {
-      setState(() {});
+      if (mounted) setState(() {});
     });
 
     Timer(Duration(seconds: 3), () {
-      setState(() {
-        _controller.forward();
-      });
+      if (mounted)
+        setState(() {
+          _controller.forward();
+        });
     });
   }
 

@@ -2,10 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/models/bag.dart';
-import 'package:suneel_printer/models/payment.dart';
 import 'package:suneel_printer/models/wishlist.dart';
 
-bool staging = true;
+bool testing = true;
+
+FirebaseFirestore database = FirebaseFirestore.instance;
+
+Bag bag = Bag();
+Wishlist wishlist = Wishlist();
+SharedPreferences preferences;
+
+Map selectedInfo;
+List<Map> addresses;
 
 const kUIAccent = Colors.redAccent;
 const kUIColor = Colors.white;
@@ -14,6 +22,9 @@ const kUIDarkText = Color(0xff031715);
 
 double getHeight(BuildContext context, double desiredHeight) =>
     MediaQuery.of(context).size.height * desiredHeight / 816;
+
+double getAspect(BuildContext context, double aspect) =>
+    aspect * 816 / MediaQuery.of(context).size.height;
 
 InputDecoration kInputDialogDecoration = InputDecoration(
   enabledBorder: OutlineInputBorder(
@@ -30,19 +41,11 @@ InputDecoration kInputDialogDecoration = InputDecoration(
   ),
 );
 
-FirebaseFirestore database = FirebaseFirestore.instance;
-
-Bag bag = Bag();
-Wishlist wishlist = Wishlist();
-Payment payment = Payment();
-SharedPreferences preferences;
-
-Map selectedInfo;
-List<Map> addresses;
-
 CircularProgressIndicator indicator = CircularProgressIndicator(
   valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),
 );
+
+List onOrder = ["Printing", "Binding"];
 
 List<Map<String, dynamic>> categories = [
   {
@@ -76,8 +79,6 @@ List<Map<String, dynamic>> categories = [
     "image": "assets/images/Binding.png",
   },
 ];
-
-List onOrder = ["Printing", "Binding"];
 
 extension StringExtension on String {
   String capitalize() {

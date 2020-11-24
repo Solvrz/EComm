@@ -58,26 +58,31 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                   behavior: HitTestBehavior.translucent,
                   onTap: () {
                     if (index == widget._currentTab) return;
-                    setState(() {
-                      widget._currentTab = index;
-                    });
+                    if (mounted)
+                      setState(() {
+                        widget._currentTab = index;
+                      });
                   },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
-                    child: AnimatedDefaultTextStyle(
-                      child: Text(
-                        widget.tabsData[index]["name"].split("\\n").join("\n"),
-                        textAlign: TextAlign.center,
+                  child: Container(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: AnimatedDefaultTextStyle(
+                        child: Text(
+                          widget.tabsData[index]["name"]
+                              .split("\\n")
+                              .join("\n"),
+                          textAlign: TextAlign.center,
+                        ),
+                        duration: Duration(milliseconds: 150),
+                        style: TextStyle(
+                            fontSize: index == widget._currentTab ? 16 : 14,
+                            fontWeight: index == widget._currentTab
+                                ? FontWeight.w600
+                                : FontWeight.normal,
+                            color: index == widget._currentTab
+                                ? kUIDarkText
+                                : Colors.grey[600]),
                       ),
-                      duration: Duration(milliseconds: 150),
-                      style: TextStyle(
-                          fontSize: index == widget._currentTab ? 16 : 14,
-                          fontWeight: index == widget._currentTab
-                              ? FontWeight.w600
-                              : FontWeight.normal,
-                          color: index == widget._currentTab
-                              ? kUIDarkText
-                              : Colors.grey[600]),
                     ),
                   ),
                 );

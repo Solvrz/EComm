@@ -41,26 +41,27 @@ class _OrderProductPageState extends State<OrderProductPage> {
                   color: Colors.grey[200],
                 ),
                 height: getHeight(context, 100),
-                width: MediaQuery.of(context).size.width / 1.5,
+                width: MediaQuery.of(context).size.width / 1.3,
                 child: Padding(
                   padding: EdgeInsets.all(20),
                   child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
                           "Service: ",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 20,
+                            fontSize: getHeight(context, 25),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         DropdownButton(
                           hint: Text(value),
                           onChanged: (val) {
-                            setState(() {
-                              value = val;
-                            });
+                            if (mounted)
+                              setState(() {
+                                value = val;
+                              });
                           },
                           items: List.generate(widget.tabsData.length,
                                   (index) => widget.tabsData[index]["name"])
@@ -70,7 +71,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                   child: Text(
                                     val,
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: getHeight(context, 18),
                                         color: Colors.grey[900],
                                         letterSpacing: 0.2,
                                         fontWeight: FontWeight.bold,
@@ -89,8 +90,8 @@ class _OrderProductPageState extends State<OrderProductPage> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey[200],
                 ),
-                height: getHeight(context, 130),
-                width: MediaQuery.of(context).size.width / 1.5,
+                height: getHeight(context, 200),
+                width: MediaQuery.of(context).size.width / 1.3,
                 child: Padding(
                   padding: EdgeInsets.all(15),
                   child: selectedInfo == null
@@ -108,14 +109,16 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                 ),
                               );
 
-                              setState(() {});
+                              if (mounted) setState(() {});
                             },
-                            child: Text(
-                              "Select Information",
-                              style: TextStyle(
-                                color: kUIDarkText,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                            child: Container(
+                              child: Text(
+                                "Select Information",
+                                style: TextStyle(
+                                  color: kUIDarkText,
+                                  fontSize: getHeight(context, 20),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -133,14 +136,14 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                         "Name: ",
                                         style: TextStyle(
                                           color: kUIDarkText,
-                                          fontSize: 20,
+                                          fontSize: getHeight(context, 20),
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       Text(
                                         "${selectedInfo['name'].toString().capitalize()}",
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: getHeight(context, 18),
                                           color: Colors.grey[900],
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -161,12 +164,14 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                         ),
                                       );
 
-                                      setState(() {});
+                                      if (mounted) setState(() {});
                                     },
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 25,
-                                      color: kUIDarkText.withOpacity(0.8),
+                                    child: Container(
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 25,
+                                        color: kUIDarkText.withOpacity(0.8),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -177,14 +182,14 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     "Phone: ",
                                     style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 20,
+                                      fontSize: getHeight(context, 20),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
                                     "${selectedInfo['phone']}",
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: getHeight(context, 18),
                                       color: Colors.grey[900],
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -197,14 +202,14 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     "Email: ",
                                     style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 20,
+                                      fontSize: getHeight(context, 20),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
                                     "${selectedInfo['email']}",
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: getHeight(context, 18),
                                       color: Colors.grey[900],
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -217,16 +222,17 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                     "Address: ",
                                     style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 20,
+                                      fontSize: getHeight(context, 20),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}",
+                                      "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}"
+                                          .replaceAll("", "\u{200B}"),
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: getHeight(context, 18),
                                         color: Colors.grey[900],
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -252,7 +258,7 @@ class _OrderProductPageState extends State<OrderProductPage> {
                                   "You will soon receive a confirmation mail from us.",
                               process: () async {
                                 await http.post(
-                                  "https://suneel-printers.herokuapp.com/on_order",
+                                  "https://suneel-printers.herokuapp.com/request",
                                   headers: <String, String>{
                                     "Content-Type":
                                         "application/json; charset=UTF-8",
@@ -275,19 +281,21 @@ class _OrderProductPageState extends State<OrderProductPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.check_circle_outline, color: Colors.grey[200]),
-                    SizedBox(width: 8),
-                    Text(
-                      "Place Order",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[200]),
-                    ),
-                  ],
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.check_circle_outline, color: Colors.grey[200]),
+                      SizedBox(width: 8),
+                      Text(
+                        "Place Order",
+                        style: TextStyle(
+                            fontSize: getHeight(context, 16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[200]),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )

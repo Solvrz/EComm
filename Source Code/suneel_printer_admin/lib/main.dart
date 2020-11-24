@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,9 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:suneel_printer_admin/constant.dart';
 import 'package:suneel_printer_admin/screens/export.dart';
 
-void main() async {
+Future<void> backgroundMsg(RemoteMessage message) async {}
+
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   GestureBinding.instance.resamplingEnabled = true;
 
@@ -30,13 +33,16 @@ void main() async {
           .setCrashlyticsCollectionEnabled(false)
           .whenComplete(() {
         FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+        messaging.subscribeToTopic("orders").whenComplete(() {
+          FirebaseMessaging.onBackgroundMessage(backgroundMsg);
 
-        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-            .whenComplete(
-          () => runApp(
-            SuneelPrinter(),
-          ),
-        );
+          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+              .whenComplete(
+            () => runApp(
+              SuneelPrinter(),
+            ),
+          );
+        });
       });
     });
   });
@@ -75,10 +81,10 @@ class SuneelPrinter extends StatelessWidget {
       routes: {
         "/": (BuildContext context) => SplashScreen(),
         "/home": (BuildContext context) => HomeScreen(),
+        "/orders": (BuildContext context) => OrderScreen(),
         "/product": (BuildContext context) => ProductScreen(),
         "/category": (BuildContext context) => CategoryScreen(),
         "/add_product": (BuildContext context) => AddProductScreen(),
-        "/past_orders": (BuildContext context) => PastOrderScreen(),
       },
     );
   }

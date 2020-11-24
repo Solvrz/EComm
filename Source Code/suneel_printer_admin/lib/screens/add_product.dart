@@ -110,33 +110,37 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
             ),
             trailing: [
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: name != "" && price != "" && mrp != ""
-                    ? () async {
-                        _addProduct(context, args.title, args.product,
-                            args.tabs, args.tabsData, args.currentTab);
+              if (name != "" &&
+                  price != "" &&
+                  mrp != "" &&
+                  (variations.isEmpty ||
+                      variations
+                              .where((e) => e.name.trim() == '')
+                              .toList()
+                              .length ==
+                          0))
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    _addProduct(context, args.title, args.product, args.tabs,
+                        args.tabsData, args.currentTab);
 
-                        Navigator.pop(context);
-                      }
-                    : null,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kUIColor),
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: kUIColor),
+                    ),
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.arrow_forward_ios,
+                        color: kUIDarkText, size: 26),
                   ),
-                  padding: EdgeInsets.all(8),
-                  child: Icon(Icons.arrow_forward_ios,
-                      color: name != "" && price != "" && mrp != ""
-                          ? kUIDarkText
-                          : Colors.grey[400],
-                      size: 26),
                 ),
-              ),
             ],
           ),
           body: SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context).size.height * 730 / 816,
+              height: getHeight(context, 730),
               width: MediaQuery.of(context).size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -147,27 +151,30 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(right: 18, bottom: 36),
+                          padding: EdgeInsets.all(12),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
                                 child: TextField(
                                   controller: nameController,
                                   cursorColor: Colors.grey,
+                                  maxLines: 2,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Product Name",
                                     hintStyle: TextStyle(
                                         color: kUIDarkText,
-                                        fontSize: 28,
+                                        fontSize: getHeight(context, 28),
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
-                                  onChanged: (value) =>
-                                      setState(() => name = value),
+                                  onChanged: (value) {
+                                    if (mounted) setState(() => name = value);
+                                  },
                                   style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 28,
+                                      fontSize: getHeight(context, 28),
                                       fontWeight: FontWeight.w600,
                                       fontFamily: "sans-serif-condensed"),
                                 ),
@@ -208,161 +215,84 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
                                   images.addAll(compImages);
                                   imageFiles.addAll(compFiles);
-                                  setState(() {
-                                    _currentImage = 0;
-                                  });
+                                  if (mounted)
+                                    setState(() {
+                                      _currentImage = 0;
+                                    });
                                 },
-                                child: Icon(Icons.add_photo_alternate,
-                                    color: kUIAccent, size: 32),
+                                child: Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(12),
+                                    child: Icon(Icons.add_photo_alternate,
+                                        color: kUIAccent, size: 28),
+                                  ),
+                                ),
                               )
                             ],
                           ),
                         ),
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.3,
+                          height: MediaQuery.of(context).size.height * 0.25,
                           width: MediaQuery.of(context).size.width,
                           child: images.length > 0
-                              ? Stack(
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: GestureDetector(
-                                          behavior: HitTestBehavior.translucent,
-                                          onTap: () async {
-                                            await showDialog(
-                                                context: context,
-                                                builder:
-                                                    (_) => RoundedAlertDialog(
-                                                          title:
-                                                              "Select the image you want to delete",
-                                                          centerTitle: true,
-                                                          widgets: [
-                                                            SingleChildScrollView(
-                                                              child: Container(
-                                                                  height: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .height /
-                                                                      2,
-                                                                  child: Column(
-                                                                    children: List
-                                                                        .generate(
-                                                                      images
-                                                                          .length,
-                                                                      (int index) =>
-                                                                          GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          if (urls.isNotEmpty &&
-                                                                              args.product != null) {
-                                                                            Reference
-                                                                                storageReference =
-                                                                                FirebaseStorage.instance.refFromURL(urls[index]);
-                                                                            storageReference.delete();
-
-                                                                            urls.removeAt(index);
-                                                                          }
-
-                                                                          images
-                                                                              .removeAt(index);
-
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                        child: Container(
-                                                                            padding: EdgeInsets.symmetric(vertical: 8),
-                                                                            margin: EdgeInsets.symmetric(vertical: 8),
-                                                                            height: MediaQuery.of(context).size.height / 8,
-                                                                            decoration: BoxDecoration(
-                                                                              color: Colors.grey[100],
-                                                                              borderRadius: BorderRadius.circular(20),
-                                                                            ),
-                                                                            child: Center(child: images[index])),
-                                                                      ),
-                                                                    ),
-                                                                  )),
-                                                            )
-                                                          ],
-                                                        ));
-                                            setState(() {});
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                right: 18, bottom: 9),
-                                            child: Icon(Icons.delete,
-                                                color: kUIDarkText
-                                                    .withOpacity(0.6)),
-                                          )),
+                                    Container(
+                                      padding: EdgeInsets.all(8),
+                                      child: CarouselSlider(
+                                        items: images
+                                            .map<Widget>((Image image) => image)
+                                            .toList(),
+                                        options: CarouselOptions(
+                                            autoPlay: images.length > 1
+                                                ? true
+                                                : false,
+                                            enlargeCenterPage: true,
+                                            aspectRatio:
+                                                getAspect(context, 2.5),
+                                            onPageChanged: (index, reason) {
+                                              if (mounted)
+                                                setState(() {
+                                                  _currentImage = index;
+                                                });
+                                            }),
+                                      ),
                                     ),
-                                    Column(
+                                    if (images.length > 1)
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.fromLTRB(
-                                                8, 16, 8, 8),
-                                            child: CarouselSlider(
-                                              items: images
-                                                  .map<Widget>(
-                                                      (Image image) => image)
-                                                  .toList(),
-                                              options: CarouselOptions(
-                                                  autoPlay: images.length > 1
-                                                      ? true
-                                                      : false,
-                                                  enlargeCenterPage: true,
-                                                  aspectRatio: 2,
-                                                  onPageChanged:
-                                                      (index, reason) {
-                                                    setState(() {
-                                                      _currentImage = index;
-                                                    });
-                                                  }),
+                                        children: List.generate(
+                                          images.length,
+                                          (int index) => AnimatedContainer(
+                                            duration:
+                                                Duration(milliseconds: 400),
+                                            width:
+                                                _currentImage == index ? 16 : 8,
+                                            height:
+                                                _currentImage == index ? 6 : 8,
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 3),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              color: _currentImage == index
+                                                  ? Color.fromRGBO(0, 0, 0, 0.9)
+                                                  : Color.fromRGBO(
+                                                      0, 0, 0, 0.4),
                                             ),
                                           ),
-                                          if (images.length > 1)
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: List.generate(
-                                                images.length,
-                                                (int index) =>
-                                                    AnimatedContainer(
-                                                  duration: Duration(
-                                                      milliseconds: 400),
-                                                  width: _currentImage == index
-                                                      ? 16
-                                                      : 8,
-                                                  height: _currentImage == index
-                                                      ? 6
-                                                      : 8,
-                                                  margin: EdgeInsets.symmetric(
-                                                      vertical: 10,
-                                                      horizontal: 3),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    color:
-                                                        _currentImage == index
-                                                            ? Color.fromRGBO(
-                                                                0, 0, 0, 0.9)
-                                                            : Color.fromRGBO(
-                                                                0, 0, 0, 0.4),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                        ]),
+                                        ),
+                                      ),
                                   ],
                                 )
                               : Center(
                                   child: Text("No Images Added\nAdd One",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: getHeight(context, 20),
                                         fontWeight: FontWeight.bold,
                                       ))),
                         )
@@ -390,16 +320,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     child: AlertButton(
-                      backgroundColor: kUIColor,
-                      titleColor: kUIAccent,
-                      title: "Add Variation",
-                      onPressed: () => setState(() {
-                        variations.add(
-                          Variation(
-                              name: "", options: [Option(label: "Label")]),
-                        );
-                      }),
-                    ),
+                        backgroundColor: kUIColor,
+                        titleColor: kUIAccent,
+                        title: "Add Variation",
+                        onPressed: () {
+                          if (mounted)
+                            setState(() {
+                              variations.add(
+                                Variation(
+                                    name: "",
+                                    options: [Option(label: "Label")]),
+                              );
+                            });
+                        }),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(18, 20, 18, 0),
@@ -410,7 +343,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             "MRP",
                             style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 22,
+                                fontSize: getHeight(context, 22),
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.2),
                           ),
@@ -426,15 +359,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               hintText: "MRP",
                               hintStyle: TextStyle(
                                   color: kUIDarkText,
-                                  fontSize: 20,
+                                  fontSize: getHeight(context, 20),
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: -0.4),
                             ),
-                            onChanged: (value) => setState(() => mrp = value),
+                            onChanged: (value) {
+                              if (mounted) setState(() => mrp = value);
+                            },
                             cursorColor: Colors.grey,
                             style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 20,
+                                fontSize: getHeight(context, 20),
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: -0.4),
                           ),
@@ -451,7 +386,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             "Actual Price",
                             style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 22,
+                                fontSize: getHeight(context, 22),
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.2),
                           ),
@@ -467,15 +402,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               hintText: "Price",
                               hintStyle: TextStyle(
                                   color: kUIDarkText,
-                                  fontSize: 20,
+                                  fontSize: getHeight(context, 20),
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: -0.4),
                             ),
                             cursorColor: Colors.grey,
-                            onChanged: (value) => setState(() => price = value),
+                            onChanged: (value) {
+                              if (mounted) setState(() => price = value);
+                            },
                             style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 20,
+                                fontSize: getHeight(context, 20),
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: -0.4),
                           ),
@@ -502,9 +439,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
         GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
-            setState(() {
-              variations.remove(variation);
-            });
+            if (mounted)
+              setState(() {
+                variations.remove(variation);
+              });
           },
           child: Container(
             margin: EdgeInsets.only(left: 12),
@@ -531,13 +469,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   hintText: "Name",
                   hintStyle: TextStyle(
                       color: kUIDarkText,
-                      fontSize: 22,
+                      fontSize: getHeight(context, 22),
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.2),
                 ),
                 style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: 22,
+                    fontSize: getHeight(context, 22),
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.2),
               ),
@@ -561,16 +499,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               labelController, variation, index);
                         },
                         onLongPress: () {
-                          setState(() {
-                            variations[variations.indexOf(variation)]
-                                        .options
-                                        .length >
-                                    1
-                                ? variations[variations.indexOf(variation)]
-                                    .options
-                                    .removeAt(index)
-                                : variations.remove(variation);
-                          });
+                          if (mounted)
+                            setState(() {
+                              variations[variations.indexOf(variation)]
+                                          .options
+                                          .length >
+                                      1
+                                  ? variations[variations.indexOf(variation)]
+                                      .options
+                                      .removeAt(index)
+                                  : variations.remove(variation);
+                            });
                         },
                         child: Container(
                           margin: EdgeInsets.fromLTRB(2, 0, 2, 4),
@@ -609,15 +548,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
-                  setState(() {
-                    variations[variations.indexOf(variation)].options.add(
-                          Option(label: "Label"),
-                        );
-                  });
+                  if (mounted)
+                    setState(() {
+                      variations[variations.indexOf(variation)].options.add(
+                            Option(label: "Label"),
+                          );
+                    });
                 },
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Icon(Icons.add),
+                child: Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.add),
+                  ),
                 ),
               )
             ])
@@ -634,25 +576,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
     bool noError = true;
 
     for (File file in imageFiles) {
-      final UploadTask task = FirebaseStorage.instance
-          .ref()
-          .child(
-              "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.pdf")
-          .putFile(file);
+      try {
+        TaskSnapshot task = await storage
+            .ref()
+            .child(
+                "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.jpeg")
+            .putFile(file);
 
-      task.snapshotEvents.listen((TaskSnapshot snapshot) {
-        if (snapshot.state.toString() == "complete")
-          task.then((TaskSnapshot snapshot) async {
-            final String url = await snapshot.ref.getDownloadURL();
+        String url = await task.ref.getDownloadURL();
 
-            urls.add(url);
-            file.delete();
-          }).catchError((Object e) {
-            noError = false;
-          });
-      }, onError: (Object e) {
+        urls.add(url);
+        file.delete();
+      } catch (e) {
         noError = false;
-      });
+      }
     }
 
     if (noError) {
@@ -751,13 +688,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       context: context,
       builder: (_) => WillPopScope(
         onWillPop: () async {
-          setState(() {
-            if (variation.options[index].label != labelController.text &&
-                labelController.text != "") {
-              variations[variations.indexOf(variation)].options[index].label =
-                  labelController.text.trim();
-            }
-          });
+          if (mounted)
+            setState(() {
+              if (variation.options[index].label != labelController.text &&
+                  labelController.text != "") {
+                variations[variations.indexOf(variation)].options[index].label =
+                    labelController.text.trim();
+              }
+            });
           return true;
         },
         child: RoundedAlertDialog(
@@ -799,18 +737,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       child: InkWell(
                         onTap: changeColor,
                         borderRadius: BorderRadius.circular(50),
-                        child: notTrans
-                            ? AnimatedOpacity(
-                                duration: Duration(milliseconds: 210),
-                                opacity: isCurrentColor ? 1 : 0,
-                                child: Icon(
-                                  Icons.done,
-                                  color: useWhiteForeground(color)
-                                      ? kUIColor
-                                      : Colors.black,
-                                ),
-                              )
-                            : Icon(Icons.clear),
+                        child: Container(
+                            child: notTrans
+                                ? AnimatedOpacity(
+                                    duration: Duration(milliseconds: 210),
+                                    opacity: isCurrentColor ? 1 : 0,
+                                    child: Icon(
+                                      Icons.done,
+                                      color: useWhiteForeground(color)
+                                          ? kUIColor
+                                          : Colors.black,
+                                    ),
+                                  )
+                                : Icon(Icons.clear)),
                       ),
                     ),
                   );
@@ -833,14 +772,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 title: "Done",
                 onPressed: () {
                   Navigator.pop(context);
-                  setState(() {
-                    if (variation.options[index].label !=
-                        labelController.text) {
-                      variations[variations.indexOf(variation)]
-                          .options[index]
-                          .label = labelController.text.trim();
-                    }
-                  });
+                  if (mounted)
+                    setState(() {
+                      if (variation.options[index].label !=
+                          labelController.text) {
+                        variations[variations.indexOf(variation)]
+                            .options[index]
+                            .label = labelController.text.trim();
+                      }
+                    });
                 })
           ],
         ),

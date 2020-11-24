@@ -26,7 +26,10 @@ class _ProductScreenState extends State<ProductScreen> {
       variations = List.generate(
         args.product.variations.length,
         (index) => OptionRadioTile(
-          onChanged: (_) {},
+          onChanged: (option) {
+            product.select(args.product.variations[index].name, option);
+            if (mounted) setState(() {});
+          },
           variation: args.product.variations[index],
           currIndex: args.product.variations[index].options
               .indexOf(product.selected[args.product.variations[index].name]),
@@ -41,33 +44,6 @@ class _ProductScreenState extends State<ProductScreen> {
         appBar: CustomAppBar(
           parent: context,
           title: "",
-          trailing: [
-            GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () async {
-                await Navigator.pushNamed(context, "/bag");
-                setState(() {});
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: kUIColor),
-                ),
-                padding: EdgeInsets.all(18),
-                child: Stack(
-                  children: [
-                    Image.asset("assets/images/ShoppingBag.png",
-                        width: 30, height: 30),
-                    Positioned(
-                      left: 11,
-                      top: 10,
-                      child: Text(bag.products.length.toString(),
-                          style: TextStyle(color: kUIDarkText)),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
         ),
         body: Container(
           height: MediaQuery.of(context).size.height,
@@ -108,18 +84,19 @@ class _ProductScreenState extends State<ProductScreen> {
                                       options: CarouselOptions(
                                           autoPlay: product.images.length > 1,
                                           enlargeCenterPage: true,
-                                          aspectRatio: 2.5,
+                                          aspectRatio: getAspect(context, 2.5),
                                           onPageChanged: (index, reason) {
-                                            setState(() {
-                                              _currentImage = index;
-                                            });
+                                            if (mounted)
+                                              setState(() {
+                                                _currentImage = index;
+                                              });
                                           }),
                                     )
                                   : Center(
                                       child: Text(
                                         "No Images Available",
                                         style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: getHeight(context, 20),
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
@@ -157,7 +134,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         ...variations,
-                        if (variations.length > 0)
+                        if (variations.isNotEmpty)
                           Divider(thickness: 2, height: 2),
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -170,7 +147,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   "Price",
                                   style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 22,
+                                      fontSize: getHeight(context, 22),
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: 0.2),
                                 ),
@@ -179,7 +156,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 "₹ ${product.price}",
                                 style: TextStyle(
                                     color: kUIDarkText,
-                                    fontSize: 22,
+                                    fontSize: getHeight(context, 22),
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: -0.4),
                               )
@@ -196,7 +173,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   "MRP",
                                   style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 22,
+                                      fontSize: getHeight(context, 22),
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: 0.2),
                                 ),
@@ -206,7 +183,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 style: TextStyle(
                                     color: kUIDarkText,
                                     decoration: TextDecoration.lineThrough,
-                                    fontSize: 22,
+                                    fontSize: getHeight(context, 22),
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: -0.4),
                               ),
@@ -215,7 +192,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 "Save: ₹ ${double.parse(product.mrp) - double.parse(product.price)}",
                                 style: TextStyle(
                                     color: Colors.orangeAccent,
-                                    fontSize: 22,
+                                    fontSize: getHeight(context, 22),
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: -0.4),
                               )
@@ -258,37 +235,6 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                     ),
                     VerticalDivider(),
-                    // if (bag.containsProduct(product))
-                    //   Column(
-                    //     children: [
-                    //       GestureDetector(
-                    //         behavior: HitTestBehavior.translucent,
-                    //         onTap: () => setState(
-                    //           () => bag.increaseQuantity(product),
-                    //         ),
-                    //         child: Container(
-                    //           padding: EdgeInsets.all(6),
-                    //           decoration: BoxDecoration(
-                    //             color: kUIDarkText,
-                    //             borderRadius: BorderRadius.circular(5),
-                    //           ),
-                    //           child: Icon(Icons.add,
-                    //               size: 26, color: kUILightText),
-                    //         ),
-                    //       ),
-                    //       Text(
-                    //         bag.getQuantity(product).toString(),
-                    //         style: TextStyle(fontSize: 22, color: kUIDarkText),
-                    //       ),
-                    //       GestureDetector(
-                    //         behavior: HitTestBehavior.translucent,
-                    //         onTap: () => setState(
-                    //           () => bag.decreaseQuantity(product),
-                    //         ),
-                    //         child: Icon(Icons.remove, size: 30),
-                    //       ),
-                    //     ],
-                    //   ),
                     Expanded(
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
@@ -298,14 +244,16 @@ class _ProductScreenState extends State<ProductScreen> {
                             ? Colors.grey[600]
                             : kUIAccent.withOpacity(0.9),
                         padding: EdgeInsets.symmetric(vertical: 16),
-                        child: Text(
-                          bag.containsProduct(product)
-                              ? "IN BAG"
-                              : "ADD TO BAG",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: kUIColor,
-                              fontWeight: FontWeight.bold),
+                        child: Container(
+                          child: Text(
+                            bag.containsProduct(product)
+                                ? "IN BAG"
+                                : "ADD TO BAG",
+                            style: TextStyle(
+                                fontSize: getHeight(context, 20),
+                                color: kUIColor,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                         onPressed: () async {
                           if (!bag.containsProduct(product)) {
@@ -320,7 +268,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             await Navigator.pushNamed(context, "/bag");
                           }
 
-                          setState(() {});
+                          if (mounted) setState(() {});
                         },
                       ),
                     ),

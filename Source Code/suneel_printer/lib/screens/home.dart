@@ -28,15 +28,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        FocusScope.of(context).requestFocus(
-          FocusNode(),
-        );
+        FocusScope.of(context).requestFocus(FocusNode());
 
         if (query != "") {
-          setState(() {
-            query = "";
-            controller.clear();
-          });
+          if (mounted)
+            setState(() {
+              query = "";
+              controller.clear();
+            });
           return false;
         } else {
           return showDialog(
@@ -67,43 +66,46 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           backgroundColor: kUIColor,
           resizeToAvoidBottomInset: false,
-          bottomNavigationBar: Container(
-            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 24),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25),
-                topRight: Radius.circular(25),
-              ),
-            ),
-            height: getHeight(context, 62),
-            width: MediaQuery.of(context).size.width,
-            child: Center(
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(Icons.call,
-                    size: getHeight(context, 52), color: kUIAccent),
-                SizedBox(width: 15),
-                Column(
-                  children: [
-                    Text(
-                      "Call or Whatsapp",
-                      style: TextStyle(
-                          fontSize: getHeight(context, 20),
-                          fontWeight: FontWeight.w400),
+          bottomNavigationBar: query == ""
+              ? Container(
+                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: 24),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25),
                     ),
-                    Text(
-                      "1234567890",
-                      style: TextStyle(
-                          fontSize: getHeight(context, 22),
-                          fontWeight: FontWeight.bold,
-                          color: kUIAccent),
-                    ),
-                  ],
-                ),
-              ]),
-            ),
-          ),
+                  ),
+                  height: getHeight(context, 62),
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.call,
+                              size: getHeight(context, 52), color: kUIAccent),
+                          SizedBox(width: 15),
+                          Column(
+                            children: [
+                              Text(
+                                "Call or Whatsapp",
+                                style: TextStyle(
+                                    fontSize: getHeight(context, 20),
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              Text(
+                                "1234567890",
+                                style: TextStyle(
+                                    fontSize: getHeight(context, 22),
+                                    fontWeight: FontWeight.bold,
+                                    color: kUIAccent),
+                              ),
+                            ],
+                          ),
+                        ]),
+                  ),
+                )
+              : null,
           appBar: AppBar(
               elevation: 0,
               backgroundColor: kUIColor,
@@ -116,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         "Deliver To",
                         style: TextStyle(
-                            fontSize: 18,
+                            fontSize: getHeight(context, 18),
                             color: Colors.grey[600],
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.2,
@@ -137,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context: context,
                               builder: (_) => InformationSheet(),
                             );
-                            setState(() {});
+                            if (mounted) setState(() {});
                           },
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
@@ -170,10 +172,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.pushNamed(context, "/past_orders");
                   },
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Image.asset("assets/images/YourOrders.png",
-                        width: 30, height: 30),
+                  child: Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Image.asset("assets/images/YourOrders.png",
+                          width: 30, height: 30),
+                    ),
                   ),
                 ),
                 GestureDetector(
@@ -181,19 +185,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.pushNamed(context, "/bag");
                   },
-                  child: Padding(
-                    padding: EdgeInsets.all(14),
-                    child: Stack(
-                      children: [
-                        Image.asset("assets/images/ShoppingBag.png",
-                            width: 30, height: 30),
-                        Positioned(
-                          left: 11,
-                          top: 10,
-                          child: Text(bag.products.length.toString(),
-                              style: TextStyle(color: kUIDarkText)),
-                        )
-                      ],
+                  child: Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(14),
+                      child: Stack(
+                        children: [
+                          Image.asset("assets/images/ShoppingBag.png",
+                              width: 30, height: 30),
+                          Positioned(
+                            left: 11,
+                            top: 10,
+                            child: Text(bag.products.length.toString(),
+                                style: TextStyle(color: kUIDarkText)),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

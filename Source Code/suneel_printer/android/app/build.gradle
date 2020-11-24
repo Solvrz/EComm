@@ -36,12 +36,11 @@ android {
 
     defaultConfig {
         applicationId 'com.solvrz.suneel_printer'
-        minSdkVersion 18
+        minSdkVersion 20
         targetSdkVersion 29
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        multiDexEnabled true
     }
 
     buildTypes {
@@ -64,7 +63,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:multidex:1.0.3'
     androidTestImplementation 'androidx.test:runner:1.3.0'
-    implementation 'com.paytm.appinvokesdk:appinvokesdk:1.5'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

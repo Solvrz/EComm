@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:suneel_printer/components/home.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/bag.dart';
@@ -19,12 +20,111 @@ class CheckoutSheet extends StatefulWidget {
 }
 
 class _CheckoutSheetState extends State<CheckoutSheet> {
+  Razorpay _razorpay;
+
   static List<String> paymentMethods = [
     "Pay On Delivery",
-    "PayTM, Credit Card, Debit Card & Net Banking"
+    "Wallets, Credit Card, Debit Card & Net Banking"
   ];
 
-  String pod = paymentMethods.first;
+  String paymentMethod = paymentMethods.first;
+
+  void initState() {
+    super.initState();
+
+    _razorpay = Razorpay();
+
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+        (PaymentSuccessResponse response) async {
+      http.Response verification = await http.post(
+        "https://suneel-printers.herokuapp.com/payment_verify",
+        headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: jsonEncode(<String, dynamic>{
+          "payment_id": response.paymentId,
+          "signature": response.signature,
+          "order_id": response.orderId
+        }),
+      );
+
+      if (verification.statusCode == 200) {
+        Map verificationResponse = jsonDecode(verification.body);
+        if (verificationResponse["sucessful"]) {
+          Navigator.popAndPushNamed(
+            context,
+            "/payment",
+            arguments: PaymentArguments(
+                success: true,
+                msg:
+                    "The Payment was Successful, You will soon receive a confirmation mail from us.",
+                process: () async {
+                  await placeOrder();
+                }),
+          );
+        } else {
+          Navigator.popAndPushNamed(
+            context,
+            "/payment",
+            arguments: PaymentArguments(
+                success: false,
+                msg:
+                    "The Payment Failed, If Money was deducted from your account, Please Contact Us",
+                process: () async {}),
+          );
+        }
+      } else {
+        Navigator.popAndPushNamed(
+          context,
+          "/payment",
+          arguments: PaymentArguments(
+              success: false,
+              msg:
+                  "Server Error, If Money was deducted from your account, Please Contact Us",
+              process: () async {}),
+        );
+      }
+    });
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
+        (PaymentFailureResponse response) {
+      Navigator.popAndPushNamed(
+        context,
+        "/payment",
+        arguments: PaymentArguments(
+            success: false, msg: response.message, process: () async {}),
+      );
+    });
+    _razorpay.on(Razorpay.PAYMENT_CANCELLED.toString(), () {
+      Navigator.popAndPushNamed(
+        context,
+        "/payment",
+        arguments: PaymentArguments(
+            success: false,
+            msg: "The Payment was Cancelled",
+            process: () async {}),
+      );
+    });
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
+        (ExternalWalletResponse response) {
+      Navigator.popAndPushNamed(
+        context,
+        "/payment",
+        arguments: PaymentArguments(
+            success: true,
+            msg:
+                "The Payment was Successfully conducted via ${response.walletName.toUpperCase()}, You will soon receive a confirmation mail from us.",
+            process: () async {
+              await placeOrder();
+            }),
+      );
+    });
+  }
+
+  void dispose() {
+    super.dispose();
+
+    _razorpay.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +149,18 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Icon(Icons.close, color: kUIDarkText),
+                    child: Container(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Icon(Icons.close, color: kUIDarkText),
+                      ),
                     ),
                   ),
                   Text(
                     "Check Out",
                     style: TextStyle(
                         color: kUIDarkText,
-                        fontSize: 24,
+                        fontSize: getHeight(context, 24),
                         fontWeight: FontWeight.bold),
                   )
                 ],
@@ -77,14 +179,14 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               "Name: ",
                               style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 20,
+                                fontSize: getHeight(context, 20),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              "${selectedInfo['name'].toString().capitalize()}",
+                              "${selectedInfo["name"].toString().capitalize()}",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: getHeight(context, 18),
                                 color: kUIDarkText,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -106,10 +208,12 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               ),
                             );
                           },
-                          child: Icon(
-                            Icons.edit,
-                            size: 25,
-                            color: kUIDarkText.withOpacity(0.8),
+                          child: Container(
+                            child: Icon(
+                              Icons.edit,
+                              size: getHeight(context, 25),
+                              color: kUIDarkText.withOpacity(0.8),
+                            ),
                           ),
                         ),
                       ],
@@ -120,14 +224,14 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "Phone: ",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 20,
+                            fontSize: getHeight(context, 20),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          "${selectedInfo['phone']}",
+                          "${selectedInfo["phone"]}",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: getHeight(context, 18),
                             color: kUIDarkText,
                             fontWeight: FontWeight.w500,
                           ),
@@ -140,15 +244,15 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "Email: ",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 20,
+                            fontSize: getHeight(context, 20),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          "${selectedInfo['email']}",
+                          "${selectedInfo["email"]}",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 18,
+                            fontSize: getHeight(context, 18),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -160,17 +264,18 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "Address: ",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 20,
+                            fontSize: getHeight(context, 20),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Expanded(
                           child: Text(
-                            "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}",
+                            "${selectedInfo["address"].toString().capitalize()}, ${selectedInfo["pincode"]}"
+                                .replaceAll("", "\u{200B}"),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: kUIDarkText,
-                              fontSize: 18,
+                              fontSize: getHeight(context, 18),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -186,7 +291,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           "Payment Methods",
                           style: TextStyle(
                             color: kUIDarkText,
-                            fontSize: 22,
+                            fontSize: getHeight(context, 22),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -200,15 +305,15 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                     value,
                                     style: TextStyle(
                                       color: kUIDarkText,
-                                      fontSize: 18,
+                                      fontSize: getHeight(context, 18),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   value: value,
-                                  groupValue: pod,
+                                  groupValue: paymentMethod,
                                   onChanged: (_) {
-                                    if (pod != value)
-                                      setState(() => pod = value);
+                                    if (paymentMethod != value) if (mounted)
+                                      setState(() => paymentMethod = value);
                                   },
                                 );
                               },
@@ -223,7 +328,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                 "Total:",
                                 style: TextStyle(
                                   color: kUIDarkText,
-                                  fontSize: 24,
+                                  fontSize: getHeight(context, 24),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -241,7 +346,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                   : widget.price.toStringAsFixed(2),
                               style: TextStyle(
                                 color: kUIDarkText,
-                                fontSize: 24,
+                                fontSize: getHeight(context, 24),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -255,7 +360,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
               ),
               Center(
                 child: MaterialButton(
-                  onPressed: pod == paymentMethods.first
+                  onPressed: paymentMethod == paymentMethods.first
                       ? () async {
                           Navigator.popAndPushNamed(
                             context,
@@ -272,37 +377,73 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       : () async {
                           FocusScope.of(context).unfocus();
 
-                          Map<String, dynamic> status =
-                              await payment.startPayment(
-                                  context,
-                                  selectedInfo["email"],
-                                  selectedInfo["phone"],
-                                  widget.price);
-
-                          Navigator.popAndPushNamed(
-                            context,
-                            "/payment",
-                            arguments: PaymentArguments(
-                                success: status["success"],
-                                msg: status["msg"],
-                                process: () async {
-                                  if (status["success"]) await placeOrder();
-                                }),
+                          http.Response token = await http.post(
+                            "https://suneel-printers.herokuapp.com/payment_create_order",
+                            headers: <String, String>{
+                              "Content-Type": "application/json; charset=UTF-8",
+                            },
+                            body: jsonEncode(<String, dynamic>{
+                              "amount": (widget.price * 100).toInt(),
+                              "order_id":
+                                  "ORDER_${DateTime.now().microsecondsSinceEpoch.toString()}",
+                            }),
                           );
+
+                          if (token.statusCode == 200) {
+                            Map tokenResponse = jsonDecode(token.body);
+
+                            _razorpay.open({
+                              "key": testing
+                                  ? "rzp_test_3XFNUiX9RPskxm"
+                                  : "", // TODO: Put Merchant Key
+                              "order_id": tokenResponse["id"],
+                              "amount": (widget.price * 100),
+                              "name": "Suneel Printers.",
+                              "description": "Order Payment",
+                              "timeout": 120,
+                              "prefill": {
+                                "contact": selectedInfo["phone"],
+                                "email": selectedInfo["email"],
+                              },
+                              "external": {
+                                "wallets": [
+                                  // "paytm", 
+                                  // TODO: Complete Verfication: PayTM
+                                  "phonepe",
+                                  "jiomoney",
+                                  "mobikwik",
+                                  "airtelmoney",
+                                  "payzapp",
+                                  "freecharge",
+                                ]
+                              }
+                            });
+                          } else {
+                            Navigator.popAndPushNamed(
+                              context,
+                              "/payment",
+                              arguments: PaymentArguments(
+                                  success: false,
+                                  msg: "Server Error, Please Try Again later",
+                                  process: () async {}),
+                            );
+                          }
                         },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 36),
                   color: kUIAccent,
-                  child: Text(
-                    pod == paymentMethods.first
-                        ? "Proceed To Buy"
-                        : "Proceed To Pay",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        color: kUILightText),
+                  child: Container(
+                    child: Text(
+                      paymentMethod == paymentMethods.first
+                          ? "Proceed To Buy"
+                          : "Proceed To Pay",
+                      style: TextStyle(
+                          fontSize: getHeight(context, 24),
+                          fontWeight: FontWeight.w600,
+                          color: kUILightText),
+                    ),
                   ),
                 ),
               ),
@@ -314,7 +455,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
   Future placeOrder() async {
     await http.post(
-      "https://suneel-printers.herokuapp.com/order_request",
+      "https://suneel-printers.herokuapp.com/order",
       headers: <String, String>{
         "Content-Type": "application/json; charset=UTF-8",
       },
@@ -323,8 +464,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         "phone": selectedInfo["phone"],
         "address": selectedInfo["address"],
         "email": selectedInfo["email"],
-        "payment_mode":
-            pod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
+        "payment_mode": paymentMethod == paymentMethods.first
+            ? "Pay On Delivery"
+            : "Prepaid",
         "price": widget.price.toString(),
         "product_list": bag.products
             .map<String>((BagItem bagItem) {
@@ -333,13 +475,13 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   ? " (${product.selected.values.map((value) => value.label).toList().join(", ")})"
                   : "";
 
-              return '''
+              return """
                     <tr>
                         <td>${product.name}$variationText</td>
                         <td class="righty">${bagItem.quantity}</td>
                         <td class="righty">${(double.parse(product.price) * bagItem.quantity).toStringAsFixed(2)}</td>
                     </tr>
-                    ''';
+                    """;
             })
             .toList()
             .join("\n"),
@@ -357,8 +499,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         "email": selectedInfo["email"],
         "time": Timestamp.now().toString(),
         "price": widget.price.toString(),
-        "payment_mode":
-            pod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
+        "payment_mode": paymentMethod == paymentMethods.first
+            ? "Pay On Delivery"
+            : "Prepaid",
         "products": bag.products.map((e) {
           return {"product": e.product.toJson(), "quantity": e.quantity};
         }).toList()
@@ -374,7 +517,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
       "pincode": selectedInfo["pincode"],
       "email": selectedInfo["email"],
       "payment_mode":
-          pod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
+          paymentMethod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
       "time": Timestamp.now(),
       "price": widget.price.toString(),
       "status": false,

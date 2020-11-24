@@ -5,7 +5,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar(
       {@required this.parent,
       @required this.title,
-      this.elevation = 1.0,
+      this.elevation = 1,
       this.leading,
       this.trailing = const []});
 
@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget leading;
   final List<Widget> trailing;
 
-  Size get preferredSize => Size.fromHeight(65.0);
+  Size get preferredSize => Size.fromHeight(65);
 
   @override
   Widget build(parent) {
@@ -28,7 +28,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: TextStyle(
           color: kUIDarkText,
-          fontSize: 24,
+          fontSize: getHeight(parent, 24),
           fontWeight: FontWeight.bold,
           fontFamily: "sans-serif-condensed",
         ),

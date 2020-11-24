@@ -28,225 +28,248 @@ class _BagScreenState extends State<BagScreen> {
       price += double.parse(bagItem.product.price) * bagItem.quantity;
     });
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: kUIColor,
-        resizeToAvoidBottomInset: true,
-        appBar: CustomAppBar(
-          parent: context,
-          title: "My Bag",
-          trailing: [
-            GestureDetector(
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushNamed(context, '/home');
+        return false;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: kUIColor,
+          resizeToAvoidBottomInset: true,
+          appBar: CustomAppBar(
+            parent: context,
+            title: "My Bag",
+            leading: GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () => Navigator.pushNamed(context, "/wishlist"),
-              child: Padding(
-                padding: EdgeInsets.all(18),
-                child: Icon(
-                  Icons.favorite_border,
-                  color: kUIDarkText,
-                  size: 28,
+              onTap: () => Navigator.pushNamed(context, '/home'),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: kUIColor),
                 ),
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.arrow_back_ios, color: kUIDarkText, size: 26),
               ),
-            )
-          ],
-        ),
-        bottomNavigationBar: Container(
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25),
-              topRight: Radius.circular(25),
             ),
-          ),
-          height: MediaQuery.of(context).size.height * 0.1,
-          width: MediaQuery.of(context).size.width,
-          child: Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Text(
-                      "₹ ",
-                      style: TextStyle(
-                        color: kUIDarkText,
-                        fontSize: 16,
-                      ),
+            trailing: [
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () => Navigator.pushNamed(context, "/wishlist"),
+                child: Padding(
+                  padding: EdgeInsets.all(18),
+                  child: Container(
+                    child: Icon(
+                      Icons.favorite_border,
+                      color: kUIDarkText,
+                      size: 28,
                     ),
-                    Text(
-                      price - price.toInt() == 0
-                          ? price.toInt().toString()
-                          : price.toStringAsFixed(2),
-                      style: TextStyle(
-                          fontSize: 34,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: -2,
-                          color: kUIDarkText),
-                    ),
-                    SizedBox(width: 12),
-                    Text(
-                      "(${bag.products.length} items)",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[600]),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-              MaterialButton(
-                color: kUIAccent,
-                disabledColor: kUIDarkText.withOpacity(0.5),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.check_circle_outline, color: Colors.grey[200]),
-                    SizedBox(width: 8),
-                    Text(
-                      "Checkout",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[200]),
-                    ),
-                  ],
-                ),
-                onPressed: bag.hasProducts
-                    ? () async {
-                        selectedInfo == null
-                            ? await showModalBottomSheet(
-                                isScrollControlled: true,
-                                isDismissible: false,
-                                enableDrag: false,
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (_) => Padding(
-                                  padding: MediaQuery.of(context).viewInsets,
-                                  child: InformationSheet(popable: false),
-                                ),
-                              )
-                            : await showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (_) => Padding(
-                                  padding: MediaQuery.of(context).viewInsets,
-                                  child: CheckoutSheet(price: price),
-                                ),
-                              );
-                        setState(() {});
-                      }
-                    : null,
               )
             ],
           ),
-        ),
-        body: Column(
-          children: [
-            if (bag.changeLog.isNotEmpty)
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () async {
-                  await showDialog(
-                    context: context,
-                    builder: (_) => WillPopScope(
-                      onWillPop: () async {
-                        setState(
-                          () => bag.changeLog.clear(),
-                        );
-                        return true;
-                      },
-                      child: RoundedAlertDialog(title: "Alerts", widgets: [
-                        Container(
-                          height: getHeight(context, 280),
-                          width: 300,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: bag.changeLog.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Column(
-                                children: [
-                                  Text(
-                                    bag.changeLog[index],
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: kUIDarkText,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: "sans-serif-condensed"),
-                                  ),
-                                  Divider(
-                                    height: 15,
-                                    thickness: 0.8,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                      ]),
-                    ),
-                  );
-                },
-                child: Container(
-                  height: 70,
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.symmetric(horizontal: 8),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
-                      color: Colors.yellow[200]),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          bottomNavigationBar: Container(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+              ),
+            ),
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
                     children: [
                       Text(
-                        "Alerts for items in your bag",
+                        "₹ ",
                         style: TextStyle(
-                            color: kUIDarkText,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "sans-serif-condensed"),
+                          color: kUIDarkText,
+                          fontSize: getHeight(context, 16),
+                        ),
                       ),
                       Text(
-                        "Tap to view",
+                        price - price.toInt() == 0
+                            ? price.toInt().toString()
+                            : price.toStringAsFixed(2),
                         style: TextStyle(
-                            color: Colors.grey[800],
-                            fontFamily: "sans-serif-condensed"),
-                      )
+                            fontSize: getHeight(context, 34),
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -2,
+                            color: kUIDarkText),
+                      ),
+                      SizedBox(width: 12),
+                      Text(
+                        "(${bag.products.length} items)",
+                        style: TextStyle(
+                            fontSize: getHeight(context, 16),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[600]),
+                      ),
                     ],
                   ),
                 ),
-              ),
-            Expanded(
-              child: bag.products.isNotEmpty
-                  ? Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 24),
-                      child: AnimatedList(
-                        shrinkWrap: true,
-                        key: _listKey,
-                        initialItemCount: bag.products.length,
-                        itemBuilder: (BuildContext context, int index,
-                                Animation<double> animation) =>
-                            _buildItem(context, index, animation),
+                MaterialButton(
+                  color: kUIAccent,
+                  disabledColor: kUIDarkText.withOpacity(0.5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.check_circle_outline,
+                            color: Colors.grey[200]),
+                        SizedBox(width: 8),
+                        Text(
+                          "Checkout",
+                          style: TextStyle(
+                              fontSize: getHeight(context, 16),
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[200]),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onPressed: bag.hasProducts
+                      ? () async {
+                          selectedInfo == null
+                              ? await showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  isDismissible: false,
+                                  enableDrag: false,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (_) => Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: InformationSheet(popable: false),
+                                  ),
+                                )
+                              : await showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (_) => Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: CheckoutSheet(price: price),
+                                  ),
+                                );
+                          if (mounted) setState(() {});
+                        }
+                      : null,
+                )
+              ],
+            ),
+          ),
+          body: Column(
+            children: [
+              if (bag.changeLog.isNotEmpty)
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (_) => WillPopScope(
+                        onWillPop: () async {
+                          if (mounted)
+                            setState(
+                              () => bag.changeLog.clear(),
+                            );
+                          return true;
+                        },
+                        child: RoundedAlertDialog(title: "Alerts", widgets: [
+                          Container(
+                            height: getHeight(context, 280),
+                            width: 300,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: bag.changeLog.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Column(
+                                  children: [
+                                    Text(
+                                      bag.changeLog[index],
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: kUIDarkText,
+                                          fontSize: getHeight(context, 16),
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: "sans-serif-condensed"),
+                                    ),
+                                    Divider(
+                                      height: 15,
+                                      thickness: 0.8,
+                                      color: Colors.black,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ]),
                       ),
-                    )
-                  : Center(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width / 1.25,
-                        child: EmptyListWidget(
-                          packageImage: PackageImage.Image_2,
-                          title: "No Items",
-                          subTitle: "Shop and add more items",
+                    );
+                  },
+                  child: Container(
+                    height: 70,
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: Colors.yellow[200]),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Alerts for items in your bag",
+                          style: TextStyle(
+                              color: kUIDarkText,
+                              fontSize: getHeight(context, 20),
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "sans-serif-condensed"),
+                        ),
+                        Text(
+                          "Tap to view",
+                          style: TextStyle(
+                              color: Colors.grey[800],
+                              fontFamily: "sans-serif-condensed"),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              Expanded(
+                child: bag.products.isNotEmpty
+                    ? Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 24),
+                        child: AnimatedList(
+                          shrinkWrap: true,
+                          key: _listKey,
+                          initialItemCount: bag.products.length,
+                          itemBuilder: (BuildContext context, int index,
+                                  Animation<double> animation) =>
+                              _buildItem(context, index, animation),
+                        ),
+                      )
+                    : Center(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 1.25,
+                          child: EmptyListWidget(
+                            packageImage: PackageImage.Image_2,
+                            title: "No Items",
+                            subTitle: "Shop and add more items",
+                          ),
                         ),
                       ),
-                    ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -269,7 +292,7 @@ class _BagScreenState extends State<BagScreen> {
               "/product",
               arguments: ProductArguments(bag.products[index].product),
             );
-            setState(() {});
+            if (mounted) setState(() {});
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8),
@@ -297,14 +320,17 @@ class _BagScreenState extends State<BagScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
-                                product.name,
-                                maxLines: 3,
-                                style: TextStyle(
-                                    color: kUIDarkText,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: -0.4),
+                              Expanded(
+                                child: Text(
+                                  product.name.replaceAll("", "\u{200B}"),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: kUIDarkText,
+                                      fontSize: getHeight(context, 25),
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: -0.4),
+                                ),
                               ),
                               Row(
                                 children: [
@@ -312,19 +338,24 @@ class _BagScreenState extends State<BagScreen> {
                                     "₹ ${product.price}",
                                     style: TextStyle(
                                         color: kUIDarkText,
-                                        fontSize: 20,
+                                        fontSize: getHeight(context, 24),
                                         fontWeight: FontWeight.bold,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
                                   SizedBox(width: 12),
-                                  Text(
-                                    "₹ ${product.mrp}",
-                                    style: TextStyle(
-                                        color: kUIDarkText.withOpacity(0.7),
-                                        decoration: TextDecoration.lineThrough,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w800,
-                                        fontFamily: "sans-serif-condensed"),
+                                  Expanded(
+                                    child: Text(
+                                      "₹ ${product.mrp}"
+                                          .replaceAll("", "\u{200B}"),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: kUIDarkText.withOpacity(0.7),
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          fontSize: getHeight(context, 20),
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: "sans-serif-condensed"),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -357,7 +388,7 @@ class _BagScreenState extends State<BagScreen> {
                                           .label[0]
                                           .toUpperCase(),
                                       style: TextStyle(
-                                          fontSize: 13,
+                                          fontSize: getHeight(context, 13),
                                           fontWeight: FontWeight.w600,
                                           color: kUIDarkText),
                                     )
@@ -378,14 +409,16 @@ class _BagScreenState extends State<BagScreen> {
                         behavior: HitTestBehavior.translucent,
                         onTap: () async {
                           bag.increaseQuantity(product);
-                          setState(() {});
+                          if (mounted) setState(() {});
                         },
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Icon(
-                            Icons.add,
-                            color: kUIColor,
-                            size: 20,
+                        child: Container(
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Icon(
+                              Icons.add,
+                              color: kUIColor,
+                              size: 20,
+                            ),
                           ),
                         ),
                       ),
@@ -393,7 +426,7 @@ class _BagScreenState extends State<BagScreen> {
                         bag.getQuantity(product).toString(),
                         style: TextStyle(
                             color: kUIColor,
-                            fontSize: 18,
+                            fontSize: getHeight(context, 18),
                             fontWeight: FontWeight.w500),
                       ),
                       GestureDetector(
@@ -422,7 +455,7 @@ class _BagScreenState extends State<BagScreen> {
             onTap: () {
               Timer(Duration(milliseconds: 200), () {
                 bag.removeProduct(product);
-                setState(() {});
+                if (mounted) setState(() {});
               });
               _listKey.currentState.removeItem(
                 index,

@@ -18,7 +18,7 @@ class _ProductListState extends State<ProductList> {
     return GridView.count(
       shrinkWrap: true,
       crossAxisCount: 2,
-      childAspectRatio: 0.75,
+      childAspectRatio: getAspect(context, 0.75),
       children: List.generate(
         widget.products.length,
         (index) => ProductCard(product: widget.products[index]),
@@ -39,7 +39,7 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width / 2;
+    final double width = MediaQuery.of(context).size.width / 3;
     final double height = width / 0.8;
 
     return GestureDetector(
@@ -50,7 +50,7 @@ class _ProductCardState extends State<ProductCard> {
           "/product",
           arguments: ProductArguments(widget.product),
         );
-        setState(() {});
+        if (mounted) setState(() {});
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(12, 24, 12, 0),
@@ -72,7 +72,7 @@ class _ProductCardState extends State<ProductCard> {
                     padding: EdgeInsets.fromLTRB(0, 15, 12, 0),
                     child: widget.product.images.length > 0
                         ? Container(
-                            height: height / 1.8,
+                            height: height / getAspect(context, 1.2),
                             decoration: BoxDecoration(boxShadow: [
                               BoxShadow(
                                 color: Colors.grey[600],
@@ -83,7 +83,7 @@ class _ProductCardState extends State<ProductCard> {
                             child: Image(image: widget.product.images[0]),
                           )
                         : Container(
-                            height: height / 1.8,
+                            height: height / getAspect(context, 1.2),
                             child: Center(
                               child: Text("No Image Provided"),
                             ),
@@ -94,18 +94,23 @@ class _ProductCardState extends State<ProductCard> {
                   alignment: Alignment.topRight,
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    onTap: () => setState(
-                      () => wishlist.containsProduct(widget.product)
-                          ? wishlist.removeProduct(widget.product)
-                          : wishlist.addProduct(widget.product),
-                    ),
-                    child: Icon(
-                      wishlist.containsProduct(widget.product)
-                          ? Icons.favorite
-                          : Icons.favorite_outline,
-                      color: wishlist.containsProduct(widget.product)
-                          ? kUIAccent
-                          : kUIDarkText,
+                    onTap: () {
+                      if (mounted)
+                        setState(
+                          () => wishlist.containsProduct(widget.product)
+                              ? wishlist.removeProduct(widget.product)
+                              : wishlist.addProduct(widget.product),
+                        );
+                    },
+                    child: Container(
+                      child: Icon(
+                        wishlist.containsProduct(widget.product)
+                            ? Icons.favorite
+                            : Icons.favorite_outline,
+                        color: wishlist.containsProduct(widget.product)
+                            ? kUIAccent
+                            : kUIDarkText,
+                      ),
                     ),
                   ),
                 )
@@ -124,21 +129,24 @@ class _ProductCardState extends State<ProductCard> {
                     fontFamily: "sans-serif-condensed"),
               ),
               SizedBox(width: 12),
-              Text(
-                "₹ ${widget.product.mrp}",
-                style: TextStyle(
-                    color: kUIDarkText.withOpacity(0.7),
-                    decoration: TextDecoration.lineThrough,
-                    fontSize: getHeight(context, 18),
-                    fontWeight: FontWeight.w800,
-                    fontFamily: "sans-serif-condensed"),
+              Expanded(
+                child: Text(
+                  "₹ ${widget.product.mrp}".replaceAll("", "\u{200B}"),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: kUIDarkText.withOpacity(0.7),
+                      decoration: TextDecoration.lineThrough,
+                      fontSize: getHeight(context, 18),
+                      fontWeight: FontWeight.w800,
+                      fontFamily: "sans-serif-condensed"),
+                ),
               ),
             ],
           ),
           Padding(
             padding: EdgeInsets.only(right: 12),
             child: Text(
-              widget.product.name,
+              widget.product.name.replaceAll("", "\u{200B}"),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(

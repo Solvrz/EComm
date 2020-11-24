@@ -96,10 +96,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(
-                                product.name,
+                                product.name.replaceAll("", "\u{200B}"),
                                 maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 22,
+                                    color: kUIDarkText,
+                                    fontSize: getHeight(context, 23),
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: -0.4),
                               ),
@@ -109,7 +111,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                     "₹ ${product.price}",
                                     style: TextStyle(
                                         color: kUIDarkText,
-                                        fontSize: 20,
+                                        fontSize: getHeight(context, 23),
                                         fontWeight: FontWeight.bold,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
@@ -119,7 +121,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                     style: TextStyle(
                                         color: kUIDarkText.withOpacity(0.7),
                                         decoration: TextDecoration.lineThrough,
-                                        fontSize: 18,
+                                        fontSize: getHeight(context, 20),
                                         fontWeight: FontWeight.w800,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
@@ -142,7 +144,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
             onTap: () {
               Timer(Duration(milliseconds: 200), () {
                 wishlist.removeProduct(product);
-                setState(() {});
+                if (mounted) setState(() {});
               });
 
               _listKey.currentState.removeItem(

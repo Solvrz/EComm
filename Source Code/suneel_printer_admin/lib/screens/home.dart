@@ -2,9 +2,11 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:suneel_printer_admin/components/alert_button.dart';
 import 'package:suneel_printer_admin/components/home.dart';
 import 'package:suneel_printer_admin/components/rounded_alert_dialog.dart';
@@ -26,18 +28,66 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController controller = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+
+    AndroidNotificationChannel channel = AndroidNotificationChannel(
+      "high_importance_channel",
+      "High Importance Notifications",
+      "This channel is used for important notifications.",
+      importance: Importance.max,
+    );
+
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    flutterLocalNotificationsPlugin.initialize(
+        InitializationSettings(
+            android: AndroidInitializationSettings("@mipmap/ic_launcher")),
+        onSelectNotification: (_) async =>
+            await Navigator.pushNamed(context, "/orders"));
+
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+
+      if (notification != null && android != null)
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                  channel.id, channel.name, channel.description,
+                  groupKey: "com.solvrz.suneel_printer_admin"),
+            ));
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      Navigator.pushNamed(
+        context,
+        '/orders',
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        FocusScope.of(context).requestFocus(
-          FocusNode(),
-        );
+        FocusScope.of(context).requestFocus(FocusNode());
 
         if (query != "") {
-          setState(() {
-            query = "";
-            controller.clear();
-          });
+          if (mounted)
+            setState(() {
+              query = "";
+              controller.clear();
+            });
           return false;
         } else {
           return showDialog(
@@ -88,13 +138,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       "Call or Whatsapp",
-                      style:
-                          TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
+                      style: TextStyle(
+                          fontSize: getHeight(context, 20),
+                          fontWeight: FontWeight.w400),
                     ),
                     Text(
                       "1234567890",
                       style: TextStyle(
-                          fontSize: 23,
+                          fontSize: getHeight(context, 24),
                           fontWeight: FontWeight.bold,
                           color: kUIAccent),
                     ),
@@ -135,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 controller: controller,
                                 onChanged: (value) {
-                                  setState(() => query = value);
+                                  if (mounted) setState(() => query = value);
                                 },
                                 style: TextStyle(
                                   color: Colors.grey[800],
@@ -147,16 +198,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               GestureDetector(
                                 behavior: HitTestBehavior.translucent,
                                 onTap: () {
-                                  setState(() {
-                                    FocusScope.of(context).requestFocus(
-                                      FocusNode(),
-                                    );
-                                    query = "";
-                                    controller.clear();
-                                  });
+                                  if (mounted)
+                                    setState(() {
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      query = "";
+                                      controller.clear();
+                                    });
                                 },
-                                child:
-                                    Icon(Icons.clear, color: Colors.grey[600]),
+                                child: Container(
+                                    child: Icon(Icons.clear,
+                                        color: Colors.grey[600])),
                               )
                           ]),
                         ),
@@ -165,12 +217,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
-                          Navigator.pushNamed(context, "/past_orders");
+                          Navigator.pushNamed(context, "/orders");
                         },
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Image.asset("assets/images/YourOrders.png",
-                              width: 30, height: 30),
+                        child: Container(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Image.asset("assets/images/YourOrders.png",
+                                width: 30, height: 30),
+                          ),
                         ),
                       )
                     ],
@@ -203,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ? GridView.count(
                                     shrinkWrap: true,
                                     crossAxisCount: 2,
-                                    childAspectRatio: 0.725,
+                                    childAspectRatio: getAspect(context, 0.725),
                                     children: List.generate(
                                       products.length,
                                       (index) =>
@@ -267,11 +321,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 autoPlay:
                                     carouselImages.length > 1 ? true : false,
                                 enlargeCenterPage: true,
-                                aspectRatio: 2,
+                                aspectRatio: getAspect(context, 2),
                                 onPageChanged: (index, reason) {
-                                  setState(() {
-                                    _current = index;
-                                  });
+                                  if (mounted)
+                                    setState(() {
+                                      _current = index;
+                                    });
                                 }),
                           ),
                           SizedBox(height: 12),
@@ -303,79 +358,88 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text(
                                     "Categories",
                                     style: TextStyle(
-                                        fontSize: 32,
+                                        fontSize: getHeight(context, 32),
                                         letterSpacing: 0.2,
                                         fontWeight: FontWeight.bold,
                                         color: kUIDarkText),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(top: 22),
-                                    child: GridView.count(
-                                      shrinkWrap: true,
-                                      crossAxisCount: 3,
-                                      mainAxisSpacing: 12,
-                                      crossAxisSpacing: 12,
-                                      childAspectRatio: 0.98,
-                                      children: List.generate(categories.length,
-                                          (int index) {
-                                        Map<String, dynamic> data =
-                                            categories[index];
-                                        return GestureDetector(
-                                          behavior: HitTestBehavior.translucent,
-                                          onTap: onOrder.contains(data["name"])
-                                              ? () {
-                                                  Scaffold.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      elevation: 10,
-                                                      backgroundColor:
-                                                          kUIAccent,
-                                                      content: Text(
-                                                        "Sorry, ${data["name"]} screen is not available in Admin Mode",
-                                                        textAlign:
-                                                            TextAlign.center,
+                                    child: Container(
+                                      height: getHeight(context, 290),
+                                      child: GridView.count(
+                                        shrinkWrap: true,
+                                        crossAxisCount: 3,
+                                        mainAxisSpacing: getHeight(context, 12),
+                                        crossAxisSpacing: 12,
+                                        childAspectRatio:
+                                            getAspect(context, 0.9),
+                                        children: List.generate(
+                                            categories.length, (int index) {
+                                          Map<String, dynamic> data =
+                                              categories[index];
+                                          return GestureDetector(
+                                            behavior:
+                                                HitTestBehavior.translucent,
+                                            onTap: onOrder
+                                                    .contains(data["name"])
+                                                ? () {
+                                                    Scaffold.of(context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        elevation: 10,
+                                                        backgroundColor:
+                                                            kUIAccent,
+                                                        content: Text(
+                                                          "Sorry, ${data["name"]} screen is not available in Admin Mode",
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                : () => Navigator.pushNamed(
+                                                      context,
+                                                      "/category",
+                                                      arguments:
+                                                          CategoryArguments(
+                                                        data,
+                                                        data["uId"],
                                                       ),
                                                     ),
-                                                  );
-                                                }
-                                              : () => Navigator.pushNamed(
-                                                    context,
-                                                    "/category",
-                                                    arguments:
-                                                        CategoryArguments(
-                                                      data,
-                                                      data["uId"],
+                                            child: Container(
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: Color(0xffFFEBEB),
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(data["image"],
+                                                      height: 50, width: 50),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    data["name"],
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: getHeight(
+                                                          context, 14),
+                                                      fontFamily:
+                                                          "sans-serif-condensed",
+                                                      color: kUIDarkText,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                     ),
                                                   ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Color(0xffFFEBEB),
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
+                                                ],
+                                              ),
                                             ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Image.asset(data["image"],
-                                                    height: 50, width: 50),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  data["name"],
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily:
-                                                        "sans-serif-condensed",
-                                                    color: kUIDarkText,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }),
+                                          );
+                                        }),
+                                      ),
                                     ),
                                   ),
                                 ]),

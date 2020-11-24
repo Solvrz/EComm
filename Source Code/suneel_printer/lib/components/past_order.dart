@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
-import 'package:suneel_printer/screens/product.dart';
 
 class InfoWidget extends StatelessWidget {
   final Map order;
@@ -11,6 +10,21 @@ class InfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String timestamp = DateTime.fromMicrosecondsSinceEpoch(int.parse(
+                    order['time']
+                        .split("(")[1]
+                        .split("=")[1]
+                        .split(",")[0]
+                        .toString()) *
+                1000000 +
+            int.parse(order['time']
+                    .split("(")[1]
+                    .split("=")[2]
+                    .split(")")[0]
+                    .toString()) ~/
+                1000)
+        .toString();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -21,16 +35,17 @@ class InfoWidget extends StatelessWidget {
               "Name: ",
               style: TextStyle(
                 color: kUIDarkText,
-                fontSize: 20,
+                fontSize: getHeight(context, 20),
                 fontWeight: FontWeight.bold,
               ),
             ),
             Expanded(
               child: Text(
-                "${order['name'].toString().capitalize()}",
+                "${order['name'].toString().capitalize()}"
+                    .replaceAll("", "\u{200B}"),
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: getHeight(context, 18),
                   color: kUIDarkText,
                   fontWeight: FontWeight.w500,
                 ),
@@ -42,16 +57,62 @@ class InfoWidget extends StatelessWidget {
                   "Date: ",
                   style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: 20,
+                    fontSize: getHeight(context, 20),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  "${DateTime.fromMicrosecondsSinceEpoch(int.parse(order['time'].split("(")[1].split("=")[1].split(",")[0].toString()) * 1000000 + int.parse(order['time'].split("(")[1].split("=")[2].split(")")[0].toString()) ~/ 1000).toString().split(" ")[0].split("-").reversed.join("-")}",
+                  "${timestamp.split(" ")[0].split("-").reversed.join("-")}"
+                      .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: kUIDarkText,
-                    fontSize: 18,
+                    fontSize: getHeight(context, 18),
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Phone: ",
+              style: TextStyle(
+                color: kUIDarkText,
+                fontSize: getHeight(context, 20),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                "${order['phone']}",
+                style: TextStyle(
+                  fontSize: getHeight(context, 18),
+                  color: kUIDarkText,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  "Time: ",
+                  style: TextStyle(
+                    color: kUIDarkText,
+                    fontSize: getHeight(context, 20),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "${timestamp.split(" ")[1].split(".")[0].split(":")[0]}:${timestamp.split(" ")[1].split(".")[0].split(":")[1]}"
+                      .replaceAll("", "\u{200B}"),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: kUIDarkText,
+                    fontSize: getHeight(context, 18),
                     fontWeight: FontWeight.w500,
                   ),
                 )
@@ -62,30 +123,10 @@ class InfoWidget extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Phone: ",
-              style: TextStyle(
-                color: kUIDarkText,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "${order['phone']}",
-              style: TextStyle(
-                fontSize: 18,
-                color: kUIDarkText,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Text(
               "Email: ",
               style: TextStyle(
                 color: kUIDarkText,
-                fontSize: 20,
+                fontSize: getHeight(context, 20),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -93,7 +134,7 @@ class InfoWidget extends StatelessWidget {
               "${order['email']}",
               style: TextStyle(
                 color: kUIDarkText,
-                fontSize: 18,
+                fontSize: getHeight(context, 18),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -106,18 +147,19 @@ class InfoWidget extends StatelessWidget {
               "Address: ",
               style: TextStyle(
                 color: kUIDarkText,
-                fontSize: 20,
+                fontSize: getHeight(context, 20),
                 fontWeight: FontWeight.bold,
               ),
             ),
             Expanded(
               child: Text(
-                "${order['address'].toString().capitalize()}, ${order['pincode']}",
+                "${order['address'].toString().capitalize()}, ${order['pincode']}"
+                    .replaceAll("", "\u{200B}"),
                 overflow: overflow ? null : TextOverflow.ellipsis,
                 maxLines: overflow ? 3 : 1,
                 style: TextStyle(
                   color: kUIDarkText,
-                  fontSize: 18,
+                  fontSize: getHeight(context, 18),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -131,17 +173,19 @@ class InfoWidget extends StatelessWidget {
               "Payment Mode: ",
               style: TextStyle(
                 color: kUIDarkText,
-                fontSize: 20,
+                fontSize: getHeight(context, 20),
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              "${order['payment_mode']}",
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: kUIDarkText,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Text(
+                "${order['payment_mode']}".replaceAll("", "\u{200B}"),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: kUIDarkText,
+                  fontSize: getHeight(context, 18),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],
@@ -152,17 +196,19 @@ class InfoWidget extends StatelessWidget {
               "Total Price: ",
               style: TextStyle(
                 color: kUIDarkText,
-                fontSize: 20,
+                fontSize: getHeight(context, 20),
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              "₹ ${order['price']}",
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: kUIDarkText,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Text(
+                "₹ ${order['price']}".replaceAll("", "\u{200B}"),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: kUIDarkText,
+                  fontSize: getHeight(context, 18),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],
@@ -173,17 +219,19 @@ class InfoWidget extends StatelessWidget {
               "Total Items: ",
               style: TextStyle(
                 color: kUIDarkText,
-                fontSize: 20,
+                fontSize: getHeight(context, 20),
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              "${order["products"].length} items",
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: kUIDarkText,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Text(
+                "${order["products"].length} items".replaceAll("", "\u{200B}"),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: kUIDarkText,
+                  fontSize: getHeight(context, 18),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],
@@ -219,7 +267,7 @@ class PastOrderSheet extends StatelessWidget {
               "Order Summary",
               style: TextStyle(
                 color: kUIDarkText,
-                fontSize: 32,
+                fontSize: getHeight(context, 32),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -250,16 +298,9 @@ class PastOrderSheet extends StatelessWidget {
                                   horizontal: 24, vertical: 18),
                               child: Row(
                                 children: [
-                                  GestureDetector(
-                                    onTap: () => Navigator.pushNamed(
-                                      context,
-                                      "/product",
-                                      arguments: ProductArguments(product),
-                                    ),
-                                    child: product.images.length > 0
-                                        ? Image(image: product.images[0])
-                                        : Text("No Image Provided"),
-                                  ),
+                                  product.images.length > 0
+                                      ? Image(image: product.images[0])
+                                      : Text("No Image"),
                                   SizedBox(width: 24),
                                   Expanded(
                                     child: Column(
@@ -272,7 +313,7 @@ class PastOrderSheet extends StatelessWidget {
                                           "${product.name} × ${order["products"][index]["quantity"]}",
                                           maxLines: 3,
                                           style: TextStyle(
-                                              fontSize: 22,
+                                              fontSize: getHeight(context, 22),
                                               fontWeight: FontWeight.w500,
                                               fontFamily:
                                                   "sans-serif-condensed",
@@ -284,7 +325,8 @@ class PastOrderSheet extends StatelessWidget {
                                               "₹ ${product.price}",
                                               style: TextStyle(
                                                   color: kUIDarkText,
-                                                  fontSize: 20,
+                                                  fontSize:
+                                                      getHeight(context, 20),
                                                   fontWeight: FontWeight.bold,
                                                   fontFamily:
                                                       "sans-serif-condensed"),
@@ -297,7 +339,8 @@ class PastOrderSheet extends StatelessWidget {
                                                       .withOpacity(0.7),
                                                   decoration: TextDecoration
                                                       .lineThrough,
-                                                  fontSize: 18,
+                                                  fontSize:
+                                                      getHeight(context, 18),
                                                   fontWeight: FontWeight.w800,
                                                   fontFamily:
                                                       "sans-serif-condensed"),
@@ -305,6 +348,36 @@ class PastOrderSheet extends StatelessWidget {
                                           ],
                                         ),
                                       ],
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: List.generate(
+                                      product.selected.length,
+                                      (index) => CircleAvatar(
+                                        radius: 12,
+                                        backgroundColor: product.selected.values
+                                                .toList()[index]
+                                                .color ??
+                                            Colors.grey[400],
+                                        child: product.selected.values
+                                                    .toList()[index]
+                                                    .color ==
+                                                null
+                                            ? Text(
+                                                product.selected.values
+                                                    .toList()[index]
+                                                    .label[0]
+                                                    .toUpperCase(),
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        getHeight(context, 13),
+                                                    fontWeight: FontWeight.w600,
+                                                    color: kUIDarkText),
+                                              )
+                                            : null,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -321,7 +394,7 @@ class PastOrderSheet extends StatelessWidget {
               "Delivery Information:",
               style: TextStyle(
                 color: kUIDarkText,
-                fontSize: 26,
+                fontSize: getHeight(context, 26),
                 fontWeight: FontWeight.bold,
               ),
             ),

@@ -42,38 +42,39 @@ class PastOrderScreen extends StatelessWidget {
                                 ),
                               );
                             },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Container(
-                                margin: EdgeInsets.symmetric(vertical: 8),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.grey[200]),
-                                child: Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Column(children: [
-                                    InfoWidget(
-                                      order: jsonDecode(orders[index]),
-                                    ),
-                                    Center(
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            "Tap for More Details",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              color: kUIDarkText,
-                                              fontSize: 18,
-                                              fontFamily:
-                                                  "sans-serif-condensed",
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          Icon(Icons.keyboard_arrow_down)
-                                        ],
+                            child: Container(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(vertical: 8),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.grey[200]),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Column(children: [
+                                      InfoWidget(
+                                        order: jsonDecode(orders[index]),
                                       ),
-                                    ),
-                                  ]),
+                                      Center(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "Tap for More Details",
+                                              style: TextStyle(
+                                                color: kUIDarkText,
+                                                fontSize: getHeight(context, 18),
+                                                fontFamily:
+                                                    "sans-serif-condensed",
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Icon(Icons.keyboard_arrow_down)
+                                          ],
+                                        ),
+                                      ),
+                                    ]),
+                                  ),
                                 ),
                               ),
                             ),
