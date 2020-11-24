@@ -5,6 +5,7 @@ import 'package:suneel_printer/models/bag.dart';
 import 'package:suneel_printer/models/wishlist.dart';
 
 bool testing = true;
+String contact = "1234567890";
 
 FirebaseFirestore database = FirebaseFirestore.instance;
 

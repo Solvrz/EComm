@@ -12,6 +12,7 @@ import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/category.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -67,42 +68,52 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: kUIColor,
           resizeToAvoidBottomInset: false,
           bottomNavigationBar: query == ""
-              ? Container(
-                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: 24),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      topRight: Radius.circular(25),
+              ? GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () async {
+                    if (await canLaunch("tel://$contact"))
+                      launch("tel://$contact");
+
+                    // if (await canLaunch("whatsapp://send?phone=$contact"))
+                    //   launch("whatsapp://send?phone=$contact");
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 24),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25),
+                      ),
                     ),
-                  ),
-                  height: getHeight(context, 62),
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.call,
-                              size: getHeight(context, 52), color: kUIAccent),
-                          SizedBox(width: 15),
-                          Column(
-                            children: [
-                              Text(
-                                "Call or Whatsapp",
-                                style: TextStyle(
-                                    fontSize: getHeight(context, 20),
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              Text(
-                                "1234567890",
-                                style: TextStyle(
-                                    fontSize: getHeight(context, 22),
-                                    fontWeight: FontWeight.bold,
-                                    color: kUIAccent),
-                              ),
-                            ],
-                          ),
-                        ]),
+                    height: getHeight(context, 62),
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.call,
+                                size: getHeight(context, 52), color: kUIAccent),
+                            SizedBox(width: 15),
+                            Column(
+                              children: [
+                                Text(
+                                  "Call or Whatsapp",
+                                  style: TextStyle(
+                                      fontSize: getHeight(context, 20),
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                Text(
+                                  "$contact",
+                                  style: TextStyle(
+                                      fontSize: getHeight(context, 22),
+                                      fontWeight: FontWeight.bold,
+                                      color: kUIAccent),
+                                ),
+                              ],
+                            ),
+                          ]),
+                    ),
                   ),
                 )
               : null,
@@ -119,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         "Deliver To",
                         style: TextStyle(
                             fontSize: getHeight(context, 18),
-                            color: Colors.grey[600],
+                            color: kUIAccent.withOpacity(0.8),
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.2,
                             fontFamily: "sans-serif-condensed"),
@@ -128,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       children: [
                         Icon(Icons.location_on_outlined,
-                            color: kUIDarkText, size: 20),
+                            color: kUIAccent.withOpacity(0.6), size: 20),
                         SizedBox(width: 2),
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
@@ -153,9 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: selectedInfo != null
-                                      ? kUIDarkText
-                                      : kUIAccent.withOpacity(0.8),
+                                  color: kUIDarkText.withOpacity(0.8),
                                   letterSpacing: 0.2,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: "sans-serif-condensed"),

@@ -385,11 +385,11 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                 if (await validateFields() == false) {
                   return;
                 } else {
-                  String name = controllers["name"].text;
-                  String phone = controllers["phone"].text;
-                  String address = controllers["address"].text;
-                  String email = controllers["email"].text;
-                  String pincode = controllers["pincode"].text;
+                  String name = controllers["name"].text.trim();
+                  String phone = controllers["phone"].text.trim();
+                  String address = controllers["address"].text.trim();
+                  String email = controllers["email"].text.trim();
+                  String pincode = controllers["pincode"].text.trim();
 
                   if (widget.edit) {
                     int index = widget.addresses.indexOf(widget.data);
@@ -451,13 +451,13 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
   }
 
   Future<bool> validateFields() async {
-    String name = controllers["name"].text;
-    String phone = controllers["phone"].text;
-    String address = controllers["address"].text;
-    String email = controllers["email"].text;
-    String pincode = controllers["pincode"].text;
+    String name = controllers["name"].text.trim();
+    String phone = controllers["phone"].text.trim();
+    String address = controllers["address"].text.trim();
+    String email = controllers["email"].text.trim();
+    String pincode = controllers["pincode"].text.trim();
 
-    if (name.trim() == "")
+    if (name == "")
       error["name"] = true;
     else
       error["name"] = false;
@@ -467,7 +467,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
     else
       error["phone"] = false;
 
-    if (address.trim() == "")
+    if (address == "")
       error["address"] = true;
     else
       error["address"] = false;
@@ -480,7 +480,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
     http.Response result =
         await http.get("https://api.postalpincode.in/pincode/$pincode");
 
-    if (jsonDecode(result.body)[0]["Status"] == "Error" || pincode.trim() == "")
+    if (jsonDecode(result.body)[0]["Status"] == "Error" || pincode == "")
       error["pincode"] = true;
     else
       error["pincode"] = false;

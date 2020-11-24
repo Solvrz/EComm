@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   firebase_core: ^0.5.2
   cloud_firestore: ^0.14.3
   firebase_crashlytics: ^0.2.3
@@ -21,6 +20,7 @@ dependencies:
   flutter_slidable: ^0.5.7
   carousel_slider: ^2.3.1
   flare_flutter: ^2.0.6
+  url_launcher: ^5.7.10
   empty_widget: ^0.0.1
   http: ^0.12.2
 
