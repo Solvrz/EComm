@@ -203,7 +203,7 @@ class _InformationSheetState extends State<InformationSheet> {
                       ),
                     ),
                   ),
-                  GestureDetector(
+                  InkWell(
                     behavior: HitTestBehavior.translucent,
                     onTap: () async {
                       await showModalBottomSheet(
@@ -263,6 +263,7 @@ class AddInformationSheet extends StatefulWidget {
 }
 
 class _AddInformationSheetState extends State<AddInformationSheet> {
+  bool added = false;
   Map<String, Map> fields = {
     "name": {
       "title": "Name",
@@ -390,9 +391,9 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                     SizedBox(height: 12),
                   ]);
             }),
-            GestureDetector(
+            InkWell(
               behavior: HitTestBehavior.translucent,
-              onTap: () async {
+              onTap: added ? (){}: () async {
                 if (await validateFields() == false) {
                   return;
                 } else {
