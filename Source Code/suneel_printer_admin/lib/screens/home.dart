@@ -349,6 +349,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .contains(data["name"])
                                                 ? () {
                                                     Scaffold.of(context)
+                                                        .removeCurrentSnackBar();
+                                                    Scaffold.of(context)
                                                         .showSnackBar(
                                                       SnackBar(
                                                         elevation: 10,

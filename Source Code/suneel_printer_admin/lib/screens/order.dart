@@ -48,7 +48,7 @@ class OrderScreen extends StatelessWidget {
                     });
 
                     return Container(
-                      height: MediaQuery.of(context).size.height - 95,
+                      height: MediaQuery.of(context).size.height - 100,
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
@@ -168,7 +168,7 @@ class OrderScreen extends StatelessWidget {
             ],
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 8),
-              height: MediaQuery.of(context).size.height / 2.95,
+              height: MediaQuery.of(context).size.height / 2.8,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.grey[200]),

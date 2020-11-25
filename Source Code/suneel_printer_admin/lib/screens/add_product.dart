@@ -110,67 +110,78 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
             ),
             trailing: [
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: name == ""
-                    ? () {
-                        Scaffold.of(context).removeCurrentSnackBar();
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            elevation: 10,
-                            backgroundColor: kUIAccent,
-                            content: Text(
-                              "Name can't be Empty",
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        );
-                      }
-                    : price == ""
-                        ? () {
-                            Scaffold.of(context).removeCurrentSnackBar();
-                            Scaffold.of(context).showSnackBar(
-                              SnackBar(
-                                elevation: 10,
-                                backgroundColor: kUIAccent,
-                                content: Text(
-                                  "Actual Price can't be Empty",
-                                  textAlign: TextAlign.center,
-                                ),
+              Builder(
+                builder: (context) => GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: name == ""
+                      ? () {
+                          Scaffold.of(context).removeCurrentSnackBar();
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              elevation: 10,
+                              backgroundColor: kUIAccent,
+                              content: Text(
+                                "Name can't be Empty",
+                                textAlign: TextAlign.center,
                               ),
-                            );
-                          }
-                        : mrp == ""
-                            ? () {
-                                Scaffold.of(context).removeCurrentSnackBar();
-                                Scaffold.of(context).showSnackBar(
-                                  SnackBar(
-                                    elevation: 10,
-                                    backgroundColor: kUIAccent,
-                                    content: Text(
-                                      "MRP can't be Empty",
-                                      textAlign: TextAlign.center,
-                                    ),
+                            ),
+                          );
+                        }
+                      : price == ""
+                          ? () {
+                              Scaffold.of(context).removeCurrentSnackBar();
+                              Scaffold.of(context).showSnackBar(
+                                SnackBar(
+                                  elevation: 10,
+                                  backgroundColor: kUIAccent,
+                                  content: Text(
+                                    "Actual Price can't be Empty",
+                                    textAlign: TextAlign.center,
                                   ),
-                                );
-                              }
-                            : () {
-                                _addProduct(context, args.title, args.product,
-                                    args.tabs, args.tabsData, args.currentTab);
+                                ),
+                              );
+                            }
+                          : mrp == ""
+                              ? () {
+                                  Scaffold.of(context).removeCurrentSnackBar();
+                                  Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                      elevation: 10,
+                                      backgroundColor: kUIAccent,
+                                      content: Text(
+                                        "MRP can't be Empty",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              : () {
+                                  _addProduct(
+                                      context,
+                                      args.title,
+                                      args.product,
+                                      args.tabs,
+                                      args.tabsData,
+                                      args.currentTab);
 
-                                Navigator.pop(context);
-                              },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kUIColor),
-                  ),
-                  padding: EdgeInsets.all(8),
-                  child: Text(
-                    "Post",
-                    style: TextStyle(
-                      color: kUIAccent,
-                      fontSize: getHeight(context, 20),
-                      fontWeight: FontWeight.bold,
+                                  Navigator.pop(context);
+                                },
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: kUIColor),
+                        ),
+                        child: Text(
+                          "Post",
+                          style: TextStyle(
+                            color: kUIAccent,
+                            fontSize: getHeight(context, 20),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -203,7 +214,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     border: InputBorder.none,
                                     hintText: "Product Name",
                                     hintStyle: TextStyle(
-                                        color: kUIDarkText,
+                                        color: kUIDarkText.withOpacity(0.7),
                                         fontSize: getHeight(context, 28),
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "sans-serif-condensed"),
@@ -261,9 +272,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 },
                                 child: Container(
                                   child: Padding(
-                                    padding: EdgeInsets.all(12),
+                                    padding: EdgeInsets.all(8),
                                     child: Icon(Icons.add_photo_alternate,
-                                        color: kUIAccent, size: 28),
+                                        color: kUIAccent, size: 34),
                                   ),
                                 ),
                               )
@@ -400,7 +411,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               prefixText: "₹ ",
                               hintText: "MRP",
                               hintStyle: TextStyle(
-                                  color: kUIDarkText,
+                                  color: kUIDarkText.withOpacity(0.7),
                                   fontSize: getHeight(context, 20),
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: -0.4),
@@ -443,7 +454,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               prefixText: "₹ ",
                               hintText: "Price",
                               hintStyle: TextStyle(
-                                  color: kUIDarkText,
+                                  color: kUIDarkText.withOpacity(0.7),
                                   fontSize: getHeight(context, 20),
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: -0.4),
@@ -510,7 +521,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   border: InputBorder.none,
                   hintText: "Name",
                   hintStyle: TextStyle(
-                      color: kUIDarkText,
+                      color: kUIDarkText.withOpacity(0.7),
                       fontSize: getHeight(context, 22),
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.2),
@@ -556,7 +567,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         child: Container(
                           margin: EdgeInsets.fromLTRB(2, 0, 2, 4),
                           width: 32,
-                          height: 32,
+                          height: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: 0 == index
