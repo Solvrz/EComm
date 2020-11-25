@@ -110,32 +110,71 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
             ),
             trailing: [
-              if (name != "" &&
-                  price != "" &&
-                  mrp != "" &&
-                  (variations.isEmpty ||
-                      variations
-                              .where((e) => e.name.trim() == '')
-                              .toList()
-                              .length ==
-                          0))
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () {
-                    _addProduct(context, args.title, args.product, args.tabs,
-                        args.tabsData, args.currentTab);
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: name == ""
+                    ? () {
+                        Scaffold.of(context).removeCurrentSnackBar();
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            elevation: 10,
+                            backgroundColor: kUIAccent,
+                            content: Text(
+                              "Name can't be Empty",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      }
+                    : price == ""
+                        ? () {
+                            Scaffold.of(context).removeCurrentSnackBar();
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 10,
+                                backgroundColor: kUIAccent,
+                                content: Text(
+                                  "Actual Price can't be Empty",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          }
+                        : mrp == ""
+                            ? () {
+                                Scaffold.of(context).removeCurrentSnackBar();
+                                Scaffold.of(context).showSnackBar(
+                                  SnackBar(
+                                    elevation: 10,
+                                    backgroundColor: kUIAccent,
+                                    content: Text(
+                                      "MRP can't be Empty",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              }
+                            : () {
+                                _addProduct(context, args.title, args.product,
+                                    args.tabs, args.tabsData, args.currentTab);
 
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: kUIColor),
+                                Navigator.pop(context);
+                              },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: kUIColor),
+                  ),
+                  padding: EdgeInsets.all(8),
+                  child: Text(
+                    "Post",
+                    style: TextStyle(
+                      color: kUIAccent,
+                      fontSize: getHeight(context, 20),
+                      fontWeight: FontWeight.bold,
                     ),
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.arrow_forward_ios,
-                        color: kUIDarkText, size: 26),
                   ),
                 ),
+              ),
             ],
           ),
           body: SingleChildScrollView(
@@ -289,12 +328,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   ],
                                 )
                               : Center(
-                                  child: Text("No Images Added\nAdd One",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: getHeight(context, 20),
-                                        fontWeight: FontWeight.bold,
-                                      ))),
+                                  child: Text(
+                                    "No Images Added\nAdd One",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: getHeight(context, 20),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                         )
                       ],
                     ),
