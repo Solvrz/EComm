@@ -9,6 +9,7 @@ class Wishlist {
   List<Product> get products => _products;
 
   bool get hasProducts => _products.length > 0;
+
   bool get hasNoProducts => !(_products.length > 0);
 
   void addProduct(Product product) {
@@ -43,10 +44,11 @@ class Wishlist {
       "wishlist",
       _products
           .map<String>(
-            (Product e) => jsonEncode(
+            (Product e) =>
+            jsonEncode(
               e.toJson(),
             ),
-          )
+      )
           .toList(),
     );
   }
@@ -58,10 +60,11 @@ class Wishlist {
     if (wishlistData != null)
       _products = wishlistData
           .map<Product>(
-            (element) => Product.fromJson(
+            (element) =>
+            Product.fromJson(
               jsonDecode(element),
             ),
-          )
+      )
           .toList();
   }
 }

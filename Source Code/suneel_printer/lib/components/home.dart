@@ -21,7 +21,7 @@ class _InformationSheetState extends State<InformationSheet> {
       addresses
           .map(
             (e) => jsonEncode(e),
-          )
+      )
           .toList(),
     );
   }
@@ -38,7 +38,10 @@ class _InformationSheetState extends State<InformationSheet> {
       },
       child: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height / 2,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height / 2,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
@@ -84,116 +87,121 @@ class _InformationSheetState extends State<InformationSheet> {
                   Expanded(
                     child: addresses.length > 0
                         ? ListView.separated(
-                            padding: EdgeInsets.zero,
-                            itemCount: addresses.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              Map address = addresses[index];
-                              bool isSelected = address["selected"];
+                      padding: EdgeInsets.zero,
+                      itemCount: addresses.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Map address = addresses[index];
+                        bool isSelected = address["selected"];
 
-                              return ListTile(
+                        return ListTile(
+                          onTap: () async {
+                            selectedInfo = address;
+                            addresses[index]["selected"] = true;
+                            await save();
+                            if (mounted) setState(() {});
+                            Navigator.pop(context);
+                          },
+                          leading: Icon(Icons.home_outlined,
+                              size: 28,
+                              color: isSelected
+                                  ? kUIDarkText
+                                  : Colors.grey[600]),
+                          trailing: SizedBox(
+                            width: 60,
+                            child: Row(children: [
+                              GestureDetector(
+                                behavior: HitTestBehavior.translucent,
                                 onTap: () async {
-                                  selectedInfo = address;
-                                  addresses[index]["selected"] = true;
+                                  await showModalBottomSheet(
+                                    backgroundColor: Colors.transparent,
+                                    isScrollControlled: true,
+                                    context: context,
+                                    builder: (_) =>
+                                        Padding(
+                                          padding: MediaQuery
+                                              .of(context)
+                                              .viewInsets,
+                                          child: AddInformationSheet(
+                                            addresses: addresses,
+                                            edit: true,
+                                            data: address,
+                                          ),
+                                        ),
+                                  );
                                   await save();
                                   if (mounted) setState(() {});
-                                  Navigator.pop(context);
                                 },
-                                leading: Icon(Icons.home_outlined,
-                                    size: 28,
-                                    color: isSelected
-                                        ? kUIDarkText
-                                        : Colors.grey[600]),
-                                trailing: SizedBox(
-                                  width: 60,
-                                  child: Row(children: [
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      onTap: () async {
-                                        await showModalBottomSheet(
-                                          backgroundColor: Colors.transparent,
-                                          isScrollControlled: true,
-                                          context: context,
-                                          builder: (_) => Padding(
-                                            padding: MediaQuery.of(context)
-                                                .viewInsets,
-                                            child: AddInformationSheet(
-                                              addresses: addresses,
-                                              edit: true,
-                                              data: address,
-                                            ),
-                                          ),
-                                        );
-                                        await save();
-                                        if (mounted) setState(() {});
-                                      },
-                                      child: Container(
-                                        child: Icon(Icons.edit,
-                                            color: Colors.grey[700]),
-                                      ),
-                                    ),
-                                    SizedBox(width: 12),
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      onTap: () async {
-                                        if (isSelected) {
-                                          if (addresses.length == 1) {
-                                            addresses.remove(address);
-                                            selectedInfo = null;
-                                          } else {
-                                            Map newAddress = addresses[
-                                                index - 1 >= 0
-                                                    ? index - 1
-                                                    : index + 1];
-                                            addresses.remove(address);
-                                            newAddress["selected"] = true;
-                                            selectedInfo = newAddress;
-                                          }
-                                        } else {
-                                          addresses.remove(address);
-                                        }
-                                        await save();
-                                        if (mounted) setState(() {});
-                                      },
-                                      child: Container(
-                                        child: Icon(Icons.delete,
-                                            color: Colors.grey[700]),
-                                      ),
-                                    )
-                                  ]),
+                                child: Container(
+                                  child: Icon(Icons.edit,
+                                      color: Colors.grey[700]),
                                 ),
-                                title: Text(
-                                  "${address["name"].toString().capitalize()}, ${address["phone"]}",
-                                  style: TextStyle(
-                                      color: isSelected
-                                          ? kUIDarkText
-                                          : Colors.grey[600],
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: getHeight(context, 18),
-                                      letterSpacing: 0.2),
+                              ),
+                              SizedBox(width: 12),
+                              GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () async {
+                                  if (isSelected) {
+                                    if (addresses.length == 1) {
+                                      addresses.remove(address);
+                                      selectedInfo = null;
+                                    } else {
+                                      Map newAddress = addresses[
+                                      index - 1 >= 0
+                                          ? index - 1
+                                          : index + 1];
+                                      addresses.remove(address);
+                                      newAddress["selected"] = true;
+                                      selectedInfo = newAddress;
+                                    }
+                                  } else {
+                                    addresses.remove(address);
+                                  }
+                                  await save();
+                                  if (mounted) setState(() {});
+                                },
+                                child: Container(
+                                  child: Icon(Icons.delete,
+                                      color: Colors.grey[700]),
                                 ),
-                                subtitle: Padding(
-                                  padding: EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    address["address"],
-                                    style: TextStyle(
-                                        color: kUIDarkText, letterSpacing: 0.2),
-                                  ),
-                                ),
-                              );
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) => Divider(
-                                    thickness: 0.75, color: Colors.grey[400]),
-                          )
-                        : Center(
+                              )
+                            ]),
+                          ),
+                          title: Text(
+                            "${address["name"]
+                                .toString()
+                                .capitalize()}, ${address["phone"]}",
+                            style: TextStyle(
+                                color: isSelected
+                                    ? kUIDarkText
+                                    : Colors.grey[600],
+                                fontWeight: FontWeight.bold,
+                                fontSize: getHeight(context, 18),
+                                letterSpacing: 0.2),
+                          ),
+                          subtitle: Padding(
+                            padding: EdgeInsets.only(top: 6),
                             child: Text(
-                              "No Information Added",
+                              address["address"],
                               style: TextStyle(
-                                  color: kUIDarkText,
-                                  fontSize: getHeight(context, 20),
-                                  fontWeight: FontWeight.w500),
+                                  color: kUIDarkText, letterSpacing: 0.2),
                             ),
                           ),
+                        );
+                      },
+                      separatorBuilder:
+                          (BuildContext context, int index) =>
+                          Divider(
+                              thickness: 0.75, color: Colors.grey[400]),
+                    )
+                        : Center(
+                      child: Text(
+                        "No Information Added",
+                        style: TextStyle(
+                            color: kUIDarkText,
+                            fontSize: getHeight(context, 20),
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
                   ),
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
@@ -202,10 +210,13 @@ class _InformationSheetState extends State<InformationSheet> {
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
                         context: context,
-                        builder: (_) => Padding(
-                          padding: MediaQuery.of(context).viewInsets,
-                          child: AddInformationSheet(addresses: addresses),
-                        ),
+                        builder: (_) =>
+                            Padding(
+                              padding: MediaQuery
+                                  .of(context)
+                                  .viewInsets,
+                              child: AddInformationSheet(addresses: addresses),
+                            ),
                       );
                       if (mounted) setState(() {});
                     },
@@ -419,7 +430,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                     widget.addresses
                         .map(
                           (e) => jsonEncode(e),
-                        )
+                    )
                         .toList(),
                   );
 
@@ -478,7 +489,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
       error["email"] = false;
 
     http.Response result =
-        await http.get("https://api.postalpincode.in/pincode/$pincode");
+    await http.get("https://api.postalpincode.in/pincode/$pincode");
 
     if (jsonDecode(result.body)[0]["Status"] == "Error" || pincode == "")
       error["pincode"] = true;

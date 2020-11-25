@@ -20,7 +20,9 @@ class _SplashScreenState extends State<SplashScreen>
   void didChangeDependencies() {
     if (mounted)
       setState(() {
-        size = MediaQuery.of(context).size;
+        size = MediaQuery
+            .of(context)
+            .size;
       });
     super.didChangeDependencies();
   }
@@ -112,13 +114,15 @@ class AnimatedCircle extends CustomPainter {
 
     Path circle = Path.combine(
       PathOperation.intersect,
-      Path()..addRect(rect),
+      Path()
+        ..addRect(rect),
       Path()
         ..addOval(rCircle)
         ..close(),
     );
 
-    canvas.drawPath(circle, Paint()..color = holeColor);
+    canvas.drawPath(circle, Paint()
+      ..color = holeColor);
   }
 
   @override

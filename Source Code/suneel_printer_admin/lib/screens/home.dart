@@ -39,17 +39,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
     flutterLocalNotificationsPlugin.initialize(
         InitializationSettings(
             android: AndroidInitializationSettings("@mipmap/ic_launcher")),
         onSelectNotification: (_) async =>
-            await Navigator.pushNamed(context, "/orders"));
+        await Navigator.pushNamed(context, "/orders"));
 
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -92,25 +92,26 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           return showDialog(
             context: context,
-            builder: (_) => RoundedAlertDialog(
-              title: "Do you want to quit the app?",
-              buttonsList: [
-                AlertButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  titleColor: kUIColor,
-                  title: "No",
+            builder: (_) =>
+                RoundedAlertDialog(
+                  title: "Do you want to quit the app?",
+                  buttonsList: [
+                    AlertButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      titleColor: kUIColor,
+                      title: "No",
+                    ),
+                    AlertButton(
+                      onPressed: () {
+                        SystemNavigator.pop();
+                      },
+                      titleColor: kUIColor,
+                      title: "Yes",
+                    )
+                  ],
                 ),
-                AlertButton(
-                  onPressed: () {
-                    SystemNavigator.pop();
-                  },
-                  titleColor: kUIColor,
-                  title: "Yes",
-                )
-              ],
-            ),
           );
         }
       },
@@ -127,7 +128,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Expanded(
                         child: Container(
-                          width: MediaQuery.of(context).size.width,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
                           height: 50,
                           margin: EdgeInsets.symmetric(vertical: 24),
                           padding: EdgeInsets.symmetric(horizontal: 12),
@@ -201,45 +205,50 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (future.hasData) {
                             List docs = future.data.docs
                                 .where(
-                                  (element) => element
+                                  (element) =>
+                                  element
                                       .data()["name"]
                                       .toLowerCase()
                                       .contains(
-                                        query.toLowerCase().trim(),
-                                      ),
-                                )
+                                    query.toLowerCase().trim(),
+                                  ),
+                            )
                                 .toList();
 
                             List<Product> products = List.generate(
                               docs.length,
-                              (index) => Product.fromJson(
-                                docs[index].data(),
-                              ),
+                                  (index) =>
+                                  Product.fromJson(
+                                    docs[index].data(),
+                                  ),
                             );
 
                             return products.length > 0
                                 ? GridView.count(
-                                    shrinkWrap: true,
-                                    crossAxisCount: 2,
-                                    childAspectRatio: getAspect(context, 0.725),
-                                    children: List.generate(
-                                      products.length,
-                                      (index) =>
-                                          SearchCard(product: products[index]),
-                                    ),
-                                  )
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              childAspectRatio: getAspect(context, 0.725),
+                              children: List.generate(
+                                products.length,
+                                    (index) =>
+                                    SearchCard(product: products[index]),
+                              ),
+                            )
                                 : Center(
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          1.25,
-                                      child: EmptyListWidget(
-                                        packageImage: PackageImage.Image_1,
-                                        title: "No Results",
-                                        subTitle:
-                                            "No results found for your search",
-                                      ),
-                                    ),
-                                  );
+                              child: Container(
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width /
+                                    1.25,
+                                child: EmptyListWidget(
+                                  packageImage: PackageImage.Image_1,
+                                  title: "No Results",
+                                  subTitle:
+                                  "No results found for your search",
+                                ),
+                              ),
+                            );
                           } else {
                             return Center(
                               child: indicator,
@@ -261,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           carouselImages = future.data.docs
                               .map(
                                 (e) => e.get("url"),
-                              )
+                          )
                               .toList();
                         }
 
@@ -270,20 +279,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: carouselImages.length,
                             itemBuilder: (BuildContext context, int index) =>
                                 ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  image: DecorationImage(
-                                      image:
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      image: DecorationImage(
+                                          image:
                                           NetworkImage(carouselImages[index]),
-                                      fit: BoxFit.cover),
+                                          fit: BoxFit.cover),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
                             options: CarouselOptions(
                                 autoPlay:
-                                    carouselImages.length > 1 ? true : false,
+                                carouselImages.length > 1 ? true : false,
                                 enlargeCenterPage: true,
                                 aspectRatio: getAspect(context, 2),
                                 onPageChanged: (index, reason) {
@@ -299,18 +308,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: List.generate(
                                 carouselImages.length,
-                                (int index) => AnimatedContainer(
-                                  duration: Duration(milliseconds: 400),
-                                  width: _current == index ? 16 : 8,
-                                  height: _current == index ? 6 : 8,
-                                  margin: EdgeInsets.symmetric(horizontal: 3),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: _current == index
-                                        ? Color.fromRGBO(0, 0, 0, 0.9)
-                                        : Color.fromRGBO(0, 0, 0, 0.4),
-                                  ),
-                                ),
+                                    (int index) =>
+                                    AnimatedContainer(
+                                      duration: Duration(milliseconds: 400),
+                                      width: _current == index ? 16 : 8,
+                                      height: _current == index ? 6 : 8,
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 3),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: _current == index
+                                            ? Color.fromRGBO(0, 0, 0, 0.9)
+                                            : Color.fromRGBO(0, 0, 0, 0.4),
+                                      ),
+                                    ),
                               ),
                             ),
                           SizedBox(height: 18),
@@ -337,52 +348,53 @@ class _HomeScreenState extends State<HomeScreen> {
                                         mainAxisSpacing: getHeight(context, 12),
                                         crossAxisSpacing: 12,
                                         childAspectRatio:
-                                            getAspect(context, 0.9),
+                                        getAspect(context, 0.9),
                                         children: List.generate(
                                             categories.length, (int index) {
                                           Map<String, dynamic> data =
-                                              categories[index];
+                                          categories[index];
                                           return GestureDetector(
                                             behavior:
-                                                HitTestBehavior.translucent,
+                                            HitTestBehavior.translucent,
                                             onTap: onOrder
-                                                    .contains(data["name"])
+                                                .contains(data["name"])
                                                 ? () {
-                                                    Scaffold.of(context)
-                                                        .removeCurrentSnackBar();
-                                                    Scaffold.of(context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        elevation: 10,
-                                                        backgroundColor:
-                                                            kUIAccent,
-                                                        content: Text(
-                                                          "Sorry, ${data["name"]} screen is not available in Admin Mode",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                : () => Navigator.pushNamed(
-                                                      context,
-                                                      "/category",
-                                                      arguments:
-                                                          CategoryArguments(
-                                                        data,
-                                                        data["uId"],
-                                                      ),
-                                                    ),
+                                              Scaffold.of(context)
+                                                  .removeCurrentSnackBar();
+                                              Scaffold.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  elevation: 10,
+                                                  backgroundColor:
+                                                  kUIAccent,
+                                                  content: Text(
+                                                    "Sorry, ${data["name"]} screen is not available in Admin Mode",
+                                                    textAlign:
+                                                    TextAlign.center,
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                                : () =>
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  "/category",
+                                                  arguments:
+                                                  CategoryArguments(
+                                                    data,
+                                                    data["uId"],
+                                                  ),
+                                                ),
                                             child: Container(
                                               padding: EdgeInsets.all(8),
                                               decoration: BoxDecoration(
                                                 color: Color(0xffFFEBEB),
                                                 borderRadius:
-                                                    BorderRadius.circular(15),
+                                                BorderRadius.circular(15),
                                               ),
                                               child: Column(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                                 children: [
                                                   Image.asset(data["image"],
                                                       height: 50, width: 50),
@@ -394,10 +406,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       fontSize: getHeight(
                                                           context, 14),
                                                       fontFamily:
-                                                          "sans-serif-condensed",
+                                                      "sans-serif-condensed",
                                                       color: kUIDarkText,
                                                       fontWeight:
-                                                          FontWeight.w600,
+                                                      FontWeight.w600,
                                                     ),
                                                   ),
                                                 ],

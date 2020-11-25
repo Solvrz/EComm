@@ -11,14 +11,14 @@ dependencies:
   flutter:
     sdk: flutter
 
-  firebase_core: ^0.5.2
-  firebase_auth: ^0.18.3
-  cloud_firestore: ^0.14.3
-  firebase_storage: ^5.0.1
+  firebase_core: ^0.5.2+1
+  firebase_auth: ^0.18.3+1
+  cloud_firestore: ^0.14.3+1
+  firebase_storage: ^5.1.0
   firebase_messaging: ^8.0.0-dev.8
-  firebase_crashlytics: ^0.2.3
+  firebase_crashlytics: ^0.2.3+1
   firebase_performance: ^0.4.2
-  flutter_local_notifications: ^3.0.1+5
+  flutter_local_notifications: ^3.0.1+6
   flutter_image_compress: ^0.7.0
   responsive_framework: ^0.0.11
   flutter_colorpicker: ^0.3.4

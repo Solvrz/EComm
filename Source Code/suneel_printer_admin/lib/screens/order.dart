@@ -48,31 +48,35 @@ class OrderScreen extends StatelessWidget {
                     });
 
                     return Container(
-                      height: MediaQuery.of(context).size.height - 100,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height - 100,
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
                             unDelivered.isNotEmpty
                                 ? Column(
-                                    children: List.generate(
-                                      unDelivered.length,
-                                      (index) => _buildItem(
-                                        context,
-                                        unDeliveredIds[index],
-                                        unDelivered[index],
-                                      ),
+                              children: List.generate(
+                                unDelivered.length,
+                                    (index) =>
+                                    _buildItem(
+                                      context,
+                                      unDeliveredIds[index],
+                                      unDelivered[index],
                                     ),
-                                  )
+                              ),
+                            )
                                 : Padding(
-                                    padding: EdgeInsets.only(bottom: 15),
-                                    child: Text(
-                                      "All Orders Delivered",
-                                      style: TextStyle(
-                                        fontSize: getHeight(context, 18),
-                                        color: kUIDarkText,
-                                      ),
-                                    ),
-                                  ),
+                              padding: EdgeInsets.only(bottom: 15),
+                              child: Text(
+                                "All Orders Delivered",
+                                style: TextStyle(
+                                  fontSize: getHeight(context, 18),
+                                  color: kUIDarkText,
+                                ),
+                              ),
+                            ),
                             if (delivered.isNotEmpty) ...[
                               Text(
                                 "Delivered Orders",
@@ -85,11 +89,12 @@ class OrderScreen extends StatelessWidget {
                               Column(
                                 children: List.generate(
                                   delivered.length,
-                                  (index) => _buildItem(
-                                    context,
-                                    deliveredIds[index],
-                                    delivered[index],
-                                  ),
+                                      (index) =>
+                                      _buildItem(
+                                        context,
+                                        deliveredIds[index],
+                                        delivered[index],
+                                      ),
                                 ),
                               ),
                             ]
@@ -101,7 +106,10 @@ class OrderScreen extends StatelessWidget {
                     return Expanded(
                       child: Center(
                         child: Container(
-                          width: MediaQuery.of(context).size.width / 1.25,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width / 1.25,
                           child: EmptyListWidget(
                             packageImage: PackageImage.Image_4,
                             title: "No Orders",
@@ -134,10 +142,13 @@ class OrderScreen extends StatelessWidget {
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
           context: context,
-          builder: (_) => Padding(
-            padding: MediaQuery.of(context).viewInsets,
-            child: PastOrderSheet(order),
-          ),
+          builder: (_) =>
+              Padding(
+                padding: MediaQuery
+                    .of(context)
+                    .viewInsets,
+                child: PastOrderSheet(order),
+              ),
         );
       },
       child: Container(
@@ -149,13 +160,17 @@ class OrderScreen extends StatelessWidget {
             secondaryActions: [
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () => database
-                    .collection("orders")
-                    .doc(id)
-                    .update({"status": !order["status"]}),
+                onTap: () =>
+                    database
+                        .collection("orders")
+                        .doc(id)
+                        .update({"status": !order["status"]}),
                 child: Container(
                   margin: EdgeInsets.only(left: 12),
-                  height: MediaQuery.of(context).size.height / 2.95,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height / 2.95,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
                       color: !order["status"] ? kUIAccent : Colors.greenAccent),
@@ -168,7 +183,10 @@ class OrderScreen extends StatelessWidget {
             ],
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 8),
-              height: MediaQuery.of(context).size.height / 2.8,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 2.8,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.grey[200]),

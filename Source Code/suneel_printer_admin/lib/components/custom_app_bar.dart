@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:suneel_printer_admin/constant.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  CustomAppBar(
-      {@required this.parent,
-      @required this.title,
-      this.elevation = 1,
-      this.leading,
-      this.trailing = const []});
+  CustomAppBar({@required this.parent,
+    @required this.title,
+    this.elevation = 1,
+    this.leading,
+    this.trailing = const []});
 
   final BuildContext parent;
   final String title;
@@ -35,16 +34,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       leading: leading == null
           ? GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () => Navigator.pop(parent),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: kUIColor),
-                ),
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.arrow_back_ios, color: kUIDarkText, size: 26),
-              ),
-            )
+        behavior: HitTestBehavior.translucent,
+        onTap: () => Navigator.pop(parent),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: kUIColor),
+          ),
+          padding: EdgeInsets.all(8),
+          child: Icon(Icons.arrow_back_ios, color: kUIDarkText, size: 26),
+        ),
+      )
           : leading,
       actions: trailing,
     );
