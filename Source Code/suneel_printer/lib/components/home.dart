@@ -204,7 +204,6 @@ class _InformationSheetState extends State<InformationSheet> {
                     ),
                   ),
                   InkWell(
-                    behavior: HitTestBehavior.translucent,
                     onTap: () async {
                       await showModalBottomSheet(
                         isScrollControlled: true,
@@ -392,8 +391,9 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                   ]);
             }),
             InkWell(
-              behavior: HitTestBehavior.translucent,
-              onTap: added ? (){}: () async {
+              onTap: added
+                  ? () {}
+                  : () async {
                 if (await validateFields() == false) {
                   return;
                 } else {
