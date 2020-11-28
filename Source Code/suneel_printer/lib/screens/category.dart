@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/screens/category_product.dart';
-import 'package:suneel_printer/screens/order.dart';
+import 'package:suneel_printer/screens/request_product.dart';
 
 // ignore: must_be_immutable
 class CategoryScreen extends StatefulWidget {
@@ -18,10 +18,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    CategoryArguments args = ModalRoute
-        .of(context)
-        .settings
-        .arguments;
+    CategoryArguments args = ModalRoute.of(context).settings.arguments;
 
     title = args.data["name"].split("\n").join(" ");
 
@@ -42,25 +39,25 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     if (snapshot.hasData) {
                       dynamic screen = !onOrder.contains(title)
                           ? CategoryProductPage(
-                        title,
-                        snapshot.data.docs
-                            .map<Map>(
-                              (DocumentSnapshot e) => e.data(),
-                        )
-                            .toList(),
-                        snapshot.data.docs
-                            .map<DocumentReference>(
-                                (DocumentSnapshot e) => e.reference)
-                            .toList(),
-                      )
-                          : OrderProductPage(
-                        title: title,
-                        tabsData: snapshot.data.docs
-                            .map<Map>(
-                              (DocumentSnapshot e) => e.data(),
-                        )
-                            .toList(),
-                      );
+                              title,
+                              snapshot.data.docs
+                                  .map<Map>(
+                                    (DocumentSnapshot e) => e.data(),
+                                  )
+                                  .toList(),
+                              snapshot.data.docs
+                                  .map<DocumentReference>(
+                                      (DocumentSnapshot e) => e.reference)
+                                  .toList(),
+                            )
+                          : RequestProductPage(
+                              title: title,
+                              tabsData: snapshot.data.docs
+                                  .map<Map>(
+                                    (DocumentSnapshot e) => e.data(),
+                                  )
+                                  .toList(),
+                            );
 
                       return Scaffold(
                         backgroundColor: kUIColor,
@@ -90,7 +87,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                         child: Text(
                                             bag.products.length.toString(),
                                             style:
-                                            TextStyle(color: kUIDarkText)),
+                                                TextStyle(color: kUIDarkText)),
                                       )
                                     ],
                                   ),

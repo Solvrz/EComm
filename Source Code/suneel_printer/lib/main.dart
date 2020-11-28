@@ -33,10 +33,9 @@ void main() async {
             .whenComplete(() {
           SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
               .whenComplete(
-                () =>
-                runApp(
-                  SuneelPrinter(),
-                ),
+            () => runApp(
+              SuneelPrinter(),
+            ),
           );
         });
       });
@@ -56,22 +55,22 @@ class SuneelPrinter extends StatelessWidget {
       ),
       builder: (BuildContext context, Widget widget) =>
           ResponsiveWrapper.builder(
-            BouncingScrollWrapper.builder(
-              context,
-              widget,
-            ),
-            maxWidth: 1200,
-            minWidth: 360,
-            defaultScale: true,
-            breakpoints: [
-              ResponsiveBreakpoint.resize(360, name: MOBILE),
-              ResponsiveBreakpoint.autoScale(500, name: MOBILE),
-              ResponsiveBreakpoint.autoScale(1000, name: TABLET),
-              ResponsiveBreakpoint.resize(1200, name: DESKTOP),
-              ResponsiveBreakpoint.autoScale(2460, name: "4K"),
-            ],
-            background: Container(color: kUIColor),
-          ),
+        BouncingScrollWrapper.builder(
+          context,
+          widget,
+        ),
+        maxWidth: 1200,
+        minWidth: 360,
+        defaultScale: true,
+        breakpoints: [
+          ResponsiveBreakpoint.resize(360, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(500, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(1000, name: TABLET),
+          ResponsiveBreakpoint.resize(1200, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(2460, name: "4K"),
+        ],
+        background: Container(color: kUIColor),
+      ),
       title: 'Suneel Printers',
       initialRoute: "/",
       routes: {
@@ -82,7 +81,7 @@ class SuneelPrinter extends StatelessWidget {
         "/payment": (BuildContext context) => PaymentScreen(),
         "/wishlist": (BuildContext context) => WishlistScreen(),
         "/category": (BuildContext context) => CategoryScreen(),
-        "/past_orders": (BuildContext context) => PastOrderScreen(),
+        "/orders": (BuildContext context) => PastOrderScreen(),
       },
     );
   }
