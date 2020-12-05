@@ -15,10 +15,7 @@ class SearchCard extends StatefulWidget {
 class _SearchCardState extends State<SearchCard> {
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width / 2;
+    final double width = MediaQuery.of(context).size.width / 2;
     final double height = width / 0.8;
 
     return GestureDetector(
@@ -50,22 +47,22 @@ class _SearchCardState extends State<SearchCard> {
                     padding: EdgeInsets.fromLTRB(0, 15, 18, 0),
                     child: widget.product.images.length > 0
                         ? Container(
-                      height: height / 1.675,
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[600],
-                          blurRadius: 12,
-                          offset: Offset(2, 2),
-                        )
-                      ]),
-                      child: Image(image: widget.product.images[0]),
-                    )
+                            height: height / 1.675,
+                            decoration: BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey[600],
+                                blurRadius: 12,
+                                offset: Offset(2, 2),
+                              )
+                            ]),
+                            child: Image(image: widget.product.images[0]),
+                          )
                         : Container(
-                      height: height / 1.65,
-                      child: Center(
-                        child: Text("No Image Provided"),
-                      ),
-                    ),
+                            height: height / 1.65,
+                            child: Center(
+                              child: Text("No Image Provided"),
+                            ),
+                          ),
                   ),
                 ),
               ],

@@ -25,7 +25,7 @@ class _ProductListState extends State<ProductList> {
       childAspectRatio: getAspect(context, 0.75),
       children: List.generate(
         widget.products.length,
-            (index) =>
+        (index) =>
             ProductCard(product: widget.products[index], args: widget.args),
       ),
     );
@@ -53,8 +53,7 @@ class _ProductCardState extends State<ProductCard>
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
-    )
-      ..addListener(() {
+    )..addListener(() {
         if (mounted) setState(() {});
       });
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
@@ -62,10 +61,7 @@ class _ProductCardState extends State<ProductCard>
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width / 2;
+    final double width = MediaQuery.of(context).size.width / 2;
     final double height = width / 0.8;
 
     return Container(
@@ -87,22 +83,22 @@ class _ProductCardState extends State<ProductCard>
                   padding: EdgeInsets.fromLTRB(0, 15, 18, 0),
                   child: widget.product.images.length > 0
                       ? Container(
-                    height: height / 1.675,
-                    decoration: BoxDecoration(boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey[600],
-                        blurRadius: 12,
-                        offset: Offset(2, 2),
-                      )
-                    ]),
-                    child: Image(image: widget.product.images[0]),
-                  )
+                          height: height / 1.675,
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey[600],
+                              blurRadius: 12,
+                              offset: Offset(2, 2),
+                            )
+                          ]),
+                          child: Image(image: widget.product.images[0]),
+                        )
                       : Container(
-                    height: height / 1.65,
-                    child: Center(
-                      child: Text("No Image Provided"),
-                    ),
-                  ),
+                          height: height / 1.65,
+                          child: Center(
+                            child: Text("No Image Provided"),
+                          ),
+                        ),
                 ),
               ),
               Align(
@@ -152,77 +148,75 @@ class _ProductCardState extends State<ProductCard>
 
                         showDialog(
                           context: context,
-                          builder: (_) =>
-                              RoundedAlertDialog(
-                                title: "Do you want to delete this Product?",
-                                buttonsList: [
-                                  AlertButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    title: "No",
-                                  ),
-                                  AlertButton(
-                                    onPressed: () async {
-                                      Navigator.pop(context);
-                                      _animationController.reverse();
+                          builder: (_) => RoundedAlertDialog(
+                            title: "Do you want to delete this Product?",
+                            buttonsList: [
+                              AlertButton(
+                                onPressed: () => Navigator.pop(context),
+                                title: "No",
+                              ),
+                              AlertButton(
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                  _animationController.reverse();
 
-                                      List<String> uIds =
+                                  List<String> uIds =
                                       widget.product.uId.split("/");
 
-                                      if (widget.product.images != null)
-                                        widget.product.images.forEach((
-                                            element) =>
-                                            storage
-                                                .ref()
-                                                .child(element.url
+                                  if (widget.product.images != null)
+                                    widget.product.images.forEach((element) =>
+                                        storage
+                                            .ref()
+                                            .child(element.url
                                                 .replaceAll(
-                                                RegExp(
-                                                    r'https://firebasestorage.googleapis.com/v0/b/suneelprinters37.appspot.com/o/'),
-                                                '')
+                                                    RegExp(
+                                                        r'https://firebasestorage.googleapis.com/v0/b/suneelprinters37.appspot.com/o/'),
+                                                    '')
                                                 .replaceAll(RegExp(r'%2F'), '/')
                                                 .replaceAll(
-                                                RegExp(r'(\?alt).*'), '')
+                                                    RegExp(r'(\?alt).*'), '')
                                                 .replaceAll(RegExp(r'%20'), ' ')
                                                 .replaceAll(
-                                                RegExp(r'%3A'), ':'))
-                                                .delete());
+                                                    RegExp(r'%3A'), ':'))
+                                            .delete());
 
-                                      QuerySnapshot category = await database
-                                          .collection("categories")
-                                          .where(
+                                  QuerySnapshot category = await database
+                                      .collection("categories")
+                                      .where(
                                         "uId",
                                         isEqualTo: int.parse(uIds[0]),
                                       )
-                                          .get();
+                                      .get();
 
-                                      QuerySnapshot tab =
+                                  QuerySnapshot tab =
                                       await category.docs.first.reference
                                           .collection("tabs")
                                           .where(
-                                        "uId",
-                                        isEqualTo: int.parse(uIds[1]),
-                                      )
+                                            "uId",
+                                            isEqualTo: int.parse(uIds[1]),
+                                          )
                                           .get();
 
-                                      QuerySnapshot product = await tab
-                                          .docs.first.reference
-                                          .collection("products")
-                                          .where("uId",
+                                  QuerySnapshot product = await tab
+                                      .docs.first.reference
+                                      .collection("products")
+                                      .where("uId",
                                           isEqualTo: widget.product.uId)
-                                          .get();
+                                      .get();
 
-                                      product.docs.first.reference.delete();
+                                  product.docs.first.reference.delete();
 
-                                      QuerySnapshot query = await database
-                                          .collection("products")
-                                          .where("uId",
+                                  QuerySnapshot query = await database
+                                      .collection("products")
+                                      .where("uId",
                                           isEqualTo: widget.product.uId)
-                                          .get();
-                                      query.docs.first.reference.delete();
-                                    },
-                                    title: "Yes",
-                                  ),
-                                ],
+                                      .get();
+                                  query.docs.first.reference.delete();
+                                },
+                                title: "Yes",
                               ),
+                            ],
+                          ),
                         );
                       },
                       child: Container(

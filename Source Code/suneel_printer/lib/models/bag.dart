@@ -110,7 +110,7 @@ class Bag {
       _products
           .map<String>(
             (BagItem bagItem) => bagItem.toString(),
-      )
+          )
           .toList(),
     );
   }
@@ -122,7 +122,7 @@ class Bag {
       List<BagItem> items = bagData
           .map<BagItem>(
             (String data) => BagItem.fromString(data),
-      )
+          )
           .toList();
 
       for (BagItem item in items) {
@@ -133,8 +133,7 @@ class Bag {
 
         if (products.docs.isEmpty) {
           _changeLog.add(
-              "The product '${item.product
-                  .name}' has been removed from the store");
+              "The product '${item.product.name}' has been removed from the store");
           wishlist.removeProduct(item.product);
           items[items.indexOf(item)] = null;
         } else {
@@ -152,22 +151,18 @@ class Bag {
 
               updatedData["selected"] =
                   productData["variations"].asMap().map((_, element) {
-                    Variation variation = Variation.fromJson(element);
-                    return MapEntry(
-                      variation.name,
-                      variation.options.first.toJson(),
-                    );
-                  });
+                Variation variation = Variation.fromJson(element);
+                return MapEntry(
+                  variation.name,
+                  variation.options.first.toJson(),
+                );
+              });
             } else if (changeKey == "name") {
               _changeLog.add(
-                  "The name of the product '${item.product
-                      .name}' has been changed to ${productData["name"]}.");
+                  "The name of the product '${item.product.name}' has been changed to ${productData["name"]}.");
             } else {
               _changeLog.add(
-                  "The ${changeKey
-                      .capitalize()} for product '${productData["name"]}' has been changed from ${item
-                      .product
-                      .toJson()[changeKey]} to ${productData[changeKey]}.");
+                  "The ${changeKey.capitalize()} for product '${productData["name"]}' has been changed from ${item.product.toJson()[changeKey]} to ${productData[changeKey]}.");
             }
 
             updatedData[changeKey] = productData[changeKey];

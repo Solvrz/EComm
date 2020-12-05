@@ -9,12 +9,13 @@ class AlertButton extends StatelessWidget {
   final double titleSize;
   final BorderRadius borderRadius;
 
-  AlertButton({@required this.title,
-    @required this.onPressed,
-    this.backgroundColor = kUIAccent,
-    this.titleColor = kUIColor,
-    this.titleSize = 17,
-    this.borderRadius});
+  AlertButton(
+      {@required this.title,
+      @required this.onPressed,
+      this.backgroundColor = kUIAccent,
+      this.titleColor = kUIColor,
+      this.titleSize = 17,
+      this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
