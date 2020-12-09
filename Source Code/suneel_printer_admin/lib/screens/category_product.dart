@@ -15,8 +15,7 @@ class CategoryProductPage extends StatefulWidget {
 
   CategoryProductPage(this.title, this.tabsData, this.tabs);
 
-  Widget getFab(BuildContext context) =>
-      FloatingActionButton(
+  Widget getFab(BuildContext context) => FloatingActionButton(
         elevation: 10,
         backgroundColor: kUIColor,
         child: Icon(Icons.add, color: kUIAccent, size: 30),
@@ -43,10 +42,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
     return Column(children: [
       Container(
         padding: EdgeInsets.symmetric(vertical: 6),
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
+        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           color: kUIColor,
           border: Border.symmetric(
@@ -97,14 +93,14 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
       ),
       StreamBuilder<QuerySnapshot>(
         stream:
-        widget.tabs[widget._currentTab].collection("products").snapshots(),
+            widget.tabs[widget._currentTab].collection("products").snapshots(),
         builder: (BuildContext context, AsyncSnapshot future) {
           if (future.hasData) {
             if (future.data.docs.isNotEmpty) {
               return Expanded(
                 child: ProductList(
                   products: future.data.docs.map<Product>(
-                        (DocumentSnapshot e) {
+                    (DocumentSnapshot e) {
                       return Product.fromJson(
                         e.data(),
                       );
@@ -120,14 +116,8 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             } else {
               return Center(
                 child: Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height / 1.5,
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width / 1.5,
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  width: MediaQuery.of(context).size.width / 1.5,
                   child: EmptyListWidget(
                     title: "No Product",
                     subTitle: "No Product Available Yet",
@@ -137,14 +127,8 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             }
           } else {
             return Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 1.5,
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.9,
+              height: MediaQuery.of(context).size.height / 1.5,
+              width: MediaQuery.of(context).size.width * 0.9,
               child: Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),

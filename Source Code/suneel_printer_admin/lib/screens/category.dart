@@ -17,10 +17,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    CategoryArguments args = ModalRoute
-        .of(context)
-        .settings
-        .arguments;
+    CategoryArguments args = ModalRoute.of(context).settings.arguments;
 
     title = args.data["name"].split("\n").join(" ");
 
@@ -44,7 +41,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         snapshot.data.docs
                             .map<Map>(
                               (DocumentSnapshot e) => e.data(),
-                        )
+                            )
                             .toList(),
                         snapshot.data.docs
                             .map<DocumentReference>(
@@ -61,8 +58,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         ),
                         floatingActionButton: screen != null
                             ? Builder(
-                          builder: (context) => screen.getFab(context),
-                        )
+                                builder: (context) => screen.getFab(context),
+                              )
                             : null,
                         body: Column(children: [Expanded(child: screen)]),
                       );
