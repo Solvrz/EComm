@@ -35,65 +35,65 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     _razorpay = Razorpay();
 
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-            (PaymentSuccessResponse response) async {
-          http.Response verification = await http.post(
-            "https://suneel-printers.herokuapp.com/payment_verify",
-            headers: <String, String>{
-              "Content-Type": "application/json; charset=UTF-8",
-            },
-            body: jsonEncode(<String, dynamic>{
-              "payment_id": response.paymentId,
-              "signature": response.signature,
-              "order_id": response.orderId
-            }),
-          );
+        (PaymentSuccessResponse response) async {
+      http.Response verification = await http.post(
+        "https://suneel-printers.herokuapp.com/payment_verify",
+        headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: jsonEncode(<String, dynamic>{
+          "payment_id": response.paymentId,
+          "signature": response.signature,
+          "order_id": response.orderId
+        }),
+      );
 
-          if (verification.statusCode == 200) {
-            Map verificationResponse = jsonDecode(verification.body);
-            if (verificationResponse["sucessful"]) {
-              Navigator.popAndPushNamed(
-                context,
-                "/payment",
-                arguments: PaymentArguments(
-                    success: true,
-                    msg:
-                    "The Payment was Successful, You will soon receive a confirmation mail from us.",
-                    process: () async {
-                      await placeOrder();
-                    }),
-              );
-            } else {
-              Navigator.popAndPushNamed(
-                context,
-                "/payment",
-                arguments: PaymentArguments(
-                    success: false,
-                    msg:
-                    "The Payment Failed, If Money was deducted from your account, Please Contact Us",
-                    process: () async {}),
-              );
-            }
-          } else {
-            Navigator.popAndPushNamed(
-              context,
-              "/payment",
-              arguments: PaymentArguments(
-                  success: false,
-                  msg:
-                  "Server Error, If Money was deducted from your account, Please Contact Us",
-                  process: () async {}),
-            );
-          }
-        });
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
-            (PaymentFailureResponse response) {
+      if (verification.statusCode == 200) {
+        Map verificationResponse = jsonDecode(verification.body);
+        if (verificationResponse["sucessful"]) {
           Navigator.popAndPushNamed(
             context,
             "/payment",
             arguments: PaymentArguments(
-                success: false, msg: response.message, process: () async {}),
+                success: true,
+                msg:
+                    "The Payment was Successful, You will soon receive a confirmation mail from us.",
+                process: () async {
+                  await placeOrder();
+                }),
           );
-        });
+        } else {
+          Navigator.popAndPushNamed(
+            context,
+            "/payment",
+            arguments: PaymentArguments(
+                success: false,
+                msg:
+                    "The Payment Failed, If Money was deducted from your account, Please Contact Us",
+                process: () async {}),
+          );
+        }
+      } else {
+        Navigator.popAndPushNamed(
+          context,
+          "/payment",
+          arguments: PaymentArguments(
+              success: false,
+              msg:
+                  "Server Error, If Money was deducted from your account, Please Contact Us",
+              process: () async {}),
+        );
+      }
+    });
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
+        (PaymentFailureResponse response) {
+      Navigator.popAndPushNamed(
+        context,
+        "/payment",
+        arguments: PaymentArguments(
+            success: false, msg: response.message, process: () async {}),
+      );
+    });
     _razorpay.on(Razorpay.PAYMENT_CANCELLED.toString(), () {
       Navigator.popAndPushNamed(
         context,
@@ -105,21 +105,19 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
       );
     });
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
-            (ExternalWalletResponse response) {
-          Navigator.popAndPushNamed(
-            context,
-            "/payment",
-            arguments: PaymentArguments(
-                success: true,
-                msg:
-                "The Payment was Successfully conducted via ${response
-                    .walletName
-                    .toUpperCase()}, You will soon receive a confirmation mail from us.",
-                process: () async {
-                  await placeOrder();
-                }),
-          );
-        });
+        (ExternalWalletResponse response) {
+      Navigator.popAndPushNamed(
+        context,
+        "/payment",
+        arguments: PaymentArguments(
+            success: true,
+            msg:
+                "The Payment was Successfully conducted via ${response.walletName.toUpperCase()}, You will soon receive a confirmation mail from us.",
+            process: () async {
+              await placeOrder();
+            }),
+      );
+    });
   }
 
   void dispose() {
@@ -204,13 +202,10 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               enableDrag: false,
                               backgroundColor: Colors.transparent,
                               context: context,
-                              builder: (_) =>
-                                  Padding(
-                                    padding: MediaQuery
-                                        .of(context)
-                                        .viewInsets,
-                                    child: InformationSheet(popable: false),
-                                  ),
+                              builder: (_) => Padding(
+                                padding: MediaQuery.of(context).viewInsets,
+                                child: InformationSheet(popable: false),
+                              ),
                             );
                           },
                           child: Container(
@@ -275,9 +270,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         ),
                         Expanded(
                           child: Text(
-                            "${selectedInfo["address"]
-                                .toString()
-                                .capitalize()}, ${selectedInfo["pincode"]}"
+                            "${selectedInfo["address"].toString().capitalize()}, ${selectedInfo["pincode"]}"
                                 .replaceAll("", "\u{200B}"),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -306,7 +299,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           height: getHeight(context, 120),
                           child: ListView(
                             children: paymentMethods.map<Widget>(
-                                  (value) {
+                              (value) {
                                 return RadioListTile(
                                   title: Text(
                                     value,
@@ -369,76 +362,73 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                 child: MaterialButton(
                   onPressed: paymentMethod == paymentMethods.first
                       ? () async {
-                    Navigator.popAndPushNamed(
-                      context,
-                      "/payment",
-                      arguments: PaymentArguments(
-                          success: true,
-                          msg:
-                          "You will soon receive a confirmation mail from us.",
-                          process: () async {
-                            await placeOrder();
-                          }),
-                    );
-                  }
-                      : () async {
-                    FocusScope.of(context).unfocus();
-
-                    http.Response token = await http.post(
-                      "https://suneel-printers.herokuapp.com/payment_create_order",
-                      headers: <String, String>{
-                        "Content-Type": "application/json; charset=UTF-8",
-                      },
-                      body: jsonEncode(<String, dynamic>{
-                        "amount": (widget.price * 100).toInt(),
-                        "order_id":
-                        "ORDER_${DateTime
-                            .now()
-                            .microsecondsSinceEpoch
-                            .toString()}",
-                      }),
-                    );
-
-                    if (token.statusCode == 200) {
-                      Map tokenResponse = jsonDecode(token.body);
-
-                      _razorpay.open({
-                        "key": testing
-                            ? "rzp_test_3XFNUiX9RPskxm"
-                            : "", // TODO: Put Merchant Key
-                        "order_id": tokenResponse["id"],
-                        "amount": (widget.price * 100),
-                        "name": "Suneel Printers.",
-                        "description": "Order Payment",
-                        "timeout": 120,
-                        "prefill": {
-                          "contact": selectedInfo["phone"],
-                          "email": selectedInfo["email"],
-                        },
-                        "external": {
-                          "wallets": [
-                            // "paytm",
-                            // TODO: Complete Verfication: PayTM
-                            "phonepe",
-                            "jiomoney",
-                            "mobikwik",
-                            "airtelmoney",
-                            "payzapp",
-                            "freecharge",
-                          ]
+                          Navigator.popAndPushNamed(
+                            context,
+                            "/payment",
+                            arguments: PaymentArguments(
+                                success: true,
+                                msg:
+                                    "You will soon receive a confirmation mail from us.",
+                                process: () async {
+                                  await placeOrder();
+                                }),
+                          );
                         }
-                      });
-                    } else {
-                      Navigator.popAndPushNamed(
-                        context,
-                        "/payment",
-                        arguments: PaymentArguments(
-                            success: false,
-                            msg: "Server Error, Please Try Again later",
-                            process: () async {}),
-                      );
-                    }
-                  },
+                      : () async {
+                          FocusScope.of(context).unfocus();
+
+                          http.Response token = await http.post(
+                            "https://suneel-printers.herokuapp.com/payment_create_order",
+                            headers: <String, String>{
+                              "Content-Type": "application/json; charset=UTF-8",
+                            },
+                            body: jsonEncode(<String, dynamic>{
+                              "amount": (widget.price * 100).toInt(),
+                              "order_id":
+                                  "ORDER_${DateTime.now().microsecondsSinceEpoch.toString()}",
+                            }),
+                          );
+
+                          if (token.statusCode == 200) {
+                            Map tokenResponse = jsonDecode(token.body);
+
+                            _razorpay.open({
+                              "key": testing
+                                  ? "rzp_test_3XFNUiX9RPskxm"
+                                  : "", // TODO: Put Merchant Key
+                              "order_id": tokenResponse["id"],
+                              "amount": (widget.price * 100),
+                              "name": "Suneel Printers.",
+                              "description": "Order Payment",
+                              "timeout": 120,
+                              "prefill": {
+                                "contact": selectedInfo["phone"],
+                                "email": selectedInfo["email"],
+                              },
+                              "external": {
+                                "wallets": [
+                                  // "paytm",
+                                  // TODO: Complete Verfication: PayTM
+                                  "phonepe",
+                                  "jiomoney",
+                                  "mobikwik",
+                                  "airtelmoney",
+                                  "payzapp",
+                                  "freecharge",
+                                ]
+                              }
+                            });
+                          } else {
+                            Navigator.popAndPushNamed(
+                              context,
+                              "/payment",
+                              arguments: PaymentArguments(
+                                  success: false,
+                                  msg: "Server Error, Please Try Again later",
+                                  process: () async {}),
+                            );
+                          }
+                        },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -463,7 +453,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     );
   }
 
-  Future placeOrder() async {
+  Future<void> placeOrder() async {
     await http.post(
       "https://suneel-printers.herokuapp.com/order",
       headers: <String, String>{
@@ -480,22 +470,19 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         "price": widget.price.toString(),
         "product_list": bag.products
             .map<String>((BagItem bagItem) {
-          Product product = bagItem.product;
-          String variationText = product.selected.length > 0
-              ? " (${product.selected.values.map((value) => value.label)
-              .toList()
-              .join(", ")})"
-              : "";
+              Product product = bagItem.product;
+              String variationText = product.selected.length > 0
+                  ? " (${product.selected.values.map((value) => value.label).toList().join(", ")})"
+                  : "";
 
-          return """
+              return """
                     <tr>
                         <td>${product.name}$variationText</td>
                         <td class="righty">${bagItem.quantity}</td>
-                        <td class="righty">${(double.parse(product.price) *
-              bagItem.quantity).toStringAsFixed(2)}</td>
+                        <td class="righty">${(double.parse(product.price) * bagItem.quantity).toStringAsFixed(2)}</td>
                     </tr>
                     """;
-        })
+            })
             .toList()
             .join("\n"),
       }),
@@ -530,13 +517,25 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
       "pincode": selectedInfo["pincode"],
       "email": selectedInfo["email"],
       "payment_mode":
-      paymentMethod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
+          paymentMethod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
       "time": Timestamp.now(),
       "price": widget.price.toString(),
       "status": false,
       "products": bag.products.map((e) {
         return {"product": e.product.toJson(), "quantity": e.quantity};
       }).toList()
+    });
+
+    QuerySnapshot query = await database.collection("products").get();
+    List<DocumentSnapshot> products = query.docs;
+
+    bag.products.forEach((BagItem item) {
+      DocumentSnapshot doc =
+          products.where((e) => e.get("uId") == item.product.uId).first;
+
+      if (doc != null)
+        doc.reference
+            .update({"sales": (doc.data()["sales"] ?? 0) + item.quantity});
     });
   }
 }
