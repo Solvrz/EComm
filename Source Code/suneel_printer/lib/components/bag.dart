@@ -536,19 +536,5 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         return {"product": e.product.toJson(), "quantity": e.quantity};
       }).toList()
     });
-
-    QuerySnapshot query = await database.collection("products").get();
-    List<DocumentSnapshot> products = query.docs;
-
-    bag.products.forEach((BagItem item) {
-      DocumentSnapshot doc =
-          products
-              .where((e) => e.get("uId") == item.product.uId)
-              .first;
-
-      if (doc != null)
-        doc.reference
-            .update({"sales": (doc.data()["sales"] ?? 0) + item.quantity});
-    });
   }
 }

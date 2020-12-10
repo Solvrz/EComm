@@ -23,7 +23,7 @@ class OrderScreen extends StatelessWidget {
                 height: MediaQuery
                     .of(context)
                     .size
-                    .height - 95,
+                    .height - 100,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [

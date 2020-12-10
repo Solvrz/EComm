@@ -94,7 +94,7 @@ class _OptionRadioTileState extends State<OptionRadioTile> {
                             duration: Duration(milliseconds: 200),
                             style: widget.currIndex == index
                                 ? TextStyle(
-                                fontSize: getHeight(context, 14),
+                                fontSize: getHeight(context, 12),
                                 color: kUIDarkText)
                                 : TextStyle(color: kUIDarkText, fontSize: 0),
                           ),
