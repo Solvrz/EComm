@@ -18,7 +18,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    CategoryArguments args = ModalRoute.of(context).settings.arguments;
+    CategoryArguments args = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
 
     title = args.data["name"].split("\n").join(" ");
 
@@ -39,25 +42,25 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     if (snapshot.hasData) {
                       dynamic screen = !onOrder.contains(title)
                           ? CategoryProductPage(
-                              title,
-                              snapshot.data.docs
-                                  .map<Map>(
-                                    (DocumentSnapshot e) => e.data(),
-                                  )
-                                  .toList(),
-                              snapshot.data.docs
-                                  .map<DocumentReference>(
-                                      (DocumentSnapshot e) => e.reference)
-                                  .toList(),
-                            )
+                        title,
+                        snapshot.data.docs
+                            .map<Map>(
+                              (DocumentSnapshot e) => e.data(),
+                        )
+                            .toList(),
+                        snapshot.data.docs
+                            .map<DocumentReference>(
+                                (DocumentSnapshot e) => e.reference)
+                            .toList(),
+                      )
                           : RequestProductPage(
-                              title: title,
-                              tabsData: snapshot.data.docs
-                                  .map<Map>(
-                                    (DocumentSnapshot e) => e.data(),
-                                  )
-                                  .toList(),
-                            );
+                        title: title,
+                        tabsData: snapshot.data.docs
+                            .map<Map>(
+                              (DocumentSnapshot e) => e.data(),
+                        )
+                            .toList(),
+                      );
 
                       return Scaffold(
                         backgroundColor: kUIColor,
@@ -85,9 +88,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                         left: 11,
                                         top: 10,
                                         child: Text(
-                                            bag.products.length.toString(),
-                                            style:
-                                                TextStyle(color: kUIDarkText)),
+                                          bag.products.length.toString(),
+                                          style: TextStyle(color: kUIDarkText),
+                                        ),
                                       )
                                     ],
                                   ),

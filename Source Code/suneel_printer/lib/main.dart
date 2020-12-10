@@ -19,24 +19,43 @@ void main() async {
   RenderErrorBox.backgroundColor = Colors.transparent;
   RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);
 
-  Firebase.initializeApp().whenComplete(() {
-    FirebasePerformance.instance
-        .setPerformanceCollectionEnabled(false)
+  secureStorage
+      .write(key: "key_testing", value: "rzp_test_3XFNUiX9RPskxm")
+      .whenComplete(() {
+    secureStorage
+    // TODO: Put Merchant Key
+        .write(key: "key_production", value: "")
         .whenComplete(() {
-      FirebaseCrashlytics.instance
-          .setCrashlyticsCollectionEnabled(false)
-          .whenComplete(() {
-        FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+      secureStorage.read(key: "key_testing").then((value) {
+        keyTesting = value;
 
-        SharedPreferences.getInstance()
-            .then((value) => preferences = value)
-            .whenComplete(() {
-          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-              .whenComplete(
-            () => runApp(
-              SuneelPrinter(),
-            ),
-          );
+        secureStorage.read(key: "key_production").then((value) {
+          keyProduction = value;
+
+          Firebase.initializeApp().whenComplete(() {
+            FirebasePerformance.instance
+                .setPerformanceCollectionEnabled(false)
+                .whenComplete(() {
+              FirebaseCrashlytics.instance
+                  .setCrashlyticsCollectionEnabled(false)
+                  .whenComplete(() {
+                FlutterError.onError =
+                    FirebaseCrashlytics.instance.recordFlutterError;
+
+                SharedPreferences.getInstance()
+                    .then((value) => preferences = value)
+                    .whenComplete(() {
+                  SystemChrome.setPreferredOrientations(
+                      [DeviceOrientation.portraitUp]).whenComplete(
+                        () =>
+                        runApp(
+                          SuneelPrinter(),
+                        ),
+                  );
+                });
+              });
+            });
+          });
         });
       });
     });
@@ -55,22 +74,22 @@ class SuneelPrinter extends StatelessWidget {
       ),
       builder: (BuildContext context, Widget widget) =>
           ResponsiveWrapper.builder(
-        BouncingScrollWrapper.builder(
-          context,
-          widget,
-        ),
-        maxWidth: 1200,
-        minWidth: 360,
-        defaultScale: true,
-        breakpoints: [
-          ResponsiveBreakpoint.resize(360, name: MOBILE),
-          ResponsiveBreakpoint.autoScale(500, name: MOBILE),
-          ResponsiveBreakpoint.autoScale(1000, name: TABLET),
-          ResponsiveBreakpoint.resize(1200, name: DESKTOP),
-          ResponsiveBreakpoint.autoScale(2460, name: "4K"),
-        ],
-        background: Container(color: kUIColor),
-      ),
+            BouncingScrollWrapper.builder(
+              context,
+              widget,
+            ),
+            maxWidth: 1200,
+            minWidth: 360,
+            defaultScale: true,
+            breakpoints: [
+              ResponsiveBreakpoint.resize(360, name: MOBILE),
+              ResponsiveBreakpoint.autoScale(500, name: MOBILE),
+              ResponsiveBreakpoint.autoScale(1000, name: TABLET),
+              ResponsiveBreakpoint.resize(1200, name: DESKTOP),
+              ResponsiveBreakpoint.autoScale(2460, name: "4K"),
+            ],
+            background: Container(color: kUIColor),
+          ),
       title: 'Suneel Printers',
       initialRoute: "/",
       routes: {

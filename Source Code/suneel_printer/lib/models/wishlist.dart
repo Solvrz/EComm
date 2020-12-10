@@ -44,10 +44,11 @@ class Wishlist {
       "wishlist",
       _products
           .map<String>(
-            (Product e) => jsonEncode(
+            (Product e) =>
+            jsonEncode(
               e.toJson(),
             ),
-          )
+      )
           .toList(),
     );
   }
@@ -59,10 +60,11 @@ class Wishlist {
     if (wishlistData != null)
       _products = wishlistData
           .map<Product>(
-            (element) => Product.fromJson(
+            (element) =>
+            Product.fromJson(
               jsonDecode(element),
             ),
-          )
+      )
           .toList();
   }
 }

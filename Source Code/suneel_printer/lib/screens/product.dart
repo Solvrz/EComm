@@ -17,7 +17,10 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ProductArguments args = ModalRoute.of(context).settings.arguments;
+    ProductArguments args = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
 
     if (product == null) {
       product = Product.fromJson(
@@ -25,15 +28,17 @@ class _ProductScreenState extends State<ProductScreen> {
       );
       variations = List.generate(
         args.product.variations.length,
-        (index) => OptionRadioTile(
-          onChanged: (option) {
-            product.select(args.product.variations[index].name, option);
-            if (mounted) setState(() {});
-          },
-          variation: args.product.variations[index],
-          currIndex: args.product.variations[index].options
-              .indexOf(product.selected[args.product.variations[index].name]),
-        ),
+            (index) =>
+            OptionRadioTile(
+              onChanged: (option) {
+                product.select(args.product.variations[index].name, option);
+                if (mounted) setState(() {});
+              },
+              variation: args.product.variations[index],
+              currIndex: args.product.variations[index].options
+                  .indexOf(
+                  product.selected[args.product.variations[index].name]),
+            ),
       );
     }
 
@@ -46,8 +51,14 @@ class _ProductScreenState extends State<ProductScreen> {
           title: "",
         ),
         body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -65,8 +76,14 @@ class _ProductScreenState extends State<ProductScreen> {
                           fontFamily: "sans-serif-condensed"),
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * 0.3,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,49 +92,50 @@ class _ProductScreenState extends State<ProductScreen> {
                               padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
                               child: product.images.length > 0
                                   ? CarouselSlider(
-                                      items: product.images
-                                          .map<Widget>(
-                                            (NetworkImage image) =>
-                                                Image(image: image),
-                                          )
-                                          .toList(),
-                                      options: CarouselOptions(
-                                          autoPlay: product.images.length > 1,
-                                          enlargeCenterPage: true,
-                                          aspectRatio: getAspect(context, 2.5),
-                                          onPageChanged: (index, reason) {
-                                            if (mounted)
-                                              setState(() {
-                                                _currentImage = index;
-                                              });
-                                          }),
-                                    )
+                                items: product.images
+                                    .map<Widget>(
+                                      (NetworkImage image) =>
+                                      Image(image: image),
+                                )
+                                    .toList(),
+                                options: CarouselOptions(
+                                    autoPlay: product.images.length > 1,
+                                    enlargeCenterPage: true,
+                                    aspectRatio: getAspect(context, 2.5),
+                                    onPageChanged: (index, reason) {
+                                      if (mounted)
+                                        setState(() {
+                                          _currentImage = index;
+                                        });
+                                    }),
+                              )
                                   : Center(
-                                      child: Text(
-                                        "No Images Available",
-                                        style: TextStyle(
-                                            fontSize: getHeight(context, 20),
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
+                                child: Text(
+                                  "No Images Available",
+                                  style: TextStyle(
+                                      fontSize: getHeight(context, 20),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: List.generate(
                                 product.images.length,
-                                (int index) => AnimatedContainer(
-                                  duration: Duration(milliseconds: 400),
-                                  width: _currentImage == index ? 16 : 8,
-                                  height: _currentImage == index ? 6 : 8,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 3),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: _currentImage == index
-                                        ? Color.fromRGBO(0, 0, 0, 0.9)
-                                        : Color.fromRGBO(0, 0, 0, 0.4),
-                                  ),
-                                ),
+                                    (int index) =>
+                                    AnimatedContainer(
+                                      duration: Duration(milliseconds: 400),
+                                      width: _currentImage == index ? 16 : 8,
+                                      height: _currentImage == index ? 6 : 8,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 3),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: _currentImage == index
+                                            ? Color.fromRGBO(0, 0, 0, 0.9)
+                                            : Color.fromRGBO(0, 0, 0, 0.4),
+                                      ),
+                                    ),
                               ),
                             ),
                           ]),
@@ -189,7 +207,8 @@ class _ProductScreenState extends State<ProductScreen> {
                               ),
                               SizedBox(width: 12),
                               Text(
-                                "Save: ₹ ${double.parse(product.mrp) - double.parse(product.price)}",
+                                "Save: ₹ ${double.parse(product.mrp) -
+                                    double.parse(product.price)}",
                                 style: TextStyle(
                                     color: Colors.orangeAccent,
                                     fontSize: getHeight(context, 22),
