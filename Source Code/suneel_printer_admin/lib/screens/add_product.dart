@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -24,6 +25,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
   String name = "";
   String price = "";
   String mrp = "";
+
+  bool trending = false;
 
   List<Color> colors = [
     Color(0xFFF44336),
@@ -55,7 +58,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AddProductArguments args = ModalRoute.of(context).settings.arguments;
+    AddProductArguments args = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
 
     if (args.product != null && name == "") {
       name = args.product.name;
@@ -67,16 +73,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
       mrp = args.product.mrp;
       mrpController.text = mrp;
 
+      trending = args.product.trending;
+
       if (args.product.images != null) {
         images = args.product.images
             .map(
               (e) => Image(image: e),
-            )
+        )
             .toList();
         urls = args.product.images
             .map(
               (e) => e.url,
-            )
+        )
             .toList();
       }
 
@@ -111,87 +119,91 @@ class _AddProductScreenState extends State<AddProductScreen> {
             ),
             trailing: [
               Builder(
-                builder: (context) => GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: name == ""
-                      ? () {
-                          Scaffold.of(context).removeCurrentSnackBar();
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              elevation: 10,
-                              backgroundColor: kUIAccent,
-                              content: Text(
-                                "Name can't be Empty",
-                                textAlign: TextAlign.center,
+                builder: (context) =>
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: name == ""
+                          ? () {
+                        Scaffold.of(context).removeCurrentSnackBar();
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            elevation: 10,
+                            backgroundColor: kUIAccent,
+                            content: Text(
+                              "Name can't be Empty",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      }
+                          : price == ""
+                          ? () {
+                        Scaffold.of(context).removeCurrentSnackBar();
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            elevation: 10,
+                            backgroundColor: kUIAccent,
+                            content: Text(
+                              "Actual Price can't be Empty",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      }
+                          : mrp == ""
+                          ? () {
+                        Scaffold.of(context).removeCurrentSnackBar();
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            elevation: 10,
+                            backgroundColor: kUIAccent,
+                            content: Text(
+                              "MRP can't be Empty",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      }
+                          : () {
+                        _addProduct(
+                            context,
+                            args.title,
+                            args.product,
+                            args.tabs,
+                            args.tabsData,
+                            args.currentTab);
+
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: kUIColor),
+                            ),
+                            child: Text(
+                              "Post",
+                              style: TextStyle(
+                                color: kUIAccent,
+                                fontSize: getHeight(context, 20),
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          );
-                        }
-                      : price == ""
-                          ? () {
-                              Scaffold.of(context).removeCurrentSnackBar();
-                              Scaffold.of(context).showSnackBar(
-                                SnackBar(
-                                  elevation: 10,
-                                  backgroundColor: kUIAccent,
-                                  content: Text(
-                                    "Actual Price can't be Empty",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              );
-                            }
-                          : mrp == ""
-                              ? () {
-                                  Scaffold.of(context).removeCurrentSnackBar();
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      elevation: 10,
-                                      backgroundColor: kUIAccent,
-                                      content: Text(
-                                        "MRP can't be Empty",
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              : () {
-                                  _addProduct(
-                                      context,
-                                      args.title,
-                                      args.product,
-                                      args.tabs,
-                                      args.tabsData,
-                                      args.currentTab);
-
-                                  Navigator.pop(context);
-                                },
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: kUIColor),
-                        ),
-                        child: Text(
-                          "Post",
-                          style: TextStyle(
-                            color: kUIAccent,
-                            fontSize: getHeight(context, 20),
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
               ),
             ],
           ),
           body: SingleChildScrollView(
             child: Container(
               height: getHeight(context, 730),
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -233,10 +245,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 behavior: HitTestBehavior.translucent,
                                 onTap: () async {
                                   FilePickerResult result =
-                                      await FilePicker.platform.pickFiles(
-                                          type: FileType.custom,
-                                          allowedExtensions: ["png", "jpg"],
-                                          allowMultiple: true);
+                                  await FilePicker.platform.pickFiles(
+                                      type: FileType.custom,
+                                      allowedExtensions: ["png", "jpg"],
+                                      allowMultiple: true);
 
                                   List<Image> compImages = [];
                                   List<File> compFiles = [];
@@ -244,14 +256,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   for (String path in result.paths) {
                                     File file = File(path);
                                     List<String> splits =
-                                        file.absolute.path.split("/");
+                                    file.absolute.path.split("/");
 
                                     File compFile = await FlutterImageCompress
                                         .compressAndGetFile(
                                       file.absolute.path,
                                       splits
-                                              .getRange(0, splits.length - 1)
-                                              .join("/") +
+                                          .getRange(0, splits.length - 1)
+                                          .join("/") +
                                           "/Compressed" +
                                           Timestamp.now().toDate().toString() +
                                           ".jpeg",
@@ -282,72 +294,79 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           ),
                         ),
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.25,
-                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery
+                              .of(context)
+                              .size
+                              .height * 0.25,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
                           child: images.length > 0
                               ? Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(8),
-                                      child: CarouselSlider(
-                                        items: images
-                                            .map<Widget>((Image image) => image)
-                                            .toList(),
-                                        options: CarouselOptions(
-                                            autoPlay: images.length > 1
-                                                ? true
-                                                : false,
-                                            enlargeCenterPage: true,
-                                            aspectRatio:
-                                                getAspect(context, 2.5),
-                                            onPageChanged: (index, reason) {
-                                              if (mounted)
-                                                setState(() {
-                                                  _currentImage = index;
-                                                });
-                                            }),
-                                      ),
-                                    ),
-                                    if (images.length > 1)
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: List.generate(
-                                          images.length,
-                                          (int index) => AnimatedContainer(
-                                            duration:
-                                                Duration(milliseconds: 400),
-                                            width:
-                                                _currentImage == index ? 16 : 8,
-                                            height:
-                                                _currentImage == index ? 6 : 8,
-                                            margin: EdgeInsets.symmetric(
-                                                vertical: 10, horizontal: 3),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              color: _currentImage == index
-                                                  ? Color.fromRGBO(0, 0, 0, 0.9)
-                                                  : Color.fromRGBO(
-                                                      0, 0, 0, 0.4),
-                                            ),
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                child: CarouselSlider(
+                                  items: images
+                                      .map<Widget>((Image image) => image)
+                                      .toList(),
+                                  options: CarouselOptions(
+                                      autoPlay: images.length > 1
+                                          ? true
+                                          : false,
+                                      enlargeCenterPage: true,
+                                      aspectRatio:
+                                      getAspect(context, 2.5),
+                                      onPageChanged: (index, reason) {
+                                        if (mounted)
+                                          setState(() {
+                                            _currentImage = index;
+                                          });
+                                      }),
+                                ),
+                              ),
+                              if (images.length > 1)
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: List.generate(
+                                    images.length,
+                                        (int index) =>
+                                        AnimatedContainer(
+                                          duration:
+                                          Duration(milliseconds: 400),
+                                          width:
+                                          _currentImage == index ? 16 : 8,
+                                          height:
+                                          _currentImage == index ? 6 : 8,
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 3),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(15),
+                                            color: _currentImage == index
+                                                ? Color.fromRGBO(0, 0, 0, 0.9)
+                                                : Color.fromRGBO(
+                                                0, 0, 0, 0.4),
                                           ),
                                         ),
-                                      ),
-                                  ],
-                                )
-                              : Center(
-                                  child: Text(
-                                    "No Images Added\nAdd One",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: getHeight(context, 20),
-                                      fontWeight: FontWeight.bold,
-                                    ),
                                   ),
                                 ),
+                            ],
+                          )
+                              : Center(
+                            child: Text(
+                              "No Images Added\nAdd One",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: getHeight(context, 20),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         )
                       ],
                     ),
@@ -361,10 +380,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               ...variations.map(
-                                (Variation variation) => Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 2),
-                                  child: _buildVariation(context, variation),
-                                ),
+                                    (Variation variation) =>
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 2),
+                                      child: _buildVariation(
+                                          context, variation),
+                                    ),
                               ),
                             ]),
                       ),
@@ -388,7 +410,36 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         }),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(18, 20, 18, 0),
+                    padding: EdgeInsets.fromLTRB(18, 20, 32, 0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Trending",
+                            style: TextStyle(
+                                color: kUIDarkText,
+                                fontSize: getHeight(context, 22),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.2),
+                          ),
+                        ),
+                        Container(
+                          width: 80,
+                          child: CupertinoSwitch(
+                            value: trending,
+                            onChanged: (value) {
+                              setState(() {
+                                trending = value;
+                              });
+                            },
+                            activeColor: kUIAccent,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(18, 0, 18, 0),
                     child: Row(
                       children: [
                         Expanded(
@@ -499,7 +550,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
           },
           child: Container(
             margin: EdgeInsets.only(left: 12),
-            height: MediaQuery.of(context).size.height / 6,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height / 6,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25), color: kUIAccent),
             child: Icon(Icons.delete, color: kUILightText, size: 32),
@@ -515,7 +569,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
             Expanded(
               child: TextField(
                 controller: TextEditingController(text: variation.name),
-                onChanged: (value) => variations[variations.indexOf(variation)]
+                onChanged: (value) =>
+                variations[variations.indexOf(variation)]
                     .name = value.trim(),
                 decoration: InputDecoration(
                   border: InputBorder.none,
@@ -536,67 +591,71 @@ class _AddProductScreenState extends State<AddProductScreen> {
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               ...List.generate(
                 variation.options.length,
-                (index) => Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 3),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          final TextEditingController labelController =
+                    (index) =>
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 3),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () {
+                              final TextEditingController labelController =
                               TextEditingController(
                                   text: variation.options[index].label);
 
-                          _buildVariationDialog(
-                              labelController, variation, index);
-                        },
-                        onLongPress: () {
-                          if (mounted)
-                            setState(() {
-                              variations[variations.indexOf(variation)]
-                                          .options
-                                          .length >
+                              _buildVariationDialog(
+                                  labelController, variation, index);
+                            },
+                            onLongPress: () {
+                              if (mounted)
+                                setState(() {
+                                  variations[variations.indexOf(variation)]
+                                      .options
+                                      .length >
                                       1
-                                  ? variations[variations.indexOf(variation)]
+                                      ? variations[variations.indexOf(
+                                      variation)]
                                       .options
                                       .removeAt(index)
-                                  : variations.remove(variation);
-                            });
-                        },
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(2, 0, 2, 4),
-                          width: 32,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: 0 == index
-                                ? Border.all(color: Colors.grey[400], width: 2)
-                                : null,
-                          ),
-                          child: Center(
-                            child: CircleAvatar(
-                              radius: 10,
-                              backgroundColor: variation.options[index].color ??
-                                  Colors.grey[400],
-                              child: variation.options[index].color == null
-                                  ? Text(
-                                      variation.options[index].label[0]
-                                          .toUpperCase(),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color: kUIDarkText),
-                                    )
-                                  : null,
+                                      : variations.remove(variation);
+                                });
+                            },
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(2, 0, 2, 4),
+                              width: 32,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: 0 == index
+                                    ? Border.all(
+                                    color: Colors.grey[400], width: 2)
+                                    : null,
+                              ),
+                              child: Center(
+                                child: CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: variation.options[index]
+                                      .color ??
+                                      Colors.grey[400],
+                                  child: variation.options[index].color == null
+                                      ? Text(
+                                    variation.options[index].label[0]
+                                        .toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: kUIDarkText),
+                                  )
+                                      : null,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          Text(variation.options[index].label),
+                        ],
                       ),
-                      Text(variation.options[index].label),
-                    ],
-                  ),
-                ),
+                    ),
               ),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
@@ -604,8 +663,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   if (mounted)
                     setState(() {
                       variations[variations.indexOf(variation)].options.add(
-                            Option(label: "Label"),
-                          );
+                        Option(label: "Label"),
+                      );
                     });
                 },
                 child: Container(
@@ -625,7 +684,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   void _addProduct(BuildContext context, String title, Product product,
       List<DocumentReference> tabs, List<Map> tabsData, int currentTab) async {
     List<String> urls =
-        product != null ? product.images.map((e) => e.url).toList() : [];
+    product != null ? product.images.map((e) => e.url).toList() : [];
     bool noError = true;
 
     for (File file in imageFiles) {
@@ -633,7 +692,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
         TaskSnapshot task = await storage
             .ref()
             .child(
-                "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.jpeg")
+            "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(
+                " ")}/file-${Timestamp.now().toDate()}.jpeg")
             .putFile(file);
 
         String url = await task.ref.getDownloadURL();
@@ -653,7 +713,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
       int maxId = 0;
 
       query.docs.forEach((element) {
-        int currId = int.parse(element.data()["uId"].split("/").last);
+        int currId = int.parse(element.data()["uId"]
+            .split("/")
+            .last);
         if (currId > maxId) maxId = currId;
       });
 
@@ -664,15 +726,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
             .get();
 
         await query.docs.first.reference.update({
-          "uId": "$categoryId/${tabsData[currentTab]["uId"]}/${maxId + 1}",
+          "uId": product.uId,
           "imgs": urls,
           "mrp": double.parse(mrp),
           "price": double.parse(price),
           "name": name.trim(),
+          "trending": trending,
           "variations": variations
               .map(
                 (e) => e.toJson(),
-              )
+          )
               .toList()
         });
 
@@ -682,15 +745,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
             .get();
 
         await query.docs.first.reference.update({
-          "uId": "$categoryId/${tabsData[currentTab]["uId"]}/${maxId + 1}",
+          "uId": product.uId,
           "imgs": urls,
           "mrp": double.parse(mrp),
           "price": double.parse(price),
           "name": name.trim(),
+          "trending": trending,
           "variations": variations
               .map(
                 (e) => e.toJson(),
-              )
+          )
               .toList()
         });
       } else {
@@ -700,10 +764,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
           "mrp": double.parse(mrp),
           "price": double.parse(price),
           "name": name.trim(),
+          "trending": trending,
           "variations": variations
               .map(
                 (e) => e.toJson(),
-              )
+          )
               .toList()
         });
 
@@ -713,10 +778,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
           "mrp": double.parse(mrp),
           "price": double.parse(price),
           "name": name.trim(),
+          "trending": trending,
           "variations": variations
               .map(
                 (e) => e.toJson(),
-              )
+          )
               .toList()
         });
       }
@@ -735,110 +801,113 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
   }
 
-  void _buildVariationDialog(
-      TextEditingController labelController, Variation variation, int index) {
+  void _buildVariationDialog(TextEditingController labelController,
+      Variation variation, int index) {
     showDialog(
       context: context,
-      builder: (_) => WillPopScope(
-        onWillPop: () async {
-          if (mounted)
-            setState(() {
-              if (variation.options[index].label != labelController.text &&
-                  labelController.text != "") {
-                variations[variations.indexOf(variation)].options[index].label =
-                    labelController.text.trim();
-              }
-            });
-          return true;
-        },
-        child: RoundedAlertDialog(
-          title: "Edit Option",
-          widgets: [
-            TextField(
-              controller: labelController,
-              decoration: kInputDialogDecoration.copyWith(
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.clear),
-                  onPressed: () => labelController.clear(),
+      builder: (_) =>
+          WillPopScope(
+            onWillPop: () async {
+              if (mounted)
+                setState(() {
+                  if (variation.options[index].label != labelController.text &&
+                      labelController.text != "") {
+                    variations[variations.indexOf(variation)].options[index]
+                        .label =
+                        labelController.text.trim();
+                  }
+                });
+              return true;
+            },
+            child: RoundedAlertDialog(
+              title: "Edit Option",
+              widgets: [
+                TextField(
+                  controller: labelController,
+                  decoration: kInputDialogDecoration.copyWith(
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () => labelController.clear(),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(height: 12),
-            BlockPicker(
-                availableColors: colors,
-                itemBuilder: (color, isCurrentColor, changeColor) {
-                  final bool notTrans = color != Colors.transparent;
-                  return Container(
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: notTrans ? color : kUIColor,
-                      boxShadow: notTrans
-                          ? [
-                              BoxShadow(
-                                color: color != kUIColor && notTrans
-                                    ? color.withOpacity(0.8)
-                                    : Colors.grey[600],
-                                offset: Offset(1, 2),
-                                blurRadius: 5,
-                              ),
-                            ]
-                          : null,
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: changeColor,
-                        borderRadius: BorderRadius.circular(50),
-                        child: Container(
-                          child: notTrans
-                              ? AnimatedOpacity(
-                                  duration: Duration(milliseconds: 210),
-                                  opacity: isCurrentColor ? 1 : 0,
-                                  child: Icon(
-                                    Icons.done,
-                                    color: useWhiteForeground(color)
-                                        ? kUIColor
-                                        : Colors.black,
-                                  ),
-                                )
-                              : Icon(Icons.clear),
+                SizedBox(height: 12),
+                BlockPicker(
+                    availableColors: colors,
+                    itemBuilder: (color, isCurrentColor, changeColor) {
+                      final bool notTrans = color != Colors.transparent;
+                      return Container(
+                        margin: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: notTrans ? color : kUIColor,
+                          boxShadow: notTrans
+                              ? [
+                            BoxShadow(
+                              color: color != kUIColor && notTrans
+                                  ? color.withOpacity(0.8)
+                                  : Colors.grey[600],
+                              offset: Offset(1, 2),
+                              blurRadius: 5,
+                            ),
+                          ]
+                              : null,
                         ),
-                      ),
-                    ),
-                  );
-                },
-                pickerColor: variation.options[index].color ?? Colors.redAccent,
-                onColorChanged: (color) {
-                  if (color != Colors.transparent)
-                    variations[variations.indexOf(variation)]
-                        .options[index]
-                        .color = color;
-                  else
-                    variations[variations.indexOf(variation)]
-                        .options[index]
-                        .color = null;
-                })
-          ],
-          isExpanded: false,
-          buttonsList: [
-            AlertButton(
-                title: "Done",
-                onPressed: () {
-                  Navigator.pop(context);
-                  if (mounted)
-                    setState(() {
-                      if (variation.options[index].label !=
-                          labelController.text) {
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: changeColor,
+                            borderRadius: BorderRadius.circular(50),
+                            child: Container(
+                              child: notTrans
+                                  ? AnimatedOpacity(
+                                duration: Duration(milliseconds: 210),
+                                opacity: isCurrentColor ? 1 : 0,
+                                child: Icon(
+                                  Icons.done,
+                                  color: useWhiteForeground(color)
+                                      ? kUIColor
+                                      : Colors.black,
+                                ),
+                              )
+                                  : Icon(Icons.clear),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    pickerColor: variation.options[index].color ??
+                        Colors.redAccent,
+                    onColorChanged: (color) {
+                      if (color != Colors.transparent)
                         variations[variations.indexOf(variation)]
                             .options[index]
-                            .label = labelController.text.trim();
-                      }
-                    });
-                })
-          ],
-        ),
-      ),
+                            .color = color;
+                      else
+                        variations[variations.indexOf(variation)]
+                            .options[index]
+                            .color = null;
+                    })
+              ],
+              isExpanded: false,
+              buttonsList: [
+                AlertButton(
+                    title: "Done",
+                    onPressed: () {
+                      Navigator.pop(context);
+                      if (mounted)
+                        setState(() {
+                          if (variation.options[index].label !=
+                              labelController.text) {
+                            variations[variations.indexOf(variation)]
+                                .options[index]
+                                .label = labelController.text.trim();
+                          }
+                        });
+                    })
+              ],
+            ),
+          ),
     );
   }
 
@@ -849,26 +918,27 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     showDialog(
       context: context,
-      builder: (_) => RoundedAlertDialog(
-        title: "Do you want to discard the changes?",
-        buttonsList: [
-          AlertButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            titleColor: kUIColor,
-            title: "No",
+      builder: (_) =>
+          RoundedAlertDialog(
+            title: "Do you want to discard the changes?",
+            buttonsList: [
+              AlertButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                titleColor: kUIColor,
+                title: "No",
+              ),
+              AlertButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                titleColor: kUIColor,
+                title: "Yes",
+              )
+            ],
           ),
-          AlertButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            titleColor: kUIColor,
-            title: "Yes",
-          )
-        ],
-      ),
     );
   }
 }

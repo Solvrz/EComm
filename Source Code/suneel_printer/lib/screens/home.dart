@@ -38,26 +38,25 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           return showDialog(
             context: context,
-            builder: (_) =>
-                RoundedAlertDialog(
-                  title: "Do you want to quit the app?",
-                  buttonsList: [
-                    AlertButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      titleColor: kUIColor,
-                      title: "No",
-                    ),
-                    AlertButton(
-                      onPressed: () {
-                        SystemNavigator.pop();
-                      },
-                      titleColor: kUIColor,
-                      title: "Yes",
-                    )
-                  ],
+            builder: (_) => RoundedAlertDialog(
+              title: "Do you want to quit the app?",
+              buttonsList: [
+                AlertButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  titleColor: kUIColor,
+                  title: "No",
                 ),
+                AlertButton(
+                  onPressed: () {
+                    SystemNavigator.pop();
+                  },
+                  titleColor: kUIColor,
+                  title: "Yes",
+                )
+              ],
+            ),
           );
         }
       },
@@ -103,11 +102,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
                                 maxWidth:
-                                (MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width - 24) /
-                                    2.1),
+                                    (MediaQuery.of(context).size.width - 24) /
+                                        2.1),
                             child: Text(
                               selectedInfo != null
                                   ? selectedInfo["address"]
@@ -179,10 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     Container(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width,
+                      width: MediaQuery.of(context).size.width,
                       height: getHeight(context, 50),
                       padding: EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
@@ -239,42 +232,37 @@ class _HomeScreenState extends State<HomeScreen> {
                             if (future.hasData) {
                               List docs = future.data.docs
                                   .where(
-                                    (element) =>
-                                    element
+                                    (element) => element
                                         .data()["name"]
                                         .toLowerCase()
                                         .contains(
-                                      query.toLowerCase().trim(),
-                                    ),
-                              )
+                                          query.toLowerCase().trim(),
+                                        ),
+                                  )
                                   .toList();
 
                               List<Product> products = List.generate(
                                 docs.length,
-                                    (index) =>
-                                    Product.fromJson(
-                                      docs[index].data(),
-                                    ),
+                                (index) => Product.fromJson(
+                                  docs[index].data(),
+                                ),
                               );
 
                               return products.length > 0
                                   ? ProductList(products: products)
                                   : Center(
-                                child: Container(
-                                  width:
-                                  MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width /
-                                      1.25,
-                                  child: EmptyListWidget(
-                                    packageImage: PackageImage.Image_1,
-                                    title: "No Results",
-                                    subTitle:
-                                    "No results found for your search",
-                                  ),
-                                ),
-                              );
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.25,
+                                        child: EmptyListWidget(
+                                          packageImage: PackageImage.Image_1,
+                                          title: "No Results",
+                                          subTitle:
+                                              "No results found for your search",
+                                        ),
+                                      ),
+                                    );
                             } else {
                               return Center(
                                 child: indicator,
@@ -308,13 +296,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       Map<String, dynamic> data =
-                                      categories[index];
+                                          categories[index];
                                       return GestureDetector(
                                         behavior: HitTestBehavior.translucent,
                                         onTap: () {
-                                          FirebaseFirestore.instance
-                                              .clearPersistence();
-
                                           Navigator.pushNamed(
                                             context,
                                             "/category",
@@ -325,25 +310,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                           );
                                         },
                                         child: Container(
-                                          width: MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width /
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
                                               4,
                                           margin: EdgeInsets.only(right: 12),
                                           padding: EdgeInsets.all(8),
                                           decoration: BoxDecoration(
                                             color: data["color"],
                                             borderRadius:
-                                            BorderRadius.circular(15),
+                                                BorderRadius.circular(15),
                                           ),
                                           child: Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               Image.asset(data["image"],
                                                   height:
-                                                  getHeight(context, 50),
+                                                      getHeight(context, 50),
                                                   width: 50),
                                               SizedBox(height: 8),
                                               Text(
@@ -351,9 +335,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontFamily:
-                                                  "sans-serif-condensed",
+                                                      "sans-serif-condensed",
                                                   fontSize:
-                                                  getHeight(context, 16),
+                                                      getHeight(context, 16),
                                                   color: kUIDarkText,
                                                   fontWeight: FontWeight.w600,
                                                 ),
