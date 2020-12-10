@@ -17,12 +17,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    PaymentArguments args = ModalRoute.of(context).settings.arguments;
+    PaymentArguments args = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
 
     if (!isProcessing) {
       isProcessing = true;
       args.process().then(
-        (_) {
+            (_) {
           if (mounted)
             setState(() {
               isCompleted = true;
@@ -36,10 +39,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 callback: (_) {
                   Timer(
                     Duration(milliseconds: 800),
-                    () => Navigator.pushNamed(
-                      context,
-                      "/home",
-                    ),
+                        () =>
+                        Navigator.pushNamed(
+                          context,
+                          "/home",
+                        ),
                   );
 
                   if (args.success) bag.clear();
@@ -60,7 +64,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
           backgroundColor: kUIColor,
           body: Container(
             padding: EdgeInsets.all(16),
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             child: Column(children: [
               if (!isCompleted) SizedBox(height: 150),
               Container(
@@ -71,12 +78,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 child: isCompleted
                     ? flareAnimation
                     : CircularProgressIndicator(
-                        strokeWidth: 14,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Colors.grey[700]),
-                      ),
+                  strokeWidth: 14,
+                  valueColor:
+                  AlwaysStoppedAnimation<Color>(Colors.grey[700]),
+                ),
               ),
-              if (!isCompleted) SizedBox(height: getHeight(context, 150)),
+              if (!isCompleted)
+                SizedBox(
+                  height: getHeight(context, 150),
+                ),
               if (isCompleted) ...[
                 Text(
                   args.success ? "Order Placed Successfully" : "Payment Failed",

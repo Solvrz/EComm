@@ -791,18 +791,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         onTap: changeColor,
                         borderRadius: BorderRadius.circular(50),
                         child: Container(
-                            child: notTrans
-                                ? AnimatedOpacity(
-                                    duration: Duration(milliseconds: 210),
-                                    opacity: isCurrentColor ? 1 : 0,
-                                    child: Icon(
-                                      Icons.done,
-                                      color: useWhiteForeground(color)
-                                          ? kUIColor
-                                          : Colors.black,
-                                    ),
-                                  )
-                                : Icon(Icons.clear)),
+                          child: notTrans
+                              ? AnimatedOpacity(
+                                  duration: Duration(milliseconds: 210),
+                                  opacity: isCurrentColor ? 1 : 0,
+                                  child: Icon(
+                                    Icons.done,
+                                    color: useWhiteForeground(color)
+                                        ? kUIColor
+                                        : Colors.black,
+                                  ),
+                                )
+                              : Icon(Icons.clear),
+                        ),
                       ),
                     ),
                   );

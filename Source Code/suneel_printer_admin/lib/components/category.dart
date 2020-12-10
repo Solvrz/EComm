@@ -164,10 +164,11 @@ class _ProductCardState extends State<ProductCard>
                                       widget.product.uId.split("/");
 
                                   if (widget.product.images != null)
-                                    widget.product.images.forEach((element) =>
-                                        storage
-                                            .ref()
-                                            .child(element.url
+                                    widget.product.images.forEach(
+                                      (element) => storage
+                                          .ref()
+                                          .child(
+                                            element.url
                                                 .replaceAll(
                                                     RegExp(
                                                         r'https://firebasestorage.googleapis.com/v0/b/suneelprinters37.appspot.com/o/'),
@@ -177,8 +178,10 @@ class _ProductCardState extends State<ProductCard>
                                                     RegExp(r'(\?alt).*'), '')
                                                 .replaceAll(RegExp(r'%20'), ' ')
                                                 .replaceAll(
-                                                    RegExp(r'%3A'), ':'))
-                                            .delete());
+                                                    RegExp(r'%3A'), ':'),
+                                          )
+                                          .delete(),
+                                    );
 
                                   QuerySnapshot category = await database
                                       .collection("categories")

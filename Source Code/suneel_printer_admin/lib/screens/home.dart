@@ -42,10 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
         FlutterLocalNotificationsPlugin();
 
     flutterLocalNotificationsPlugin.initialize(
-        InitializationSettings(
-            android: AndroidInitializationSettings("@mipmap/ic_launcher")),
-        onSelectNotification: (_) async =>
-            await Navigator.pushNamed(context, "/orders"));
+      InitializationSettings(
+        android: AndroidInitializationSettings("@mipmap/ic_launcher"),
+      ),
+      onSelectNotification: (_) async =>
+          await Navigator.pushNamed(context, "/orders"),
+    );
 
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -58,14 +60,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (notification != null && android != null)
         flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                  channel.id, channel.name, channel.description,
-                  groupKey: "com.solvrz.suneel_printer_admin"),
-            ));
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+                channel.id, channel.name, channel.description,
+                groupKey: "com.solvrz.suneel_printer_admin"),
+          ),
+        );
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -80,7 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        FocusScope.of(context).requestFocus(FocusNode());
+        FocusScope.of(context).requestFocus(
+          FocusNode(),
+        );
 
         if (query != "") {
           if (mounted)
@@ -164,15 +169,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onTap: () {
                                   if (mounted)
                                     setState(() {
-                                      FocusScope.of(context)
-                                          .requestFocus(FocusNode());
+                                      FocusScope.of(context).requestFocus(
+                                        FocusNode(),
+                                      );
                                       query = "";
                                       controller.clear();
                                     });
                                 },
                                 child: Container(
-                                    child: Icon(Icons.clear,
-                                        color: Colors.grey[600])),
+                                  child: Icon(Icons.clear,
+                                      color: Colors.grey[600]),
+                                ),
                               )
                           ]),
                         ),
