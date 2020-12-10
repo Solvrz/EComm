@@ -296,9 +296,9 @@ class _BagScreenState extends State<BagScreen> {
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8),
-            height: getHeight(context, 140),
+            height: getHeight(context, 125),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(20),
                 color: Colors.grey[200]),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,

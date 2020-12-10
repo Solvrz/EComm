@@ -17,7 +17,8 @@ Map selectedInfo;
 List<Map> addresses;
 
 const kUIAccent = Colors.redAccent;
-const kUIColor = Colors.white60;
+const kUISecondaryAccent = Color(0xffa5c4f2);
+const kUIColor = Colors.white;
 const kUILightText = Colors.white;
 const kUIDarkText = Color(0xff031715);
 
@@ -46,9 +47,9 @@ CircularProgressIndicator indicator = CircularProgressIndicator(
   valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),
 );
 
-List onOrder = ["Printing", "Binding"];
+const List<String> onOrder = <String>["Printing", "Binding"];
 
-List<Map<String, dynamic>> categories = [
+const List<Map<String, dynamic>> categories = <Map<String, dynamic>>[
   {
     "uId": 1,
     "name": "Office\nBooks",
@@ -90,5 +91,9 @@ List<Map<String, dynamic>> categories = [
 extension StringExtension on String {
   String capitalize() {
     return this.length > 0 ? this[0].toUpperCase() + this.substring(1) : "";
+  }
+
+  int toInt() {
+    return int.parse(this);
   }
 }

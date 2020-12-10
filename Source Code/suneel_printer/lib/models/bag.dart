@@ -22,7 +22,7 @@ class BagItem {
       Product.fromJson(
         jsonDecode(data.split("\n")[0]),
       ),
-      int.parse(data.split("\n")[1]),
+      data.split("\n")[1].toInt(),
     );
   }
 }

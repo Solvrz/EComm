@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:suneel_printer/constant.dart';
 
 class Variation {
   String _name;
@@ -56,9 +57,8 @@ class Option {
 
   Option({String label, dynamic color}) {
     _label = label;
-    _color = color is String && color != null
-        ? Color(int.parse("0xff$color"))
-        : color;
+    _color =
+        color is String && color != null ? Color("0xff$color".toInt()) : color;
   }
 
   Map toJson() {

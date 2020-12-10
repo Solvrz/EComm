@@ -10,6 +10,7 @@ import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/category.dart';
+import 'package:suneel_printer/screens/product.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -63,11 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: kUIColor,
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
               elevation: 0,
-              backgroundColor: Colors.white,
+              backgroundColor: kUIColor,
               automaticallyImplyLeading: false,
               title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -433,91 +434,303 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 16),
-              FutureBuilder<QuerySnapshot>(
-                  future: database
-                      .collection("products")
-                      .orderBy("sales")
-                      .limit(10)
-                      .get(),
-                  builder: (BuildContext context, future) {
-                    if (future.hasData) {
-                      print(future.data.docs);
-                      return Expanded(
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Color(0xffFF8C6A),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
+              Expanded(
+                child: Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Color(0xffa5c4f2),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Trending Products",
+                            style: TextStyle(
+                              color: kUIDarkText.withOpacity(0.8),
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
                             ),
-                            // Align(
-                            //   alignment: Alignment.bottomCenter,
-                            //   child: GestureDetector(
-                            //     behavior: HitTestBehavior.translucent,
-                            //     onTap: () async {
-                            //       if (await canLaunch("tel://$contact"))
-                            //         launch("tel://$contact");
+                          ),
+                          SizedBox(height: 8),
+                          FutureBuilder<QuerySnapshot>(
+                              future: database
+                                  .collection("products")
+                                  .orderBy("sales")
+                                  .limit(10)
+                                  .get(),
+                              builder: (BuildContext context, future) {
+                                if (future.hasData) {
+                                  List<Product> products = future.data.docs
+                                      .map<Product>((DocumentSnapshot e) =>
+                                          Product.fromJson(e.data()))
+                                      .toList();
 
-                            //       // if (await canLaunch("whatsapp://send?phone=$contact"))
-                            //       //   launch("whatsapp://send?phone=$contact");
-                            //     },
-                            //     child: Container(
-                            //       padding: EdgeInsets.symmetric(
-                            //           vertical: 4, horizontal: 24),
-                            //       decoration: BoxDecoration(
-                            //         color: Colors.grey[200],
-                            //         borderRadius: BorderRadius.only(
-                            //           topLeft: Radius.circular(25),
-                            //           topRight: Radius.circular(25),
-                            //         ),
-                            //       ),
-                            //       height: getHeight(context, 62),
-                            //       width: MediaQuery.of(context).size.width,
-                            //       child: Center(
-                            //         child: Row(
-                            //             mainAxisAlignment:
-                            //                 MainAxisAlignment.center,
-                            //             children: [
-                            //               Icon(Icons.call,
-                            //                   size: getHeight(context, 52),
-                            //                   color: kUIAccent),
-                            //               SizedBox(width: 15),
-                            //               Column(
-                            //                 children: [
-                            //                   Text(
-                            //                     "Call or Whatsapp",
-                            //                     style: TextStyle(
-                            //                         fontSize:
-                            //                             getHeight(context, 20),
-                            //                         fontWeight:
-                            //                             FontWeight.w400),
-                            //                   ),
-                            //                   Text(
-                            //                     "$contact",
-                            //                     style: TextStyle(
-                            //                         fontSize:
-                            //                             getHeight(context, 22),
-                            //                         fontWeight: FontWeight.bold,
-                            //                         color: kUIAccent),
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ]),
-                            //       ),
-                            //     ),
-                            //   ),
-                            // )
-                          ],
-                        ),
-                      );
-                    }
+                                  products.add(products.first);
+                                  products.add(products.first);
+                                  products.add(products.first);
 
-                    return Container();
-                  })
+                                  return Column(
+                                    children: List.generate(
+                                      products.length,
+                                      (int index) {
+                                        Product product = products[index];
+                                        return GestureDetector(
+                                          behavior: HitTestBehavior.translucent,
+                                          onTap: () async {
+                                            await Navigator.pushNamed(
+                                              context,
+                                              "/product",
+                                              arguments: ProductArguments(
+                                                  bag.products[index].product),
+                                            );
+                                            if (mounted) setState(() {});
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.only(right: 8),
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 8),
+                                            height: getHeight(context, 110),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: kUIColor),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.stretch,
+                                              children: [
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 24,
+                                                            vertical: 18),
+                                                    child: Row(
+                                                      children: [
+                                                        product.images.length >
+                                                                0
+                                                            ? Image(
+                                                                image: product
+                                                                    .images[0])
+                                                            : Text(
+                                                                "No Image",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                              ),
+                                                        SizedBox(width: 24),
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceEvenly,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Text(
+                                                                  product.name
+                                                                      .replaceAll(
+                                                                          "",
+                                                                          "\u{200B}"),
+                                                                  maxLines: 3,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          kUIDarkText,
+                                                                      fontSize: getHeight(
+                                                                          context,
+                                                                          22),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      letterSpacing:
+                                                                          -0.4),
+                                                                ),
+                                                              ),
+                                                              Row(
+                                                                children: [
+                                                                  Text(
+                                                                    "₹ ${product.price}",
+                                                                    style: TextStyle(
+                                                                        color:
+                                                                            kUIDarkText,
+                                                                        fontSize: getHeight(
+                                                                            context,
+                                                                            21),
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontFamily:
+                                                                            "sans-serif-condensed"),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      width:
+                                                                          12),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      "₹ ${product.mrp}"
+                                                                          .replaceAll(
+                                                                              "",
+                                                                              "\u{200B}"),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: TextStyle(
+                                                                          color: kUIDarkText.withOpacity(
+                                                                              0.7),
+                                                                          decoration: TextDecoration
+                                                                              .lineThrough,
+                                                                          fontSize: getHeight(
+                                                                              context,
+                                                                              18),
+                                                                          fontWeight: FontWeight
+                                                                              .w800,
+                                                                          fontFamily:
+                                                                              "sans-serif-condensed"),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                if (product.selected.length > 0)
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 12,
+                                                        left: 4,
+                                                        top: 18,
+                                                        bottom: 18),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: List.generate(
+                                                        product.selected.length,
+                                                        (index) => CircleAvatar(
+                                                          radius: 12,
+                                                          backgroundColor:
+                                                              product.selected
+                                                                      .values
+                                                                      .toList()[
+                                                                          index]
+                                                                      .color ??
+                                                                  Colors.grey[
+                                                                      400],
+                                                          child: product
+                                                                      .selected
+                                                                      .values
+                                                                      .toList()[
+                                                                          index]
+                                                                      .color ==
+                                                                  null
+                                                              ? Text(
+                                                                  product
+                                                                      .selected
+                                                                      .values
+                                                                      .toList()[
+                                                                          index]
+                                                                      .label[0]
+                                                                      .toUpperCase(),
+                                                                  style: TextStyle(
+                                                                      fontSize: getHeight(
+                                                                          context,
+                                                                          13),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      color:
+                                                                          kUIDarkText),
+                                                                )
+                                                              : null,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+
+                                return Container();
+                              }),
+                        ],
+                      ),
+                    )),
+                // Align(
+                //   alignment: Alignment.bottomCenter,
+                //   child: GestureDetector(
+                //     behavior: HitTestBehavior.translucent,
+                //     onTap: () async {
+                //       if (await canLaunch("tel://$contact"))
+                //         launch("tel://$contact");
+
+                //       // if (await canLaunch("whatsapp://send?phone=$contact"))
+                //       //   launch("whatsapp://send?phone=$contact");
+                //     },
+                //     child: Container(
+                //       padding: EdgeInsets.symmetric(
+                //           vertical: 4, horizontal: 24),
+                //       decoration: BoxDecoration(
+                //         color: Colors.grey[200],
+                //         borderRadius: BorderRadius.only(
+                //           topLeft: Radius.circular(25),
+                //           topRight: Radius.circular(25),
+                //         ),
+                //       ),
+                //       height: getHeight(context, 62),
+                //       width: MediaQuery.of(context).size.width,
+                //       child: Center(
+                //         child: Row(
+                //             mainAxisAlignment:
+                //                 MainAxisAlignment.center,
+                //             children: [
+                //               Icon(Icons.call,
+                //                   size: getHeight(context, 52),
+                //                   color: kUIAccent),
+                //               SizedBox(width: 15),
+                //               Column(
+                //                 children: [
+                //                   Text(
+                //                     "Call or Whatsapp",
+                //                     style: TextStyle(
+                //                         fontSize:
+                //                             getHeight(context, 20),
+                //                         fontWeight:
+                //                             FontWeight.w400),
+                //                   ),
+                //                   Text(
+                //                     "$contact",
+                //                     style: TextStyle(
+                //                         fontSize:
+                //                             getHeight(context, 22),
+                //                         fontWeight: FontWeight.bold,
+                //                         color: kUIAccent),
+                //                   ),
+                //                 ],
+                //               ),
+                //             ]),
+                //       ),
+                //     ),
+                //   ),
+                // )
+              )
             ],
           ),
         ),
