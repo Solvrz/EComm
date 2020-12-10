@@ -22,8 +22,8 @@ Map selectedInfo;
 List<Map> addresses;
 
 const kUIAccent = Colors.redAccent;
-const kUIColor = Colors.white;
-const kUILightText = Color(0xffF1F9F8);
+const kUIColor = Colors.white60;
+const kUILightText = Colors.white;
 const kUIDarkText = Color(0xff031715);
 
 double getHeight(BuildContext context, double desiredHeight) =>
@@ -58,31 +58,37 @@ List<Map<String, dynamic>> categories = [
     "uId": 1,
     "name": "Office\nBooks",
     "image": "assets/images/Office.png",
+    "color": Color(0xfff0cbb6)
   },
   {
     "uId": 2,
     "name": "Stationary",
     "image": "assets/images/Stationery.png",
+    "color": Color(0xffead7b7)
   },
   {
     "uId": 3,
     "name": "Shagun & Envelopes",
     "image": "assets/images/Shagun.png",
+    "color": Color(0xfff5e5e3)
   },
   {
     "uId": 4,
     "name": "Computer \nAccessories",
     "image": "assets/images/Computer.png",
+    "color": Color(0xffa5c4f2)
   },
   {
     "uId": 5,
     "name": "Printing",
     "image": "assets/images/Printing.png",
+    "color": Color(0xffc3cde2)
   },
   {
     "uId": 6,
     "name": "Binding",
     "image": "assets/images/Binding.png",
+    "color": Color(0xffebcfa0)
   },
 ];
 

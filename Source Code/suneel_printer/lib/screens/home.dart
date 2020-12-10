@@ -1,5 +1,3 @@
-import 'package:carousel_slider/carousel_options.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +10,6 @@ import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/category.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -20,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // ignore: unused_field
   int _current = 0;
   String query = "";
 
@@ -65,61 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: kUIColor,
+          backgroundColor: Colors.white,
           resizeToAvoidBottomInset: false,
-          bottomNavigationBar: query == ""
-              ? GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () async {
-                    if (await canLaunch("tel://$contact"))
-                      launch("tel://$contact");
-
-                    // if (await canLaunch("whatsapp://send?phone=$contact"))
-                    //   launch("whatsapp://send?phone=$contact");
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 24),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25),
-                      ),
-                    ),
-                    height: getHeight(context, 62),
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.call,
-                                size: getHeight(context, 52), color: kUIAccent),
-                            SizedBox(width: 15),
-                            Column(
-                              children: [
-                                Text(
-                                  "Call or Whatsapp",
-                                  style: TextStyle(
-                                      fontSize: getHeight(context, 20),
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                Text(
-                                  "$contact",
-                                  style: TextStyle(
-                                      fontSize: getHeight(context, 22),
-                                      fontWeight: FontWeight.bold,
-                                      color: kUIAccent),
-                                ),
-                              ],
-                            ),
-                          ]),
-                    ),
-                  ),
-                )
-              : null,
           appBar: AppBar(
               elevation: 0,
-              backgroundColor: kUIColor,
+              backgroundColor: Colors.white,
               automaticallyImplyLeading: false,
               title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         "Deliver To",
                         style: TextStyle(
                             fontSize: getHeight(context, 18),
-                            color: kUIAccent.withOpacity(0.8),
+                            color: kUIDarkText,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.2,
                             fontFamily: "sans-serif-condensed"),
@@ -139,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       children: [
                         Icon(Icons.location_on_outlined,
-                            color: kUIAccent.withOpacity(0.6), size: 20),
+                            color: kUIDarkText, size: 20),
                         SizedBox(width: 2),
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
@@ -164,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: kUIDarkText.withOpacity(0.8),
+                                  color: kUIDarkText,
                                   letterSpacing: 0.2,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: "sans-serif-condensed"),
@@ -184,8 +132,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     child: Padding(
                       padding: EdgeInsets.all(8),
-                      child: Image.asset("assets/images/YourOrders.png",
-                          width: 30, height: 30),
+                      child: Image.asset(
+                        "assets/images/YourOrders.png",
+                        width: 30,
+                        height: 30,
+                      ),
                     ),
                   ),
                 ),
@@ -199,8 +150,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: EdgeInsets.all(14),
                       child: Stack(
                         children: [
-                          Image.asset("assets/images/ShoppingBag.png",
-                              width: 30, height: 30),
+                          Image.asset(
+                            "assets/images/ShoppingBag.png",
+                            width: 30,
+                            height: 30,
+                          ),
                           Positioned(
                             left: 11,
                             top: 10,
@@ -333,60 +287,60 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           return Column(
                             children: [
-                              Container(
-                                height: getHeight(context, 180),
-                                width: MediaQuery.of(context).size.width,
-                                child: CarouselSlider.builder(
-                                  itemCount: carouselImages.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
-                                          ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[200],
-                                        image: DecorationImage(
-                                            image: NetworkImage(
-                                                carouselImages[index]),
-                                            fit: BoxFit.cover),
-                                      ),
-                                    ),
-                                  ),
-                                  options: CarouselOptions(
-                                      autoPlay: carouselImages.length > 1
-                                          ? true
-                                          : false,
-                                      enlargeCenterPage: true,
-                                      aspectRatio: 2,
-                                      onPageChanged: (index, reason) {
-                                        setState(() {
-                                          _current = index;
-                                        });
-                                      }),
-                                ),
-                              ),
-                              SizedBox(height: 12),
-                              if (carouselImages.length > 1)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    carouselImages.length,
-                                    (int index) => AnimatedContainer(
-                                      duration: Duration(milliseconds: 400),
-                                      width: _current == index ? 16 : 8,
-                                      height: _current == index ? 6 : 8,
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 3),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: _current == index
-                                            ? Color.fromRGBO(0, 0, 0, 0.9)
-                                            : Color.fromRGBO(0, 0, 0, 0.4),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              SizedBox(height: getHeight(context, 14)),
+                              // Container(
+                              //   height: getHeight(context, 180),
+                              //   width: MediaQuery.of(context).size.width,
+                              //   child: CarouselSlider.builder(
+                              //     itemCount: carouselImages.length,
+                              //     itemBuilder:
+                              //         (BuildContext context, int index) =>
+                              //             ClipRRect(
+                              //       borderRadius: BorderRadius.circular(10),
+                              //       child: Container(
+                              //         decoration: BoxDecoration(
+                              //           color: Colors.grey[200],
+                              //           image: DecorationImage(
+                              //               image: NetworkImage(
+                              //                   carouselImages[index]),
+                              //               fit: BoxFit.cover),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     options: CarouselOptions(
+                              //         autoPlay: carouselImages.length > 1
+                              //             ? true
+                              //             : false,
+                              //         enlargeCenterPage: true,
+                              //         aspectRatio: 2,
+                              //         onPageChanged: (index, reason) {
+                              //           setState(() {
+                              //             _current = index;
+                              //           });
+                              //         }),
+                              //   ),
+                              // ),
+                              // SizedBox(height: 12),
+                              // if (carouselImages.length > 1)
+                              //   Row(
+                              //     mainAxisAlignment: MainAxisAlignment.center,
+                              //     children: List.generate(
+                              //       carouselImages.length,
+                              //       (int index) => AnimatedContainer(
+                              //         duration: Duration(milliseconds: 400),
+                              //         width: _current == index ? 16 : 8,
+                              //         height: _current == index ? 6 : 8,
+                              //         margin:
+                              //             EdgeInsets.symmetric(horizontal: 3),
+                              //         decoration: BoxDecoration(
+                              //           borderRadius: BorderRadius.circular(15),
+                              //           color: _current == index
+                              //               ? Color.fromRGBO(0, 0, 0, 0.9)
+                              //               : Color.fromRGBO(0, 0, 0, 0.4),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // SizedBox(height: getHeight(context, 14)),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 6),
                                 child: Column(
@@ -401,32 +355,41 @@ class _HomeScreenState extends State<HomeScreen> {
                                           color: kUIDarkText),
                                     ),
                                     SizedBox(height: getHeight(context, 14)),
-                                    GridView.count(
-                                      shrinkWrap: true,
-                                      crossAxisCount: 3,
-                                      mainAxisSpacing: 12,
-                                      crossAxisSpacing: 12,
-                                      childAspectRatio: 0.98,
-                                      children: List.generate(
-                                        categories.length,
-                                        (int index) {
+                                    Container(
+                                      height: getHeight(context, 125),
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: categories.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
                                           Map<String, dynamic> data =
                                               categories[index];
                                           return GestureDetector(
                                             behavior:
                                                 HitTestBehavior.translucent,
-                                            onTap: () => Navigator.pushNamed(
-                                              context,
-                                              "/category",
-                                              arguments: CategoryArguments(
-                                                data,
-                                                data["uId"],
-                                              ),
-                                            ),
+                                            onTap: () {
+                                              FirebaseFirestore.instance
+                                                  .clearPersistence();
+
+                                              Navigator.pushNamed(
+                                                context,
+                                                "/category",
+                                                arguments: CategoryArguments(
+                                                  data,
+                                                  data["uId"],
+                                                ),
+                                              );
+                                            },
                                             child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  4,
+                                              margin:
+                                                  EdgeInsets.only(right: 12),
                                               padding: EdgeInsets.all(8),
                                               decoration: BoxDecoration(
-                                                color: Color(0xffFFEBEB),
+                                                color: data["color"],
                                                 borderRadius:
                                                     BorderRadius.circular(15),
                                               ),
@@ -458,7 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           );
                                         },
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -469,6 +432,92 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
+              SizedBox(height: 16),
+              FutureBuilder<QuerySnapshot>(
+                  future: database
+                      .collection("products")
+                      .orderBy("sales")
+                      .limit(10)
+                      .get(),
+                  builder: (BuildContext context, future) {
+                    if (future.hasData) {
+                      print(future.data.docs);
+                      return Expanded(
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xffFF8C6A),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                            ),
+                            // Align(
+                            //   alignment: Alignment.bottomCenter,
+                            //   child: GestureDetector(
+                            //     behavior: HitTestBehavior.translucent,
+                            //     onTap: () async {
+                            //       if (await canLaunch("tel://$contact"))
+                            //         launch("tel://$contact");
+
+                            //       // if (await canLaunch("whatsapp://send?phone=$contact"))
+                            //       //   launch("whatsapp://send?phone=$contact");
+                            //     },
+                            //     child: Container(
+                            //       padding: EdgeInsets.symmetric(
+                            //           vertical: 4, horizontal: 24),
+                            //       decoration: BoxDecoration(
+                            //         color: Colors.grey[200],
+                            //         borderRadius: BorderRadius.only(
+                            //           topLeft: Radius.circular(25),
+                            //           topRight: Radius.circular(25),
+                            //         ),
+                            //       ),
+                            //       height: getHeight(context, 62),
+                            //       width: MediaQuery.of(context).size.width,
+                            //       child: Center(
+                            //         child: Row(
+                            //             mainAxisAlignment:
+                            //                 MainAxisAlignment.center,
+                            //             children: [
+                            //               Icon(Icons.call,
+                            //                   size: getHeight(context, 52),
+                            //                   color: kUIAccent),
+                            //               SizedBox(width: 15),
+                            //               Column(
+                            //                 children: [
+                            //                   Text(
+                            //                     "Call or Whatsapp",
+                            //                     style: TextStyle(
+                            //                         fontSize:
+                            //                             getHeight(context, 20),
+                            //                         fontWeight:
+                            //                             FontWeight.w400),
+                            //                   ),
+                            //                   Text(
+                            //                     "$contact",
+                            //                     style: TextStyle(
+                            //                         fontSize:
+                            //                             getHeight(context, 22),
+                            //                         fontWeight: FontWeight.bold,
+                            //                         color: kUIAccent),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ]),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // )
+                          ],
+                        ),
+                      );
+                    }
+
+                    return Container();
+                  })
             ],
           ),
         ),
