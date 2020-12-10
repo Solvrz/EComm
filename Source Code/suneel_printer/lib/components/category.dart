@@ -4,9 +4,10 @@ import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/product.dart';
 
 class ProductList extends StatefulWidget {
-  ProductList({@required this.products});
-
+  final State parent;
   final List<Product> products;
+
+  ProductList({this.parent, @required this.products});
 
   @override
   _ProductListState createState() => _ProductListState();
@@ -15,13 +16,18 @@ class ProductList extends StatefulWidget {
 class _ProductListState extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      shrinkWrap: true,
-      crossAxisCount: 2,
-      childAspectRatio: getAspect(context, 0.75),
-      children: List.generate(
-        widget.products.length,
-            (index) => ProductCard(product: widget.products[index]),
+    return Container(
+      child: GridView.count(
+        shrinkWrap: true,
+        crossAxisCount: 2,
+        childAspectRatio: getAspect(context, 0.74),
+        children: List.generate(
+          widget.products.length,
+          (index) => ProductCard(
+            product: widget.products[index],
+            parent: widget.parent,
+          ),
+        ),
       ),
     );
   }
@@ -29,8 +35,9 @@ class _ProductListState extends State<ProductList> {
 
 class ProductCard extends StatefulWidget {
   final Product product;
+  final State parent;
 
-  ProductCard({this.product});
+  ProductCard({this.product, this.parent});
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -39,10 +46,7 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width / 3;
+    final double width = MediaQuery.of(context).size.width / 3;
     final double height = width / 0.8;
 
     return GestureDetector(
@@ -53,10 +57,10 @@ class _ProductCardState extends State<ProductCard> {
           "/product",
           arguments: ProductArguments(widget.product),
         );
-        if (mounted) setState(() {});
+        widget.parent.setState(() {});
       },
       child: Container(
-        padding: EdgeInsets.fromLTRB(12, 24, 12, 0),
+        padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(color: Colors.grey[400], width: 1),
@@ -68,31 +72,8 @@ class _ProductCardState extends State<ProductCard> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Align(
             alignment: Alignment.center,
-            child: Stack(
+            child: Column(
               children: [
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 15, 12, 0),
-                    child: widget.product.images.length > 0
-                        ? Container(
-                      height: height / getAspect(context, 1.2),
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[600],
-                          blurRadius: 12,
-                          offset: Offset(2, 2),
-                        )
-                      ]),
-                      child: Image(image: widget.product.images[0]),
-                    )
-                        : Container(
-                      height: height / getAspect(context, 1.2),
-                      child: Center(
-                        child: Text("No Image Provided"),
-                      ),
-                    ),
-                  ),
-                ),
                 Align(
                   alignment: Alignment.topRight,
                   child: GestureDetector(
@@ -100,8 +81,7 @@ class _ProductCardState extends State<ProductCard> {
                     onTap: () {
                       if (mounted)
                         setState(
-                              () =>
-                          wishlist.containsProduct(widget.product)
+                          () => wishlist.containsProduct(widget.product)
                               ? wishlist.removeProduct(widget.product)
                               : wishlist.addProduct(widget.product),
                         );
@@ -117,7 +97,31 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                     ),
                   ),
-                )
+                ),
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 4, 12, 0),
+                    child: widget.product.images.length > 0
+                        ? Container(
+                            height: height / getAspect(context, 1.2),
+                            decoration: BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey[400],
+                                blurRadius: 8,
+                                spreadRadius: 1,
+                                offset: Offset(2, 2),
+                              )
+                            ]),
+                            child: Image(image: widget.product.images[0]),
+                          )
+                        : Container(
+                            height: height / getAspect(context, 1.2),
+                            child: Center(
+                              child: Text("No Image Provided"),
+                            ),
+                          ),
+                  ),
+                ),
               ],
             ),
           ),

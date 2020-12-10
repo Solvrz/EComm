@@ -7,12 +7,13 @@ import 'package:suneel_printer/models/product.dart';
 
 // ignore: must_be_immutable
 class CategoryProductPage extends StatefulWidget {
+  final State parent;
   final String title;
   final List<Map> tabsData;
   final List<DocumentReference> tabs;
   int _currentTab = 0;
 
-  CategoryProductPage(this.title, this.tabsData, this.tabs);
+  CategoryProductPage(this.parent, this.title, this.tabsData, this.tabs);
 
   @override
   _CategoryProductPageState createState() => _CategoryProductPageState();
@@ -59,44 +60,36 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                     },
                     child: Container(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 18),
-                        child: Row(
-                          children: [
-                            if (index == widget._currentTab) ...[
-                              CircleAvatar(
-                                radius: 4,
-                                backgroundColor: kUISecondaryAccent,
-                              ),
-                              SizedBox(width: 8),
-                            ],
-                            AnimatedDefaultTextStyle(
-                              child: Text(
-                                widget.tabsData[index]["name"]
-                                    .split("\\n")
-                                    .join("\n"),
-                                textAlign: TextAlign.center,
-                              ),
-                              duration: Duration(milliseconds: 150),
-                              style: TextStyle(
-                                  fontSize:
-                                      index == widget._currentTab ? 16 : 14,
-                                  fontWeight: index == widget._currentTab
-                                      ? FontWeight.w600
-                                      : FontWeight.normal,
-                                  color: index == widget._currentTab
-                                      ? kUIDarkText
-                                      : Colors.grey[600]),
-                            ),
-                            if (index == widget._currentTab) ...[
-                              SizedBox(width: 8),
-                              CircleAvatar(
-                                radius: 4,
-                                backgroundColor: kUISecondaryAccent,
+                          padding: EdgeInsets.symmetric(horizontal: 18),
+                          child: Row(
+                            children: [
+                              if (index == widget._currentTab) ...[
+                                CircleAvatar(
+                                  radius: 4,
+                                  backgroundColor: kUISecondaryAccent,
+                                ),
+                                SizedBox(width: 8),
+                              ],
+                              AnimatedDefaultTextStyle(
+                                child: Text(
+                                  widget.tabsData[index]["name"]
+                                      .split("\\n")
+                                      .join("\n"),
+                                  textAlign: TextAlign.center,
+                                ),
+                                duration: Duration(milliseconds: 150),
+                                style: TextStyle(
+                                    fontSize: getHeight(context,
+                                        index == widget._currentTab ? 16 : 14),
+                                    fontWeight: index == widget._currentTab
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                                    color: index == widget._currentTab
+                                        ? kUIDarkText
+                                        : Colors.grey[600]),
                               ),
                             ],
-                          ],
-                        ),
-                      ),
+                          )),
                     ),
                   );
                 }),
@@ -105,7 +98,18 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             if (tabsController.hasClients)
               if (tabsController.offset <
                   tabsController.position.maxScrollExtent * 0.9)
-                Icon(Icons.arrow_forward_ios, size: 18)
+                GestureDetector(
+                  onTap: () => tabsController.animateTo(
+                    tabsController.position.maxScrollExtent,
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: getHeight(context, 18),
+                    color: kUIDarkText.withOpacity(0.75),
+                  ),
+                )
           ],
         ),
       ),
@@ -117,6 +121,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             if (future.data.docs.isNotEmpty) {
               return Expanded(
                 child: ProductList(
+                  parent: widget.parent,
                   products: future.data.docs.map<Product>(
                     (DocumentSnapshot e) {
                       return Product.fromJson(

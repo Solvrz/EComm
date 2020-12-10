@@ -37,6 +37,14 @@ class CategoryProductPage extends StatefulWidget {
 }
 
 class _CategoryProductPageState extends State<CategoryProductPage> {
+  ScrollController tabsController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabsController = ScrollController()..addListener(() => setState(() {}));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -49,46 +57,67 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             horizontal: BorderSide(color: Colors.grey[400], width: 1),
           ),
         ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              ...List.generate(widget.tabs.length, (int index) {
-                return GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () {
-                    if (index == widget._currentTab) return;
-                    if (mounted)
-                      setState(() {
-                        widget._currentTab = index;
-                      });
-                  },
-                  child: Container(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      child: AnimatedDefaultTextStyle(
-                        child: Text(
-                          widget.tabsData[index]["name"]
-                              .split("\\n")
-                              .join("\n"),
-                          textAlign: TextAlign.center,
+        child: Stack(
+          alignment: Alignment.centerRight,
+          children: [
+            SingleChildScrollView(
+              controller: tabsController,
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  ...List.generate(widget.tabs.length, (int index) {
+                    return GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        if (index == widget._currentTab) return;
+                        if (mounted)
+                          setState(() {
+                            widget._currentTab = index;
+                          });
+                      },
+                      child: Container(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 24),
+                          child: AnimatedDefaultTextStyle(
+                            child: Text(
+                              widget.tabsData[index]["name"]
+                                  .split("\\n")
+                                  .join("\n"),
+                              textAlign: TextAlign.center,
+                            ),
+                            duration: Duration(milliseconds: 150),
+                            style: TextStyle(
+                                fontSize: index == widget._currentTab ? 16 : 14,
+                                fontWeight: index == widget._currentTab
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                                color: index == widget._currentTab
+                                    ? kUIDarkText
+                                    : Colors.grey[600]),
+                          ),
                         ),
-                        duration: Duration(milliseconds: 150),
-                        style: TextStyle(
-                            fontSize: index == widget._currentTab ? 16 : 14,
-                            fontWeight: index == widget._currentTab
-                                ? FontWeight.w600
-                                : FontWeight.normal,
-                            color: index == widget._currentTab
-                                ? kUIDarkText
-                                : Colors.grey[600]),
                       ),
-                    ),
+                    );
+                  })
+                ],
+              ),
+            ),
+            if (tabsController.hasClients)
+              if (tabsController.offset <
+                  tabsController.position.maxScrollExtent * 0.9)
+                GestureDetector(
+                  onTap: () => tabsController.animateTo(
+                    tabsController.position.maxScrollExtent,
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
                   ),
-                );
-              })
-            ],
-          ),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: getHeight(context, 18),
+                    color: kUIDarkText.withOpacity(0.75),
+                  ),
+                )
+          ],
         ),
       ),
       StreamBuilder<QuerySnapshot>(

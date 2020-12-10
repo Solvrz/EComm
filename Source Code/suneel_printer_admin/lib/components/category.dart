@@ -76,31 +76,8 @@ class _ProductCardState extends State<ProductCard>
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Align(
           alignment: Alignment.center,
-          child: Stack(
+          child: Column(
             children: [
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 15, 18, 0),
-                  child: widget.product.images.length > 0
-                      ? Container(
-                          height: height / 1.675,
-                          decoration: BoxDecoration(boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[600],
-                              blurRadius: 12,
-                              offset: Offset(2, 2),
-                            )
-                          ]),
-                          child: Image(image: widget.product.images[0]),
-                        )
-                      : Container(
-                          height: height / 1.65,
-                          child: Center(
-                            child: Text("No Image Provided"),
-                          ),
-                        ),
-                ),
-              ),
               Align(
                 alignment: Alignment.topRight,
                 child: Column(
@@ -234,6 +211,30 @@ class _ProductCardState extends State<ProductCard>
                       ),
                     )
                   ],
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 4, 18, 0),
+                  child: widget.product.images.length > 0
+                      ? Container(
+                          height: height / 1.675,
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey[400],
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                              offset: Offset(2, 2),
+                            )
+                          ]),
+                          child: Image(image: widget.product.images[0]),
+                        )
+                      : Container(
+                          height: height / 1.65,
+                          child: Center(
+                            child: Text("No Image Provided"),
+                          ),
+                        ),
                 ),
               )
             ],
