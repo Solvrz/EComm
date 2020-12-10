@@ -19,24 +19,42 @@ void main() async {
   RenderErrorBox.backgroundColor = Colors.transparent;
   RenderErrorBox.textStyle = ui.TextStyle(color: Colors.transparent);
 
-  Firebase.initializeApp().whenComplete(() {
-    FirebasePerformance.instance
-        .setPerformanceCollectionEnabled(false)
+  secureStorage
+      .write(key: "key_testing", value: "rzp_test_3XFNUiX9RPskxm")
+      .whenComplete(() {
+    secureStorage
+        // TODO: Put Merchant Key
+        .write(key: "key_production", value: "")
         .whenComplete(() {
-      FirebaseCrashlytics.instance
-          .setCrashlyticsCollectionEnabled(false)
-          .whenComplete(() {
-        FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+      secureStorage.read(key: "key_testing").then((value) {
+        keyTesting = value;
 
-        SharedPreferences.getInstance()
-            .then((value) => preferences = value)
-            .whenComplete(() {
-          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-              .whenComplete(
-            () => runApp(
-              SuneelPrinter(),
-            ),
-          );
+        secureStorage.read(key: "key_production").then((value) {
+          keyProduction = value;
+
+          Firebase.initializeApp().whenComplete(() {
+            FirebasePerformance.instance
+                .setPerformanceCollectionEnabled(false)
+                .whenComplete(() {
+              FirebaseCrashlytics.instance
+                  .setCrashlyticsCollectionEnabled(false)
+                  .whenComplete(() {
+                FlutterError.onError =
+                    FirebaseCrashlytics.instance.recordFlutterError;
+
+                SharedPreferences.getInstance()
+                    .then((value) => preferences = value)
+                    .whenComplete(() {
+                  SystemChrome.setPreferredOrientations(
+                      [DeviceOrientation.portraitUp]).whenComplete(
+                    () => runApp(
+                      SuneelPrinter(),
+                    ),
+                  );
+                });
+              });
+            });
+          });
         });
       });
     });

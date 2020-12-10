@@ -393,9 +393,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             Map tokenResponse = jsonDecode(token.body);
 
                             _razorpay.open({
-                              "key": testing
-                                  ? "rzp_test_3XFNUiX9RPskxm"
-                                  : "", // TODO: Put Merchant Key
+                              "key": testing ? keyTesting : keyProduction,
                               "order_id": tokenResponse["id"],
                               "amount": (widget.price * 100),
                               "name": "Suneel Printers.",

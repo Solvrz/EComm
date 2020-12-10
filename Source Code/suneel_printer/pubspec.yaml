@@ -10,11 +10,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   firebase_core: ^0.5.2+1
   cloud_firestore: ^0.14.3+1
   firebase_crashlytics: ^0.2.3+1
   firebase_performance: ^0.4.2
+  flutter_secure_storage: ^3.3.5
   responsive_framework: ^0.0.14
   shared_preferences: ^0.5.12+4
   razorpay_flutter: ^1.2.2

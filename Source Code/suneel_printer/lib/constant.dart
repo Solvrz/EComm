@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/models/bag.dart';
 import 'package:suneel_printer/models/wishlist.dart';
@@ -7,7 +8,11 @@ import 'package:suneel_printer/models/wishlist.dart';
 bool testing = true;
 String contact = "1234567890";
 
+String keyTesting = "";
+String keyProduction = "";
+
 FirebaseFirestore database = FirebaseFirestore.instance;
+FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
 Bag bag = Bag();
 Wishlist wishlist = Wishlist();
