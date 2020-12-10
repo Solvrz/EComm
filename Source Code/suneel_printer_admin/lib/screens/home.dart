@@ -1,17 +1,13 @@
-import 'package:carousel_slider/carousel_options.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:empty_widget/empty_widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:suneel_printer_admin/components/alert_button.dart';
-import 'package:suneel_printer_admin/components/home.dart';
+import 'package:suneel_printer_admin/components/order.dart';
 import 'package:suneel_printer_admin/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer_admin/constant.dart';
-import 'package:suneel_printer_admin/models/product.dart';
 import 'package:suneel_printer_admin/screens/category.dart';
 
 bool hasShown = false;
@@ -22,11 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _current = 0;
-  String query = "";
-
-  TextEditingController controller = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -39,19 +30,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
     flutterLocalNotificationsPlugin.initialize(
       InitializationSettings(
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
       ),
       onSelectNotification: (_) async =>
-          await Navigator.pushNamed(context, "/orders"),
+      await Navigator.pushNamed(context, "/orders"),
     );
 
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -83,108 +74,58 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        FocusScope.of(context).requestFocus(
-          FocusNode(),
+        return showDialog(
+          context: context,
+          builder: (_) =>
+              RoundedAlertDialog(
+                title: "Do you want to quit the app?",
+                buttonsList: [
+                  AlertButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    titleColor: kUIColor,
+                    title: "No",
+                  ),
+                  AlertButton(
+                    onPressed: () {
+                      SystemNavigator.pop();
+                    },
+                    titleColor: kUIColor,
+                    title: "Yes",
+                  )
+                ],
+              ),
         );
-
-        if (query != "") {
-          if (mounted)
-            setState(() {
-              query = "";
-              controller.clear();
-            });
-          return false;
-        } else {
-          return showDialog(
-            context: context,
-            builder: (_) => RoundedAlertDialog(
-              title: "Do you want to quit the app?",
-              buttonsList: [
-                AlertButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  titleColor: kUIColor,
-                  title: "No",
-                ),
-                AlertButton(
-                  onPressed: () {
-                    SystemNavigator.pop();
-                  },
-                  titleColor: kUIColor,
-                  title: "Yes",
-                )
-              ],
-            ),
-          );
-        }
       },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: kUIColor,
           resizeToAvoidBottomInset: false,
-          body: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+          body: Column(children: [
+            Container(
+              height: getHeight(context, 360),
+              decoration: BoxDecoration(
+                color: kUISecondaryAccent,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 16),
                 child: Column(children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          margin: EdgeInsets.symmetric(vertical: 24),
-                          padding: EdgeInsets.symmetric(horizontal: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(children: [
-                            Icon(Icons.search, color: Colors.grey[600]),
-                            SizedBox(width: 12),
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Search for Products",
-                                  hintStyle: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                controller: controller,
-                                onChanged: (value) {
-                                  if (mounted) setState(() => query = value);
-                                },
-                                style: TextStyle(
-                                  color: Colors.grey[800],
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            if (query != "")
-                              GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () {
-                                  if (mounted)
-                                    setState(() {
-                                      FocusScope.of(context).requestFocus(
-                                        FocusNode(),
-                                      );
-                                      query = "";
-                                      controller.clear();
-                                    });
-                                },
-                                child: Container(
-                                  child: Icon(Icons.clear,
-                                      color: Colors.grey[600]),
-                                ),
-                              )
-                          ]),
-                        ),
+                      Text(
+                        "Undelivered Orders",
+                        style: TextStyle(
+                            fontSize: getHeight(context, 32),
+                            letterSpacing: 0.2,
+                            fontWeight: FontWeight.bold,
+                            color: kUIDarkText.withOpacity(0.8)),
                       ),
-                      SizedBox(width: 16),
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
@@ -192,240 +133,250 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: Container(
                           child: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Image.asset("assets/images/YourOrders.png",
-                                width: 30, height: 30),
+                            padding: EdgeInsets.all(4),
+                            child: Image.asset(
+                              "assets/images/YourOrders.png",
+                              width: 30,
+                              height: 30,
+                            ),
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
-                  if (query != "")
-                    StreamBuilder<QuerySnapshot>(
-                        stream: database.collection("products").snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> future) {
-                          if (future.hasData) {
-                            List docs = future.data.docs
-                                .where(
-                                  (element) => element
-                                      .data()["name"]
-                                      .toLowerCase()
-                                      .contains(
-                                        query.toLowerCase().trim(),
-                                      ),
-                                )
-                                .toList();
+                  SizedBox(height: 12),
+                  Expanded(
+                    child: StreamBuilder(
+                      stream: database
+                          .collection("orders")
+                          .orderBy("time", descending: true)
+                          .snapshots(),
+                      builder: (BuildContext context, AsyncSnapshot future) {
+                        if (future.hasData) {
+                          if (future.data.docs.isNotEmpty) {
+                            List<Map> orders = [];
+                            List<String> orderIds = [];
 
-                            List<Product> products = List.generate(
-                              docs.length,
-                              (index) => Product.fromJson(
-                                docs[index].data(),
+                            future.data.docs.forEach((element) {
+                              if (element.data() != null) {
+                                if (!element.data()["status"]) {
+                                  orders.add(
+                                    element.data(),
+                                  );
+                                  orderIds.add(element.id);
+                                }
+                              }
+                            });
+
+                            return orders.isEmpty
+                                ? Container(
+                              height: getHeight(context, 275),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "No Undelivered Orders Availble",
+                                maxLines: 3,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: getHeight(context, 28),
+                                  fontWeight: FontWeight.bold,
+                                  color: kUILightText.withOpacity(0.8),
+                                ),
+                              ),
+                            )
+                                : Container(
+                              child: Scrollbar(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      Column(
+                                        children: List.generate(
+                                          orders.length,
+                                              (index) =>
+                                              _buildItem(
+                                                context,
+                                                orderIds[index],
+                                                orders[index],
+                                              ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
                             );
-
-                            return products.length > 0
-                                ? GridView.count(
-                                    shrinkWrap: true,
-                                    crossAxisCount: 2,
-                                    childAspectRatio: getAspect(context, 0.725),
-                                    children: List.generate(
-                                      products.length,
-                                      (index) =>
-                                          SearchCard(product: products[index]),
-                                    ),
-                                  )
-                                : Center(
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          1.25,
-                                      child: EmptyListWidget(
-                                        packageImage: PackageImage.Image_1,
-                                        title: "No Results",
-                                        subTitle:
-                                            "No results found for your search",
-                                      ),
-                                    ),
-                                  );
                           } else {
-                            return Center(
-                              child: indicator,
+                            return Container(
+                              height: getHeight(context, 275),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "No Undelivered Orders Availble",
+                                maxLines: 3,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: getHeight(context, 28),
+                                  fontWeight: FontWeight.bold,
+                                  color: kUILightText.withOpacity(0.8),
+                                ),
+                              ),
                             );
                           }
-                        })
-                  else
-                    FutureBuilder<QuerySnapshot>(
-                      future: database
-                          .collection("carouselImages")
-                          .orderBy("sequence")
-                          .get(),
-                      builder: (BuildContext context, AsyncSnapshot future) {
-                        List carouselImages = [
-                          "https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8184.jpg?size=626&ext=jpg"
-                        ];
-
-                        if (future.hasData) {
-                          carouselImages = future.data.docs
-                              .map(
-                                (e) => e.get("url"),
-                              )
-                              .toList();
+                        } else {
+                          return Expanded(
+                            child: Center(
+                              child: indicator,
+                            ),
+                          );
                         }
-
-                        return Column(children: [
-                          CarouselSlider.builder(
-                            itemCount: carouselImages.length,
-                            itemBuilder: (BuildContext context, int index) =>
-                                ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  image: DecorationImage(
-                                      image:
-                                          NetworkImage(carouselImages[index]),
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-                            ),
-                            options: CarouselOptions(
-                                autoPlay:
-                                    carouselImages.length > 1 ? true : false,
-                                enlargeCenterPage: true,
-                                aspectRatio: getAspect(context, 2),
-                                onPageChanged: (index, reason) {
-                                  if (mounted)
-                                    setState(() {
-                                      _current = index;
-                                    });
-                                }),
-                          ),
-                          SizedBox(height: 12),
-                          if (carouselImages.length > 1)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(
-                                carouselImages.length,
-                                (int index) => AnimatedContainer(
-                                  duration: Duration(milliseconds: 400),
-                                  width: _current == index ? 16 : 8,
-                                  height: _current == index ? 6 : 8,
-                                  margin: EdgeInsets.symmetric(horizontal: 3),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: _current == index
-                                        ? Color.fromRGBO(0, 0, 0, 0.9)
-                                        : Color.fromRGBO(0, 0, 0, 0.4),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          SizedBox(height: 18),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 6),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Categories",
-                                    style: TextStyle(
-                                        fontSize: getHeight(context, 32),
-                                        letterSpacing: 0.2,
-                                        fontWeight: FontWeight.bold,
-                                        color: kUIDarkText),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 22),
-                                    child: Container(
-                                      height: getHeight(context, 290),
-                                      child: GridView.count(
-                                        shrinkWrap: true,
-                                        crossAxisCount: 3,
-                                        mainAxisSpacing: getHeight(context, 12),
-                                        crossAxisSpacing: 12,
-                                        childAspectRatio:
-                                            getAspect(context, 0.9),
-                                        children: List.generate(
-                                            categories.length, (int index) {
-                                          Map<String, dynamic> data =
-                                              categories[index];
-                                          return GestureDetector(
-                                            behavior:
-                                                HitTestBehavior.translucent,
-                                            onTap: onOrder
-                                                    .contains(data["name"])
-                                                ? () {
-                                                    Scaffold.of(context)
-                                                        .removeCurrentSnackBar();
-                                                    Scaffold.of(context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        elevation: 10,
-                                                        backgroundColor:
-                                                            kUIAccent,
-                                                        content: Text(
-                                                          "Sorry, ${data["name"]} screen is not available in Admin Mode",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                : () => Navigator.pushNamed(
-                                                      context,
-                                                      "/category",
-                                                      arguments:
-                                                          CategoryArguments(
-                                                        data,
-                                                        data["uId"],
-                                                      ),
-                                                    ),
-                                            child: Container(
-                                              padding: EdgeInsets.all(8),
-                                              decoration: BoxDecoration(
-                                                color: Color(0xffFFEBEB),
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Image.asset(data["image"],
-                                                      height: 50, width: 50),
-                                                  SizedBox(height: 8),
-                                                  Text(
-                                                    data["name"],
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontSize: getHeight(
-                                                          context, 14),
-                                                      fontFamily:
-                                                          "sans-serif-condensed",
-                                                      color: kUIDarkText,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                          ),
-                        ]);
                       },
                     ),
+                  ),
                 ]),
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Categories",
+                    style: TextStyle(
+                        fontSize: getHeight(context, 32),
+                        letterSpacing: 0.2,
+                        fontWeight: FontWeight.bold,
+                        color: kUIDarkText),
+                  ),
+                  SizedBox(height: 12),
+                  Container(
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: getHeight(context, 12),
+                      childAspectRatio: getAspect(context, 1.2),
+                      children: List.generate(
+                        categories.length,
+                            (int index) {
+                          Map<String, dynamic> data = categories[index];
+                          return GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                "/category",
+                                arguments: CategoryArguments(
+                                  data,
+                                  data["uId"],
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width / 4,
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: data["color"],
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(data["image"],
+                                      height: getHeight(context, 65),
+                                      width: getHeight(context, 65)),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    data["name"],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: "sans-serif-condensed",
+                                      fontSize: getHeight(context, 18),
+                                      color: kUIDarkText,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]),
         ),
       ),
     );
   }
+}
+
+Widget _buildItem(BuildContext context, String id, Map order) {
+  return GestureDetector(
+    behavior: HitTestBehavior.translucent,
+    onTap: () async {
+      await showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (_) =>
+            Padding(
+              padding: MediaQuery
+                  .of(context)
+                  .viewInsets,
+              child: OrderSheet(order),
+            ),
+      );
+    },
+    child: Container(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: Slidable(
+          key: ValueKey(order["time"]),
+          actionPane: SlidableDrawerActionPane(),
+          secondaryActions: [
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () =>
+                  database
+                      .collection("orders")
+                      .doc(id)
+                      .update({"status": !order["status"]}),
+              child: Container(
+                margin: EdgeInsets.only(left: 12),
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height / 6.3,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: !order["status"] ? kUIAccent : Colors.greenAccent),
+                child: Icon(
+                    !order["status"] ? Icons.local_shipping : Icons.home,
+                    color: kUILightText,
+                    size: 32),
+              ),
+            )
+          ],
+          child: Container(
+              margin: EdgeInsets.symmetric(vertical: 8),
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 6.2,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.grey[200]),
+              child: Padding(
+                padding: EdgeInsets.all(12),
+                child: InfoWidget(order: order, large: false),
+              )),
+        ),
+      ),
+    ),
+  );
 }
