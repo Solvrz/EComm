@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -528,9 +529,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           product.images
                                                               .length >
                                                               0
-                                                              ? Image(
-                                                              image: product
-                                                                  .images[0])
+                                                              ? CachedNetworkImage(
+                                                            imageUrl:
+                                                            product.images[0],
+                                                            progressIndicatorBuilder: (
+                                                                context,
+                                                                url,
+                                                                downloadProgress) =>
+                                                                CircularProgressIndicator(
+                                                                    value: downloadProgress
+                                                                        .progress),
+                                                            errorWidget: (
+                                                                context,
+                                                                url,
+                                                                error) =>
+                                                                Icon(Icons
+                                                                    .error),
+                                                          )
                                                               : Text(
                                                             "No Image",
                                                             style: TextStyle(

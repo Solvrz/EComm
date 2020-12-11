@@ -145,7 +145,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   SizedBox(height: 12),
-                  Expanded(
+                  Container(
+                    height: getHeight(context, 275),
                     child: StreamBuilder(
                       stream: database
                           .collection("orders")

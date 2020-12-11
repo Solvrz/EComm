@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -117,7 +118,15 @@ class _ProductCardState extends State<ProductCard> {
                           offset: Offset(2, 2),
                         )
                       ]),
-                      child: Image(image: widget.product.images[0]),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.product.images[0],
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                                value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            Icon(Icons.error),
+                      ),
                     )
                         : Container(
                       height: height / getAspect(context, 1.2),

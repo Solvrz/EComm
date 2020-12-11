@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:suneel_printer_admin/models/variation.dart';
 
 class Product {
   String _uId;
   String _name;
-  List<NetworkImage> _images;
+  List _images;
   String _price;
   String _mrp;
   bool _trending;
@@ -15,7 +14,7 @@ class Product {
 
   String get name => _name;
 
-  List<NetworkImage> get images => _images;
+  List get images => _images;
 
   String get price => _price;
 
@@ -37,11 +36,7 @@ class Product {
     Map selected}) {
     _uId = uId;
     _name = name;
-    _images = images
-        .map(
-          (e) => NetworkImage(e),
-    )
-        .toList();
+    _images = images;
     _price = price;
     _mrp = mrp;
     _trending = trending;
@@ -81,7 +76,7 @@ class Product {
     return {
       "uId": _uId,
       "name": _name,
-      "imgs": _images.map((e) => e.url).toList(),
+      "imgs": _images,
       "price": _price,
       "mrp": _mrp,
       "trending": _trending,

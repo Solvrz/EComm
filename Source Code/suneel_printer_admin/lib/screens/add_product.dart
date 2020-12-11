@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -45,7 +46,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   ];
 
   List<Image> images = [];
-  List<String> urls = [];
   List<File> imageFiles = [];
 
   List<Variation> variations = [];
@@ -74,21 +74,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
       mrpController.text = mrp;
 
       trending = args.product.trending;
+      variations = args.product.variations;
 
       if (args.product.images != null) {
         images = args.product.images
             .map(
-              (e) => Image(image: e),
-        )
-            .toList();
-        urls = args.product.images
-            .map(
-              (e) => e.url,
+              (e) => Image(image: CachedNetworkImageProvider(e)),
         )
             .toList();
       }
-
-      variations = args.product.variations;
     }
 
     return WillPopScope(
@@ -164,16 +158,149 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           ),
                         );
                       }
-                          : () {
-                        _addProduct(
-                            context,
-                            args.title,
-                            args.product,
-                            args.tabs,
-                            args.tabsData,
-                            args.currentTab);
+                          : () async {
+                        List<String> urls = args.product != null
+                            ? args.product.images
+                            .map((e) => e.toString())
+                            .toList()
+                            : [];
+                        bool noError = true;
 
-                        Navigator.pop(context);
+                        for (File file in imageFiles) {
+                          try {
+                            TaskSnapshot task = await storage
+                                .ref()
+                                .child(
+                                "Products/${args.title}/${args.tabsData[args
+                                    .currentTab]["name"].split("\\n").join(
+                                    " ")}/file-${Timestamp.now()
+                                    .toDate()}.jpeg")
+                                .putFile(file);
+
+                            String url =
+                            await task.ref.getDownloadURL();
+
+                            urls.add(url);
+                            file.delete();
+                          } catch (e) {
+                            noError = false;
+                          }
+                        }
+
+                        if (noError) {
+                          DocumentSnapshot category = await args
+                              .tabs[args.currentTab].parent.parent
+                              .get();
+                          int categoryId = category.get("uId");
+                          QuerySnapshot query = await args
+                              .tabs[args.currentTab]
+                              .collection("products")
+                              .get();
+
+                          int maxId = 0;
+
+                          query.docs.forEach((element) {
+                            int currId = int.parse(element
+                                .data()["uId"]
+                                .split("/")
+                                .last);
+                            if (currId > maxId) maxId = currId;
+                          });
+
+                          if (args.product != null) {
+                            QuerySnapshot query = await args
+                                .tabs[args.currentTab]
+                                .collection("products")
+                                .where("uId",
+                                isEqualTo: args.product.uId)
+                                .get();
+
+                            await query.docs.first.reference.update({
+                              "uId": args.product.uId,
+                              "imgs": urls,
+                              "mrp": double.parse(mrp),
+                              "price": double.parse(price),
+                              "name": name.trim(),
+                              "trending": trending,
+                              "variations": variations
+                                  .map(
+                                    (e) => e.toJson(),
+                              )
+                                  .toList()
+                            });
+
+                            query = await database
+                                .collection("products")
+                                .where("uId",
+                                isEqualTo: args.product.uId)
+                                .get();
+
+                            await query.docs.first.reference.update({
+                              "uId": args.product.uId,
+                              "imgs": urls,
+                              "mrp": double.parse(mrp),
+                              "price": double.parse(price),
+                              "name": name.trim(),
+                              "trending": trending,
+                              "variations": variations
+                                  .map(
+                                    (e) => e.toJson(),
+                              )
+                                  .toList()
+                            });
+                          } else {
+                            await args.tabs[args.currentTab]
+                                .collection("products")
+                                .add({
+                              "uId":
+                              "$categoryId/${args.tabsData[args
+                                  .currentTab]["uId"]}/${maxId + 1}",
+                              "imgs": urls,
+                              "mrp": double.parse(mrp),
+                              "price": double.parse(price),
+                              "name": name.trim(),
+                              "trending": trending,
+                              "variations": variations
+                                  .map(
+                                    (e) => e.toJson(),
+                              )
+                                  .toList()
+                            });
+
+                            await database
+                                .collection("products")
+                                .add({
+                              "uId":
+                              "$categoryId/${args.tabsData[args
+                                  .currentTab]["uId"]}/${maxId + 1}",
+                              "imgs": urls,
+                              "mrp": double.parse(mrp),
+                              "price": double.parse(price),
+                              "name": name.trim(),
+                              "trending": trending,
+                              "variations": variations
+                                  .map(
+                                    (e) => e.toJson(),
+                              )
+                                  .toList()
+                            });
+                          }
+
+                          Navigator.pop(context);
+                        } else {
+                          Scaffold.of(context)
+                              .removeCurrentSnackBar();
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              elevation: 10,
+                              backgroundColor: kUIAccent,
+                              content: Text(
+                                "Sorry, The product couldn't be added",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        }
                       },
                       child: Padding(
                         padding: EdgeInsets.all(16),
@@ -604,8 +731,141 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               TextEditingController(
                                   text: variation.options[index].label);
 
-                              _buildVariationDialog(
-                                  labelController, variation, index);
+                              showDialog(
+                                context: context,
+                                builder: (_) =>
+                                    WillPopScope(
+                                      onWillPop: () async {
+                                        if (mounted)
+                                          setState(() {
+                                            if (variation.options[index]
+                                                .label !=
+                                                labelController.text &&
+                                                labelController.text != "") {
+                                              variations[variations.indexOf(
+                                                  variation)]
+                                                  .options[index]
+                                                  .label =
+                                                  labelController.text.trim();
+                                            }
+                                          });
+                                        return true;
+                                      },
+                                      child: RoundedAlertDialog(
+                                        title: "Edit Option",
+                                        widgets: [
+                                          TextField(
+                                            controller: labelController,
+                                            decoration: kInputDialogDecoration
+                                                .copyWith(
+                                              suffixIcon: IconButton(
+                                                icon: Icon(Icons.clear),
+                                                onPressed: () =>
+                                                    labelController.clear(),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 12),
+                                          BlockPicker(
+                                              availableColors: colors,
+                                              itemBuilder:
+                                                  (color, isCurrentColor,
+                                                  changeColor) {
+                                                final bool notTrans =
+                                                    color != Colors.transparent;
+                                                return Container(
+                                                  margin: EdgeInsets.all(5),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                    BorderRadius.circular(50),
+                                                    color: notTrans
+                                                        ? color
+                                                        : kUIColor,
+                                                    boxShadow: notTrans
+                                                        ? [
+                                                      BoxShadow(
+                                                        color: color !=
+                                                            kUIColor &&
+                                                            notTrans
+                                                            ? color
+                                                            .withOpacity(0.8)
+                                                            : Colors.grey[600],
+                                                        offset: Offset(1, 2),
+                                                        blurRadius: 5,
+                                                      ),
+                                                    ]
+                                                        : null,
+                                                  ),
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    child: InkWell(
+                                                      onTap: changeColor,
+                                                      borderRadius:
+                                                      BorderRadius.circular(50),
+                                                      child: Container(
+                                                        child: notTrans
+                                                            ? AnimatedOpacity(
+                                                          duration: Duration(
+                                                              milliseconds: 210),
+                                                          opacity: isCurrentColor
+                                                              ? 1
+                                                              : 0,
+                                                          child: Icon(
+                                                            Icons.done,
+                                                            color:
+                                                            useWhiteForeground(
+                                                                color)
+                                                                ? kUIColor
+                                                                : Colors
+                                                                .black,
+                                                          ),
+                                                        )
+                                                            : Icon(Icons.clear),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              pickerColor:
+                                              variation.options[index].color ??
+                                                  Colors.redAccent,
+                                              onColorChanged: (color) {
+                                                if (color != Colors.transparent)
+                                                  variations[
+                                                  variations.indexOf(variation)]
+                                                      .options[index]
+                                                      .color = color;
+                                                else
+                                                  variations[
+                                                  variations.indexOf(variation)]
+                                                      .options[index]
+                                                      .color = null;
+                                              })
+                                        ],
+                                        isExpanded: false,
+                                        buttonsList: [
+                                          AlertButton(
+                                              title: "Done",
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                if (mounted)
+                                                  setState(() {
+                                                    if (variation
+                                                        .options[index].label !=
+                                                        labelController.text) {
+                                                      variations[variations
+                                                          .indexOf(variation)]
+                                                          .options[index]
+                                                          .label =
+                                                          labelController.text
+                                                              .trim();
+                                                    }
+                                                  });
+                                              })
+                                        ],
+                                      ),
+                                    ),
+                              );
                             },
                             onLongPress: () {
                               if (mounted)
@@ -681,240 +941,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
   }
 
-  void _addProduct(BuildContext context, String title, Product product,
-      List<DocumentReference> tabs, List<Map> tabsData, int currentTab) async {
-    List<String> urls =
-    product != null ? product.images.map((e) => e.url).toList() : [];
-    bool noError = true;
-
-    for (File file in imageFiles) {
-      try {
-        TaskSnapshot task = await storage
-            .ref()
-            .child(
-            "Products/$title/${tabsData[currentTab]["name"].split("\\n").join(
-                " ")}/file-${Timestamp.now().toDate()}.jpeg")
-            .putFile(file);
-
-        String url = await task.ref.getDownloadURL();
-
-        urls.add(url);
-        file.delete();
-      } catch (e) {
-        noError = false;
-      }
-    }
-
-    if (noError) {
-      DocumentSnapshot category = await tabs[currentTab].parent.parent.get();
-      int categoryId = category.get("uId");
-      QuerySnapshot query = await tabs[currentTab].collection("products").get();
-
-      int maxId = 0;
-
-      query.docs.forEach((element) {
-        int currId = int.parse(element.data()["uId"]
-            .split("/")
-            .last);
-        if (currId > maxId) maxId = currId;
-      });
-
-      if (product != null) {
-        QuerySnapshot query = await tabs[currentTab]
-            .collection("products")
-            .where("uId", isEqualTo: product.uId)
-            .get();
-
-        await query.docs.first.reference.update({
-          "uId": product.uId,
-          "imgs": urls,
-          "mrp": double.parse(mrp),
-          "price": double.parse(price),
-          "name": name.trim(),
-          "trending": trending,
-          "variations": variations
-              .map(
-                (e) => e.toJson(),
-          )
-              .toList()
-        });
-
-        query = await database
-            .collection("products")
-            .where("uId", isEqualTo: product.uId)
-            .get();
-
-        await query.docs.first.reference.update({
-          "uId": product.uId,
-          "imgs": urls,
-          "mrp": double.parse(mrp),
-          "price": double.parse(price),
-          "name": name.trim(),
-          "trending": trending,
-          "variations": variations
-              .map(
-                (e) => e.toJson(),
-          )
-              .toList()
-        });
-      } else {
-        await tabs[currentTab].collection("products").add({
-          "uId": "$categoryId/${tabsData[currentTab]["uId"]}/${maxId + 1}",
-          "imgs": urls,
-          "mrp": double.parse(mrp),
-          "price": double.parse(price),
-          "name": name.trim(),
-          "trending": trending,
-          "variations": variations
-              .map(
-                (e) => e.toJson(),
-          )
-              .toList()
-        });
-
-        await database.collection("products").add({
-          "uId": "$categoryId/${tabsData[currentTab]["uId"]}/${maxId + 1}",
-          "imgs": urls,
-          "mrp": double.parse(mrp),
-          "price": double.parse(price),
-          "name": name.trim(),
-          "trending": trending,
-          "variations": variations
-              .map(
-                (e) => e.toJson(),
-          )
-              .toList()
-        });
-      }
-    } else {
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          elevation: 10,
-          backgroundColor: kUIAccent,
-          content: Text(
-            "Sorry, The product couldn't be added",
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }
-  }
-
-  void _buildVariationDialog(TextEditingController labelController,
-      Variation variation, int index) {
-    showDialog(
-      context: context,
-      builder: (_) =>
-          WillPopScope(
-            onWillPop: () async {
-              if (mounted)
-                setState(() {
-                  if (variation.options[index].label != labelController.text &&
-                      labelController.text != "") {
-                    variations[variations.indexOf(variation)].options[index]
-                        .label =
-                        labelController.text.trim();
-                  }
-                });
-              return true;
-            },
-            child: RoundedAlertDialog(
-              title: "Edit Option",
-              widgets: [
-                TextField(
-                  controller: labelController,
-                  decoration: kInputDialogDecoration.copyWith(
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: () => labelController.clear(),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 12),
-                BlockPicker(
-                    availableColors: colors,
-                    itemBuilder: (color, isCurrentColor, changeColor) {
-                      final bool notTrans = color != Colors.transparent;
-                      return Container(
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: notTrans ? color : kUIColor,
-                          boxShadow: notTrans
-                              ? [
-                            BoxShadow(
-                              color: color != kUIColor && notTrans
-                                  ? color.withOpacity(0.8)
-                                  : Colors.grey[600],
-                              offset: Offset(1, 2),
-                              blurRadius: 5,
-                            ),
-                          ]
-                              : null,
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: changeColor,
-                            borderRadius: BorderRadius.circular(50),
-                            child: Container(
-                              child: notTrans
-                                  ? AnimatedOpacity(
-                                duration: Duration(milliseconds: 210),
-                                opacity: isCurrentColor ? 1 : 0,
-                                child: Icon(
-                                  Icons.done,
-                                  color: useWhiteForeground(color)
-                                      ? kUIColor
-                                      : Colors.black,
-                                ),
-                              )
-                                  : Icon(Icons.clear),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    pickerColor: variation.options[index].color ??
-                        Colors.redAccent,
-                    onColorChanged: (color) {
-                      if (color != Colors.transparent)
-                        variations[variations.indexOf(variation)]
-                            .options[index]
-                            .color = color;
-                      else
-                        variations[variations.indexOf(variation)]
-                            .options[index]
-                            .color = null;
-                    })
-              ],
-              isExpanded: false,
-              buttonsList: [
-                AlertButton(
-                    title: "Done",
-                    onPressed: () {
-                      Navigator.pop(context);
-                      if (mounted)
-                        setState(() {
-                          if (variation.options[index].label !=
-                              labelController.text) {
-                            variations[variations.indexOf(variation)]
-                                .options[index]
-                                .label = labelController.text.trim();
-                          }
-                        });
-                    })
-              ],
-            ),
-          ),
-    );
-  }
-
   void _buildDiscardChangesDialog(BuildContext context) async {
-    FocusScope.of(context).requestFocus(
-      FocusNode(),
-    );
+    FocusScope.of(context).unfocus();
 
     showDialog(
       context: context,

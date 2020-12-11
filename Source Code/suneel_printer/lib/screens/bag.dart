@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -321,7 +322,15 @@ class _BagScreenState extends State<BagScreen> {
                     child: Row(
                       children: [
                         product.images.length > 0
-                            ? Image(image: product.images[0])
+                            ? CachedNetworkImage(
+                          imageUrl: product.images[0],
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                              CircularProgressIndicator(
+                                  value: downloadProgress.progress),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        )
                             : Text(
                           "No Image",
                           style: TextStyle(fontSize: 20),

@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/components/product.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
+import 'package:suneel_printer/screens/image_viewer.dart';
 
 class ProductScreen extends StatefulWidget {
   @override
@@ -122,8 +124,38 @@ class _ProductScreenState extends State<ProductScreen> {
                                   ? CarouselSlider(
                                 items: product.images
                                     .map<Widget>(
-                                      (NetworkImage image) =>
-                                      Image(image: image),
+                                      (dynamic image) =>
+                                      GestureDetector(
+                                        behavior:
+                                        HitTestBehavior.translucent,
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (BuildContext
+                                              context) =>
+                                                  ImageScreen(
+                                                    title: product.name,
+                                                    images: product.images,
+                                                    currentIndex: 0,
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                        child: CachedNetworkImage(
+                                          imageUrl: image.toString(),
+                                          progressIndicatorBuilder:
+                                              (context, url,
+                                              downloadProgress) =>
+                                              CircularProgressIndicator(
+                                                  value:
+                                                  downloadProgress
+                                                      .progress),
+                                          errorWidget:
+                                              (context, url, error) =>
+                                              Icon(Icons.error),
+                                        ),
+                                      ),
                                 )
                                     .toList(),
                                 options: CarouselOptions(
@@ -305,6 +337,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         onPressed: () async {
                           if (!bag.containsProduct(product)) {
                             bag.addProduct(product);
+
                             await showModalBottomSheet(
                               backgroundColor: Colors.transparent,
                               context: context,

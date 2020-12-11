@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -154,7 +155,15 @@ class _AddProductSheetState extends State<AddProductSheet> {
               child: Row(
                 children: [
                   widget.product.images.length > 0
-                      ? Image(image: widget.product.images[0])
+                      ? CachedNetworkImage(
+                    imageUrl: widget.product.images[0],
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                        CircularProgressIndicator(
+                            value: downloadProgress.progress),
+                    errorWidget: (context, url, error) =>
+                        Icon(Icons.error),
+                  )
                       : Container(
                     padding: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
@@ -277,12 +286,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                 Expanded(
                   flex: 5,
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.popUntil(
-                        context,
-                        ModalRoute.withName("/category"),
-                      );
-                    },
+                    onTap: () => Navigator.pop(context),
                     child: Container(
                       padding:
                       EdgeInsets.symmetric(vertical: 18, horizontal: 24),

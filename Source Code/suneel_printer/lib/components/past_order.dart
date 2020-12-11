@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -310,7 +311,16 @@ class PastOrderSheet extends StatelessWidget {
                               child: Row(
                                 children: [
                                   product.images.length > 0
-                                      ? Image(image: product.images[0])
+                                      ? CachedNetworkImage(
+                                    imageUrl: product.images[0],
+                                    progressIndicatorBuilder: (context,
+                                        url, downloadProgress) =>
+                                        CircularProgressIndicator(
+                                            value: downloadProgress
+                                                .progress),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  )
                                       : Text("No Image"),
                                   SizedBox(width: 24),
                                   Expanded(

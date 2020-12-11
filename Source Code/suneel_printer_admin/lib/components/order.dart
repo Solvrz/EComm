@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:suneel_printer_admin/constant.dart';
 import 'package:suneel_printer_admin/models/product.dart';
@@ -185,7 +186,7 @@ class InfoWidget extends StatelessWidget {
             ],
           ),
         ],
-        if(!large)Divider(height: 15, thickness: 2),
+        if (!large) Divider(height: 15, thickness: 2),
         Row(
           children: [
             Text(
@@ -228,7 +229,7 @@ class InfoWidget extends StatelessWidget {
             ),
           ],
         ),
-        if(large)Divider(height: 21, thickness: 2),
+        if (large) Divider(height: 21, thickness: 2),
       ],
     );
   }
@@ -299,7 +300,16 @@ class OrderSheet extends StatelessWidget {
                               child: Row(
                                 children: [
                                   product.images.length > 0
-                                      ? Image(image: product.images[0])
+                                      ? CachedNetworkImage(
+                                    imageUrl: product.images[0],
+                                    progressIndicatorBuilder: (context,
+                                        url, downloadProgress) =>
+                                        CircularProgressIndicator(
+                                            value: downloadProgress
+                                                .progress),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  )
                                       : Text("No Image Provided"),
                                   SizedBox(width: 24),
                                   Expanded(
