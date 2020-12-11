@@ -22,18 +22,18 @@ Map selectedInfo;
 List<Map> addresses;
 
 // TODO: Light Mode
-// const kUIColor = Colors.white;
-// const kUIAccent = Colors.redAccent;
-// const kUISecondaryAccent = Color(0xffa5c4f2);
-// const kUILightText = Colors.white;
-// const kUIDarkText = Color(0xff031715);
-
-// TODO: Dark Mode
-final kUIColor = Colors.grey.shade900;
+const kUIColor = Colors.white;
 const kUIAccent = Colors.redAccent;
 const kUISecondaryAccent = Color(0xffa5c4f2);
-const kUILightText = Color(0xff031715);
-const kUIDarkText = Colors.white;
+const kUILightText = Colors.white;
+const kUIDarkText = Color(0xff031715);
+
+// TODO: Dark Mode
+// final kUIColor = Colors.grey.shade900;
+// const kUIAccent = Colors.redAccent;
+// const kUISecondaryAccent = Color(0xffa5c4f2);
+// const kUILightText = Color(0xff031715);
+// const kUIDarkText = Colors.white;
 
 double getHeight(BuildContext context, double desiredHeight) =>
     MediaQuery

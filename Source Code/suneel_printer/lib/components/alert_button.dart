@@ -12,7 +12,7 @@ class AlertButton extends StatelessWidget {
   AlertButton({@required this.title,
     @required this.onPressed,
     this.backgroundColor = kUIAccent,
-    this.titleColor = Colors.white,
+    this.titleColor = kUIColor,
     this.titleSize = 17,
     this.borderRadius});
 

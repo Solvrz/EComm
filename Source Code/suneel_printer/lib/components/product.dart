@@ -130,7 +130,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          color: Colors.white,
+          color: kUIColor,
         ),
         padding: EdgeInsets.all(24),
         child: Column(
