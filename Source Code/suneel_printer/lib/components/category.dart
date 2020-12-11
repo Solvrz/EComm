@@ -24,11 +24,10 @@ class _ProductListState extends State<ProductList> {
         childAspectRatio: getAspect(context, 0.74),
         children: List.generate(
           widget.products.length,
-              (index) =>
-              ProductCard(
-                product: widget.products[index],
-                parent: widget.parent,
-              ),
+          (index) => ProductCard(
+            product: widget.products[index],
+            parent: widget.parent,
+          ),
         ),
       ),
     );
@@ -48,10 +47,7 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width / 3;
+    final double width = MediaQuery.of(context).size.width / 3;
     final double height = width / 0.8;
 
     return GestureDetector(
@@ -65,7 +61,7 @@ class _ProductCardState extends State<ProductCard> {
         widget.parent.setState(() {});
       },
       child: Container(
-        padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+        padding: EdgeInsets.fromLTRB(12, 16, 12, 0),
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(color: Colors.grey[400], width: 1),
@@ -86,8 +82,7 @@ class _ProductCardState extends State<ProductCard> {
                     onTap: () {
                       if (mounted)
                         setState(
-                              () =>
-                          wishlist.containsProduct(widget.product)
+                          () => wishlist.containsProduct(widget.product)
                               ? wishlist.removeProduct(widget.product)
                               : wishlist.addProduct(widget.product),
                         );
@@ -109,31 +104,31 @@ class _ProductCardState extends State<ProductCard> {
                     padding: EdgeInsets.fromLTRB(0, 4, 12, 0),
                     child: widget.product.images.length > 0
                         ? Container(
-                      height: height / getAspect(context, 1.2),
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[400],
-                          blurRadius: 8,
-                          spreadRadius: 1,
-                          offset: Offset(2, 2),
-                        )
-                      ]),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.product.images[0],
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                            CircularProgressIndicator(
-                                value: downloadProgress.progress),
-                        errorWidget: (context, url, error) =>
-                            Icon(Icons.error),
-                      ),
-                    )
+                            height: height / getAspect(context, 1.2),
+                            decoration: BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey[400],
+                                blurRadius: 8,
+                                spreadRadius: 1,
+                                offset: Offset(2, 2),
+                              )
+                            ]),
+                            child: CachedNetworkImage(
+                              imageUrl: widget.product.images[0],
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) =>
+                                      CircularProgressIndicator(
+                                          value: downloadProgress.progress),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            ),
+                          )
                         : Container(
-                      height: height / getAspect(context, 1.2),
-                      child: Center(
-                        child: Text("No Image Provided"),
-                      ),
-                    ),
+                            height: height / getAspect(context, 1.2),
+                            child: Center(
+                              child: Text("No Image Provided"),
+                            ),
+                          ),
                   ),
                 ),
               ],

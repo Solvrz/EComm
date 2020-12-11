@@ -5,14 +5,12 @@ class AlertButton extends StatelessWidget {
   final String title;
   final Function onPressed;
   final Color backgroundColor;
-  final Color titleColor;
   final double titleSize;
   final BorderRadius borderRadius;
 
   AlertButton({@required this.title,
     @required this.onPressed,
     this.backgroundColor = kUIAccent,
-    this.titleColor = kUIColor,
     this.titleSize = 17,
     this.borderRadius});
 
@@ -29,7 +27,7 @@ class AlertButton extends StatelessWidget {
         child: Text(
           title,
           style: TextStyle(
-              color: titleColor,
+              color: kUIColor,
               fontSize: titleSize,
               fontWeight: FontWeight.bold),
         ),
