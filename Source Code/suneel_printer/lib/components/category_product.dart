@@ -105,7 +105,7 @@ class _ProductCardState extends State<ProductCard> {
                 ),
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 24, 12, 0),
+                    padding: EdgeInsets.fromLTRB(0, 22, 12, 0),
                     child: widget.product.images.length > 0
                         ? Container(
                       height: height / getAspect(context, 1.2),

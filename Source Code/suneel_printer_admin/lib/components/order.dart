@@ -301,17 +301,21 @@ class OrderSheet extends StatelessWidget {
                               child: Row(
                                 children: [
                                   product.images.length > 0
-                                      ? CachedNetworkImage(
+                                      ? Container(
+                                                                                width: getHeight(context, 100),
+
+                                        child: CachedNetworkImage(
                                     imageUrl: product.images[0],
                                     placeholder: (context, url) =>
-                                        Shimmer.fromColors(
-                                          baseColor: Colors.grey[200],
-                                          highlightColor: Colors.grey[100],
-                                          child: Container(color: Colors.grey),
-                                        ),
+                                          Shimmer.fromColors(
+                                            baseColor: Colors.grey[200],
+                                            highlightColor: Colors.grey[100],
+                                            child: Container(color: Colors.grey),
+                                          ),
                                     errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
-                                  )
+                                          Icon(Icons.error),
+                                  ),
+                                      )
                                       : Text("No Image Provided"),
                                   SizedBox(width: 24),
                                   Expanded(

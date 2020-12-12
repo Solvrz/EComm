@@ -25,8 +25,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
   @override
   void initState() {
     super.initState();
-    tabsController = ScrollController()
-      ..addListener(() => setState(() {}));
+    tabsController = ScrollController()..addListener(() => setState(() {}));
     setState(() {});
   }
 
@@ -35,10 +34,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
     return Column(children: [
       Container(
         padding: EdgeInsets.fromLTRB(0, 6, 2, 6),
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
+        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           color: kUIColor,
           border: Border.symmetric(
@@ -52,6 +48,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
               controller: tabsController,
               scrollDirection: Axis.horizontal,
               child: Row(
+                // TODO FIXME: Set me to start
                 children: List.generate(widget.tabs.length, (int index) {
                   return GestureDetector(
                     behavior: HitTestBehavior.translucent,
@@ -103,12 +100,11 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
               if (tabsController.offset <
                   tabsController.position.maxScrollExtent * 0.9)
                 GestureDetector(
-                  onTap: () =>
-                      tabsController.animateTo(
-                        tabsController.position.maxScrollExtent,
-                        duration: Duration(milliseconds: 400),
-                        curve: Curves.easeInOut,
-                      ),
+                  onTap: () => tabsController.animateTo(
+                    tabsController.position.maxScrollExtent,
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  ),
                   child: Icon(
                     Icons.arrow_forward_ios,
                     size: getHeight(context, 18),
@@ -120,7 +116,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
       ),
       StreamBuilder<QuerySnapshot>(
         stream:
-        widget.tabs[widget._currentTab].collection("products").snapshots(),
+            widget.tabs[widget._currentTab].collection("products").snapshots(),
         builder: (BuildContext context, AsyncSnapshot future) {
           if (future.hasData) {
             if (future.data.docs.isNotEmpty) {
@@ -128,7 +124,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                 child: ProductList(
                   parent: widget.parent,
                   products: future.data.docs.map<Product>(
-                        (DocumentSnapshot e) {
+                    (DocumentSnapshot e) {
                       return Product.fromJson(
                         e.data(),
                       );
@@ -139,14 +135,8 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             } else {
               return Center(
                 child: Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height / 1.5,
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width / 1.5,
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  width: MediaQuery.of(context).size.width / 1.5,
                   child: EmptyListWidget(
                     title: "No Product",
                     subTitle: "No Product Available Yet",
@@ -156,14 +146,8 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             }
           } else {
             return Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 1.5,
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.9,
+              height: MediaQuery.of(context).size.height / 1.5,
+              width: MediaQuery.of(context).size.width * 0.9,
               child: Center(
                 child: indicator,
               ),

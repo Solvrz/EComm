@@ -175,7 +175,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                     ? kUIDarkText
                                     : Colors.grey[600],
                                 fontWeight: FontWeight.bold,
-                                fontSize: getHeight(context, 18),
+                                fontSize: getHeight(context, 20),
                                 letterSpacing: 0.2),
                           ),
                           subtitle: Padding(

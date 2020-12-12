@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: getHeight(context, 275),
                               alignment: Alignment.center,
                               child: Text(
-                                "No Undelivered Orders Availble",
+                                "No Undelivered Orders Available",
                                 maxLines: 3,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
