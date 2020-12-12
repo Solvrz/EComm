@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -97,10 +98,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
                         product.images.length > 0
                             ? CachedNetworkImage(
                           imageUrl: product.images[0],
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                              CircularProgressIndicator(
-                                  value: downloadProgress.progress),
+                          placeholder: (context, url) =>
+                              Shimmer.fromColors(
+                                baseColor: Colors.grey[200],
+                                highlightColor: Colors.grey[100],
+                                child: Container(color: Colors.grey),
+                              ),
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error),
                         )

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/components/product.dart';
 import 'package:suneel_printer/constant.dart';
@@ -144,13 +145,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                         },
                                         child: CachedNetworkImage(
                                           imageUrl: image.toString(),
-                                          progressIndicatorBuilder:
-                                              (context, url,
-                                              downloadProgress) =>
-                                              CircularProgressIndicator(
-                                                  value:
-                                                  downloadProgress
-                                                      .progress),
+                                          placeholder: (context, url) =>
+                                              Shimmer.fromColors(
+                                                baseColor: Colors.grey[200],
+                                                highlightColor: Colors
+                                                    .grey[100],
+                                                child: Container(
+                                                    color: Colors.grey),
+                                              ),
                                           errorWidget:
                                               (context, url, error) =>
                                               Icon(Icons.error),

@@ -25,6 +25,7 @@ dependencies:
   url_launcher: ^5.7.10
   empty_widget: ^0.0.1
   photo_view: ^0.10.3
+  shimmer: ^1.1.2
   http: ^0.12.2
 
 dev_dependencies:

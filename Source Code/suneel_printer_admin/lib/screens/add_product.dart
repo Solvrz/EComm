@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -23,6 +24,8 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
+  bool disablePost = false;
+
   String name = "";
   String price = "";
   String mrp = "";
@@ -47,6 +50,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   List<Image> images = [];
   List<File> imageFiles = [];
+  List<Image> deletedImages = [];
 
   List<Variation> variations = [];
 
@@ -89,7 +93,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       onWillPop: () async {
         _buildDiscardChangesDialog(context);
 
-        return true;
+        return disablePost ? false : true;
       },
       child: SafeArea(
         child: Scaffold(
@@ -116,7 +120,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 builder: (context) =>
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onTap: name == ""
+                      onTap: disablePost
+                          ? null
+                          : name == ""
                           ? () {
                         Scaffold.of(context).removeCurrentSnackBar();
                         Scaffold.of(context).showSnackBar(
@@ -146,7 +152,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       }
                           : mrp == ""
                           ? () {
-                        Scaffold.of(context).removeCurrentSnackBar();
+                        Scaffold.of(context)
+                            .removeCurrentSnackBar();
                         Scaffold.of(context).showSnackBar(
                           SnackBar(
                             elevation: 10,
@@ -159,6 +166,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         );
                       }
                           : () async {
+                        setState(() => disablePost = true);
+
                         List<String> urls = args.product != null
                             ? args.product.images
                             .map((e) => e.toString())
@@ -166,8 +175,26 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             : [];
                         bool noError = true;
 
-                        for (File file in imageFiles) {
+                        for (int i = 0;
+                        i < imageFiles.length;
+                        i++) {
+                          File file = imageFiles[i];
+
                           try {
+                            Scaffold.of(context)
+                                .removeCurrentSnackBar();
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 10,
+                                backgroundColor: kUIAccent,
+                                content: Text(
+                                  "Uploading Image (${i + 1}/${imageFiles
+                                      .length})",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+
                             TaskSnapshot task = await storage
                                 .ref()
                                 .child(
@@ -187,7 +214,90 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           }
                         }
 
+                        if (deletedImages.isNotEmpty) {
+                          for (int i = 0;
+                          i < deletedImages.length;
+                          i++) {
+                            Scaffold.of(context)
+                                .removeCurrentSnackBar();
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 10,
+                                backgroundColor: kUIAccent,
+                                content: Text(
+                                  "Deleting Image (${i + 1}/${deletedImages
+                                      .length})",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+
+                            String url = deletedImages[i]
+                                .image
+                                .toString()
+                                .split("(")[1]
+                                .split(",")[0]
+                                .split('"')[1]
+                                .toString();
+                            await CachedNetworkImage
+                                .evictFromCache(url);
+
+                            urls.removeWhere(
+                                    (element) => element == url);
+
+                            storage
+                                .ref()
+                                .child(
+                              url
+                                  .replaceAll(
+                                  RegExp(
+                                      r'https://firebasestorage.googleapis.com/v0/b/suneelprinters37.appspot.com/o/'),
+                                  '')
+                                  .replaceAll(
+                                  RegExp(r'%2F'), '/')
+                                  .replaceAll(
+                                  RegExp(r'(\?alt).*'),
+                                  '')
+                                  .replaceAll(
+                                  RegExp(r'%20'), ' ')
+                                  .replaceAll(
+                                  RegExp(r'%3A'), ':'),
+                            )
+                                .delete();
+                          }
+
+                          Timer(Duration(milliseconds: 200), () {
+                            Scaffold.of(context)
+                                .removeCurrentSnackBar();
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 10,
+                                backgroundColor: kUIAccent,
+                                content: Text(
+                                  "Deleted Images",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          });
+                        }
+
                         if (noError) {
+                          if (imageFiles.isNotEmpty)
+                            Scaffold.of(context)
+                                .removeCurrentSnackBar();
+                          if (imageFiles.isNotEmpty)
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 10,
+                                backgroundColor: kUIAccent,
+                                content: Text(
+                                  "Uploaded Images",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+
                           DocumentSnapshot category = await args
                               .tabs[args.currentTab].parent.parent
                               .get();
@@ -215,7 +325,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 isEqualTo: args.product.uId)
                                 .get();
 
-                            await query.docs.first.reference.update({
+                            await query.docs.first.reference
+                                .update({
                               "uId": args.product.uId,
                               "imgs": urls,
                               "mrp": double.parse(mrp),
@@ -235,7 +346,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 isEqualTo: args.product.uId)
                                 .get();
 
-                            await query.docs.first.reference.update({
+                            await query.docs.first.reference
+                                .update({
                               "uId": args.product.uId,
                               "imgs": urls,
                               "mrp": double.parse(mrp),
@@ -286,7 +398,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             });
                           }
 
-                          Navigator.pop(context);
+                          Scaffold.of(context)
+                              .removeCurrentSnackBar();
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              elevation: 10,
+                              backgroundColor: kUIAccent,
+                              content: Text(
+                                args.product != null
+                                    ? "Product Updated Successfully"
+                                    : "Product Added Successfully",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+
+                          Timer(
+                            Duration(milliseconds: 400),
+                                () => Navigator.pop(context),
+                          );
                         } else {
                           Scaffold.of(context)
                               .removeCurrentSnackBar();
@@ -312,7 +442,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             child: Text(
                               "Post",
                               style: TextStyle(
-                                color: kUIAccent,
+                                color: disablePost
+                                    ? Colors.grey[200]
+                                    : kUIAccent,
                                 fontSize: getHeight(context, 20),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -430,58 +562,134 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               .size
                               .width,
                           child: images.length > 0
-                              ? Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                              ? Stack(
                             children: [
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                child: CarouselSlider(
-                                  items: images
-                                      .map<Widget>((Image image) => image)
-                                      .toList(),
-                                  options: CarouselOptions(
-                                      autoPlay: images.length > 1
-                                          ? true
-                                          : false,
-                                      enlargeCenterPage: true,
-                                      aspectRatio:
-                                      getAspect(context, 2.5),
-                                      onPageChanged: (index, reason) {
-                                        if (mounted)
-                                          setState(() {
-                                            _currentImage = index;
-                                          });
-                                      }),
-                                ),
+                              Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(8),
+                                    child: CarouselSlider(
+                                      items: images
+                                          .map<Widget>(
+                                              (Image image) => image)
+                                          .toList(),
+                                      options: CarouselOptions(
+                                          autoPlay: images.length > 1
+                                              ? true
+                                              : false,
+                                          enlargeCenterPage: true,
+                                          aspectRatio:
+                                          getAspect(context, 2.5),
+                                          onPageChanged: (index, reason) {
+                                            if (mounted)
+                                              setState(() {
+                                                _currentImage = index;
+                                              });
+                                          }),
+                                    ),
+                                  ),
+                                  if (images.length > 1)
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: List.generate(
+                                        images.length,
+                                            (int index) =>
+                                            AnimatedContainer(
+                                              duration:
+                                              Duration(milliseconds: 400),
+                                              width: _currentImage == index
+                                                  ? 16
+                                                  : 8,
+                                              height: _currentImage == index
+                                                  ? 6
+                                                  : 8,
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 10,
+                                                  horizontal: 3),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                BorderRadius.circular(15),
+                                                color: _currentImage == index
+                                                    ? Color.fromRGBO(
+                                                    0, 0, 0, 0.9)
+                                                    : Color.fromRGBO(
+                                                    0, 0, 0, 0.4),
+                                              ),
+                                            ),
+                                      ),
+                                    ),
+                                ],
                               ),
-                              if (images.length > 1)
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.center,
-                                  children: List.generate(
-                                    images.length,
-                                        (int index) =>
-                                        AnimatedContainer(
-                                          duration:
-                                          Duration(milliseconds: 400),
-                                          width:
-                                          _currentImage == index ? 16 : 8,
-                                          height:
-                                          _currentImage == index ? 6 : 8,
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 3),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(15),
-                                            color: _currentImage == index
-                                                ? Color.fromRGBO(0, 0, 0, 0.9)
-                                                : Color.fromRGBO(
-                                                0, 0, 0, 0.4),
+                              Positioned(
+                                right: 25,
+                                bottom: 10,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    List<Widget> imageWidgets =
+                                    List.generate(
+                                      images.length,
+                                          (index) =>
+                                          GestureDetector(
+                                            behavior:
+                                            HitTestBehavior.translucent,
+                                            onTap: () {
+                                              if (args.product != null &&
+                                                  args.product.images != null)
+                                                setState(() =>
+                                                    deletedImages
+                                                        .add(images[index]));
+
+                                              setState(() =>
+                                                  images.removeAt(index));
+
+                                              Navigator.pop(context);
+                                            },
+                                            child: Container(
+                                              height: getHeight(context, 100),
+                                              width: 150,
+                                              padding: EdgeInsets.all(8),
+                                              margin: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      20),
+                                                  color: Colors.grey[200]),
+                                              child: images[index],
+                                            ),
                                           ),
-                                        ),
+                                    );
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          WillPopScope(
+                                            onWillPop: () async {
+                                              setState(() {});
+                                              return true;
+                                            },
+                                            child: RoundedAlertDialog(
+                                                title:
+                                                "Select the Images to Delete",
+                                                widgets: [
+                                                  Column(
+                                                      children: imageWidgets)
+                                                ]),
+                                          ),
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.delete,
+                                    size: 30,
+                                    color: Colors.grey[700],
                                   ),
                                 ),
+                              ),
                             ],
                           )
                               : Center(
@@ -749,6 +957,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                   labelController.text.trim();
                                             }
                                           });
+
                                         return true;
                                       },
                                       child: RoundedAlertDialog(

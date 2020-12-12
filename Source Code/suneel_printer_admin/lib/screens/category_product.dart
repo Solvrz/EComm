@@ -191,9 +191,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                   .size
                   .width * 0.9,
               child: Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]),
-                ),
+                child: indicator,
               ),
             );
           }

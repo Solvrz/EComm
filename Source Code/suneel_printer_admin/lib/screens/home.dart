@@ -222,10 +222,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
                         } else {
-                          return Expanded(
-                            child: Center(
-                              child: indicator,
-                            ),
+                          return Center(
+                            child: indicator,
                           );
                         }
                       },
