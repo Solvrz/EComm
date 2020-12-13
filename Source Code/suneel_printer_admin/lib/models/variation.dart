@@ -58,8 +58,8 @@ class Option {
     _label = label;
     _color = color is String && color != null
         ? Color(
-      int.parse("0xff$color"),
-    )
+            int.parse("0xff$color"),
+          )
         : color;
   }
 

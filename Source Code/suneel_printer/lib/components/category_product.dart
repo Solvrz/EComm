@@ -25,11 +25,10 @@ class _ProductListState extends State<ProductList> {
         childAspectRatio: getAspect(context, 0.74),
         children: List.generate(
           widget.products.length,
-              (index) =>
-              ProductCard(
-                product: widget.products[index],
-                parent: widget.parent,
-              ),
+          (index) => ProductCard(
+            product: widget.products[index],
+            parent: widget.parent,
+          ),
         ),
       ),
     );
@@ -49,10 +48,7 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width / 3;
+    final double width = MediaQuery.of(context).size.width / 3;
     final double height = width / 0.8;
 
     return GestureDetector(
@@ -85,8 +81,7 @@ class _ProductCardState extends State<ProductCard> {
                     onTap: () {
                       if (mounted)
                         setState(
-                              () =>
-                          wishlist.containsProduct(widget.product)
+                          () => wishlist.containsProduct(widget.product)
                               ? wishlist.removeProduct(widget.product)
                               : wishlist.addProduct(widget.product),
                         );
@@ -108,39 +103,38 @@ class _ProductCardState extends State<ProductCard> {
                     padding: EdgeInsets.fromLTRB(0, 22, 12, 0),
                     child: widget.product.images.length > 0
                         ? Container(
-                      height: height / getAspect(context, 1.2),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.product.images[0],
-                        imageBuilder: (context, imageProvider) =>
-                            Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: imageProvider, fit: BoxFit.fill),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey[400],
-                                      blurRadius: 8,
-                                      spreadRadius: 2,
-                                      offset: Offset(2, 2),
-                                    )
-                                  ]),
+                            height: height / getAspect(context, 1.2),
+                            child: CachedNetworkImage(
+                              imageUrl: widget.product.images[0],
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: imageProvider, fit: BoxFit.fill),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey[400],
+                                        blurRadius: 8,
+                                        spreadRadius: 2,
+                                        offset: Offset(2, 2),
+                                      )
+                                    ]),
+                              ),
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: Colors.grey[200],
+                                highlightColor: Colors.grey[100],
+                                child: Container(color: Colors.grey),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
-                        placeholder: (context, url) =>
-                            Shimmer.fromColors(
-                              baseColor: Colors.grey[200],
-                              highlightColor: Colors.grey[100],
-                              child: Container(color: Colors.grey),
-                            ),
-                        errorWidget: (context, url, error) =>
-                            Icon(Icons.error),
-                      ),
-                    )
+                          )
                         : Container(
-                      height: height / getAspect(context, 1.2),
-                      child: Center(
-                        child: Text("No Image Provided"),
-                      ),
-                    ),
+                            height: height / getAspect(context, 1.2),
+                            child: Center(
+                              child: Text("No Image Provided"),
+                            ),
+                          ),
                   ),
                 ),
               ],

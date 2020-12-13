@@ -41,10 +41,7 @@ class _RequestProductPageState extends State<RequestProductPage> {
                   color: Colors.grey[200],
                 ),
                 height: getHeight(context, 100),
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width / 1.3,
+                width: MediaQuery.of(context).size.width / 1.3,
                 child: Padding(
                   padding: EdgeInsets.all(20),
                   child: Row(
@@ -69,8 +66,7 @@ class _RequestProductPageState extends State<RequestProductPage> {
                           items: List.generate(widget.tabsData.length,
                                   (index) => widget.tabsData[index]["name"])
                               .map<DropdownMenuItem>(
-                                (var val) =>
-                                DropdownMenuItem(
+                                (var val) => DropdownMenuItem(
                                   value: val,
                                   child: Text(
                                     val,
@@ -82,7 +78,7 @@ class _RequestProductPageState extends State<RequestProductPage> {
                                         fontFamily: "sans-serif-condensed"),
                                   ),
                                 ),
-                          )
+                              )
                               .toList(),
                         )
                       ]),
@@ -95,169 +91,157 @@ class _RequestProductPageState extends State<RequestProductPage> {
                   color: Colors.grey[200],
                 ),
                 height: getHeight(context, 200),
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width / 1.3,
+                width: MediaQuery.of(context).size.width / 1.3,
                 child: Padding(
                   padding: EdgeInsets.all(15),
                   child: selectedInfo == null
                       ? Center(
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () async {
-                        await showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          context: context,
-                          builder: (_) =>
-                              Padding(
-                                padding: MediaQuery
-                                    .of(context)
-                                    .viewInsets,
-                                child: InformationSheet(),
-                              ),
-                        );
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () async {
+                              await showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (_) => Padding(
+                                  padding: MediaQuery.of(context).viewInsets,
+                                  child: InformationSheet(),
+                                ),
+                              );
 
-                        if (mounted) setState(() {});
-                      },
-                      child: Container(
-                        child: Text(
-                          "Select Information",
-                          style: TextStyle(
-                            color: kUIDarkText,
-                            fontSize: getHeight(context, 20),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                      : Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  "Name: ",
-                                  style: TextStyle(
-                                    color: kUIDarkText,
-                                    fontSize: getHeight(context, 20),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  "${selectedInfo['name']
-                                      .toString()
-                                      .capitalize()}",
-                                  style: TextStyle(
-                                    fontSize: getHeight(context, 18),
-                                    color: Colors.grey[900],
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () async {
-                                await showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  context: context,
-                                  builder: (_) =>
-                                      Padding(
-                                        padding:
-                                        MediaQuery
-                                            .of(context)
-                                            .viewInsets,
-                                        child: InformationSheet(),
-                                      ),
-                                );
-
-                                if (mounted) setState(() {});
-                              },
-                              child: Container(
-                                child: Icon(
-                                  Icons.edit,
-                                  size: 25,
-                                  color: kUIDarkText.withOpacity(0.8),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Phone: ",
-                              style: TextStyle(
-                                color: kUIDarkText,
-                                fontSize: getHeight(context, 20),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              "${selectedInfo['phone']}",
-                              style: TextStyle(
-                                fontSize: getHeight(context, 18),
-                                color: Colors.grey[900],
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Email: ",
-                              style: TextStyle(
-                                color: kUIDarkText,
-                                fontSize: getHeight(context, 20),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              "${selectedInfo['email']}",
-                              style: TextStyle(
-                                fontSize: getHeight(context, 18),
-                                color: Colors.grey[900],
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Address: ",
-                              style: TextStyle(
-                                color: kUIDarkText,
-                                fontSize: getHeight(context, 20),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
+                              if (mounted) setState(() {});
+                            },
+                            child: Container(
                               child: Text(
-                                "${selectedInfo['address']
-                                    .toString()
-                                    .capitalize()}, ${selectedInfo['pincode']}"
-                                    .replaceAll("", "\u{200B}"),
-                                overflow: TextOverflow.ellipsis,
+                                "Click Here \nSelect Information",
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: getHeight(context, 18),
-                                  color: Colors.grey[900],
-                                  fontWeight: FontWeight.w500,
+                                  color: kUIDarkText,
+                                  fontSize: getHeight(context, 20),
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ]),
+                          ),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Name: ",
+                                        style: TextStyle(
+                                          color: kUIDarkText,
+                                          fontSize: getHeight(context, 20),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        "${selectedInfo['name'].toString().capitalize()}",
+                                        style: TextStyle(
+                                          fontSize: getHeight(context, 18),
+                                          color: Colors.grey[900],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    onTap: () async {
+                                      await showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.transparent,
+                                        context: context,
+                                        builder: (_) => Padding(
+                                          padding:
+                                              MediaQuery.of(context).viewInsets,
+                                          child: InformationSheet(),
+                                        ),
+                                      );
+
+                                      if (mounted) setState(() {});
+                                    },
+                                    child: Container(
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 25,
+                                        color: kUIDarkText.withOpacity(0.8),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Phone: ",
+                                    style: TextStyle(
+                                      color: kUIDarkText,
+                                      fontSize: getHeight(context, 20),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${selectedInfo['phone']}",
+                                    style: TextStyle(
+                                      fontSize: getHeight(context, 18),
+                                      color: Colors.grey[900],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Email: ",
+                                    style: TextStyle(
+                                      color: kUIDarkText,
+                                      fontSize: getHeight(context, 20),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${selectedInfo['email']}",
+                                    style: TextStyle(
+                                      fontSize: getHeight(context, 18),
+                                      color: Colors.grey[900],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Address: ",
+                                    style: TextStyle(
+                                      color: kUIDarkText,
+                                      fontSize: getHeight(context, 20),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      "${selectedInfo['address'].toString().capitalize()}, ${selectedInfo['pincode']}"
+                                          .replaceAll("", "\u{200B}"),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: getHeight(context, 18),
+                                        color: Colors.grey[900],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ]),
                 ),
               )
             ]),
@@ -266,31 +250,31 @@ class _RequestProductPageState extends State<RequestProductPage> {
               child: MaterialButton(
                 onPressed: value != "Choose a Service" && selectedInfo != null
                     ? () async {
-                  Navigator.popAndPushNamed(
-                    context,
-                    "/payment",
-                    arguments: PaymentArguments(
-                        success: true,
-                        msg:
-                        "You will soon receive a confirmation mail from us.",
-                        process: () async {
-                          await http.post(
-                            "https://suneel-printers.herokuapp.com/request",
-                            headers: <String, String>{
-                              "Content-Type":
-                              "application/json; charset=UTF-8",
-                            },
-                            body: jsonEncode(<String, String>{
-                              "name": selectedInfo["name"],
-                              "phone": selectedInfo["phone"],
-                              "address": selectedInfo["address"],
-                              "email": selectedInfo["email"],
-                              "order_list": value
-                            }),
-                          );
-                        }),
-                  );
-                }
+                        Navigator.popAndPushNamed(
+                          context,
+                          "/payment",
+                          arguments: PaymentArguments(
+                              success: true,
+                              msg:
+                                  "You will soon receive a confirmation mail from us.",
+                              process: () async {
+                                await http.post(
+                                  "https://suneel-printers.herokuapp.com/request",
+                                  headers: <String, String>{
+                                    "Content-Type":
+                                        "application/json; charset=UTF-8",
+                                  },
+                                  body: jsonEncode(<String, String>{
+                                    "name": selectedInfo["name"],
+                                    "phone": selectedInfo["phone"],
+                                    "address": selectedInfo["address"],
+                                    "email": selectedInfo["email"],
+                                    "order_list": value
+                                  }),
+                                );
+                              }),
+                        );
+                      }
                     : null,
                 disabledColor: kUIDarkText.withOpacity(0.5),
                 color: kUIAccent,

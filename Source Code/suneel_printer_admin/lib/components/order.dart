@@ -52,10 +52,7 @@ class InfoWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${timestamp.split(" ")[0]
-                      .split("-")
-                      .reversed
-                      .join("-")}"
+                  "${timestamp.split(" ")[0].split("-").reversed.join("-")}"
                       .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -100,9 +97,7 @@ class InfoWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${timestamp.split(" ")[1].split(".")[0].split(
-                      ":")[0]}:${timestamp.split(" ")[1].split(".")[0].split(
-                      ":")[1]}"
+                  "${timestamp.split(" ")[1].split(".")[0].split(":")[0]}:${timestamp.split(" ")[1].split(".")[0].split(":")[1]}"
                       .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -149,9 +144,7 @@ class InfoWidget extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  "${order['address']
-                      .toString()
-                      .capitalize()}, ${order['pincode']}"
+                  "${order['address'].toString().capitalize()}, ${order['pincode']}"
                       .replaceAll("", "\u{200B}"),
                   overflow: shortAddress ? null : TextOverflow.ellipsis,
                   maxLines: shortAddress ? 3 : 1,
@@ -268,26 +261,17 @@ class OrderSheet extends StatelessWidget {
             SizedBox(height: 10),
             Container(
               height: order["products"].length > 3
-                  ? MediaQuery
-                  .of(context)
-                  .size
-                  .height * 375 / 816
-                  : MediaQuery
-                  .of(context)
-                  .size
-                  .height * 275 / 816,
+                  ? MediaQuery.of(context).size.height * 375 / 816
+                  : MediaQuery.of(context).size.height * 275 / 816,
               child: ListView.builder(
                   itemCount: order["products"].length,
                   itemBuilder: (BuildContext context, int index) {
                     Product product =
-                    Product.fromJson(order["products"][index]["product"]);
+                        Product.fromJson(order["products"][index]["product"]);
 
                     return Container(
                       margin: EdgeInsets.symmetric(vertical: 8),
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height / 6,
+                      height: MediaQuery.of(context).size.height / 6,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
                           color: Colors.grey[200]),
@@ -302,38 +286,38 @@ class OrderSheet extends StatelessWidget {
                                 children: [
                                   product.images.length > 0
                                       ? Container(
-                                                                                width: getHeight(context, 100),
-
-                                        child: CachedNetworkImage(
-                                    imageUrl: product.images[0],
-                                    placeholder: (context, url) =>
-                                          Shimmer.fromColors(
-                                            baseColor: Colors.grey[200],
-                                            highlightColor: Colors.grey[100],
-                                            child: Container(color: Colors.grey),
+                                          width: getHeight(context, 100),
+                                          child: CachedNetworkImage(
+                                            imageUrl: product.images[0],
+                                            placeholder: (context, url) =>
+                                                Shimmer.fromColors(
+                                              baseColor: Colors.grey[200],
+                                              highlightColor: Colors.grey[100],
+                                              child:
+                                                  Container(color: Colors.grey),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
                                           ),
-                                    errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                  ),
-                                      )
+                                        )
                                       : Text("No Image Provided"),
                                   SizedBox(width: 24),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
-                                          "${product
-                                              .name} × ${order["products"][index]["quantity"]}",
+                                          "${product.name} × ${order["products"][index]["quantity"]}",
                                           maxLines: 3,
                                           style: TextStyle(
                                               fontSize: getHeight(context, 22),
                                               fontWeight: FontWeight.w500,
                                               fontFamily:
-                                              "sans-serif-condensed",
+                                                  "sans-serif-condensed",
                                               letterSpacing: -0.4),
                                         ),
                                         Row(
@@ -343,10 +327,10 @@ class OrderSheet extends StatelessWidget {
                                               style: TextStyle(
                                                   color: kUIDarkText,
                                                   fontSize:
-                                                  getHeight(context, 20),
+                                                      getHeight(context, 20),
                                                   fontWeight: FontWeight.bold,
                                                   fontFamily:
-                                                  "sans-serif-condensed"),
+                                                      "sans-serif-condensed"),
                                             ),
                                             SizedBox(width: 12),
                                             Text(
@@ -357,10 +341,10 @@ class OrderSheet extends StatelessWidget {
                                                   decoration: TextDecoration
                                                       .lineThrough,
                                                   fontSize:
-                                                  getHeight(context, 18),
+                                                      getHeight(context, 18),
                                                   fontWeight: FontWeight.w800,
                                                   fontFamily:
-                                                  "sans-serif-condensed"),
+                                                      "sans-serif-condensed"),
                                             ),
                                           ],
                                         ),
@@ -375,34 +359,33 @@ class OrderSheet extends StatelessWidget {
                                         bottom: 18),
                                     child: Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceAround,
                                       children: List.generate(
                                         product.selected.length,
-                                            (index) =>
-                                            CircleAvatar(
-                                              radius: 12,
-                                              backgroundColor: product
+                                        (index) => CircleAvatar(
+                                          radius: 12,
+                                          backgroundColor: product
                                                   .selected.values
                                                   .toList()[index]
                                                   .color ??
-                                                  Colors.grey[400],
-                                              child: product.selected.values
-                                                  .toList()[index]
-                                                  .color ==
+                                              Colors.grey[400],
+                                          child: product.selected.values
+                                                      .toList()[index]
+                                                      .color ==
                                                   null
-                                                  ? Text(
-                                                product.selected.values
-                                                    .toList()[index]
-                                                    .label[0]
-                                                    .toUpperCase(),
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight:
-                                                    FontWeight.w600,
-                                                    color: kUIDarkText),
-                                              )
-                                                  : null,
-                                            ),
+                                              ? Text(
+                                                  product.selected.values
+                                                      .toList()[index]
+                                                      .label[0]
+                                                      .toUpperCase(),
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: kUIDarkText),
+                                                )
+                                              : null,
+                                        ),
                                       ),
                                     ),
                                   ),

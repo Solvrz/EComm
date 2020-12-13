@@ -11,9 +11,10 @@ class ImageScreen extends StatefulWidget {
   final List images;
   int currentIndex;
 
-  ImageScreen({@required this.title,
-    @required this.images,
-    @required this.currentIndex});
+  ImageScreen(
+      {@required this.title,
+      @required this.images,
+      @required this.currentIndex});
 
   @override
   _ImageScreenState createState() => _ImageScreenState();
@@ -50,24 +51,23 @@ class _ImageScreenState extends State<ImageScreen> {
                   minScale: PhotoViewComputedScale.contained * 0.8,
                   maxScale: 1.6,
                   imageProvider:
-                  CachedNetworkImageProvider(widget.images[index]),
+                      CachedNetworkImageProvider(widget.images[index]),
                   initialScale: PhotoViewComputedScale.contained * 0.8,
                 );
               },
               itemCount: widget.images.length,
-              loadingBuilder: (context, event) =>
-                  Center(
-                    child: Container(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        value: event == null
-                            ? 0
-                            : event.cumulativeBytesLoaded /
+              loadingBuilder: (context, event) => Center(
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    value: event == null
+                        ? 0
+                        : event.cumulativeBytesLoaded /
                             event.expectedTotalBytes,
-                      ),
-                    ),
                   ),
+                ),
+              ),
               pageController: _pageController,
               onPageChanged: (page) =>
                   setState(() => widget.currentIndex = page),

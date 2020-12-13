@@ -30,19 +30,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+        FlutterLocalNotificationsPlugin();
 
     flutterLocalNotificationsPlugin.initialize(
       InitializationSettings(
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
       ),
       onSelectNotification: (_) async =>
-      await Navigator.pushNamed(context, "/orders"),
+          await Navigator.pushNamed(context, "/orders"),
     );
 
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -76,26 +76,25 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: () async {
         return showDialog(
           context: context,
-          builder: (_) =>
-              RoundedAlertDialog(
-                title: "Do you want to quit the app?",
-                buttonsList: [
-                  AlertButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    titleColor: kUIColor,
-                    title: "No",
-                  ),
-                  AlertButton(
-                    onPressed: () {
-                      SystemNavigator.pop();
-                    },
-                    titleColor: kUIColor,
-                    title: "Yes",
-                  )
-                ],
+          builder: (_) => RoundedAlertDialog(
+            title: "Do you want to quit the app?",
+            buttonsList: [
+              AlertButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                titleColor: kUIColor,
+                title: "No",
               ),
+              AlertButton(
+                onPressed: () {
+                  SystemNavigator.pop();
+                },
+                titleColor: kUIColor,
+                title: "Yes",
+              )
+            ],
+          ),
         );
       },
       child: SafeArea(
@@ -171,40 +170,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             return orders.isEmpty
                                 ? Container(
-                              height: getHeight(context, 275),
-                              alignment: Alignment.center,
-                              child: Text(
-                                "No Undelivered Orders Available",
-                                maxLines: 3,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: getHeight(context, 28),
-                                  fontWeight: FontWeight.bold,
-                                  color: kUILightText.withOpacity(0.8),
-                                ),
-                              ),
-                            )
+                                    height: getHeight(context, 275),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "No Undelivered Orders Available",
+                                      maxLines: 3,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: getHeight(context, 28),
+                                        fontWeight: FontWeight.bold,
+                                        color: kUILightText.withOpacity(0.8),
+                                      ),
+                                    ),
+                                  )
                                 : Container(
-                              child: Scrollbar(
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      Column(
-                                        children: List.generate(
-                                          orders.length,
-                                              (index) =>
-                                              _buildItem(
-                                                context,
-                                                orderIds[index],
-                                                orders[index],
+                                    child: Scrollbar(
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          children: [
+                                            Column(
+                                              children: List.generate(
+                                                orders.length,
+                                                (index) => _buildItem(
+                                                  context,
+                                                  orderIds[index],
+                                                  orders[index],
+                                                ),
                                               ),
+                                            )
+                                          ],
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
+                                      ),
+                                    ),
+                                  );
                           } else {
                             return Container(
                               height: getHeight(context, 275),
@@ -255,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       childAspectRatio: getAspect(context, 1.2),
                       children: List.generate(
                         categories.length,
-                            (int index) {
+                        (int index) {
                           Map<String, dynamic> data = categories[index];
                           return GestureDetector(
                             behavior: HitTestBehavior.translucent,
@@ -270,10 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                             child: Container(
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width / 4,
+                              width: MediaQuery.of(context).size.width / 4,
                               padding: EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: data["color"],
@@ -322,13 +317,10 @@ Widget _buildItem(BuildContext context, String id, Map order) {
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         context: context,
-        builder: (_) =>
-            Padding(
-              padding: MediaQuery
-                  .of(context)
-                  .viewInsets,
-              child: OrderSheet(order),
-            ),
+        builder: (_) => Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: OrderSheet(order),
+        ),
       );
     },
     child: Container(
@@ -340,17 +332,13 @@ Widget _buildItem(BuildContext context, String id, Map order) {
           secondaryActions: [
             GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () =>
-                  database
-                      .collection("orders")
-                      .doc(id)
-                      .update({"status": !order["status"]}),
+              onTap: () => database
+                  .collection("orders")
+                  .doc(id)
+                  .update({"status": !order["status"]}),
               child: Container(
                 margin: EdgeInsets.only(left: 12),
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height / 6.3,
+                height: MediaQuery.of(context).size.height / 6.3,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: !order["status"] ? kUIAccent : Colors.greenAccent),
@@ -363,10 +351,7 @@ Widget _buildItem(BuildContext context, String id, Map order) {
           ],
           child: Container(
               margin: EdgeInsets.symmetric(vertical: 8),
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 6.2,
+              height: MediaQuery.of(context).size.height / 6.2,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.grey[200]),

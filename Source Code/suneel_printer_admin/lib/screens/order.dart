@@ -57,10 +57,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     });
 
                     return Container(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height - 100,
+                      height: MediaQuery.of(context).size.height - 100,
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
@@ -76,12 +73,11 @@ class _OrderScreenState extends State<OrderScreen> {
                               Column(
                                 children: List.generate(
                                   unDelivered.length,
-                                      (index) =>
-                                      _buildItem(
-                                        context,
-                                        unDeliveredIds[index],
-                                        unDelivered[index],
-                                      ),
+                                  (index) => _buildItem(
+                                    context,
+                                    unDeliveredIds[index],
+                                    unDelivered[index],
+                                  ),
                                 ),
                               ),
                             ],
@@ -97,12 +93,11 @@ class _OrderScreenState extends State<OrderScreen> {
                               Column(
                                 children: List.generate(
                                   delivered.length,
-                                      (index) =>
-                                      _buildItem(
-                                        context,
-                                        deliveredIds[index],
-                                        delivered[index],
-                                      ),
+                                  (index) => _buildItem(
+                                    context,
+                                    deliveredIds[index],
+                                    delivered[index],
+                                  ),
                                 ),
                               ),
                             ]
@@ -114,10 +109,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     return Expanded(
                       child: Center(
                         child: Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width / 1.25,
+                          width: MediaQuery.of(context).size.width / 1.25,
                           child: EmptyListWidget(
                             packageImage: PackageImage.Image_4,
                             title: "No Orders",
@@ -150,13 +142,10 @@ class _OrderScreenState extends State<OrderScreen> {
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
           context: context,
-          builder: (_) =>
-              Padding(
-                padding: MediaQuery
-                    .of(context)
-                    .viewInsets,
-                child: OrderSheet(order),
-              ),
+          builder: (_) => Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: OrderSheet(order),
+          ),
         );
       },
       child: Container(
@@ -168,17 +157,13 @@ class _OrderScreenState extends State<OrderScreen> {
             secondaryActions: [
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () =>
-                    database
-                        .collection("orders")
-                        .doc(id)
-                        .update({"status": !order["status"]}),
+                onTap: () => database
+                    .collection("orders")
+                    .doc(id)
+                    .update({"status": !order["status"]}),
                 child: Container(
                   margin: EdgeInsets.only(left: 12),
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height / 2.95,
+                  height: MediaQuery.of(context).size.height / 2.95,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
                       color: !order["status"] ? kUIAccent : Colors.greenAccent),
@@ -191,10 +176,7 @@ class _OrderScreenState extends State<OrderScreen> {
             ],
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 8),
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 2.8,
+              height: MediaQuery.of(context).size.height / 2.8,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.grey[200]),

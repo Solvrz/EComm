@@ -28,16 +28,10 @@ const kUILightText = Colors.white;
 const kUIDarkText = Color(0xff031715);
 
 double getHeight(BuildContext context, double desiredHeight) =>
-    MediaQuery
-        .of(context)
-        .size
-        .height * desiredHeight / 816;
+    MediaQuery.of(context).size.height * desiredHeight / 816;
 
 double getAspect(BuildContext context, double aspect) =>
-    aspect * 816 / MediaQuery
-        .of(context)
-        .size
-        .height;
+    aspect * 816 / MediaQuery.of(context).size.height;
 
 InputDecoration kInputDialogDecoration = InputDecoration(
   enabledBorder: OutlineInputBorder(
