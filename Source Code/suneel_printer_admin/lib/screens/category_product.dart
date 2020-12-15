@@ -58,7 +58,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
           ),
         ),
         child: Stack(
-          alignment: Alignment.centerRight,
+          alignment: Alignment.centerLeft,
           children: [
             SingleChildScrollView(
               controller: tabsController,

@@ -477,7 +477,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                     <tr>
                         <td>${product.name}$variationText</td>
                         <td class="righty">${bagItem.quantity}</td>
-                        <td class="righty">${(double.parse(product.price) * bagItem.quantity).toStringAsFixed(2)}</td>
+                        <td class="righty">${(product.price.toDouble() * bagItem.quantity).toStringAsFixed(2)}</td>
                     </tr>
                     """;
             })

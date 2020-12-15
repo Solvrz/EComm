@@ -13,7 +13,7 @@ class InfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String timestamp = order['time'].toDate().toString();
+    DateTime timestamp = order['time'].toDate();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +52,7 @@ class InfoWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${timestamp.split(" ")[0].split("-").reversed.join("-")}"
+                  "${timestamp.day}-${timestamp.month}-${timestamp.year}"
                       .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -97,7 +97,7 @@ class InfoWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${timestamp.split(" ")[1].split(".")[0].split(":")[0]}:${timestamp.split(" ")[1].split(".")[0].split(":")[1]}"
+                  "${timestamp.hour}:${timestamp.minute}"
                       .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

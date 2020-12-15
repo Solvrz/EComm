@@ -244,13 +244,13 @@ class _ProductScreenState extends State<ProductScreen> {
                                 style: TextStyle(
                                     color: kUIDarkText,
                                     decoration: TextDecoration.lineThrough,
-                                    fontSize: getHeight(context, 22),
+          fontSize: getHeight(context, 22),
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: -0.4),
                               ),
                               SizedBox(width: 12),
                               Text(
-                                "Save: ₹ ${double.parse(product.mrp) - double.parse(product.price)}",
+                                "Save: ₹ ${product.mrp.toDouble() - product.price.toDouble()}",
                                 style: TextStyle(
                                     color: Colors.orangeAccent,
                                     fontSize: getHeight(context, 22),

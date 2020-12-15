@@ -20,47 +20,16 @@ class OrderScreen extends StatelessWidget {
 
             orders.sort((a, b) {
               dynamic orderA = jsonDecode(a.toString());
-              String timestampA = DateTime.fromMicrosecondsSinceEpoch(
-                      orderA['time']
-                                  .split("(")[1]
-                                  .split("=")[1]
-                                  .split(",")[0]
-                                  .toString()
-                                  .toInt() *
-                              1000000 +
-                          orderA['time']
-                                  .split("(")[1]
-                                  .split("=")[2]
-                                  .split(")")[0]
-                                  .toString()
-                                  .toInt() ~/
-                              1000)
-                  .toString();
+              DateTime timestampA = orderA["time"].toString().toDate();
 
               dynamic orderB = jsonDecode(b.toString());
-              String timestampB = DateTime.fromMicrosecondsSinceEpoch(
-                      orderB['time']
-                                  .split("(")[1]
-                                  .split("=")[1]
-                                  .split(",")[0]
-                                  .toString()
-                                  .toInt() *
-                              1000000 +
-                          orderB['time']
-                                  .split("(")[1]
-                                  .split("=")[2]
-                                  .split(")")[0]
-                                  .toString()
-                                  .toInt() ~/
-                              1000)
-                  .toString();
+              DateTime timestampB = orderB["time"].toString().toDate();
 
               return timestampB.compareTo(timestampA);
             });
 
             if (orders.isNotEmpty) {
-              return Container(
-                height: MediaQuery.of(context).size.height - 100,
+              return Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [

@@ -80,16 +80,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 SizedBox(
                   height: getHeight(context, 150),
                 ),
-              if (isCompleted) ...[
-                Text(
-                  args.success ? "Order Placed Successfully" : "Payment Failed",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: kUIDarkText,
-                    fontSize: getHeight(context, 24),
-                    fontWeight: FontWeight.bold,
-                  ),
+              Text(
+                !isCompleted
+                    ? "Please Wait...\nProcessing your Order"
+                    : args.success
+                        ? "Order Placed Successfully"
+                        : "Payment Failed",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: kUIDarkText,
+                  fontSize: getHeight(context, 24),
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+              if (isCompleted) ...[
                 SizedBox(height: 8),
                 Text(
                   args.msg,

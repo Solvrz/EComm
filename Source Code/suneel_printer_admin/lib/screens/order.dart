@@ -56,8 +56,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       }
                     });
 
-                    return Container(
-                      height: MediaQuery.of(context).size.height - 100,
+                    return Expanded(
                       child: SingleChildScrollView(
                         child: Column(
                           children: [

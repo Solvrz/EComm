@@ -88,9 +88,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     return WillPopScope(
       onWillPop: () async {
-        _buildDiscardChangesDialog(context);
-
-        return disablePost ? false : true;
+        if (disablePost) {
+          return false;
+        } else {
+          _buildDiscardChangesDialog(context);
+          return true;
+        }
       },
       child: SafeArea(
         child: Scaffold(
@@ -101,15 +104,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
             title: args.product != null ? "Edit" : "Preview",
             leading: GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () {
-                _buildDiscardChangesDialog(context);
-              },
+              onTap: disablePost
+                  ? null
+                  : () {
+                      _buildDiscardChangesDialog(context);
+                    },
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: kUIColor),
                 ),
                 padding: EdgeInsets.all(8),
-                child: Icon(Icons.arrow_back_ios, color: kUIDarkText, size: 26),
+                child: Icon(Icons.arrow_back_ios,
+                    color: disablePost ? Colors.grey[200] : kUIDarkText,
+                    size: 26),
               ),
             ),
             trailing: [
@@ -334,9 +341,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                   .data()["uId"]
                                                   .split("/")
                                                   .last);
+
                                               if (currId > maxId)
                                                 maxId = currId;
                                             });
+
+                                            double doubleMrp =
+                                                double.parse(mrp);
+                                            double doublePrice =
+                                                double.parse(price);
 
                                             if (args.product != null) {
                                               QuerySnapshot query = await args
@@ -351,8 +364,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                   .update({
                                                 "uId": args.product.uId,
                                                 "imgs": urls,
-                                                "mrp": double.parse(mrp),
-                                                "price": double.parse(price),
+                                                "mrp": doubleMrp,
+                                                "price": doublePrice,
                                                 "name": name.trim(),
                                                 "trending": trending,
                                                 "variations": variations
@@ -373,8 +386,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                   .update({
                                                 "uId": args.product.uId,
                                                 "imgs": urls,
-                                                "mrp": double.parse(mrp),
-                                                "price": double.parse(price),
+                                                "mrp": doubleMrp,
+                                                "price": doublePrice,
                                                 "name": name.trim(),
                                                 "trending": trending,
                                                 "variations": variations
@@ -390,8 +403,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                 "uId":
                                                     "$categoryId/${args.tabsData[args.currentTab]["uId"]}/${maxId + 1}",
                                                 "imgs": urls,
-                                                "mrp": double.parse(mrp),
-                                                "price": double.parse(price),
+                                                "mrp": doubleMrp,
+                                                "price": doublePrice,
                                                 "name": name.trim(),
                                                 "trending": trending,
                                                 "variations": variations
@@ -407,8 +420,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                 "uId":
                                                     "$categoryId/${args.tabsData[args.currentTab]["uId"]}/${maxId + 1}",
                                                 "imgs": urls,
-                                                "mrp": double.parse(mrp),
-                                                "price": double.parse(price),
+                                                "mrp": doubleMrp,
+                                                "price": doublePrice,
                                                 "name": name.trim(),
                                                 "trending": trending,
                                                 "variations": variations

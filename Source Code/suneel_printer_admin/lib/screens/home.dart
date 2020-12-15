@@ -338,7 +338,7 @@ Widget _buildItem(BuildContext context, String id, Map order) {
                   .update({"status": !order["status"]}),
               child: Container(
                 margin: EdgeInsets.only(left: 12),
-                height: MediaQuery.of(context).size.height / 6.3,
+                height: MediaQuery.of(context).size.height / 6,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: !order["status"] ? kUIAccent : Colors.greenAccent),
@@ -351,7 +351,7 @@ Widget _buildItem(BuildContext context, String id, Map order) {
           ],
           child: Container(
               margin: EdgeInsets.symmetric(vertical: 8),
-              height: MediaQuery.of(context).size.height / 6.2,
+              height: MediaQuery.of(context).size.height / 6,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.grey[200]),

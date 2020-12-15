@@ -27,7 +27,7 @@ class _BagScreenState extends State<BagScreen> {
     double price = 0;
 
     bag.products.forEach((BagItem bagItem) {
-      price += double.parse(bagItem.product.price) * bagItem.quantity;
+      price += bagItem.product.price.toDouble() * bagItem.quantity;
     });
 
     return SafeArea(
