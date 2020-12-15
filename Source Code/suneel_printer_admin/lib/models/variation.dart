@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class Variation {
@@ -56,7 +57,9 @@ class Option {
   Option({String label, dynamic color}) {
     _label = label;
     _color = color is String && color != null
-        ? Color(int.parse("0xff$color"))
+        ? Color(
+            int.parse("0xff$color"),
+          )
         : color;
   }
 

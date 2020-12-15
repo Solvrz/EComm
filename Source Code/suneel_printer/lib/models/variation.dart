@@ -57,8 +57,11 @@ class Option {
 
   Option({String label, dynamic color}) {
     _label = label;
-    _color =
-        color is String && color != null ? Color("0xff$color".toInt()) : color;
+    _color = color is String && color != null
+        ? Color(
+            "0xff$color".toInt(),
+          )
+        : color;
   }
 
   Map toJson() {

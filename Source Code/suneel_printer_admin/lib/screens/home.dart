@@ -120,10 +120,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         "Undelivered Orders",
                         style: TextStyle(
-                            fontSize: getHeight(context, 32),
-                            letterSpacing: 0.2,
-                            fontWeight: FontWeight.bold,
-                            color: kUIDarkText.withOpacity(0.8)),
+                          fontSize: getHeight(context, 32),
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.bold,
+                          color: kUIDarkText.withOpacity(0.8),
+                        ),
                       ),
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
@@ -277,9 +278,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Image.asset(data["image"],
-                                      height: getHeight(context, 65),
-                                      width: getHeight(context, 65)),
+                                  Image.asset(
+                                    data["image"],
+                                    height: getHeight(context, 65),
+                                    width: getHeight(context, 65),
+                                  ),
                                   SizedBox(height: 8),
                                   Text(
                                     data["name"],
@@ -350,15 +353,16 @@ Widget _buildItem(BuildContext context, String id, Map order) {
             )
           ],
           child: Container(
-              margin: EdgeInsets.symmetric(vertical: 8),
-              height: MediaQuery.of(context).size.height / 6,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey[200]),
-              child: Padding(
-                padding: EdgeInsets.all(12),
-                child: InfoWidget(order: order, large: false),
-              )),
+            margin: EdgeInsets.symmetric(vertical: 8),
+            height: MediaQuery.of(context).size.height / 6,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey[200]),
+            child: Padding(
+              padding: EdgeInsets.all(12),
+              child: InfoWidget(order: order, large: false),
+            ),
+          ),
         ),
       ),
     ),

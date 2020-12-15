@@ -42,7 +42,10 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
   @override
   void initState() {
     super.initState();
-    tabsController = ScrollController()..addListener(() => setState(() {}));
+    tabsController = ScrollController()
+      ..addListener(
+        () => setState(() {}),
+      );
   }
 
   @override
@@ -77,39 +80,37 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                       },
                       child: Container(
                         child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 18),
-                            child: Row(
-                              children: [
-                                if (index == widget._currentTab) ...[
-                                  CircleAvatar(
-                                    radius: 4,
-                                    backgroundColor: kUISecondaryAccent,
-                                  ),
-                                  SizedBox(width: 8),
-                                ],
-                                AnimatedDefaultTextStyle(
-                                  child: Text(
-                                    widget.tabsData[index]["name"]
-                                        .split("\\n")
-                                        .join("\n"),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  duration: Duration(milliseconds: 150),
-                                  style: TextStyle(
-                                      fontSize: getHeight(
-                                          context,
-                                          index == widget._currentTab
-                                              ? 16
-                                              : 14),
-                                      fontWeight: index == widget._currentTab
-                                          ? FontWeight.w600
-                                          : FontWeight.normal,
-                                      color: index == widget._currentTab
-                                          ? kUIDarkText
-                                          : Colors.grey[600]),
+                          padding: EdgeInsets.symmetric(horizontal: 18),
+                          child: Row(
+                            children: [
+                              if (index == widget._currentTab) ...[
+                                CircleAvatar(
+                                  radius: 4,
+                                  backgroundColor: kUISecondaryAccent,
                                 ),
+                                SizedBox(width: 8),
                               ],
-                            )),
+                              AnimatedDefaultTextStyle(
+                                child: Text(
+                                  widget.tabsData[index]["name"]
+                                      .split("\\n")
+                                      .join("\n"),
+                                  textAlign: TextAlign.center,
+                                ),
+                                duration: Duration(milliseconds: 150),
+                                style: TextStyle(
+                                    fontSize: getHeight(context,
+                                        index == widget._currentTab ? 16 : 14),
+                                    fontWeight: index == widget._currentTab
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                                    color: index == widget._currentTab
+                                        ? kUIDarkText
+                                        : Colors.grey[600]),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   })

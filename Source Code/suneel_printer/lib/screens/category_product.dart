@@ -25,7 +25,10 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
   @override
   void initState() {
     super.initState();
-    tabsController = ScrollController()..addListener(() => setState(() {}));
+    tabsController = ScrollController()
+      ..addListener(
+        () => setState(() {}),
+      );
     setState(() {});
   }
 

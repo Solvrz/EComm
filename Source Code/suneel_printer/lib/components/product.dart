@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:suneel_printer/components/marquee.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/models/variation.dart';
@@ -181,14 +182,16 @@ class _AddProductSheetState extends State<AddProductSheet> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.product.name,
-                        maxLines: 3,
-                        style: TextStyle(
-                            color: kUIDarkText,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: -0.4),
+                      Marquee(
+                        child: Text(
+                          widget.product.name,
+                          maxLines: 2,
+                          style: TextStyle(
+                              color: kUIDarkText,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: -0.4),
+                        ),
                       ),
                       Row(
                         children: [

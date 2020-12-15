@@ -80,7 +80,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
       if (args.product.images != null) {
         images = args.product.images
             .map(
-              (e) => Image(image: CachedNetworkImageProvider(e)),
+              (e) => Image(
+                image: CachedNetworkImageProvider(e),
+              ),
             )
             .toList();
       }
@@ -193,7 +195,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                           List<String> urls =
                                               args.product != null
                                                   ? args.product.images
-                                                      .map((e) => e.toString())
+                                                      .map(
+                                                        (e) => e.toString(),
+                                                      )
                                                       .toList()
                                                   : [];
                                           bool noError = true;
@@ -664,11 +668,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                               onTap: () {
                                                 if (args.product != null &&
                                                     args.product.images != null)
-                                                  setState(() => deletedImages
-                                                      .add(images[index]));
+                                                  setState(
+                                                    () => deletedImages
+                                                        .add(images[index]),
+                                                  );
 
-                                                setState(() =>
-                                                    images.removeAt(index));
+                                                setState(
+                                                  () => images.removeAt(index),
+                                                );
 
                                                 Navigator.pop(context);
                                               },

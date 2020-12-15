@@ -19,10 +19,14 @@ class OrderScreen extends StatelessWidget {
             List orders = preferences.getStringList("orders") ?? [];
 
             orders.sort((a, b) {
-              dynamic orderA = jsonDecode(a.toString());
+              dynamic orderA = jsonDecode(
+                a.toString(),
+              );
               DateTime timestampA = orderA["time"].toString().toDate();
 
-              dynamic orderB = jsonDecode(b.toString());
+              dynamic orderB = jsonDecode(
+                b.toString(),
+              );
               DateTime timestampB = orderB["time"].toString().toDate();
 
               return timestampB.compareTo(timestampA);

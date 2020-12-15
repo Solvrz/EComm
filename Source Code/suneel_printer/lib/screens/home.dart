@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:suneel_printer/components/alert_button.dart';
 import 'package:suneel_printer/components/category_product.dart';
 import 'package:suneel_printer/components/home.dart';
+import 'package:suneel_printer/components/marquee.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -430,181 +431,54 @@ class _HomeScreenState extends State<HomeScreen> {
                         topRight: Radius.circular(20),
                       ),
                     ),
-                    child: Scrollbar(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: SingleChildScrollView(
-                          physics: ClampingScrollPhysics(),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Trending Products",
-                                style: TextStyle(
-                                  color: kUIDarkText.withOpacity(0.8),
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: SingleChildScrollView(
+                        physics: ClampingScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Trending Products",
+                              style: TextStyle(
+                                color: kUIDarkText.withOpacity(0.8),
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
                               ),
-                              SizedBox(height: 8),
-                              FutureBuilder<QuerySnapshot>(
-                                future: database
-                                    .collection("products")
-                                    .where("trending", isEqualTo: true)
-                                    .limit(10)
-                                    .get(),
-                                builder: (BuildContext context, future) {
-                                  if (future.hasData) {
-                                    List<Product> products = future.data.docs
-                                        .map<Product>((DocumentSnapshot e) =>
-                                            Product.fromJson(e.data()))
-                                        .toList();
+                            ),
+                            SizedBox(height: 8),
+                            FutureBuilder<QuerySnapshot>(
+                              future: database
+                                  .collection("products")
+                                  .where("trending", isEqualTo: true)
+                                  .limit(10)
+                                  .get(),
+                              builder: (BuildContext context, future) {
+                                if (future.hasData) {
+                                  List<Product> products = future.data.docs
+                                      .map<Product>(
+                                        (DocumentSnapshot e) =>
+                                            Product.fromJson(
+                                          e.data(),
+                                        ),
+                                      )
+                                      .toList();
 
-                                    return products.isNotEmpty
-                                        ? Column(
-                                            children: List.generate(
-                                              products.length,
-                                              (int index) {
-                                                Product product =
-                                                    products[index];
-                                                return GestureDetector(
-                                                  behavior: HitTestBehavior
-                                                      .translucent,
-                                                  onTap: () async {
-                                                    await Navigator.pushNamed(
-                                                      context,
-                                                      "/product",
-                                                      arguments:
-                                                          ProductArguments(
-                                                              products[index]),
-                                                    );
-                                                    if (mounted)
-                                                      setState(() {});
-                                                  },
-                                                  child: Container(
-                                                    padding: EdgeInsets.only(
-                                                        right: 8),
-                                                    margin:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 8),
-                                                    height:
-                                                        getHeight(context, 110),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                        color: kUIColor),
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .stretch,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        24,
-                                                                    vertical:
-                                                                        18),
-                                                            child: Row(
-                                                              children: [
-                                                                product.images
-                                                                            .length >
-                                                                        0
-                                                                    ? CachedNetworkImage(
-                                                                        imageUrl:
-                                                                            product.images[0],
-                                                                        placeholder:
-                                                                            (context, url) =>
-                                                                                Shimmer.fromColors(
-                                                                          baseColor:
-                                                                              Colors.grey[200],
-                                                                          highlightColor:
-                                                                              Colors.grey[100],
-                                                                          child:
-                                                                              Container(color: Colors.grey),
-                                                                        ),
-                                                                        errorWidget: (context,
-                                                                                url,
-                                                                                error) =>
-                                                                            Icon(Icons.error),
-                                                                      )
-                                                                    : Text(
-                                                                        "No Image",
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                18),
-                                                                      ),
-                                                                SizedBox(
-                                                                    width: 24),
-                                                                Expanded(
-                                                                  child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceEvenly,
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child:
-                                                                            Text(
-                                                                          product.name.replaceAll(
-                                                                              "",
-                                                                              "\u{200B}"),
-                                                                          maxLines:
-                                                                              3,
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                          style: TextStyle(
-                                                                              color: kUIDarkText,
-                                                                              fontSize: getHeight(context, 22),
-                                                                              fontWeight: FontWeight.w500,
-                                                                              letterSpacing: -0.4),
-                                                                        ),
-                                                                      ),
-                                                                      Row(
-                                                                        children: [
-                                                                          Text(
-                                                                            "₹ ${product.price}",
-                                                                            style: TextStyle(
-                                                                                color: kUIDarkText,
-                                                                                fontSize: getHeight(context, 21),
-                                                                                fontWeight: FontWeight.bold,
-                                                                                fontFamily: "sans-serif-condensed"),
-                                                                          ),
-                                                                          SizedBox(
-                                                                              width: 12),
-                                                                          Expanded(
-                                                                            child:
-                                                                                Text(
-                                                                              "₹ ${product.mrp}".replaceAll("", "\u{200B}"),
-                                                                              overflow: TextOverflow.ellipsis,
-                                                                              style: TextStyle(color: kUIDarkText.withOpacity(0.7), decoration: TextDecoration.lineThrough, fontSize: getHeight(context, 18), fontWeight: FontWeight.w800, fontFamily: "sans-serif-condensed"),
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          )
-                                        : Container(
-                                            height: getHeight(context, 275),
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "No Trending Products available right now",
+                                  return products.isNotEmpty
+                                      ? Column(
+                                          children: List.generate(
+                                            products.length,
+                                            (int index) => _buildItem(
+                                                context, products[index]),
+                                          ),
+                                        )
+                                      : Container(
+                                          height: getHeight(context, 275),
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.only(top: 45),
+                                          child: Column(children: [
+                                            Text(
+                                              "Trending Products Incoming! \nPlease Wait",
                                               maxLines: 3,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
@@ -615,14 +489,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .withOpacity(0.8),
                                               ),
                                             ),
-                                          );
-                                  }
+                                            SizedBox(height: 25),
+                                            indicator,
+                                          ]));
+                                }
 
-                                  return Container();
-                                },
-                              ),
-                            ],
-                          ),
+                                return Container();
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -631,6 +506,100 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildItem(BuildContext context, Product product) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () async {
+        await Navigator.pushNamed(
+          context,
+          "/product",
+          arguments: ProductArguments(product),
+        );
+        if (mounted) setState(() {});
+      },
+      child: Container(
+        padding: EdgeInsets.only(right: 8),
+        margin: EdgeInsets.symmetric(vertical: 8),
+        height: getHeight(context, 110),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20), color: kUIColor),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                child: Row(
+                  children: [
+                    product.images.length > 0
+                        ? CachedNetworkImage(
+                            imageUrl: product.images[0],
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey[200],
+                              highlightColor: Colors.grey[100],
+                              child: Container(color: Colors.grey),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          )
+                        : Text(
+                            "No Image",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                    SizedBox(width: 24),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Marquee(
+                            child: Text(
+                              product.name,
+                              style: TextStyle(
+                                  color: kUIDarkText,
+                                  fontSize: getHeight(context, 22),
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.4),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "₹ ${product.price}",
+                                style: TextStyle(
+                                    color: kUIDarkText,
+                                    fontSize: getHeight(context, 21),
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "sans-serif-condensed"),
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  "₹ ${product.mrp}".replaceAll("", "\u{200B}"),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: kUIDarkText.withOpacity(0.7),
+                                      decoration: TextDecoration.lineThrough,
+                                      fontSize: getHeight(context, 18),
+                                      fontWeight: FontWeight.w800,
+                                      fontFamily: "sans-serif-condensed"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:suneel_printer/components/custom_app_bar.dart';
+import 'package:suneel_printer/components/marquee.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
 import 'package:suneel_printer/screens/product.dart';
@@ -110,15 +111,15 @@ class _WishlistScreenState extends State<WishlistScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
-                                product.name.replaceAll("", "\u{200B}"),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: kUIDarkText,
-                                    fontSize: getHeight(context, 23),
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: -0.4),
+                              Marquee(
+                                child: Text(
+                                  product.name,
+                                  style: TextStyle(
+                                      color: kUIDarkText,
+                                      fontSize: getHeight(context, 22),
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: -0.4),
+                                ),
                               ),
                               Row(
                                 children: [
@@ -126,19 +127,24 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                     "₹ ${product.price}",
                                     style: TextStyle(
                                         color: kUIDarkText,
-                                        fontSize: getHeight(context, 23),
+                                        fontSize: getHeight(context, 21),
                                         fontWeight: FontWeight.bold,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
                                   SizedBox(width: 12),
-                                  Text(
-                                    "₹ ${product.mrp}",
-                                    style: TextStyle(
-                                        color: kUIDarkText.withOpacity(0.7),
-                                        decoration: TextDecoration.lineThrough,
-                                        fontSize: getHeight(context, 20),
-                                        fontWeight: FontWeight.w800,
-                                        fontFamily: "sans-serif-condensed"),
+                                  Expanded(
+                                    child: Text(
+                                      "₹ ${product.mrp}"
+                                          .replaceAll("", "\u{200B}"),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: kUIDarkText.withOpacity(0.7),
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          fontSize: getHeight(context, 18),
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: "sans-serif-condensed"),
+                                    ),
                                   ),
                                 ],
                               ),

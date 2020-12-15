@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:suneel_printer/components/bag.dart';
 import 'package:suneel_printer/components/custom_app_bar.dart';
 import 'package:suneel_printer/components/home.dart';
+import 'package:suneel_printer/components/marquee.dart';
 import 'package:suneel_printer/components/rounded_alert_dialog.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/bag.dart';
@@ -299,7 +300,6 @@ class _BagScreenState extends State<BagScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
-                  // height: getHeight(context, 125),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                     child: Row(
@@ -325,26 +325,27 @@ class _BagScreenState extends State<BagScreen> {
                               ),
                         SizedBox(width: 24),
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Marquee(
+                            child: Text(
+                              product.name,
+                              style: TextStyle(
+                                  color: kUIDarkText,
+                                  fontSize: getHeight(context, 22),
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.4),
+                            ),
+                          ),
+                          Row(
                             children: [
-                              Expanded(
-                                child: Text(
-                                  product.name.replaceAll("", "\u{200B}"),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: kUIDarkText,
-                                      fontSize: getHeight(context, 21),
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: -0.4),
-                                ),
-                              ),
                               Text(
                                 "₹ ${product.price}",
                                 style: TextStyle(
                                     color: kUIDarkText,
-                                    fontSize: getHeight(context, 20),
+                                    fontSize: getHeight(context, 21),
                                     fontWeight: FontWeight.bold,
                                     fontFamily: "sans-serif-condensed"),
                               ),
@@ -356,14 +357,16 @@ class _BagScreenState extends State<BagScreen> {
                                   style: TextStyle(
                                       color: kUIDarkText.withOpacity(0.7),
                                       decoration: TextDecoration.lineThrough,
-                                      fontSize: getHeight(context, 19),
+                                      fontSize: getHeight(context, 18),
                                       fontWeight: FontWeight.w800,
                                       fontFamily: "sans-serif-condensed"),
                                 ),
                               ),
                             ],
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
                       ],
                     ),
                   ),

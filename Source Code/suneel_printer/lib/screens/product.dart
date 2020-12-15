@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:suneel_printer/components/custom_app_bar.dart';
+import 'package:suneel_printer/components/marquee.dart';
 import 'package:suneel_printer/components/product.dart';
 import 'package:suneel_printer/constant.dart';
 import 'package:suneel_printer/models/product.dart';
@@ -87,13 +88,15 @@ class _ProductScreenState extends State<ProductScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      product.name,
-                      style: TextStyle(
-                          color: kUIDarkText,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: "sans-serif-condensed"),
+                    Marquee(
+                      child: Text(
+                        product.name,
+                        style: TextStyle(
+                            color: kUIDarkText,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "sans-serif-condensed"),
+                      ),
                     ),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.3,
@@ -244,7 +247,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 style: TextStyle(
                                     color: kUIDarkText,
                                     decoration: TextDecoration.lineThrough,
-          fontSize: getHeight(context, 22),
+                                    fontSize: getHeight(context, 22),
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: -0.4),
                               ),

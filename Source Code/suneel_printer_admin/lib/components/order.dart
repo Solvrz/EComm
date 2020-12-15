@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:suneel_printer_admin/components/marquee.dart';
 import 'package:suneel_printer_admin/constant.dart';
 import 'package:suneel_printer_admin/models/product.dart';
 
@@ -310,15 +311,17 @@ class OrderSheet extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Text(
-                                          "${product.name} × ${order["products"][index]["quantity"]}",
-                                          maxLines: 3,
-                                          style: TextStyle(
-                                              fontSize: getHeight(context, 22),
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily:
-                                                  "sans-serif-condensed",
-                                              letterSpacing: -0.4),
+                                        Marquee(
+                                          child: Text(
+                                            "${product.name} × ${order["products"][index]["quantity"]}",
+                                            style: TextStyle(
+                                                fontSize:
+                                                    getHeight(context, 22),
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily:
+                                                    "sans-serif-condensed",
+                                                letterSpacing: -0.4),
+                                          ),
                                         ),
                                         Row(
                                           children: [
