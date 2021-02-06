@@ -97,7 +97,7 @@ class InfoWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${timestamp.hour}:${timestamp.minute}"
+                  "${timestamp.hour.toString().padLeft(2, "0")}:${timestamp.minute.toString().padLeft(2, "0")}"
                       .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

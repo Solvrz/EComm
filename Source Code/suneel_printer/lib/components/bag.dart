@@ -37,7 +37,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
         (PaymentSuccessResponse response) async {
       http.Response verification = await http.post(
-        "https://suneel-printers.herokuapp.com/payment_verify",
+        "https://suneel-printer-server.herokuapp.com/payment_verify",
         headers: <String, String>{
           "Content-Type": "application/json; charset=UTF-8",
         },
@@ -378,7 +378,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           FocusScope.of(context).unfocus();
 
                           http.Response token = await http.post(
-                            "https://suneel-printers.herokuapp.com/payment_init",
+                            "https://suneel-printer-server.herokuapp.com/payment_init",
                             headers: <String, String>{
                               "Content-Type": "application/json; charset=UTF-8",
                             },
@@ -453,7 +453,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
   Future<void> placeOrder() async {
     await http.post(
-      "https://suneel-printers.herokuapp.com/order",
+      "https://suneel-printer-server.herokuapp.com/order",
       headers: <String, String>{
         "Content-Type": "application/json; charset=UTF-8",
       },

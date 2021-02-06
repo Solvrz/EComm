@@ -325,48 +325,50 @@ class _BagScreenState extends State<BagScreen> {
                               ),
                         SizedBox(width: 24),
                         Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Marquee(
-                            child: Text(
-                              product.name,
-                              style: TextStyle(
-                                  color: kUIDarkText,
-                                  fontSize: getHeight(context, 22),
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: -0.4),
-                            ),
-                          ),
-                          Row(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
-                                "₹ ${product.price}",
-                                style: TextStyle(
-                                    color: kUIDarkText,
-                                    fontSize: getHeight(context, 21),
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "sans-serif-condensed"),
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
+                              Marquee(
                                 child: Text(
-                                  "₹ ${product.mrp}".replaceAll("", "\u{200B}"),
-                                  overflow: TextOverflow.ellipsis,
+                                  product.name,
                                   style: TextStyle(
-                                      color: kUIDarkText.withOpacity(0.7),
-                                      decoration: TextDecoration.lineThrough,
-                                      fontSize: getHeight(context, 18),
-                                      fontWeight: FontWeight.w800,
-                                      fontFamily: "sans-serif-condensed"),
+                                      color: kUIDarkText,
+                                      fontSize: getHeight(context, 22),
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: -0.4),
                                 ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "₹ ${product.price}",
+                                    style: TextStyle(
+                                        color: kUIDarkText,
+                                        fontSize: getHeight(context, 21),
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "sans-serif-condensed"),
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      "₹ ${product.mrp}"
+                                          .replaceAll("", "\u{200B}"),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: kUIDarkText.withOpacity(0.7),
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          fontSize: getHeight(context, 18),
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: "sans-serif-condensed"),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
                       ],
                     ),
                   ),

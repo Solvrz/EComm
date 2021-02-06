@@ -259,7 +259,7 @@ class _RequestProductPageState extends State<RequestProductPage> {
                                   "You will soon receive a confirmation mail from us.",
                               process: () async {
                                 await http.post(
-                                  "https://suneel-printers.herokuapp.com/request",
+                                  "https://suneel-printer-server.herokuapp.com/request",
                                   headers: <String, String>{
                                     "Content-Type":
                                         "application/json; charset=UTF-8",
