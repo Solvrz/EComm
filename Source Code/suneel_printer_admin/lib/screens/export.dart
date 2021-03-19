@@ -1,5 +1,5 @@
-export 'add_product.dart';
-export 'category.dart';
-export 'home.dart';
-export 'order.dart';
-export 'splash.dart';
+export 'add_product/export.dart';
+export 'category/export.dart';
+export 'home/export.dart';
+export 'order/export.dart';
+export 'splash/export.dart';

@@ -1,8 +1,8 @@
-export 'bag.dart';
-export 'category.dart';
-export 'home.dart';
-export 'order.dart';
-export 'payment.dart';
-export 'product.dart';
-export 'splash.dart';
-export 'wishlist.dart';
+export 'bag/export.dart';
+export 'category/export.dart';
+export 'home/export.dart';
+export 'order/export.dart';
+export 'payment/export.dart';
+export 'product/export.dart';
+export 'splash/export.dart';
+export 'wishlist/export.dart';

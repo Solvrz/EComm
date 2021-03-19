@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:suneel_printer/constant.dart';
+import 'package:suneel_printer/config/constant.dart';
 
 class Variation {
   String _name;
