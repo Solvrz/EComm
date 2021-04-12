@@ -43,7 +43,7 @@ key.properties
 
 
 # Web
-Source Code/suneel_printer/lib/generated_plugin_registrant.dart
+generated_plugin_registrant.dart
 
 # Symbolication
 app.*.symbols
@@ -52,5 +52,5 @@ app.*.symbols
 app.*.map.json
 
 # Exceptions
-!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+!packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
