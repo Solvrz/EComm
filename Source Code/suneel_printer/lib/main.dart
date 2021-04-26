@@ -1,58 +1,44 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suneel_printer/config/constant.dart';
 import 'package:suneel_printer/config/themes.dart';
-import 'package:suneel_printer/screens/export.dart';
+import 'package:suneel_printer/screens/bag/export.dart';
+import 'package:suneel_printer/screens/category/export.dart';
+import 'package:suneel_printer/screens/home/export.dart';
+import 'package:suneel_printer/screens/order/export.dart';
+import 'package:suneel_printer/screens/payment/export.dart';
+import 'package:suneel_printer/screens/product/export.dart';
+import 'package:suneel_printer/screens/splash/export.dart';
+import 'package:suneel_printer/screens/wishlist/export.dart';
 import 'package:suneel_printer/services/screen_size.dart';
 
-// TODO: Try Except on Place Order & HTTP requests
-// TODO: Refactor Code
-// TODO: Native Splash
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  GestureBinding.instance.resamplingEnabled = true;
 
-  secureStorage
-      .write(key: "key_testing", value: "rzp_test_3XFNUiX9RPskxm")
-      .whenComplete(() {
-    secureStorage
-        // TODO: Put Merchant Key
-        .write(key: "key_production", value: "")
-        .whenComplete(() {
-      secureStorage.read(key: "key_testing").then((value) {
-        keyTesting = value;
+  await secureStorage.write(
+    key: "key_testing",
+    value: "rzp_test_3XFNUiX9RPskxm",
+  );
+  await secureStorage.write(
+    key: "key_production",
+    value: "",
+  ); // TODO: Put Merchant Key
 
-        secureStorage.read(key: "key_production").then((value) {
-          keyProduction = value;
+  keyTesting = await secureStorage.read(key: "key_testing");
+  keyProduction = await secureStorage.read(key: "key_production");
 
-          Firebase.initializeApp().whenComplete(() {
-            FirebaseCrashlytics.instance
-                .setCrashlyticsCollectionEnabled(false)
-                .whenComplete(() {
-              FlutterError.onError =
-                  FirebaseCrashlytics.instance.recordFlutterError;
+  await Firebase.initializeApp();
+  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-              SharedPreferences.getInstance()
-                  .then((value) => preferences = value)
-                  .whenComplete(() {
-                SystemChrome.setPreferredOrientations(
-                    [DeviceOrientation.portraitUp]).whenComplete(
-                  () => runApp(
-                    SuneelPrinter(),
-                  ),
-                );
-              });
-            });
-          });
-        });
-      });
-    });
-  });
+  preferences = await SharedPreferences.getInstance();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  runApp(SuneelPrinter());
 }
 
 class SuneelPrinter extends StatelessWidget {

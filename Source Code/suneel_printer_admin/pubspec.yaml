@@ -16,7 +16,7 @@ dependencies:
   cloud_firestore: ^1.0.1
   firebase_storage: ^8.0.0
   firebase_messaging: ^9.0.0
-  firebase_crashlytics: ^1.0.0
+  firebase_crashlytics: ^2.0.1
   flutter_local_notifications: ^5.0.0-nullsafety.1
   flutter_image_compress: ^1.0.0-nullsafety
   cached_network_image: ^3.0.0-nullsafety

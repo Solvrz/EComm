@@ -13,7 +13,7 @@ dependencies:
 
   firebase_core: ^1.0.1
   cloud_firestore: ^1.0.1
-  firebase_crashlytics: ^1.0.0
+  firebase_crashlytics: ^2.0.1
   flutter_secure_storage: ^4.1.0
   cached_network_image: ^3.0.0-nullsafety
   shared_preferences: ^2.0.5
