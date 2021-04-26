@@ -1,2 +1,2 @@
 # SuneelPrinters-Admin-App
-App for Admin of SuneelPrinters.
+- App for Admin of SuneelPrinters.
