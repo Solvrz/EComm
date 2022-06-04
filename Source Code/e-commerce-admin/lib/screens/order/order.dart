@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -31,25 +32,25 @@ class _OrderScreenState extends State<OrderScreen> {
                   .collection("orders")
                   .orderBy("time", descending: true)
                   .snapshots(),
-              builder: (context, future) {
+              builder: (context, AsyncSnapshot<QuerySnapshot> future) {
                 if (future.hasData) {
-                  if (future.data.docs.isNotEmpty) {
+                  if (future.data!.docs.isNotEmpty) {
                     List<Map> unDelivered = [];
                     List<String> unDeliveredIds = [];
 
                     List<Map> delivered = [];
                     List<String> deliveredIds = [];
 
-                    future.data.docs.forEach((element) {
+                    future.data!.docs.forEach((QueryDocumentSnapshot element) {
                       if (element.data() != null) {
-                        if (element.data()["status"]) {
+                        if ((element.data() as Map)["status"]) {
                           delivered.add(
-                            element.data(),
+                            element.data() as Map,
                           );
                           deliveredIds.add(element.id);
                         } else {
                           unDelivered.add(
-                            element.data(),
+                            element.data() as Map,
                           );
                           unDeliveredIds.add(element.id);
                         }
@@ -152,7 +153,6 @@ class _OrderScreenState extends State<OrderScreen> {
           child: Slidable(
             key: ValueKey(order["time"]),
             endActionPane: ActionPane(
-              //TODO: Refer Me
               motion: const DrawerMotion(),
               extentRatio: 0.25,
               children: [

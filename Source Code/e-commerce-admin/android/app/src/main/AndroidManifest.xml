@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.solvrz.e_commerce_admin">
    <application
-        android:label="e_commerce_admin"
+        android:label="E-Commerce (Admin)"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

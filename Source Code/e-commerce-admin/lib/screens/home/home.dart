@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -154,17 +155,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           .collection("orders")
                           .orderBy("time", descending: true)
                           .snapshots(),
-                      builder: (context, future) {
+                      builder: (context, AsyncSnapshot<QuerySnapshot> future) {
                         if (future.hasData) {
-                          if (future.data.docs.isNotEmpty) {
+                          if (future.data!.docs.isNotEmpty) {
                             List<Map> orders = [];
                             List<String> orderIds = [];
 
-                            future.data.docs.forEach((element) {
+                            future.data!.docs.forEach((element) {
                               if (element.data() != null) {
-                                if (!element.data()["status"]) {
+                                if (!(element.data() as Map)["status"]) {
                                   orders.add(
-                                    element.data(),
+                                    element.data() as Map,
                                   );
                                   orderIds.add(element.id);
                                 }

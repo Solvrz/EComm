@@ -347,8 +347,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
                                               query.docs.forEach((element) {
                                                 int currId = int.parse(
-                                                  element
-                                                      .data()["uId"]
+                                                  (element.data() as Map)["uId"]
                                                       .split("/")
                                                       .last,
                                                 );
