@@ -10,7 +10,6 @@ class AppTheme {
     return ThemeData.light().copyWith(
       backgroundColor: backgroundColor,
       primaryColor: primaryColor,
-      accentColor: accentColor,
       highlightColor: highlightColor,
       scaffoldBackgroundColor: backgroundColor,
       dividerTheme: DividerThemeData(
@@ -20,7 +19,7 @@ class AppTheme {
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: backgroundColor,
         modalBackgroundColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(25),
             topLeft: Radius.circular(25),
@@ -33,6 +32,9 @@ class AppTheme {
             TextStyle(color: primaryColor),
           ),
         ),
+      ),
+      colorScheme: ColorScheme.fromSwatch().copyWith(
+        secondary: accentColor,
       ),
     );
   }

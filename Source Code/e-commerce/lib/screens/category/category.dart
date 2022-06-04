@@ -6,10 +6,11 @@ import './request.dart';
 import '../../config/constant.dart';
 import '../../widgets/custom_app_bar.dart';
 
-// ignore: must_be_immutable
 class CategoryScreen extends StatefulWidget {
+  const CategoryScreen({Key? key}) : super(key: key);
+
   @override
-  _CategoryScreenState createState() => _CategoryScreenState();
+  State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
@@ -26,7 +27,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(
-          parent: context,
+          context: context,
           title: title,
           trailing: [
             GestureDetector(
@@ -34,26 +35,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 await Navigator.pushNamed(context, "/bag");
                 if (mounted) setState(() {});
               },
-              child: Container(
-                child: Padding(
-                  padding: screenSize.all(18),
-                  child: Stack(
-                    children: [
-                      Image.asset(
-                        "assets/images/ShoppingBag.png",
-                        width: 30,
-                        height: 30,
+              child: Padding(
+                padding: screenSize.all(18),
+                child: Stack(
+                  children: [
+                    Image.asset(
+                      "assets/images/ShoppingBag.png",
+                      width: 30,
+                      height: 30,
+                    ),
+                    Positioned(
+                      left: 11,
+                      top: 10,
+                      child: Text(
+                        bag.products.length.toString(),
+                        style: const TextStyle(color: kUIDarkText),
                       ),
-                      Positioned(
-                        left: 11,
-                        top: 10,
-                        child: Text(
-                          bag.products.length.toString(),
-                          style: TextStyle(color: kUIDarkText),
-                        ),
-                      )
-                    ],
-                  ),
+                    )
+                  ],
                 ),
               ),
             )
@@ -76,32 +75,33 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         dynamic screen = !["Printing", "Binding"]
                                 .contains(title)
                             ? ProductScreen(
-                                this,
-                                title,
-                                snapshot.data!.docs
-                                    .map<Map>(
-                                        (DocumentSnapshot e) => e.data() as Map)
+                                parent: this,
+                                title: title,
+                                tabsData: snapshot.data!.docs
+                                    .map<Map>((e) => e.data() as Map)
                                     .toList(),
-                                snapshot.data!.docs
-                                    .map<DocumentReference>(
-                                        (DocumentSnapshot e) => e.reference)
+                                tabs: snapshot.data!.docs
+                                    .map<DocumentReference>((e) => e.reference)
                                     .toList(),
                               )
                             : RequestScreen(
                                 title: title,
                                 tabsData: snapshot.data!.docs
-                                    .map<Map>(
-                                        (DocumentSnapshot e) => e.data() as Map)
+                                    .map<Map>((e) => e.data() as Map)
                                     .toList(),
                               );
 
                         return Column(children: [Expanded(child: screen)]);
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
                       }
                     });
               } else {
-                return Center(child: CircularProgressIndicator());
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
             }),
       ),

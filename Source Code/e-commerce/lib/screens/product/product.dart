@@ -11,14 +11,13 @@ import '../../widgets/custom_app_bar.dart';
 import '../../widgets/marquee.dart';
 
 class ProductScreen extends StatefulWidget {
+  const ProductScreen({Key? key}) : super(key: key);
+
   @override
-  _ProductScreenState createState() => _ProductScreenState();
+  State<ProductScreen> createState() => _ProductScreenState();
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  late Product product;
-  late List<VariationButton> variations;
-
   int _currentImage = 0;
 
   @override
@@ -26,29 +25,28 @@ class _ProductScreenState extends State<ProductScreen> {
     ProductArguments args =
         ModalRoute.of(context)!.settings.arguments as ProductArguments;
 
-    if (product == null) {
-      product = Product.fromJson(
-        args.product.toJson(),
-      );
-      variations = List.generate(
-        args.product.variations.length,
-        (index) => VariationButton(
-          onChanged: (option) {
-            product.select(args.product.variations[index].name, option);
-            if (mounted) setState(() {});
-          },
-          variation: args.product.variations[index],
-          currIndex: args.product.variations[index].options
-              .indexOf(product.selected![args.product.variations[index].name]),
-        ),
-      );
-    }
+    Product product = Product.fromJson(
+      args.product.toJson(),
+    );
+
+    List<VariationButton> variations = List.generate(
+      args.product.variations.length,
+      (index) => VariationButton(
+        onChanged: (option) {
+          product.select(args.product.variations[index].name, option);
+          if (mounted) setState(() {});
+        },
+        variation: args.product.variations[index],
+        currIndex: args.product.variations[index].options
+            .indexOf(product.selected![args.product.variations[index].name]),
+      ),
+    );
 
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: CustomAppBar(
-          parent: context,
+          context: context,
           title: "",
           trailing: [
             GestureDetector(
@@ -56,29 +54,27 @@ class _ProductScreenState extends State<ProductScreen> {
                 await Navigator.pushNamed(context, "/bag");
                 if (mounted) setState(() {});
               },
-              child: Container(
-                child: Padding(
-                  padding: screenSize.all(18),
-                  child: Stack(
-                    children: [
-                      Image.asset("assets/images/ShoppingBag.png",
-                          width: 30, height: 30),
-                      Positioned(
-                        left: 11,
-                        top: 10,
-                        child: Text(
-                          bag.products.length.toString(),
-                          style: TextStyle(color: kUIDarkText),
-                        ),
-                      )
-                    ],
-                  ),
+              child: Padding(
+                padding: screenSize.all(18),
+                child: Stack(
+                  children: [
+                    Image.asset("assets/images/ShoppingBag.png",
+                        width: 30, height: 30),
+                    Positioned(
+                      left: 11,
+                      top: 10,
+                      child: Text(
+                        bag.products.length.toString(),
+                        style: const TextStyle(color: kUIDarkText),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
           ],
         ),
-        body: Container(
+        body: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Column(
@@ -92,14 +88,14 @@ class _ProductScreenState extends State<ProductScreen> {
                     Marquee(
                       child: Text(
                         product.name,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: kUIDarkText,
                             fontSize: 28,
                             fontWeight: FontWeight.w600,
                             fontFamily: "sans-serif-condensed"),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       height: MediaQuery.of(context).size.height * 0.3,
                       width: MediaQuery.of(context).size.width,
                       child: Column(
@@ -108,7 +104,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           children: [
                             Container(
                               padding: screenSize.fromLTRB(8, 16, 8, 8),
-                              child: product.images.length > 0
+                              child: product.images.isNotEmpty
                                   ? CarouselSlider(
                                       items: product.images
                                           .map<Widget>(
@@ -119,8 +115,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
+                                                    builder: (context) =>
                                                         ImageScreen(
                                                       title: product.name,
                                                       images: product.images,
@@ -134,7 +129,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                                 placeholder: (context, url) =>
                                                     Shimmer.fromColors(
                                                   baseColor: Theme.of(context)
-                                                      .accentColor,
+                                                      .colorScheme
+                                                      .secondary,
                                                   highlightColor:
                                                       Colors.grey[100]!,
                                                   child: Container(
@@ -142,7 +138,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                 ),
                                                 errorWidget:
                                                     (context, url, error) =>
-                                                        Icon(Icons.error),
+                                                        const Icon(Icons.error),
                                               ),
                                             ),
                                           )
@@ -153,10 +149,11 @@ class _ProductScreenState extends State<ProductScreen> {
                                           aspectRatio:
                                               screenSize.aspectRatio(2.5),
                                           onPageChanged: (index, reason) {
-                                            if (mounted)
+                                            if (mounted) {
                                               setState(() {
                                                 _currentImage = index;
                                               });
+                                            }
                                           }),
                                     )
                                   : Center(
@@ -172,8 +169,8 @@ class _ProductScreenState extends State<ProductScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: List.generate(
                                 product.images.length,
-                                (int index) => AnimatedContainer(
-                                  duration: Duration(milliseconds: 400),
+                                (index) => AnimatedContainer(
+                                  duration: const Duration(milliseconds: 400),
                                   width: _currentImage == index ? 16 : 8,
                                   height: _currentImage == index ? 6 : 8,
                                   margin: screenSize.symmetric(
@@ -181,8 +178,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
                                     color: _currentImage == index
-                                        ? Color.fromRGBO(0, 0, 0, 0.9)
-                                        : Color.fromRGBO(0, 0, 0, 0.4),
+                                        ? const Color.fromRGBO(0, 0, 0, 0.9)
+                                        : const Color.fromRGBO(0, 0, 0, 0.4),
                                   ),
                                 ),
                               ),
@@ -192,7 +189,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   ],
                 ),
               ),
-              Divider(height: 12),
+              const Divider(height: 12),
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -201,10 +198,10 @@ class _ProductScreenState extends State<ProductScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         ...variations,
-                        if (variations.isNotEmpty) Divider(height: 2),
+                        if (variations.isNotEmpty) const Divider(height: 2),
                         Padding(
                           padding: screenSize.symmetric(
-                              vertical: variations.length > 0 ? 15 : 0,
+                              vertical: variations.isNotEmpty ? 15 : 0,
                               horizontal: 18),
                           child: Row(
                             children: [
@@ -253,7 +250,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: -0.4),
                               ),
-                              SizedBox(width: 12),
+                              const SizedBox(width: 12),
                               Text(
                                 "Save: ₹ ${product.mrp.toDouble() - product.price.toDouble()}",
                                 style: TextStyle(
@@ -299,7 +296,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         ),
                       ),
                     ),
-                    VerticalDivider(),
+                    const VerticalDivider(),
                     Expanded(
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
@@ -309,16 +306,14 @@ class _ProductScreenState extends State<ProductScreen> {
                             ? Colors.grey[600]
                             : Theme.of(context).primaryColor.withOpacity(0.9),
                         padding: screenSize.symmetric(vertical: 16),
-                        child: Container(
-                          child: Text(
-                            bag.containsProduct(product)
-                                ? "IN BAG"
-                                : "ADD TO BAG",
-                            style: TextStyle(
-                                fontSize: screenSize.height(20),
-                                color: Theme.of(context).backgroundColor,
-                                fontWeight: FontWeight.bold),
-                          ),
+                        child: Text(
+                          bag.containsProduct(product)
+                              ? "IN BAG"
+                              : "ADD TO BAG",
+                          style: TextStyle(
+                              fontSize: screenSize.height(20),
+                              color: Theme.of(context).backgroundColor,
+                              fontWeight: FontWeight.bold),
                         ),
                         onPressed: () async {
                           if (!bag.containsProduct(product)) {
@@ -327,8 +322,8 @@ class _ProductScreenState extends State<ProductScreen> {
                             await showModalBottomSheet(
                               backgroundColor: Colors.transparent,
                               context: context,
-                              builder: (BuildContext context) =>
-                                  AddProductSheet(product),
+                              builder: (context) =>
+                                  AddProductSheet(product: product),
                             );
                           } else {
                             await Navigator.pushNamed(context, "/bag");

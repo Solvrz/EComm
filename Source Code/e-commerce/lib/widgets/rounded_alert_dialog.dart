@@ -12,15 +12,17 @@ class RoundedAlertDialog extends StatelessWidget {
   final double titleSize;
   final double descriptionSize;
 
-  RoundedAlertDialog(
-      {required this.title,
-      this.description = "",
-      this.buttonsList = const [],
-      this.widgets,
-      this.isExpanded = true,
-      this.centerTitle = true,
-      this.titleSize = 24,
-      this.descriptionSize = 14});
+  const RoundedAlertDialog({
+    Key? key,
+    required this.title,
+    this.description = "",
+    this.buttonsList = const [],
+    this.widgets,
+    this.isExpanded = true,
+    this.centerTitle = true,
+    this.titleSize = 24,
+    this.descriptionSize = 14,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class RoundedAlertDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: widgets!,
           ),
-        if (buttonsList.length > 0)
+        if (buttonsList.isNotEmpty)
           Row(
             mainAxisAlignment: isExpanded
                 ? MainAxisAlignment.spaceAround
@@ -65,9 +67,10 @@ class RoundedAlertDialog extends StatelessWidget {
                         child: buttonsList[index],
                       ),
                     )
-                  : Container(
+                  : SizedBox(
                       width: MediaQuery.of(context).size.width / 4,
-                      child: buttonsList[index]),
+                      child: buttonsList[index],
+                    ),
             ),
           )
       ]),

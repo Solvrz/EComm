@@ -5,16 +5,17 @@ class Marquee extends StatefulWidget {
   final Axis direction;
   final Duration animationDuration, backDuration, pauseDuration;
 
-  Marquee({
+  const Marquee({
+    Key? key,
     required this.child,
-    this.direction: Axis.horizontal,
-    this.animationDuration: const Duration(seconds: 4),
-    this.backDuration: const Duration(seconds: 4),
-    this.pauseDuration: const Duration(milliseconds: 200),
-  });
+    this.direction = Axis.horizontal,
+    this.animationDuration = const Duration(seconds: 4),
+    this.backDuration = const Duration(seconds: 4),
+    this.pauseDuration = const Duration(milliseconds: 200),
+  }) : super(key: key);
 
   @override
-  _MarqueeState createState() => _MarqueeState();
+  State<Marquee> createState() => _MarqueeState();
 }
 
 class _MarqueeState extends State<Marquee> {
@@ -36,24 +37,26 @@ class _MarqueeState extends State<Marquee> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: widget.child,
       scrollDirection: widget.direction,
       controller: scrollController,
+      child: widget.child,
     );
   }
 
-  void scroll(_) async {
+  Future<void> scroll(_) async {
     while (scrollController.hasClients) {
       await Future.delayed(widget.pauseDuration);
-      if (scrollController.hasClients)
+      if (scrollController.hasClients) {
         await scrollController.animateTo(
             scrollController.position.maxScrollExtent,
             duration: widget.animationDuration,
             curve: Curves.ease);
+      }
       await Future.delayed(widget.pauseDuration);
-      if (scrollController.hasClients)
+      if (scrollController.hasClients) {
         await scrollController.animateTo(0.0,
             duration: widget.backDuration, curve: Curves.easeOut);
+      }
     }
   }
 }

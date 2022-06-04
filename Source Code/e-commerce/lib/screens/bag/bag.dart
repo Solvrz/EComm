@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shimmer/shimmer.dart';
 
-import './models/bag.dart';
 import './widgets/checkout_sheet.dart';
 import '../../config/constant.dart';
 import '../../models/product.dart';
@@ -15,8 +16,10 @@ import '../../widgets/rounded_alert_dialog.dart';
 import '../product/export.dart';
 
 class BagScreen extends StatefulWidget {
+  const BagScreen({Key? key}) : super(key: key);
+
   @override
-  _BagScreenState createState() => _BagScreenState();
+  State<BagScreen> createState() => _BagScreenState();
 }
 
 class _BagScreenState extends State<BagScreen> {
@@ -26,15 +29,15 @@ class _BagScreenState extends State<BagScreen> {
   Widget build(BuildContext context) {
     double price = 0;
 
-    bag.products.forEach((BagItem bagItem) {
+    for (var bagItem in bag.products) {
       price += bagItem.product.price.toDouble() * bagItem.quantity;
-    });
+    }
 
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: CustomAppBar(
-          parent: context,
+          context: context,
           title: "My Bag",
           leading: GestureDetector(
             onTap: () => Navigator.pop(context),
@@ -43,7 +46,8 @@ class _BagScreenState extends State<BagScreen> {
                 border: Border.all(color: Theme.of(context).backgroundColor),
               ),
               padding: screenSize.all(8),
-              child: Icon(Icons.arrow_back_ios, color: kUIDarkText, size: 26),
+              child: const Icon(Icons.arrow_back_ios,
+                  color: kUIDarkText, size: 26),
             ),
           ),
           trailing: [
@@ -51,12 +55,10 @@ class _BagScreenState extends State<BagScreen> {
               onTap: () => Navigator.pushNamed(context, "/wishlist"),
               child: Padding(
                 padding: screenSize.all(18),
-                child: Container(
-                  child: Icon(
-                    Icons.favorite_border,
-                    color: kUIDarkText,
-                    size: 28,
-                  ),
+                child: const Icon(
+                  Icons.favorite_border,
+                  color: kUIDarkText,
+                  size: 28,
                 ),
               ),
             )
@@ -66,7 +68,7 @@ class _BagScreenState extends State<BagScreen> {
           padding: screenSize.symmetric(horizontal: 24),
           decoration: BoxDecoration(
             color: Theme.of(context).highlightColor,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(25),
               topRight: Radius.circular(25),
             ),
@@ -95,7 +97,7 @@ class _BagScreenState extends State<BagScreen> {
                           letterSpacing: -2,
                           color: kUIDarkText),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Text(
                       "(${bag.products.length} items)",
                       style: TextStyle(
@@ -113,23 +115,6 @@ class _BagScreenState extends State<BagScreen> {
                   borderRadius: BorderRadius.circular(25),
                 ),
                 padding: screenSize.symmetric(horizontal: 18, vertical: 12),
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.check_circle_outline,
-                          color: Theme.of(context).highlightColor),
-                      SizedBox(width: 8),
-                      Text(
-                        "Checkout",
-                        style: TextStyle(
-                            fontSize: screenSize.height(16),
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).highlightColor),
-                      ),
-                    ],
-                  ),
-                ),
                 onPressed: bag.hasProducts
                     ? () async {
                         selectedInfo == null
@@ -141,7 +126,7 @@ class _BagScreenState extends State<BagScreen> {
                                 context: context,
                                 builder: (_) => Padding(
                                   padding: MediaQuery.of(context).viewInsets,
-                                  child: InformationSheet(popable: false),
+                                  child: const InformationSheet(popable: false),
                                 ),
                               )
                             : await showModalBottomSheet(
@@ -156,6 +141,21 @@ class _BagScreenState extends State<BagScreen> {
                         if (mounted) setState(() {});
                       }
                     : null,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.check_circle_outline,
+                        color: Theme.of(context).highlightColor),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Checkout",
+                      style: TextStyle(
+                          fontSize: screenSize.height(16),
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).highlightColor),
+                    ),
+                  ],
+                ),
               )
             ],
           ),
@@ -169,20 +169,21 @@ class _BagScreenState extends State<BagScreen> {
                     context: context,
                     builder: (_) => WillPopScope(
                       onWillPop: () async {
-                        if (mounted)
+                        if (mounted) {
                           setState(
                             () => bag.changeLog.clear(),
                           );
+                        }
                         return true;
                       },
                       child: RoundedAlertDialog(title: "Alerts", widgets: [
-                        Container(
+                        SizedBox(
                           height: screenSize.height(280),
                           width: 300,
                           child: ListView.builder(
                             shrinkWrap: true,
                             itemCount: bag.changeLog.length,
-                            itemBuilder: (BuildContext context, int index) {
+                            itemBuilder: (context, index) {
                               return Column(
                                 children: [
                                   Text(
@@ -194,7 +195,7 @@ class _BagScreenState extends State<BagScreen> {
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
-                                  Divider(
+                                  const Divider(
                                     height: 15,
                                     thickness: 0.8,
                                     color: Colors.black,
@@ -245,13 +246,12 @@ class _BagScreenState extends State<BagScreen> {
                         shrinkWrap: true,
                         key: _listKey,
                         initialItemCount: bag.products.length,
-                        itemBuilder: (BuildContext context, int index,
-                                Animation<double> animation) =>
+                        itemBuilder: (context, index, animation) =>
                             _buildItem(context, index, animation),
                       ),
                     )
                   : Center(
-                      child: Container(
+                      child: SizedBox(
                         width: MediaQuery.of(context).size.width / 1.25,
                         child: EmptyWidget(
                           packageImage: PackageImage.Image_2,
@@ -275,29 +275,40 @@ class _BagScreenState extends State<BagScreen> {
       sizeFactor: animation,
       child: Slidable(
         key: ObjectKey(bag.products[index]),
-        startActionPane: ActionPane(
-          // TODO: Test Me
-          motion: const DrawerMotion(),
-          extentRatio: 0.25,
-          children: [
-            SlidableAction(
-              label: 'Archive',
-              backgroundColor: Colors.blue,
-              icon: Icons.archive,
-              onPressed: (context) {},
-            ),
-          ],
-        ),
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
           extentRatio: 0.25,
           children: [
-            SlidableAction(
-              label: 'Delete',
-              backgroundColor: Colors.red,
-              icon: Icons.delete,
-              onPressed: (context) {},
-            ),
+            Flexible(
+              flex: 6,
+              child: GestureDetector(
+                onTap: () {
+                  Timer(const Duration(milliseconds: 200), () {
+                    bag.removeProduct(product);
+                    if (mounted) setState(() {});
+                  });
+
+                  _listKey.currentState!.removeItem(
+                    index,
+                    (context, animation) =>
+                        _buildItem(context, index, animation),
+                    duration: const Duration(milliseconds: 200),
+                  );
+                },
+                child: Container(
+                  margin: screenSize.only(left: 12),
+                  height: MediaQuery.of(context).size.height / 6,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Theme.of(context).primaryColor),
+                  child: const Icon(
+                    Icons.delete,
+                    color: kUILightText,
+                    size: 32,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
         child: GestureDetector(
@@ -323,8 +334,8 @@ class _BagScreenState extends State<BagScreen> {
                     padding: screenSize.symmetric(horizontal: 24, vertical: 18),
                     child: Row(
                       children: [
-                        product.images.length > 0
-                            ? Container(
+                        product.images.isNotEmpty
+                            ? SizedBox(
                                 width: screenSize.height(100),
                                 child: CachedNetworkImage(
                                   imageUrl: product.images[0],
@@ -335,14 +346,14 @@ class _BagScreenState extends State<BagScreen> {
                                     child: Container(color: Colors.grey),
                                   ),
                                   errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+                                      const Icon(Icons.error),
                                 ),
                               )
-                            : Text(
+                            : const Text(
                                 "No Image",
                                 style: TextStyle(fontSize: 20),
                               ),
-                        SizedBox(width: 24),
+                        const SizedBox(width: 24),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -368,7 +379,7 @@ class _BagScreenState extends State<BagScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
-                                  SizedBox(width: 12),
+                                  const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
                                       "₹ ${product.mrp}"
@@ -436,14 +447,12 @@ class _BagScreenState extends State<BagScreen> {
                           bag.increaseQuantity(product);
                           if (mounted) setState(() {});
                         },
-                        child: Container(
-                          child: Padding(
-                            padding: screenSize.all(10),
-                            child: Icon(
-                              Icons.add,
-                              color: Theme.of(context).backgroundColor,
-                              size: 20,
-                            ),
+                        child: Padding(
+                          padding: screenSize.all(10),
+                          child: Icon(
+                            Icons.add,
+                            color: Theme.of(context).backgroundColor,
+                            size: 20,
                           ),
                         ),
                       ),
@@ -475,29 +484,6 @@ class _BagScreenState extends State<BagScreen> {
             ),
           ),
         ),
-        // secondaryActions: [
-        //   GestureDetector(
-        //     onTap: () {
-        //       Timer(Duration(milliseconds: 200), () {
-        //         bag.removeProduct(product);
-        //         if (mounted) setState(() {});
-        //       });
-        //       _listKey.currentState.removeItem(
-        //         index,
-        //         (context, animation) => _buildItem(context, index, animation),
-        //         duration: Duration(milliseconds: 200),
-        //       );
-        //     },
-        //     child: Container(
-        //       margin: screenSize.only(left: 12),
-        //       height: MediaQuery.of(context).size.height / 6,
-        //       decoration: BoxDecoration(
-        //           borderRadius: BorderRadius.circular(25),
-        //           color: Theme.of(context).primaryColor),
-        //       child: Icon(Icons.delete, color: kUILightText, size: 32),
-        //     ),
-        //   )
-        // ],
       ),
     );
   }

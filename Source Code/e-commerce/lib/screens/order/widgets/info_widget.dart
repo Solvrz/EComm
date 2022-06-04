@@ -10,7 +10,8 @@ class InfoWidget extends StatelessWidget {
   final Map order;
   final bool overflow;
 
-  InfoWidget({required this.order, this.overflow = false});
+  const InfoWidget({Key? key, required this.order, this.overflow = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,9 @@ class InfoWidget extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "${order['name'].toString().capitalize()}"
+                order['name']
+                    .toString()
+                    .capitalize()
                     .replaceAll("", "\u{200B}"),
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -157,7 +160,7 @@ class InfoWidget extends StatelessWidget {
             ),
           ],
         ),
-        Divider(height: 15),
+        const Divider(height: 15),
         Row(
           children: [
             Text(
@@ -227,8 +230,8 @@ class InfoWidget extends StatelessWidget {
             ),
           ],
         ),
-        Divider(height: 15),
-        SizedBox(height: 8),
+        const Divider(height: 15),
+        const SizedBox(height: 8),
       ],
     );
   }
@@ -237,14 +240,14 @@ class InfoWidget extends StatelessWidget {
 class OrderSheet extends StatelessWidget {
   final Map order;
 
-  OrderSheet(this.order);
+  const OrderSheet({Key? key, required this.order}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
@@ -262,15 +265,15 @@ class OrderSheet extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Divider(height: 10),
-            SizedBox(height: 10),
-            Container(
+            const Divider(height: 10),
+            const SizedBox(height: 10),
+            SizedBox(
               height: order["products"].length > 3
                   ? screenSize.height(375)
                   : screenSize.height(275),
               child: ListView.builder(
                   itemCount: order["products"].length,
-                  itemBuilder: (BuildContext context, int index) {
+                  itemBuilder: (context, index) {
                     Product product =
                         Product.fromJson(order["products"][index]["product"]);
 
@@ -289,8 +292,8 @@ class OrderSheet extends StatelessWidget {
                                   horizontal: 24, vertical: 18),
                               child: Row(
                                 children: [
-                                  product.images.length > 0
-                                      ? Container(
+                                  product.images.isNotEmpty
+                                      ? SizedBox(
                                           width: screenSize.height(100),
                                           child: CachedNetworkImage(
                                             imageUrl: product.images[0],
@@ -304,11 +307,11 @@ class OrderSheet extends StatelessWidget {
                                             ),
                                             errorWidget:
                                                 (context, url, error) =>
-                                                    Icon(Icons.error),
+                                                    const Icon(Icons.error),
                                           ),
                                         )
-                                      : Text("No Image"),
-                                  SizedBox(width: 24),
+                                      : const Text("No Image"),
+                                  const SizedBox(width: 24),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -340,7 +343,7 @@ class OrderSheet extends StatelessWidget {
                                                   fontFamily:
                                                       "sans-serif-condensed"),
                                             ),
-                                            SizedBox(width: 12),
+                                            const SizedBox(width: 12),
                                             Text(
                                               "₹ ${product.mrp}",
                                               style: TextStyle(
@@ -399,7 +402,7 @@ class OrderSheet extends StatelessWidget {
                     );
                   }),
             ),
-            Divider(height: 10),
+            const Divider(height: 10),
             Text(
               "Delivery Information:",
               style: TextStyle(
@@ -408,7 +411,7 @@ class OrderSheet extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             InfoWidget(
               order: order,
               overflow: true,

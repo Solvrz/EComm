@@ -12,12 +12,19 @@ class ProductScreen extends StatefulWidget {
   final String title;
   final List<Map> tabsData;
   final List<DocumentReference> tabs;
+
   int _currentTab = 0;
 
-  ProductScreen(this.parent, this.title, this.tabsData, this.tabs);
+  ProductScreen({
+    Key? key,
+    required this.parent,
+    required this.title,
+    required this.tabsData,
+    required this.tabs,
+  }) : super(key: key);
 
   @override
-  _ProductScreenState createState() => _ProductScreenState();
+  State<ProductScreen> createState() => _ProductScreenState();
 }
 
 class _ProductScreenState extends State<ProductScreen> {
@@ -27,7 +34,10 @@ class _ProductScreenState extends State<ProductScreen> {
   void initState() {
     super.initState();
 
-    tabsController = ScrollController()..addListener(() => setState(() {}));
+    tabsController = ScrollController()
+      ..addListener(
+        () => setState(() {}),
+      );
     setState(() {});
   }
 
@@ -47,43 +57,39 @@ class _ProductScreenState extends State<ProductScreen> {
           controller: tabsController,
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: List.generate(widget.tabs.length, (int index) {
+            children: List.generate(widget.tabs.length, (index) {
               return GestureDetector(
                 onTap: () {
                   if (index == widget._currentTab) return;
                   if (mounted) setState(() => widget._currentTab = index);
                 },
-                child: Container(
-                  child: Padding(
-                    padding: screenSize.symmetric(horizontal: 18),
-                    child: Row(children: [
-                      if (index == widget._currentTab) ...[
-                        CircleAvatar(
-                          radius: 4,
-                          backgroundColor: Color(0xffa5c4f2),
-                        ),
-                        SizedBox(width: 8),
-                      ],
-                      AnimatedDefaultTextStyle(
-                        child: Text(
-                          widget.tabsData[index]["name"]
-                              .split("\\n")
-                              .join("\n"),
-                          textAlign: TextAlign.center,
-                        ),
-                        duration: Duration(milliseconds: 150),
-                        style: TextStyle(
-                            fontSize: screenSize
-                                .height(index == widget._currentTab ? 16 : 14),
-                            fontWeight: index == widget._currentTab
-                                ? FontWeight.w600
-                                : FontWeight.normal,
-                            color: index == widget._currentTab
-                                ? kUIDarkText
-                                : Colors.grey[600]),
+                child: Padding(
+                  padding: screenSize.symmetric(horizontal: 18),
+                  child: Row(children: [
+                    if (index == widget._currentTab) ...[
+                      const CircleAvatar(
+                        radius: 4,
+                        backgroundColor: Color(0xffa5c4f2),
                       ),
-                    ]),
-                  ),
+                      const SizedBox(width: 8),
+                    ],
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 150),
+                      style: TextStyle(
+                          fontSize: screenSize
+                              .height(index == widget._currentTab ? 16 : 14),
+                          fontWeight: index == widget._currentTab
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                          color: index == widget._currentTab
+                              ? kUIDarkText
+                              : Colors.grey[600]),
+                      child: Text(
+                        widget.tabsData[index]["name"].split("\\n").join("\n"),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ]),
                 ),
               );
             }),
@@ -93,23 +99,22 @@ class _ProductScreenState extends State<ProductScreen> {
       StreamBuilder<QuerySnapshot>(
         stream:
             widget.tabs[widget._currentTab].collection("products").snapshots(),
-        builder: (BuildContext context, AsyncSnapshot future) {
+        builder: (context, future) {
           if (future.hasData) {
-            if (future.data.docs.isNotEmpty) {
+            if (future.data!.docs.isNotEmpty) {
               return Expanded(
                 child: ProductList(
                   parent: widget.parent,
-                  products: future.data.docs
+                  products: future.data!.docs
                       .map<Product>(
-                        (DocumentSnapshot e) =>
-                            Product.fromJson(e.data() as Map),
+                        (e) => Product.fromJson(e.data() as Map),
                       )
                       .toList(),
                 ),
               );
             } else {
               return Center(
-                child: Container(
+                child: SizedBox(
                   height: MediaQuery.of(context).size.height / 1.5,
                   width: MediaQuery.of(context).size.width / 1.5,
                   child: EmptyWidget(
@@ -120,10 +125,10 @@ class _ProductScreenState extends State<ProductScreen> {
               );
             }
           } else {
-            return Container(
+            return SizedBox(
               height: MediaQuery.of(context).size.height / 1.5,
               width: MediaQuery.of(context).size.width * 0.9,
-              child: Center(
+              child: const Center(
                 child: CircularProgressIndicator(),
               ),
             );

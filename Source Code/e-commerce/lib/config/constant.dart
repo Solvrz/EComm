@@ -31,11 +31,15 @@ const kUIDarkText = Color(0xff031715);
 
 InputDecoration kInputDialogDecoration = const InputDecoration(
   enabledBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(8)),
+    borderRadius: BorderRadius.all(
+      Radius.circular(8),
+    ),
     borderSide: BorderSide(color: Colors.grey),
   ),
   focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(8)),
+    borderRadius: BorderRadius.all(
+      Radius.circular(8),
+    ),
     borderSide: BorderSide(color: Colors.redAccent, width: 1.5),
   ),
 );

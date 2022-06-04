@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +13,10 @@ import '../../widgets/marquee.dart';
 import '../product/export.dart';
 
 class WishlistScreen extends StatefulWidget {
+  const WishlistScreen({Key? key}) : super(key: key);
+
   @override
-  _WishlistScreenState createState() => _WishlistScreenState();
+  State<WishlistScreen> createState() => _WishlistScreenState();
 }
 
 class _WishlistScreenState extends State<WishlistScreen> {
@@ -23,7 +27,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: CustomAppBar(parent: context, title: "My Wishlist"),
+        appBar: CustomAppBar(context: context, title: "My Wishlist"),
         body: Column(
           children: [
             Expanded(
@@ -35,13 +39,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
                         shrinkWrap: true,
                         key: _listKey,
                         initialItemCount: wishlist.products.length,
-                        itemBuilder: (BuildContext context, int index,
-                                Animation<double> animation) =>
+                        itemBuilder: (context, index, animation) =>
                             _buildItem(context, index, animation),
                       ),
                     )
                   : Center(
-                      child: Container(
+                      child: SizedBox(
                         width: MediaQuery.of(context).size.width / 1.25,
                         child: EmptyWidget(
                           packageImage: PackageImage.Image_4,
@@ -65,29 +68,40 @@ class _WishlistScreenState extends State<WishlistScreen> {
       sizeFactor: animation,
       child: Slidable(
         key: ObjectKey(wishlist.products[index]),
-        startActionPane: ActionPane(
-          // TODO: Test Me
-          motion: const DrawerMotion(),
-          extentRatio: 0.25,
-          children: [
-            SlidableAction(
-              label: 'Archive',
-              backgroundColor: Colors.blue,
-              icon: Icons.archive,
-              onPressed: (context) {},
-            ),
-          ],
-        ),
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
           extentRatio: 0.25,
           children: [
-            SlidableAction(
-              label: 'Delete',
-              backgroundColor: Colors.red,
-              icon: Icons.delete,
-              onPressed: (context) {},
-            ),
+            Flexible(
+              flex: 6,
+              child: GestureDetector(
+                onTap: () {
+                  Timer(const Duration(milliseconds: 200), () {
+                    wishlist.removeProduct(product);
+                    if (mounted) setState(() {});
+                  });
+
+                  _listKey.currentState!.removeItem(
+                    index,
+                    (context, animation) =>
+                        _buildItem(context, index, animation),
+                    duration: const Duration(milliseconds: 200),
+                  );
+                },
+                child: Container(
+                  margin: screenSize.only(left: 12),
+                  height: MediaQuery.of(context).size.height / 6,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Theme.of(context).primaryColor),
+                  child: const Icon(
+                    Icons.delete,
+                    color: kUILightText,
+                    size: 32,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
         child: GestureDetector(
@@ -110,8 +124,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     padding: screenSize.symmetric(horizontal: 24, vertical: 18),
                     child: Row(
                       children: [
-                        product.images.length > 0
-                            ? Container(
+                        product.images.isNotEmpty
+                            ? SizedBox(
                                 width: screenSize.height(100),
                                 child: CachedNetworkImage(
                                   imageUrl: product.images[0],
@@ -122,11 +136,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                     child: Container(color: Colors.grey),
                                   ),
                                   errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+                                      const Icon(Icons.error),
                                 ),
                               )
-                            : Text("No Image"),
-                        SizedBox(width: 24),
+                            : const Text("No Image"),
+                        const SizedBox(width: 24),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,7 +166,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                         fontWeight: FontWeight.bold,
                                         fontFamily: "sans-serif-condensed"),
                                   ),
-                                  SizedBox(width: 12),
+                                  const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
                                       "₹ ${product.mrp}"
@@ -180,30 +194,6 @@ class _WishlistScreenState extends State<WishlistScreen> {
             ),
           ),
         ),
-        // secondaryActions: [
-        //   GestureDetector(
-        //     onTap: () {
-        //       Timer(Duration(milliseconds: 200), () {
-        //         wishlist.removeProduct(product);
-        //         if (mounted) setState(() {});
-        //       });
-
-        //       _listKey.currentState.removeItem(
-        //         index,
-        //         (context, animation) => _buildItem(context, index, animation),
-        //         duration: Duration(milliseconds: 200),
-        //       );
-        //     },
-        //     child: Container(
-        //       margin: screenSize.only(left: 12),
-        //       height: MediaQuery.of(context).size.height / 6,
-        //       decoration: BoxDecoration(
-        //           borderRadius: BorderRadius.circular(25),
-        //           color: Theme.of(context).primaryColor),
-        //       child: Icon(Icons.delete, color: kUILightText, size: 32),
-        //     ),
-        //   )
-        // ],
       ),
     );
   }

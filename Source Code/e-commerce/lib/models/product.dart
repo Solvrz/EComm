@@ -36,11 +36,15 @@ class Product {
               (variation) => Variation.fromJson(variation),
             )
             .toList(),
+        // ignore: prefer_null_aware_operators
         selected: data["selected"] != null
             ? data["selected"].map(
                 (key, value) => MapEntry(
                   key,
-                  Option(label: value["label"], color: value["color"]),
+                  Option(
+                    label: value["label"],
+                    color: value["color"],
+                  ),
                 ),
               )
             : null);
@@ -55,7 +59,7 @@ class Product {
       "mrp": mrp,
       "variations": variations
           .map<Map>(
-            (Variation variation) => variation.toJson(),
+            (variation) => variation.toJson(),
           )
           .toList(),
       "selected": selected!.map(
@@ -91,7 +95,7 @@ class Product {
 
   void select(String name, int option) {
     selected![name] = variations
-        .where((Variation variation) => variation.name == name)
+        .where((variation) => variation.name == name)
         .first
         .options[option];
   }

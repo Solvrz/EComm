@@ -9,15 +9,14 @@ import '../../../config/constant.dart';
 import '../../../models/product.dart';
 import '../../../screens/payment/payment.dart';
 import '../../../widgets/information_sheet.dart';
-import '../models/bag.dart';
 
 class CheckoutSheet extends StatefulWidget {
   final double price;
 
-  CheckoutSheet({required this.price});
+  const CheckoutSheet({Key? key, required this.price}) : super(key: key);
 
   @override
-  _CheckoutSheetState createState() => _CheckoutSheetState();
+  State<CheckoutSheet> createState() => _CheckoutSheetState();
 }
 
 class _CheckoutSheetState extends State<CheckoutSheet> {
@@ -30,13 +29,13 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
   String paymentMethod = paymentMethods.first;
 
+  @override
   void initState() {
     super.initState();
 
     _razorpay = Razorpay();
 
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-        (PaymentSuccessResponse response) async {
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, (response) async {
       http.Response verification = await http.post(
         Uri.https("suneel-printer-server.herokuapp.com", "payment_verify", {
           "payment_id": response.paymentId,
@@ -48,7 +47,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
       if (verification.statusCode == 200) {
         Map verificationResponse = jsonDecode(verification.body);
         if (verificationResponse["sucessful"]) {
-          Navigator.popAndPushNamed(
+          if (!mounted) return;
+
+          await Navigator.popAndPushNamed(
             context,
             "/payment",
             arguments: PaymentArguments(
@@ -60,7 +61,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                 }),
           );
         } else {
-          Navigator.popAndPushNamed(
+          if (!mounted) return;
+
+          await Navigator.popAndPushNamed(
             context,
             "/payment",
             arguments: PaymentArguments(
@@ -71,7 +74,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
           );
         }
       } else {
-        Navigator.popAndPushNamed(
+        if (!mounted) return;
+
+        await Navigator.popAndPushNamed(
           context,
           "/payment",
           arguments: PaymentArguments(
@@ -82,8 +87,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         );
       }
     });
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
-        (PaymentFailureResponse response) {
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, (response) {
       Navigator.popAndPushNamed(
         context,
         './screens/bag/models/bag.dart'
@@ -105,8 +109,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
             process: () async {}),
       );
     });
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
-        (ExternalWalletResponse response) {
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, (response) {
       Navigator.popAndPushNamed(
         context,
         "/payment",
@@ -121,6 +124,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     });
   }
 
+  @override
   void dispose() {
     super.dispose();
     _razorpay.clear();
@@ -131,7 +135,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
@@ -148,11 +152,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Container(
-                      child: Padding(
-                        padding: screenSize.all(16),
-                        child: Icon(Icons.close, color: kUIDarkText),
-                      ),
+                    child: Padding(
+                      padding: screenSize.all(16),
+                      child: const Icon(Icons.close, color: kUIDarkText),
                     ),
                   ),
                   Text(
@@ -183,7 +185,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               ),
                             ),
                             Text(
-                              "${selectedInfo!["name"].toString().capitalize()}",
+                              selectedInfo!["name"].toString().capitalize(),
                               style: TextStyle(
                                 fontSize: screenSize.height(18),
                                 color: kUIDarkText,
@@ -202,16 +204,14 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               context: context,
                               builder: (_) => Padding(
                                 padding: MediaQuery.of(context).viewInsets,
-                                child: InformationSheet(popable: false),
+                                child: const InformationSheet(popable: false),
                               ),
                             );
                           },
-                          child: Container(
-                            child: Icon(
-                              Icons.edit,
-                              size: screenSize.height(25),
-                              color: kUIDarkText.withOpacity(0.8),
-                            ),
+                          child: Icon(
+                            Icons.edit,
+                            size: screenSize.height(25),
+                            color: kUIDarkText.withOpacity(0.8),
                           ),
                         ),
                       ],
@@ -280,8 +280,8 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
-                    Divider(height: 20),
+                    const SizedBox(height: 10),
+                    const Divider(height: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -293,7 +293,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           height: screenSize.height(120),
                           child: ListView(
                             children: paymentMethods.map<Widget>(
@@ -310,15 +310,18 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                   value: value,
                                   groupValue: paymentMethod,
                                   onChanged: (_) {
-                                    if (paymentMethod != value) if (mounted)
-                                      setState(() => paymentMethod = value);
+                                    if (paymentMethod != value) {
+                                      if (mounted) {
+                                        setState(() => paymentMethod = value);
+                                      }
+                                    }
                                   },
                                 );
                               },
                             ).toList(),
                           ),
                         ),
-                        Divider(height: 20),
+                        const Divider(height: 20),
                         Row(
                           children: [
                             Expanded(
@@ -331,7 +334,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                 ),
                               ),
                             ),
-                            Text(
+                            const Text(
                               "₹ ",
                               style: TextStyle(
                                 color: kUIDarkText,
@@ -350,7 +353,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             ),
                           ],
                         ),
-                        Divider(height: 15),
+                        const Divider(height: 15),
                       ],
                     ),
                   ],
@@ -360,14 +363,15 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                 child: MaterialButton(
                   onPressed: paymentMethod == paymentMethods.first
                       ? () async {
-                          Navigator.popAndPushNamed(
+                          await Navigator.popAndPushNamed(
                             context,
                             "/payment",
                             arguments: PaymentArguments(
-                                success: true,
-                                msg:
-                                    "You will soon receive a confirmation mail from us.",
-                                process: () async => await placeOrder()),
+                              success: true,
+                              msg:
+                                  "You will soon receive a confirmation mail from us.",
+                              process: () async => await placeOrder(),
+                            ),
                           );
                         }
                       : () async {
@@ -410,7 +414,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               }
                             });
                           } else {
-                            Navigator.popAndPushNamed(
+                            if (!mounted) return;
+
+                            await Navigator.popAndPushNamed(
                               context,
                               "/payment",
                               arguments: PaymentArguments(
@@ -425,20 +431,18 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   ),
                   padding: screenSize.symmetric(vertical: 12, horizontal: 36),
                   color: Theme.of(context).primaryColor,
-                  child: Container(
-                    child: Text(
-                      paymentMethod == paymentMethods.first
-                          ? "Proceed To Buy"
-                          : "Proceed To Pay",
-                      style: TextStyle(
-                          fontSize: screenSize.height(24),
-                          fontWeight: FontWeight.w600,
-                          color: kUILightText),
-                    ),
+                  child: Text(
+                    paymentMethod == paymentMethods.first
+                        ? "Proceed To Buy"
+                        : "Proceed To Pay",
+                    style: TextStyle(
+                        fontSize: screenSize.height(24),
+                        fontWeight: FontWeight.w600,
+                        color: kUILightText),
                   ),
                 ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
             ]),
       ),
     );
@@ -458,9 +462,9 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
             ? "Pay On Delivery"
             : "Prepaid",
         "product_list": bag.products
-            .map<String>((BagItem bagItem) {
+            .map<String>((bagItem) {
               Product product = bagItem.product;
-              String variationText = product.selected!.length > 0
+              String variationText = product.selected!.isNotEmpty
                   ? " (${product.selected!.values.map((value) => value.label).toList().join(", ")})"
                   : "";
 
@@ -479,23 +483,26 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
     List<String> pastOrders = preferences.getStringList("orders") ?? [];
 
-    pastOrders.add(jsonEncode({
-      "name": selectedInfo!["name"],
-      "phone": selectedInfo!["phone"],
-      "address": selectedInfo!["address"],
-      "pincode": selectedInfo!["pincode"],
-      "email": selectedInfo!["email"],
-      "time": Timestamp.now().toString(),
-      "price": widget.price.toString(),
-      "payment_mode":
-          paymentMethod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
-      "products": bag.products.map((e) {
-        return {"product": e.product.toJson(), "quantity": e.quantity};
-      }).toList()
-    }));
-    preferences.setStringList("orders", pastOrders);
+    pastOrders.add(
+      jsonEncode({
+        "name": selectedInfo!["name"],
+        "phone": selectedInfo!["phone"],
+        "address": selectedInfo!["address"],
+        "pincode": selectedInfo!["pincode"],
+        "email": selectedInfo!["email"],
+        "time": Timestamp.now().toString(),
+        "price": widget.price.toString(),
+        "payment_mode": paymentMethod == paymentMethods.first
+            ? "Pay On Delivery"
+            : "Prepaid",
+        "products": bag.products.map((e) {
+          return {"product": e.product.toJson(), "quantity": e.quantity};
+        }).toList()
+      }),
+    );
+    await preferences.setStringList("orders", pastOrders);
 
-    database.collection("orders").add({
+    await database.collection("orders").add({
       "name": selectedInfo!["name"],
       "phone": selectedInfo!["phone"],
       "address": selectedInfo!["address"],

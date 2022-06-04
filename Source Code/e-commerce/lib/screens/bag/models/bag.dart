@@ -12,6 +12,7 @@ class BagItem {
 
   BagItem(this.product, this.quantity);
 
+  @override
   String toString() => "${jsonEncode(
         product.toJson(),
       )}\n$quantity";
@@ -28,7 +29,7 @@ class BagItem {
 
 class Bag {
   List<BagItem> _products = [];
-  List<String> _changeLog = [];
+  final List<String> _changeLog = [];
 
   List<BagItem> get products => _products;
 
@@ -50,7 +51,7 @@ class Bag {
   }
 
   void removeProduct(Product product) {
-    _products.removeWhere((BagItem bagItem) {
+    _products.removeWhere((bagItem) {
       return bagItem.product == product;
     });
     _save();
@@ -62,9 +63,9 @@ class Bag {
   }
 
   void increaseQuantity(Product product, {int increase = 1}) {
-    _products.forEach((BagItem bagItem) {
+    for (var bagItem in _products) {
       if (bagItem.product == product) bagItem.quantity += increase;
-    });
+    }
     _save();
   }
 
@@ -96,84 +97,89 @@ class Bag {
   int getQuantity(Product product) {
     int quantity = 0;
 
-    _products.forEach((bagItem) {
+    for (var bagItem in _products) {
       if (bagItem.product == product) quantity = bagItem.quantity;
-    });
+    }
 
     return quantity;
   }
 
-  void _save() async {
+  Future<void> _save() async {
     await preferences.setStringList(
       "bag",
       _products
           .map<String>(
-            (BagItem bagItem) => bagItem.toString(),
+            (bagItem) => bagItem.toString(),
           )
           .toList(),
     );
   }
 
-  void load() async {
+  Future<void> load() async {
     final List<String>? bagData = preferences.getStringList("bag");
 
     if (bagData != null) {
-      List<BagItem> items = bagData
-          .map<BagItem>((String data) => BagItem.fromString(data))
+      List<BagItem?> items = bagData
+          .map<BagItem>(
+            (data) => BagItem.fromString(data),
+          )
           .toList();
 
-      for (BagItem item in items) {
-        QuerySnapshot products = await database
-            .collection("products")
-            .where("uId", isEqualTo: item.product.uId)
-            .get();
+      for (BagItem? item in items) {
+        if (item != null) {
+          QuerySnapshot products = await database
+              .collection("products")
+              .where("uId", isEqualTo: item.product.uId)
+              .get();
 
-        if (products.docs.isEmpty) {
-          _changeLog.add(
-              "The product '${item.product.name}' has been removed from the store");
-          wishlist.removeProduct(item.product);
-          items.removeAt(items.indexOf(item));
-        } else {
-          Map productData = products.docs.first.data() as Map;
-          List<String> diff = item.product.difference(
-            Product.fromJson(productData),
-          );
+          if (products.docs.isEmpty) {
+            _changeLog.add(
+                "The product '${item.product.name}' has been removed from the store");
+            wishlist.removeProduct(item.product);
+            items.removeAt(
+              items.indexOf(item),
+            );
+          } else {
+            Map productData = products.docs.first.data() as Map;
+            List<String> diff = item.product.difference(
+              Product.fromJson(productData),
+            );
 
-          Map updatedData = item.product.toJson();
+            Map updatedData = item.product.toJson();
 
-          diff.forEach((changeKey) {
-            if (changeKey == "variations") {
-              _changeLog.add(
-                  "The variations for product '${productData["name"]}' have been updated.");
+            for (var changeKey in diff) {
+              if (changeKey == "variations") {
+                _changeLog.add(
+                    "The variations for product '${productData["name"]}' have been updated.");
 
-              updatedData["selected"] =
-                  productData["variations"].asMap().map((_, element) {
-                Variation variation = Variation.fromJson(element);
-                return MapEntry(
-                  variation.name,
-                  variation.options.first.toJson(),
-                );
-              });
-            } else if (changeKey == "name") {
-              _changeLog.add(
-                  "The name of the product '${item.product.name}' has been changed to ${productData["name"]}.");
-            } else {
-              _changeLog.add(
-                  "The ${changeKey.capitalize()} for product '${productData["name"]}' has been changed from ${item.product.toJson()[changeKey]} to ${productData[changeKey]}.");
+                updatedData["selected"] =
+                    productData["variations"].asMap().map((_, element) {
+                  Variation variation = Variation.fromJson(element);
+                  return MapEntry(
+                    variation.name,
+                    variation.options.first.toJson(),
+                  );
+                });
+              } else if (changeKey == "name") {
+                _changeLog.add(
+                    "The name of the product '${item.product.name}' has been changed to ${productData["name"]}.");
+              } else {
+                _changeLog.add(
+                    "The ${changeKey.capitalize()} for product '${productData["name"]}' has been changed from ${item.product.toJson()[changeKey]} to ${productData[changeKey]}.");
+              }
+
+              updatedData[changeKey] = productData[changeKey];
             }
 
-            updatedData[changeKey] = productData[changeKey];
-          });
-
-          item.product = Product.fromJson(updatedData);
+            item.product = Product.fromJson(updatedData);
+          }
         }
+        _products = items as List<BagItem>;
       }
 
       items.removeWhere((element) => element == null);
 
-      _products = items;
-
-      _save();
+      await _save();
     }
   }
 }

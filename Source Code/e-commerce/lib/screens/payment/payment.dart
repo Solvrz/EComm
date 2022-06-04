@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import '../../config/constant.dart';
 
 class PaymentScreen extends StatefulWidget {
+  const PaymentScreen({Key? key}) : super(key: key);
+
   @override
-  _PaymentScreenState createState() => _PaymentScreenState();
+  State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
@@ -25,7 +27,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       isProcessing = true;
       args.process().then(
         (_) {
-          if (mounted)
+          if (mounted) {
             setState(() {
               isCompleted = true;
 
@@ -37,7 +39,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 fit: BoxFit.contain,
                 callback: (_) {
                   Timer(
-                    Duration(milliseconds: 800),
+                    const Duration(milliseconds: 800),
                     () => Navigator.pushNamed(
                       context,
                       "/home",
@@ -48,6 +50,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 },
               );
             });
+          }
         },
       );
     }
@@ -63,15 +66,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
             padding: screenSize.all(16),
             width: MediaQuery.of(context).size.width,
             child: Column(children: [
-              if (!isCompleted) SizedBox(height: 150),
-              Container(
+              if (!isCompleted) const SizedBox(height: 150),
+              SizedBox(
                 height: isCompleted
                     ? screenSize.height(500)
                     : screenSize.height(200),
                 width: isCompleted ? 500 : 200,
                 child: isCompleted
                     ? flareAnimation
-                    : CircularProgressIndicator(strokeWidth: 14),
+                    : const CircularProgressIndicator(strokeWidth: 14),
               ),
               if (!isCompleted)
                 SizedBox(
@@ -91,7 +94,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
               ),
               if (isCompleted) ...[
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   args.msg,
                   textAlign: TextAlign.center,

@@ -23,7 +23,10 @@ class Variation {
     return Variation(
       name: data["name"],
       options: data["options"].map<Option>((option) {
-        return Option(label: option["label"], color: option["color"]);
+        return Option(
+          label: option["label"],
+          color: option["color"],
+        );
       }).toList(),
     );
   }
@@ -31,34 +34,37 @@ class Variation {
   Map toJson() {
     return {
       "name": _name,
-      "options": _options.map((Option option) {
+      "options": _options.map((option) {
         return option.toJson();
       }).toList()
     };
   }
 
-  String toString() => jsonEncode(toJson());
+  @override
+  String toString() => jsonEncode(
+        toJson(),
+      );
 }
 
 class Option {
   late String _label;
-  late Color _color;
+  Color? _color;
 
   String get label => _label;
 
   set label(label) => _label = label;
 
-  Color get color => _color;
+  Color? get color => _color;
 
   set color(color) => _color = color;
 
-  Option({required String label, Color? color}) {
+  Option({required String label, dynamic color}) {
     _label = label;
-    _color = color is String && color != null
+    _color = color != null && color is String
         ? Color(
             "0xff$color".toInt(),
           )
-        : color!;
+        : color;
   }
 
   Map toJson() {
@@ -69,6 +75,7 @@ class Option {
   }
 
   @override
+  // ignore: hash_and_equals
   bool operator ==(Object other) {
     return other is Option && label == other.label && color == other.color;
   }

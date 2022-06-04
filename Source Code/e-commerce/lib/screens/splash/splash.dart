@@ -8,8 +8,10 @@ import '../../config/constant.dart';
 import '../home/export.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen>
@@ -20,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> holeSize;
   late Animation<Color?> holeColor;
 
+  @override
   void didChangeDependencies() {
     setState(() => size = MediaQuery.of(context).size);
     super.didChangeDependencies();
@@ -40,26 +43,31 @@ class _SplashScreenState extends State<SplashScreen>
           .toList();
 
       List<Map> selected = addresses.where((e) => e["selected"]).toList();
-      if (selected.length > 0) selectedInfo = selected.first;
+      if (selected.isNotEmpty) selectedInfo = selected.first;
     });
 
     _controller = AnimationController(
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       vsync: this,
-    )..addListener(() => setState(() {}));
+    )..addListener(
+        () => setState(() {}),
+      );
 
     holeSize = Tween<double>(begin: 0, end: 2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
     );
 
     holeColor = ColorTween(
-      begin: Color(0xfffcd7de),
+      begin: const Color(0xfffcd7de),
       end: Colors.white,
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
     );
 
-    Timer(Duration(seconds: 1), () => _controller.forward());
+    Timer(
+      const Duration(seconds: 1),
+      () => _controller.forward(),
+    );
   }
 
   @override
@@ -70,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen>
         height: double.infinity,
         color: holeSize.value > 1.5
             ? Theme.of(context).backgroundColor
-            : Color(0xfff23558),
+            : const Color(0xfff23558),
       ),
       if (holeSize.value < 1.5)
         Center(
@@ -82,10 +90,10 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       Opacity(
         opacity: pow(holeSize.value / 2, 2).toDouble(),
-        child: HomeScreen(),
+        child: const HomeScreen(),
       ),
       if (holeSize.value < 1.5)
-        Container(
+        SizedBox(
           width: double.infinity,
           height: double.infinity,
           child: CustomPaint(

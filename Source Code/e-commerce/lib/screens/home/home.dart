@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../config/constant.dart';
 import '../../models/product.dart';
@@ -18,8 +17,10 @@ import '../category/export.dart';
 import '../product/export.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -31,14 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: () async {
         if (query != "") {
-          if (mounted)
+          if (mounted) {
             setState(() {
               query = "";
               controller.clear();
             });
+          }
           return false;
         } else {
-          showDialog(
+          await showDialog(
             context: context,
             builder: (_) => RoundedAlertDialog(
               title: "Do you want to quit the app?",
@@ -82,16 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined,
+                        const Icon(Icons.location_on_outlined,
                             color: kUIDarkText, size: 20),
-                        SizedBox(width: 2),
+                        const SizedBox(width: 2),
                         GestureDetector(
                           onTap: () async {
                             await showModalBottomSheet(
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
                               context: context,
-                              builder: (_) => InformationSheet(),
+                              builder: (_) => const InformationSheet(),
                             );
                             if (mounted) setState(() {});
                           },
@@ -105,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ? selectedInfo!["address"]
                                   : "Not Selected",
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18,
                                   color: kUIDarkText,
                                   letterSpacing: 0.2,
@@ -123,47 +125,43 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.pushNamed(context, "/orders");
                   },
-                  child: Container(
-                    child: Padding(
-                      padding: screenSize.all(8),
-                      child: Image.asset(
-                        "assets/images/Orders.png",
-                        height: 30,
-                        width: 30,
-                      ),
+                  child: Padding(
+                    padding: screenSize.all(8),
+                    child: Image.asset(
+                      "assets/images/Orders.png",
+                      height: 30,
+                      width: 30,
                     ),
                   ),
                 ),
                 GestureDetector(
                   onTap: () => Navigator.pushNamed(context, "/bag"),
-                  child: Container(
-                    child: Padding(
-                      padding: screenSize.all(14),
-                      child: Stack(
-                        children: [
-                          Image.asset(
-                            "assets/images/ShoppingBag.png",
-                            height: 30,
-                            width: 30,
+                  child: Padding(
+                    padding: screenSize.all(14),
+                    child: Stack(
+                      children: [
+                        Image.asset(
+                          "assets/images/ShoppingBag.png",
+                          height: 30,
+                          width: 30,
+                        ),
+                        Positioned(
+                          left: 11,
+                          top: 10,
+                          child: Text(
+                            bag.products.length.toString(),
+                            style: const TextStyle(color: kUIDarkText),
                           ),
-                          Positioned(
-                            left: 11,
-                            top: 10,
-                            child: Text(
-                              bag.products.length.toString(),
-                              style: TextStyle(color: kUIDarkText),
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
                 ),
               ]),
           bottomNavigationBar: query == ""
               ? GestureDetector(
-                  onTap: () async => await canLaunch("tel://$contact")
-                      ? launch("tel://$contact")
+                  onTap: () async => await canLaunchUrlString("tel://$contact")
+                      ? launchUrlString("tel://$contact")
                       : null,
                   child: Container(
                     padding: screenSize.symmetric(vertical: 4, horizontal: 24),
@@ -177,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(Icons.call,
                                 size: screenSize.height(52),
                                 color: Theme.of(context).primaryColor),
-                            SizedBox(width: 15),
+                            const SizedBox(width: 15),
                             Column(children: [
                               Text(
                                 "Call or Whatsapp",
@@ -187,14 +185,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontWeight: FontWeight.w400),
                               ),
                               Text(
-                                "$contact",
+                                contact,
                                 style: TextStyle(
                                     fontSize: screenSize.height(22),
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor),
                               ),
                             ]),
-                            SizedBox(width: 15),
+                            const SizedBox(width: 15),
                             Icon(Icons.call,
                                 size: screenSize.height(52),
                                 color: Colors.transparent),
@@ -219,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: Row(children: [
                         Icon(Icons.search, color: Colors.grey[600]),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: TextField(
                             decoration: InputDecoration(
@@ -261,8 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (query != "")
                       StreamBuilder<QuerySnapshot>(
                           stream: database.collection("products").snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> future) {
+                          builder: (context, future) {
                             if (future.hasData) {
                               List docs = future.data!.docs.where((element) {
                                 String name = element.get("name").toLowerCase();
@@ -302,10 +299,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               );
 
-                              return products.length > 0
+                              return products.isNotEmpty
                                   ? ProductList(products: products)
                                   : Center(
-                                      child: Container(
+                                      child: SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width /
                                                 1.25,
@@ -318,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     );
                             } else {
-                              return Center(
+                              return const Center(
                                 child: CircularProgressIndicator(),
                               );
                             }
@@ -342,13 +339,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SizedBox(
                                   height: screenSize.height(14),
                                 ),
-                                Container(
+                                SizedBox(
                                   height: screenSize.height(125),
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     itemCount: categories.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
+                                    itemBuilder: (context, index) {
                                       Map<String, dynamic> data =
                                           categories[index];
                                       return GestureDetector(
@@ -383,7 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Image.asset(data["image"],
                                                   height: screenSize.height(50),
                                                   width: 50),
-                                              SizedBox(height: 8),
+                                              const SizedBox(height: 8),
                                               Text(
                                                 data["name"],
                                                 textAlign: TextAlign.center,
@@ -412,11 +408,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               if (query == "") ...[
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Expanded(
                   child: Container(
                     padding: screenSize.symmetric(horizontal: 4, vertical: 16),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Color(0xffa5c4f2),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
@@ -426,7 +422,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Padding(
                       padding: screenSize.symmetric(horizontal: 12),
                       child: SingleChildScrollView(
-                        physics: ClampingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -438,19 +434,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             FutureBuilder<QuerySnapshot>(
                               future: database
                                   .collection("products")
                                   .where("trending", isEqualTo: true)
                                   .limit(10)
                                   .get(),
-                              builder: (BuildContext context, future) {
+                              builder: (context, future) {
                                 if (future.hasData) {
                                   List<Product> products = future.data!.docs
                                       .map<Product>(
-                                        (DocumentSnapshot e) =>
-                                            Product.fromJson(
+                                        (e) => Product.fromJson(
                                           e.data() as Map,
                                         ),
                                       )
@@ -460,7 +455,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ? Column(
                                           children: List.generate(
                                             products.length,
-                                            (int index) => _buildItem(
+                                            (index) => _buildItem(
                                                 context, products[index]),
                                           ),
                                         )
@@ -480,9 +475,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .withOpacity(0.8),
                                               ),
                                             ),
-                                            SizedBox(height: 25),
-                                            CircularProgressIndicator(),
-                                          ]));
+                                            const SizedBox(height: 25),
+                                            const CircularProgressIndicator(),
+                                          ]),
+                                        );
                                 }
 
                                 return Container();
@@ -528,7 +524,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: screenSize.symmetric(horizontal: 24, vertical: 18),
                 child: Row(
                   children: [
-                    product.images.length > 0
+                    product.images.isNotEmpty
                         ? CachedNetworkImage(
                             imageUrl: product.images[0],
                             placeholder: (context, url) => Shimmer.fromColors(
@@ -537,13 +533,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Container(color: Colors.grey),
                             ),
                             errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                                const Icon(Icons.error),
                           )
-                        : Text(
+                        : const Text(
                             "No Image",
                             style: TextStyle(fontSize: 18),
                           ),
-                    SizedBox(width: 24),
+                    const SizedBox(width: 24),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -569,7 +565,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontWeight: FontWeight.bold,
                                     fontFamily: "sans-serif-condensed"),
                               ),
-                              SizedBox(width: 12),
+                              const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
                                   "₹ ${product.mrp}".replaceAll("", "\u{200B}"),

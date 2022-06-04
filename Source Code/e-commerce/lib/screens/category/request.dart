@@ -5,15 +5,18 @@ import '../../config/constant.dart';
 import '../../screens/payment/payment.dart';
 import '../../widgets/information_sheet.dart';
 
-// ignore: must_be_immutable
 class RequestScreen extends StatefulWidget {
-  String title;
-  List tabsData;
+  final String title;
+  final List tabsData;
 
-  RequestScreen({required this.title, required this.tabsData});
+  const RequestScreen({
+    Key? key,
+    required this.title,
+    required this.tabsData,
+  }) : super(key: key);
 
   @override
-  _RequestScreenState createState() => _RequestScreenState();
+  State<RequestScreen> createState() => _RequestScreenState();
 }
 
 class _RequestScreenState extends State<RequestScreen> {
@@ -57,10 +60,11 @@ class _RequestScreenState extends State<RequestScreen> {
                       DropdownButton<String>(
                         hint: Text(value),
                         onChanged: (val) {
-                          if (mounted)
+                          if (mounted) {
                             setState(() {
                               value = val!;
                             });
+                          }
                         },
                         items: List.generate(widget.tabsData.length,
                                 (index) => widget.tabsData[index]["name"])
@@ -83,7 +87,7 @@ class _RequestScreenState extends State<RequestScreen> {
                     ]),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -103,21 +107,19 @@ class _RequestScreenState extends State<RequestScreen> {
                               context: context,
                               builder: (_) => Padding(
                                 padding: MediaQuery.of(context).viewInsets,
-                                child: InformationSheet(),
+                                child: const InformationSheet(),
                               ),
                             );
 
                             if (mounted) setState(() {});
                           },
-                          child: Container(
-                            child: Text(
-                              "Click Here \nSelect Information",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: kUIDarkText,
-                                fontSize: screenSize.height(20),
-                                fontWeight: FontWeight.bold,
-                              ),
+                          child: Text(
+                            "Click Here \nSelect Information",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: kUIDarkText,
+                              fontSize: screenSize.height(20),
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -139,7 +141,9 @@ class _RequestScreenState extends State<RequestScreen> {
                                       ),
                                     ),
                                     Text(
-                                      "${selectedInfo!['name'].toString().capitalize()}",
+                                      selectedInfo!['name']
+                                          .toString()
+                                          .capitalize(),
                                       style: TextStyle(
                                         fontSize: screenSize.height(18),
                                         color: Colors.grey[900],
@@ -157,18 +161,16 @@ class _RequestScreenState extends State<RequestScreen> {
                                       builder: (_) => Padding(
                                         padding:
                                             MediaQuery.of(context).viewInsets,
-                                        child: InformationSheet(),
+                                        child: const InformationSheet(),
                                       ),
                                     );
 
                                     if (mounted) setState(() {});
                                   },
-                                  child: Container(
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 25,
-                                      color: kUIDarkText.withOpacity(0.8),
-                                    ),
+                                  child: Icon(
+                                    Icons.edit,
+                                    size: 25,
+                                    color: kUIDarkText.withOpacity(0.8),
                                   ),
                                 ),
                               ],
@@ -246,7 +248,7 @@ class _RequestScreenState extends State<RequestScreen> {
             child: MaterialButton(
               onPressed: value != "Choose a Service" && selectedInfo != null
                   ? () async {
-                      Navigator.popAndPushNamed(
+                      await Navigator.popAndPushNamed(
                         context,
                         "/payment",
                         arguments: PaymentArguments(
@@ -255,8 +257,7 @@ class _RequestScreenState extends State<RequestScreen> {
                                 "You will soon receive a confirmation mail from us.",
                             process: () async {
                               await http.post(
-                                Uri.https("suneel-printer-server.herokuapp.com",
-                                    "request", {
+                                Uri.http("192.168.100.45:5050", "request", {
                                   "name": selectedInfo!["name"],
                                   "phone": selectedInfo!["phone"],
                                   "address": selectedInfo!["address"],
@@ -274,22 +275,20 @@ class _RequestScreenState extends State<RequestScreen> {
                 borderRadius: BorderRadius.circular(10),
               ),
               padding: screenSize.symmetric(horizontal: 18, vertical: 12),
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.check_circle_outline,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.check_circle_outline,
+                      color: Theme.of(context).highlightColor),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Place Order",
+                    style: TextStyle(
+                        fontSize: screenSize.height(16),
+                        fontWeight: FontWeight.w600,
                         color: Theme.of(context).highlightColor),
-                    SizedBox(width: 8),
-                    Text(
-                      "Place Order",
-                      style: TextStyle(
-                          fontSize: screenSize.height(16),
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).highlightColor),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           )

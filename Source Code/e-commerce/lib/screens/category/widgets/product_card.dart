@@ -10,10 +10,14 @@ class ProductCard extends StatefulWidget {
   final Product product;
   final State? parent;
 
-  ProductCard({required this.product, this.parent});
+  const ProductCard({
+    Key? key,
+    required this.product,
+    this.parent,
+  }) : super(key: key);
 
   @override
-  _ProductCardState createState() => _ProductCardState();
+  State<ProductCard> createState() => _ProductCardState();
 }
 
 class _ProductCardState extends State<ProductCard> {
@@ -48,30 +52,29 @@ class _ProductCardState extends State<ProductCard> {
                   alignment: Alignment.topRight,
                   child: GestureDetector(
                     onTap: () {
-                      if (mounted)
+                      if (mounted) {
                         setState(
                           () => wishlist.containsProduct(widget.product)
                               ? wishlist.removeProduct(widget.product)
                               : wishlist.addProduct(widget.product),
                         );
+                      }
                     },
-                    child: Container(
-                      child: Icon(
-                        wishlist.containsProduct(widget.product)
-                            ? Icons.favorite
-                            : Icons.favorite_outline,
-                        color: wishlist.containsProduct(widget.product)
-                            ? Theme.of(context).primaryColor
-                            : kUIDarkText,
-                      ),
+                    child: Icon(
+                      wishlist.containsProduct(widget.product)
+                          ? Icons.favorite
+                          : Icons.favorite_outline,
+                      color: wishlist.containsProduct(widget.product)
+                          ? Theme.of(context).primaryColor
+                          : kUIDarkText,
                     ),
                   ),
                 ),
                 Center(
                   child: Padding(
                     padding: screenSize.fromLTRB(0, 22, 12, 0),
-                    child: widget.product.images.length > 0
-                        ? Container(
+                    child: widget.product.images.isNotEmpty
+                        ? SizedBox(
                             height: height / screenSize.aspectRatio(1.2),
                             child: CachedNetworkImage(
                               imageUrl: widget.product.images[0],
@@ -85,7 +88,7 @@ class _ProductCardState extends State<ProductCard> {
                                         color: Colors.grey[400]!,
                                         blurRadius: 8,
                                         spreadRadius: 2,
-                                        offset: Offset(2, 2),
+                                        offset: const Offset(2, 2),
                                       )
                                     ]),
                               ),
@@ -95,12 +98,12 @@ class _ProductCardState extends State<ProductCard> {
                                 child: Container(color: Colors.grey),
                               ),
                               errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
+                                  const Icon(Icons.error),
                             ),
                           )
-                        : Container(
+                        : SizedBox(
                             height: height / screenSize.aspectRatio(1.2),
-                            child: Center(
+                            child: const Center(
                               child: Text("No Image Provided"),
                             ),
                           ),
@@ -122,7 +125,7 @@ class _ProductCardState extends State<ProductCard> {
                     fontWeight: FontWeight.bold,
                     fontFamily: "sans-serif-condensed"),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   "₹ ${widget.product.mrp}".replaceAll("", "\u{200B}"),

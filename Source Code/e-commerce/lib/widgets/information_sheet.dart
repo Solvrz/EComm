@@ -9,10 +9,10 @@ import '../config/constant.dart';
 class InformationSheet extends StatefulWidget {
   final bool popable;
 
-  InformationSheet({this.popable = true});
+  const InformationSheet({Key? key, this.popable = true}) : super(key: key);
 
   @override
-  _InformationSheetState createState() => _InformationSheetState();
+  State<InformationSheet> createState() => _InformationSheetState();
 }
 
 class _InformationSheetState extends State<InformationSheet> {
@@ -41,7 +41,7 @@ class _InformationSheetState extends State<InformationSheet> {
         child: Container(
           height: MediaQuery.of(context).size.height / 2,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
@@ -66,27 +66,27 @@ class _InformationSheetState extends State<InformationSheet> {
                     GestureDetector(
                       onTap: () async {
                         await save();
+
+                        if (!mounted) return;
                         Navigator.pop(context);
                       },
-                      child: Container(
-                        child: Padding(
-                          padding: screenSize.all(8),
-                          child: Icon(Icons.close, color: kUIDarkText),
-                        ),
+                      child: Padding(
+                        padding: screenSize.all(8),
+                        child: const Icon(Icons.close, color: kUIDarkText),
                       ),
                     ),
                 ],
               ),
-              SizedBox(height: 11.5),
+              const SizedBox(height: 11.5),
               Divider(height: 1, thickness: 1, color: Colors.grey[400]),
               Expanded(
                 child: Column(children: [
                   Expanded(
-                    child: addresses.length > 0
+                    child: addresses.isNotEmpty
                         ? ListView.separated(
                             padding: EdgeInsets.zero,
                             itemCount: addresses.length,
-                            itemBuilder: (BuildContext context, int index) {
+                            itemBuilder: (context, index) {
                               Map address = addresses[index];
                               bool isSelected = address["selected"];
 
@@ -96,6 +96,8 @@ class _InformationSheetState extends State<InformationSheet> {
                                   addresses[index]["selected"] = true;
                                   await save();
                                   if (mounted) setState(() {});
+                                  if (!mounted) return;
+
                                   Navigator.pop(context);
                                 },
                                 leading: Icon(Icons.home_outlined,
@@ -125,12 +127,10 @@ class _InformationSheetState extends State<InformationSheet> {
                                         await save();
                                         if (mounted) setState(() {});
                                       },
-                                      child: Container(
-                                        child: Icon(Icons.edit,
-                                            color: Colors.grey[700]),
-                                      ),
+                                      child: Icon(Icons.edit,
+                                          color: Colors.grey[700]),
                                     ),
-                                    SizedBox(width: 12),
+                                    const SizedBox(width: 12),
                                     GestureDetector(
                                       onTap: () async {
                                         if (isSelected) {
@@ -152,10 +152,8 @@ class _InformationSheetState extends State<InformationSheet> {
                                         await save();
                                         if (mounted) setState(() {});
                                       },
-                                      child: Container(
-                                        child: Icon(Icons.delete,
-                                            color: Colors.grey[700]),
-                                      ),
+                                      child: Icon(Icons.delete,
+                                          color: Colors.grey[700]),
                                     )
                                   ]),
                                 ),
@@ -173,15 +171,14 @@ class _InformationSheetState extends State<InformationSheet> {
                                   padding: screenSize.only(top: 6),
                                   child: Text(
                                     address["address"],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: kUIDarkText, letterSpacing: 0.2),
                                   ),
                                 ),
                               );
                             },
-                            separatorBuilder:
-                                (BuildContext context, int index) => Divider(
-                                    thickness: 0.75, color: Colors.grey[400]),
+                            separatorBuilder: (context, index) => Divider(
+                                thickness: 0.75, color: Colors.grey[400]),
                           )
                         : Center(
                             child: Text(
@@ -238,14 +235,15 @@ class AddInformationSheet extends StatefulWidget {
   final bool edit;
   final Map data;
 
-  AddInformationSheet({
+  const AddInformationSheet({
+    Key? key,
     this.addresses,
     this.edit = false,
     this.data = const {},
-  });
+  }) : super(key: key);
 
   @override
-  _AddInformationSheetState createState() => _AddInformationSheetState();
+  State<AddInformationSheet> createState() => _AddInformationSheetState();
 }
 
 class _AddInformationSheetState extends State<AddInformationSheet> {
@@ -305,7 +303,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
       child: Container(
         padding: screenSize.all(16),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
@@ -321,11 +319,9 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Container(
-                    child: Padding(
-                      padding: screenSize.fromLTRB(0, 8, 8, 8),
-                      child: Icon(Icons.arrow_back_ios, color: kUIDarkText),
-                    ),
+                  child: Padding(
+                    padding: screenSize.fromLTRB(0, 8, 8, 8),
+                    child: const Icon(Icons.arrow_back_ios, color: kUIDarkText),
                   ),
                 ),
                 Text(
@@ -337,8 +333,8 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                 )
               ],
             ),
-            SizedBox(height: 12),
-            ...List.generate(fields.length, (int index) {
+            const SizedBox(height: 12),
+            ...List.generate(fields.length, (index) {
               String field = fields.keys.elementAt(index);
               Map data = fields.values.elementAt(index);
 
@@ -375,12 +371,12 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                             fontSize: screenSize.height(15),
                             color: Theme.of(context).primaryColor),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                     ],
-                    Divider(
+                    const Divider(
                       height: 8,
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                   ]);
             }),
             InkWell(
@@ -427,6 +423,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                               )
                               .toList(),
                         );
+                        if (!mounted) return;
 
                         Navigator.pop(context);
                       }
@@ -462,33 +459,39 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
     String email = controllers["email"]!.text.trim();
     String pincode = controllers["pincode"]!.text.trim();
 
-    if (name == "")
+    if (name == "") {
       error["name"] = true;
-    else
+    } else {
       error["name"] = false;
+    }
 
-    if (!RegExp(r"^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$").hasMatch(phone))
+    if (!RegExp(r"^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$").hasMatch(phone)) {
       error["phone"] = true;
-    else
+    } else {
       error["phone"] = false;
+    }
 
-    if (address == "")
+    if (address == "") {
       error["address"] = true;
-    else
+    } else {
       error["address"] = false;
+    }
 
-    if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email))
+    if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email)) {
       error["email"] = true;
-    else
+    } else {
       error["email"] = false;
+    }
 
-    http.Response result =
-        await http.get(Uri.https("api.postalpincode.in", "pincode/$pincode"));
+    http.Response result = await http.get(
+      Uri.https("api.postalpincode.in", "pincode/$pincode"),
+    );
 
-    if (jsonDecode(result.body)[0]["Status"] == "Error" || pincode == "")
+    if (jsonDecode(result.body)[0]["Status"] == "Error" || pincode == "") {
       error["pincode"] = true;
-    else
+    } else {
       error["pincode"] = false;
+    }
 
     if (mounted) setState(() {});
 

@@ -17,15 +17,16 @@ class VariationButton extends StatefulWidget {
   int currIndex;
 
   VariationButton({
+    Key? key,
     required this.variation,
     required this.onChanged,
     this.currIndex = 0,
     this.size = 10,
     this.margin = 6,
-  });
+  }) : super(key: key);
 
   @override
-  _VariationButtonState createState() => _VariationButtonState();
+  State<VariationButton> createState() => _VariationButtonState();
 }
 
 class _VariationButtonState extends State<VariationButton> {
@@ -52,57 +53,58 @@ class _VariationButtonState extends State<VariationButton> {
               widget.variation.options.length,
               (index) => GestureDetector(
                 onTap: () {
-                  if (widget.currIndex != index) if (mounted)
-                    setState(() {
-                      widget.currIndex = index;
-                    });
+                  if (widget.currIndex != index) {
+                    if (mounted) {
+                      setState(() {
+                        widget.currIndex = index;
+                      });
+                    }
+                  }
                   widget.onChanged(index);
                 },
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 200),
-                        margin: screenSize.fromLTRB(2, 0, 2, 4),
-                        width: (widget.size + widget.margin) * 2,
-                        height: (widget.size + widget.margin) * 2,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: widget.currIndex == index
-                              ? Border.all(color: Colors.grey[400]!, width: 2)
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      margin: screenSize.fromLTRB(2, 0, 2, 4),
+                      width: (widget.size + widget.margin) * 2,
+                      height: (widget.size + widget.margin) * 2,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: widget.currIndex == index
+                            ? Border.all(color: Colors.grey[400]!, width: 2)
+                            : null,
+                      ),
+                      child: Center(
+                        child: CircleAvatar(
+                          radius: widget.size,
+                          backgroundColor:
+                              widget.variation.options[index].color ??
+                                  Colors.grey[400],
+                          child: widget.variation.options[index].color == null
+                              ? Text(
+                                  widget.variation.options[index].label[0]
+                                      .toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: screenSize.height(13),
+                                      fontWeight: FontWeight.w600,
+                                      color: kUIDarkText),
+                                )
                               : null,
                         ),
-                        child: Center(
-                          child: CircleAvatar(
-                            radius: widget.size,
-                            backgroundColor:
-                                widget.variation.options[index].color ??
-                                    Colors.grey[400],
-                            child: widget.variation.options[index].color == null
-                                ? Text(
-                                    widget.variation.options[index].label[0]
-                                        .toUpperCase(),
-                                    style: TextStyle(
-                                        fontSize: screenSize.height(13),
-                                        fontWeight: FontWeight.w600,
-                                        color: kUIDarkText),
-                                  )
-                                : null,
-                          ),
-                        ),
                       ),
-                      AnimatedDefaultTextStyle(
-                        child: Text(widget.variation.options[index].label),
-                        duration: Duration(milliseconds: 200),
-                        style: widget.currIndex == index
-                            ? TextStyle(
-                                fontSize: screenSize.height(12),
-                                color: kUIDarkText)
-                            : TextStyle(color: kUIDarkText, fontSize: 0),
-                      ),
-                    ],
-                  ),
+                    ),
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 200),
+                      style: widget.currIndex == index
+                          ? TextStyle(
+                              fontSize: screenSize.height(12),
+                              color: kUIDarkText)
+                          : const TextStyle(color: kUIDarkText, fontSize: 0),
+                      child: Text(widget.variation.options[index].label),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -116,10 +118,13 @@ class _VariationButtonState extends State<VariationButton> {
 class AddProductSheet extends StatefulWidget {
   final Product product;
 
-  AddProductSheet(this.product);
+  const AddProductSheet({
+    Key? key,
+    required this.product,
+  }) : super(key: key);
 
   @override
-  _AddProductSheetState createState() => _AddProductSheetState();
+  State<AddProductSheet> createState() => _AddProductSheetState();
 }
 
 class _AddProductSheetState extends State<AddProductSheet> {
@@ -128,7 +133,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
@@ -138,7 +143,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Center(
+            const Center(
               child: Text(
                 "Item added to bag",
                 style: TextStyle(
@@ -153,8 +158,8 @@ class _AddProductSheetState extends State<AddProductSheet> {
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
-                  widget.product.images.length > 0
-                      ? Container(
+                  widget.product.images.isNotEmpty
+                      ? SizedBox(
                           width: screenSize.height(100),
                           child: CachedNetworkImage(
                             imageUrl: widget.product.images[0],
@@ -164,7 +169,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                               child: Container(color: Colors.grey),
                             ),
                             errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                                const Icon(Icons.error),
                           ),
                         )
                       : Container(
@@ -172,14 +177,14 @@ class _AddProductSheetState extends State<AddProductSheet> {
                           decoration: BoxDecoration(
                             border: Border.all(),
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               "No Image",
                               style: TextStyle(fontSize: 20),
                             ),
                           ),
                         ),
-                  SizedBox(width: 36),
+                  const SizedBox(width: 36),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +193,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                         child: Text(
                           widget.product.name,
                           maxLines: 2,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: kUIDarkText,
                               fontSize: 22,
                               fontWeight: FontWeight.w500,
@@ -199,13 +204,13 @@ class _AddProductSheetState extends State<AddProductSheet> {
                         children: [
                           Text(
                             "₹ ${widget.product.price}",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: kUIDarkText,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: "sans-serif-condensed"),
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Text(
                             "₹ ${widget.product.mrp}",
                             style: TextStyle(
@@ -225,7 +230,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "Change Quantity:",
                   style: TextStyle(
                     fontSize: 20,
@@ -238,8 +243,9 @@ class _AddProductSheetState extends State<AddProductSheet> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          if (bag.getQuantity(widget.product) > 1)
+                          if (bag.getQuantity(widget.product) > 1) {
                             bag.decreaseQuantity(widget.product);
+                          }
                         });
                       },
                       child: Container(
@@ -254,15 +260,15 @@ class _AddProductSheetState extends State<AddProductSheet> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 18),
+                    const SizedBox(width: 18),
                     Text(
                       bag.getQuantity(widget.product).toString(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(width: 18),
+                    const SizedBox(width: 18),
                     GestureDetector(
                       onTap: () {
                         setState(
@@ -285,7 +291,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                 ),
               ],
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             Row(
               children: [
                 Expanded(
@@ -313,7 +319,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                     ),
                   ),
                 ),
-                SizedBox(width: 18),
+                const SizedBox(width: 18),
                 Expanded(
                   flex: 4,
                   child: GestureDetector(
@@ -327,7 +333,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                         color: Theme.of(context).primaryColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           "To Bag",
                           style: TextStyle(

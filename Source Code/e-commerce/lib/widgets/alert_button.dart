@@ -9,13 +9,14 @@ class AlertButton extends StatelessWidget {
   final double titleSize;
   final BorderRadius? borderRadius;
 
-  AlertButton({
+  const AlertButton({
+    Key? key,
     required this.title,
     required this.onPressed,
     this.backgroundColor,
     this.titleSize = 17,
     this.borderRadius,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +27,14 @@ class AlertButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius ?? BorderRadius.circular(8),
       ),
-      child: Container(
-        child: Text(
-          title,
-          style: TextStyle(
-              color: Theme.of(context).backgroundColor,
-              fontSize: titleSize,
-              fontWeight: FontWeight.bold),
-        ),
-      ),
       onPressed: onPressed,
+      child: Text(
+        title,
+        style: TextStyle(
+            color: Theme.of(context).backgroundColor,
+            fontSize: titleSize,
+            fontWeight: FontWeight.bold),
+      ),
     );
   }
 }

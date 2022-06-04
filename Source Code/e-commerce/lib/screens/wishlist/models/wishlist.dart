@@ -9,9 +9,9 @@ class Wishlist {
 
   List<Product> get products => _products;
 
-  bool get hasProducts => _products.length > 0;
+  bool get hasProducts => _products.isNotEmpty;
 
-  bool get hasNoProducts => !(_products.length > 0);
+  bool get hasNoProducts => !(_products.isNotEmpty);
 
   void addProduct(Product product) {
     _products.add(product);
@@ -19,7 +19,7 @@ class Wishlist {
   }
 
   void removeProduct(Product product) {
-    _products.removeWhere((Product element) => element == product);
+    _products.removeWhere((element) => element == product);
     _save();
   }
 
@@ -40,13 +40,13 @@ class Wishlist {
     return contains ?? false;
   }
 
-  void _save() async {
+  Future<void> _save() async {
     final preferences = await SharedPreferences.getInstance();
     await preferences.setStringList(
       "wishlist",
       _products
           .map<String>(
-            (Product e) => jsonEncode(
+            (e) => jsonEncode(
               e.toJson(),
             ),
           )
@@ -54,11 +54,11 @@ class Wishlist {
     );
   }
 
-  void load() async {
+  Future<void> load() async {
     final preferences = await SharedPreferences.getInstance();
     final List<String>? wishlistData = preferences.getStringList("wishlist");
 
-    if (wishlistData != null)
+    if (wishlistData != null) {
       _products = wishlistData
           .map<Product>(
             (element) => Product.fromJson(
@@ -66,5 +66,6 @@ class Wishlist {
             ),
           )
           .toList();
+    }
   }
 }

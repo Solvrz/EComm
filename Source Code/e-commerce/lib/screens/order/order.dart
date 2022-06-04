@@ -8,14 +8,17 @@ import '../../config/constant.dart';
 import '../../widgets/custom_app_bar.dart';
 
 class OrderScreen extends StatelessWidget {
+  const OrderScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: CustomAppBar(parent: context, title: "My Orders", elevation: 0),
+        appBar:
+            CustomAppBar(context: context, title: "My Orders", elevation: 0),
         body: Column(children: [
-          Builder(builder: (BuildContext context) {
+          Builder(builder: (context) {
             List orders = preferences.getStringList("orders") ?? [];
 
             orders.sort((a, b) {
@@ -49,44 +52,42 @@ class OrderScreen extends StatelessWidget {
                                 builder: (_) => Padding(
                                   padding: MediaQuery.of(context).viewInsets,
                                   child: OrderSheet(
-                                    jsonDecode(orders[index]),
+                                    order: jsonDecode(orders[index]),
                                   ),
                                 ),
                               );
                             },
-                            child: Container(
-                              child: Padding(
-                                padding: screenSize.symmetric(horizontal: 12),
-                                child: Container(
-                                  margin: screenSize.symmetric(vertical: 8),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Theme.of(context).highlightColor),
-                                  child: Padding(
-                                    padding: screenSize.all(16),
-                                    child: Column(children: [
-                                      InfoWidget(
-                                        order: jsonDecode(orders[index]),
-                                      ),
-                                      Center(
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              "Tap for More Details",
-                                              style: TextStyle(
-                                                color: kUIDarkText,
-                                                fontSize: screenSize.height(18),
-                                                fontFamily:
-                                                    "sans-serif-condensed",
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                            child: Padding(
+                              padding: screenSize.symmetric(horizontal: 12),
+                              child: Container(
+                                margin: screenSize.symmetric(vertical: 8),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Theme.of(context).highlightColor),
+                                child: Padding(
+                                  padding: screenSize.all(16),
+                                  child: Column(children: [
+                                    InfoWidget(
+                                      order: jsonDecode(orders[index]),
+                                    ),
+                                    Center(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "Tap for More Details",
+                                            style: TextStyle(
+                                              color: kUIDarkText,
+                                              fontSize: screenSize.height(18),
+                                              fontFamily:
+                                                  "sans-serif-condensed",
+                                              fontWeight: FontWeight.w500,
                                             ),
-                                            Icon(Icons.keyboard_arrow_down)
-                                          ],
-                                        ),
+                                          ),
+                                          const Icon(Icons.keyboard_arrow_down)
+                                        ],
                                       ),
-                                    ]),
-                                  ),
+                                    ),
+                                  ]),
                                 ),
                               ),
                             ),
@@ -100,7 +101,7 @@ class OrderScreen extends StatelessWidget {
             } else {
               return Expanded(
                 child: Center(
-                  child: Container(
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width / 1.25,
                     child: EmptyWidget(
                       packageImage: PackageImage.Image_4,
