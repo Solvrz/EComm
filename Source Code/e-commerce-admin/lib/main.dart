@@ -1,3 +1,4 @@
+import 'package:e_commerce_admin/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -10,16 +11,19 @@ import './config/themes.dart';
 import './screens/export.dart';
 import './services/screen_size.dart';
 
-// TODO: Documentation, Remove SP metions, Logo, Splash, Icons
 Future<void> backgroundMsg(RemoteMessage message) async {}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    name: "E-Commerce",
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await FirebaseAuth.instance.signInWithEmailAndPassword(
-    email: "admin-suneelprinters@gmail.com",
-    password: "SuneelPrinters37",
+    email:
+        "admin-ecommerce@gmail.com", // TODO: Create a User ID and Pass on Firebase Auth
+    password: "ECommerce37",
   );
 
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
@@ -42,7 +46,7 @@ class ECommerce extends StatelessWidget {
         screenSize = ScreenSize(context: context);
         return widget!;
       },
-      title: 'Suneel Printers (Admin)',
+      title: 'E-Commerce (Admin)',
       initialRoute: "/",
       routes: {
         "/": (context) => SplashScreen(),

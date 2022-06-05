@@ -43,7 +43,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   border: Border.all(color: Colors.white),
                 ),
                 padding: screenSize.all(8),
-                child: Icon(Icons.arrow_back_ios, color: kUIDarkText, size: 26),
+                child: const Icon(Icons.arrow_back_ios,
+                    color: kUIDarkText, size: 26),
               ),
             )
           : leading,

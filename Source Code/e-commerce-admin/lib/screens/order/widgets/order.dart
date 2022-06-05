@@ -385,7 +385,7 @@ class OrderSheet extends StatelessWidget {
                                                       .toList()[index]
                                                       .label[0]
                                                       .toUpperCase(),
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontSize: 13,
                                                       fontWeight:
                                                           FontWeight.w600,

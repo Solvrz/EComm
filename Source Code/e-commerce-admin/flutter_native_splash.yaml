@@ -1,0 +1,14 @@
+flutter_native_splash:
+  # Customize the parameters below, and run the following command in the terminal:
+  # flutter pub run flutter_native_splash:create
+  # To restore Flutter's default white splash screen, run the following command in the terminal:
+  # flutter pub run flutter_native_splash:remove
+
+  color: "#ff5252"
+  image: assets/images/Logo.png
+
+  android_12:
+    image: assets/images/Logo.png
+    color: "#ff5252"
+
+  web: false

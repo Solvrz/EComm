@@ -30,6 +30,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 .collection("categories")
                 .where("uId", isEqualTo: args.uId)
                 .get(),
+            // TODO: SS  Firebase Structure
             builder: (context, future) {
               if (future.hasData) {
                 return FutureBuilder<QuerySnapshot>(

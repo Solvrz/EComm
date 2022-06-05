@@ -33,7 +33,7 @@ class _VariationButtonState extends State<VariationButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: (widget.size + widget.margin) * 2 + 44,
+      height: (widget.size + widget.margin) * 2 + 45,
       padding: screenSize.symmetric(vertical: 12),
       child: Row(
         children: [

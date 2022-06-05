@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    AndroidNotificationChannel channel = AndroidNotificationChannel(
+    AndroidNotificationChannel channel = const AndroidNotificationChannel(
       "high_importance_channel",
       "High Importance Notifications",
       importance: Importance.max,
@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
         FlutterLocalNotificationsPlugin();
 
     flutterLocalNotificationsPlugin.initialize(
-      InitializationSettings(
+      const InitializationSettings(
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
       ),
       onSelectNotification: (_) async =>
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
-              groupKey: "com.solvrz.suneel_printer_admin",
+              groupKey: "com.solvrz.e_commerce_admin",
             ),
           ),
         );
@@ -155,6 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           .collection("orders")
                           .orderBy("time", descending: true)
                           .snapshots(),
+                      // ignore: avoid_types_on_closure_parameters
                       builder: (context, AsyncSnapshot<QuerySnapshot> future) {
                         if (future.hasData) {
                           if (future.data!.docs.isNotEmpty) {

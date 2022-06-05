@@ -201,8 +201,9 @@ class _ProductScreenState extends State<ProductScreen> {
                         if (variations.isNotEmpty) const Divider(height: 2),
                         Padding(
                           padding: screenSize.symmetric(
-                              vertical: variations.isNotEmpty ? 15 : 0,
-                              horizontal: 18),
+                            vertical: variations.isNotEmpty ? 15 : 0,
+                            horizontal: 18,
+                          ),
                           child: Row(
                             children: [
                               Expanded(

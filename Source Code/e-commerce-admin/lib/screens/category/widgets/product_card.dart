@@ -59,7 +59,7 @@ class _ProductCardState extends State<ProductCard> {
                             element
                                 .replaceAll(
                                     RegExp(
-                                      r'https://firebasestorage.googleapis.com/v0/b/suneelprinters37.appspot.com/o/',
+                                      r'https://firebasestorage.googleapis.com/v0/b/e-commerce-37.appspot.com/o/', // TODO: Enter Firestore Base URL Here (Ex: https://firebasestorage.googleapis.com/v0/b/projectid.appspot.com/o/)
                                     ),
                                     '')
                                 .replaceAll(RegExp(r'%2F'), '/')

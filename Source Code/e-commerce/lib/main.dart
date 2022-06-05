@@ -1,3 +1,4 @@
+import 'package:e_commerce/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -9,23 +10,26 @@ import './config/themes.dart';
 import './screens/export.dart';
 import './services/screen_size.dart';
 
-// TODO: Documentation, Remove SP metions, Logo, Splash, Icons
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // TODO: Add Razorpay Keys Here
   await secureStorage.write(
     key: "key_testing",
-    value: "rzp_test_3XFNUiX9RPskxm",
+    value: "",
   );
   await secureStorage.write(
     key: "key_production",
     value: "",
-  ); // TODO: Put Merchant Key
+  );
 
   keyTesting = (await secureStorage.read(key: "key_testing"))!;
   keyProduction = (await secureStorage.read(key: "key_production"))!;
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    name: "E-Commerce",
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 

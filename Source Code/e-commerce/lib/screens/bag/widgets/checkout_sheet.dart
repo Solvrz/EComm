@@ -20,6 +20,8 @@ class CheckoutSheet extends StatefulWidget {
 }
 
 class _CheckoutSheetState extends State<CheckoutSheet> {
+  final String serverURL =
+      "e-commerce37-server.herokuapp.com"; // TODO: Change the Server URL
   late Razorpay _razorpay;
 
   static List<String> paymentMethods = [
@@ -37,7 +39,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, (response) async {
       http.Response verification = await http.post(
-        Uri.https("suneel-printer-server.herokuapp.com", "payment_verify", {
+        Uri.https(serverURL, "payment_verify", {
           "payment_id": response.paymentId,
           "signature": response.signature,
           "order_id": response.orderId
@@ -378,8 +380,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           FocusScope.of(context).unfocus();
 
                           http.Response token = await http.post(
-                            Uri.https("suneel-printer-server.herokuapp.com",
-                                "payment_init", {
+                            Uri.https(serverURL, "payment_init", {
                               "amount": (widget.price * 100).toInt(),
                               "order_id":
                                   "ORDER_${DateTime.now().microsecondsSinceEpoch.toString()}",
@@ -402,8 +403,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               },
                               "external": {
                                 "wallets": [
-                                  // "paytm",
-                                  // TODO: Complete Verfication: PayTM
+                                  "paytm",
                                   "phonepe",
                                   "jiomoney",
                                   "mobikwik",
@@ -450,7 +450,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
 
   Future<void> placeOrder() async {
     await http.post(
-      Uri.https("suneel-printer-server.herokuapp.com", "order", {
+      Uri.https(serverURL, "order", {
         "name": selectedInfo!["name"],
         "phone": selectedInfo!["phone"],
         "address": selectedInfo!["address"],
@@ -508,6 +508,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
       "address": selectedInfo!["address"],
       "pincode": selectedInfo!["pincode"],
       "email": selectedInfo!["email"],
+      "status": false,
       "time": Timestamp.now(),
       "price": widget.price.toString(),
       "payment_mode":

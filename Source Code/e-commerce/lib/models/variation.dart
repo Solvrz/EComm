@@ -25,7 +25,7 @@ class Variation {
       options: data["options"].map<Option>((option) {
         return Option(
           label: option["label"],
-          color: option["color"],
+          color: option["color"] ?? "BDBDBD",
         );
       }).toList(),
     );
@@ -41,9 +41,7 @@ class Variation {
   }
 
   @override
-  String toString() => jsonEncode(
-        toJson(),
-      );
+  String toString() => jsonEncode(toJson());
 }
 
 class Option {

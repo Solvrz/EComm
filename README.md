@@ -1,5 +1,5 @@
-# SuneelPrinters
-- An E-Commerce Platform for local buyers.
+# E-Commerce
+- An E-Commerce Platform.
 
 # Demo
-- App - In Repo
+- APK - In Repo

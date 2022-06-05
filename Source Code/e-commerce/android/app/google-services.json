@@ -1,41 +1,40 @@
 {
   "project_info": {
-    "project_number": "434456011105",
-    "firebase_url": "https://suneelprinters37.firebaseio.com",
-    "project_id": "suneelprinters37",
-    "storage_bucket": "suneelprinters37.appspot.com"
+    "project_number": "222520880472",
+    "project_id": "e-commerce37",
+    "storage_bucket": "e-commerce37.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:434456011105:android:edb30c11b41fafe95ea520",
+        "mobilesdk_app_id": "1:222520880472:android:a0bb92c8e0c150cf59892d",
         "android_client_info": {
           "package_name": "com.solvrz.e_commerce"
         }
       },
       "oauth_client": [
         {
-          "client_id": "434456011105-3r9cjrdlv2jbs25d1q147s56feeo82a3.apps.googleusercontent.com",
+          "client_id": "222520880472-4cosjqdqh8l0c5rthfvg2lgkp9k2m98p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBhEh5oVCtFD-9MOfnP-Xr04UoZo2tGx18"
+          "current_key": "AIzaSyAEu7awrK56t0ylp3HmXm5pyTZYO3qq9zM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "434456011105-3r9cjrdlv2jbs25d1q147s56feeo82a3.apps.googleusercontent.com",
+              "client_id": "222520880472-4cosjqdqh8l0c5rthfvg2lgkp9k2m98p.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "434456011105-ioqd1j2ikv30bcpkego6o2nefnisgupc.apps.googleusercontent.com",
+              "client_id": "222520880472-cd0a0cqrraj78esb89nuckqpohg4r3g0.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.suneel37.suneelPrinter"
+                "bundle_id": "com.solvrz.eCommerce"
               }
             }
           ]
@@ -44,70 +43,34 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:434456011105:android:8856c7fa41a35cca5ea520",
+        "mobilesdk_app_id": "1:222520880472:android:4a8f81418b9e428659892d",
         "android_client_info": {
-          "package_name": "com.solvrz.suneel_printer"
+          "package_name": "com.solvrz.e_commerce_admin"
         }
       },
       "oauth_client": [
         {
-          "client_id": "434456011105-3r9cjrdlv2jbs25d1q147s56feeo82a3.apps.googleusercontent.com",
+          "client_id": "222520880472-4cosjqdqh8l0c5rthfvg2lgkp9k2m98p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBhEh5oVCtFD-9MOfnP-Xr04UoZo2tGx18"
+          "current_key": "AIzaSyAEu7awrK56t0ylp3HmXm5pyTZYO3qq9zM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "434456011105-3r9cjrdlv2jbs25d1q147s56feeo82a3.apps.googleusercontent.com",
+              "client_id": "222520880472-4cosjqdqh8l0c5rthfvg2lgkp9k2m98p.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "434456011105-ioqd1j2ikv30bcpkego6o2nefnisgupc.apps.googleusercontent.com",
+              "client_id": "222520880472-cd0a0cqrraj78esb89nuckqpohg4r3g0.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.suneel37.suneelPrinter"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:434456011105:android:99ed49be7aa91fda5ea520",
-        "android_client_info": {
-          "package_name": "com.solvrz.suneel_printer_admin"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "434456011105-3r9cjrdlv2jbs25d1q147s56feeo82a3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBhEh5oVCtFD-9MOfnP-Xr04UoZo2tGx18"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "434456011105-3r9cjrdlv2jbs25d1q147s56feeo82a3.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "434456011105-ioqd1j2ikv30bcpkego6o2nefnisgupc.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.suneel37.suneelPrinter"
+                "bundle_id": "com.solvrz.eCommerce"
               }
             }
           ]

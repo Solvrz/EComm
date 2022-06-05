@@ -7,16 +7,19 @@ class Product {
   String price;
   String mrp;
   List<Variation> variations;
+  bool trending;
   Map? selected;
 
-  Product(
-      {required this.uId,
-      required this.name,
-      required this.price,
-      required this.mrp,
-      required this.variations,
-      this.images = const [],
-      this.selected}) {
+  Product({
+    required this.uId,
+    required this.name,
+    required this.price,
+    required this.mrp,
+    required this.variations,
+    required this.trending,
+    this.images = const [],
+    this.selected,
+  }) {
     selected = selected ??
         variations.asMap().map(
               (key, value) =>
@@ -25,12 +28,14 @@ class Product {
   }
 
   static Product fromJson(Map data) {
+    print(data["variations"]);
     return Product(
         uId: data["uId"],
         name: data["name"],
         images: data["imgs"] ?? [],
         price: data["price"].toString(),
         mrp: data["mrp"].toString(),
+        trending: data["trending"],
         variations: (data["variations"] ?? [])
             .map<Variation>(
               (variation) => Variation.fromJson(variation),
@@ -57,6 +62,7 @@ class Product {
       "imgs": images,
       "price": price,
       "mrp": mrp,
+      "trending": trending,
       "variations": variations
           .map<Map>(
             (variation) => variation.toJson(),

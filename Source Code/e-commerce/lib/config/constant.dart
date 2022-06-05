@@ -10,7 +10,7 @@ import '../services/screen_size.dart';
 late ScreenSize screenSize;
 
 bool testing = true;
-String contact = "1234567890";
+String contact = "1234567890"; // TODO: Change this Mobile No.
 
 String keyTesting = "";
 String keyProduction = "";

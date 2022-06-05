@@ -89,7 +89,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         if (disablePost) {
           return false;
         } else {
-          _buildDiscardChangesDialog(context);
+          await _buildDiscardChangesDialog(context);
           return true;
         }
       },
@@ -269,7 +269,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                                       url
                                                           .replaceAll(
                                                               RegExp(
-                                                                  r'https://firebasestorage.googleapis.com/v0/b/suneelprinters37.appspot.com/o/'),
+                                                                  r'https://firebasestorage.googleapis.com/v0/b/e-commerce-37.appspot.com/o/'), // TODO: Enter Firestore Base URL Here (Ex: https://firebasestorage.googleapis.com/v0/b/projectid.appspot.com/o/)
                                                               '')
                                                           .replaceAll(
                                                               RegExp(r'%2F'),
@@ -927,8 +927,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 margin: screenSize.only(left: 12),
                 height: MediaQuery.of(context).size.height / 6,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: Theme.of(context).primaryColor),
+                  borderRadius: BorderRadius.circular(25),
+                  color: Theme.of(context).primaryColor,
+                ),
                 child: const Icon(Icons.delete, color: kUILightText, size: 32),
               ),
             ),
