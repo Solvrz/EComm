@@ -1,4 +1,4 @@
-# E-Commerce
+# EComm
 - An E-Commerce Platform.
 
 # Demo
