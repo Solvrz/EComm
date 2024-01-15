@@ -27,7 +27,7 @@ class AddProductPage extends StatefulWidget {
 }
 
 class _AddProductPageState extends State<AddProductPage> {
-  bool disablePost = false;
+  bool posting = false;
 
   String name = "";
   String price = "";
@@ -87,10 +87,10 @@ class _AddProductPageState extends State<AddProductPage> {
     }
 
     return PopScope(
-      canPop: disablePost,
+      canPop: !posting,
       onPopInvoked: (poped) async {
-        if (poped) {
-          await _buildDiscardChangesDialog(context);
+        if (!poped) {
+          if (context.mounted) await _buildDiscardChangesDialog(context);
         }
       },
       child: SafeArea(
@@ -101,16 +101,20 @@ class _AddProductPageState extends State<AddProductPage> {
             title: args.product != null ? "Edit" : "Preview",
             leading: GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: disablePost
+              onTap: posting
                   ? null
-                  : () => _buildDiscardChangesDialog(context),
+                  : () {
+                      if (context.mounted) _buildDiscardChangesDialog(context);
+                    },
               child: GestureDetector(
-                onTap: () => Navigator.pop(context),
+                onTap: () {
+                  if (context.mounted) Navigator.pop(context);
+                },
                 child: Padding(
                   padding: screenSize.all(10),
                   child: Icon(
                     Icons.arrow_back_ios,
-                    color: disablePost
+                    color: posting
                         ? Colors.grey[200]
                         : Theme.of(context).colorScheme.onPrimary,
                     size: 30,
@@ -125,14 +129,14 @@ class _AddProductPageState extends State<AddProductPage> {
 
                   return GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    onTap: disablePost ? null : post(args),
+                    onTap: posting ? null : post(args),
                     child: Padding(
                       padding: screenSize.all(16),
                       child: Center(
                         child: Text(
                           "Post",
                           style: TextStyle(
-                            color: disablePost
+                            color: posting
                                 ? Colors.grey[200]
                                 : Theme.of(context).primaryColor,
                             fontSize: screenSize.height(20),
@@ -146,450 +150,444 @@ class _AddProductPageState extends State<AddProductPage> {
               ),
             ],
           ),
-          body: Flexible(
-            child: SingleChildScrollView(
-              child: SizedBox(
-                height: screenSize.height(800),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                      padding: screenSize.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: screenSize.all(12),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Flexible(
-                                  child: TextField(
-                                    controller: nameController,
-                                    cursorColor: Colors.grey,
-                                    maxLines: 2,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      disabledBorder: InputBorder.none,
-                                      focusedBorder: const OutlineInputBorder(),
-                                      errorBorder: InputBorder.none,
-                                      hintText: "Product Name",
-                                      hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary
-                                            .withOpacity(0.7),
-                                        fontSize: screenSize.height(28),
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: "sans-serif-condensed",
-                                      ),
-                                    ),
-                                    onChanged: (value) {
-                                      if (context.mounted) {
-                                        setState(() => name = value);
-                                      }
-                                    },
-                                    style: TextStyle(
+          body: SingleChildScrollView(
+            child: SizedBox(
+              height: screenSize.height(800),
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: screenSize.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: screenSize.all(12),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                child: TextField(
+                                  controller: nameController,
+                                  cursorColor: Colors.grey,
+                                  maxLines: 2,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+                                    focusedBorder: const OutlineInputBorder(),
+                                    errorBorder: InputBorder.none,
+                                    hintText: "Product Name",
+                                    hintStyle: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .onPrimary,
+                                          .onPrimary
+                                          .withOpacity(0.7),
                                       fontSize: screenSize.height(28),
                                       fontWeight: FontWeight.w600,
                                       fontFamily: "sans-serif-condensed",
                                     ),
                                   ),
-                                ),
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () async {
-                                    final FilePickerResult? result =
-                                        await FilePicker.platform.pickFiles(
-                                      type: FileType.custom,
-                                      allowedExtensions: ["png", "jpg"],
-                                      allowMultiple: true,
-                                    );
-
-                                    final List<Image> compImages = [];
-                                    final List<File> compFiles = [];
-
-                                    for (final String? path in result!.paths) {
-                                      final File file = File(path!);
-                                      final List<String> splits =
-                                          file.absolute.path.split("/");
-
-                                      final XFile? compFile =
-                                          await FlutterImageCompress
-                                              .compressAndGetFile(
-                                        file.absolute.path,
-                                        "${splits.getRange(0, splits.length - 1).join("/")}/Compressed${Timestamp.now().toDate()}.jpeg",
-                                      );
-                                      compFiles.add(File(compFile!.path));
-                                      compImages
-                                          .add(Image.file(File(compFile.path)));
-                                    }
-
-                                    images.addAll(compImages);
-                                    imageFiles.addAll(compFiles);
-
+                                  onChanged: (value) {
                                     if (context.mounted) {
-                                      setState(() {
-                                        _currentImage = 0;
-                                      });
+                                      setState(() => name = value);
                                     }
                                   },
-                                  child: Padding(
-                                    padding: screenSize.all(8),
-                                    child: Icon(
-                                      Icons.add_photo_alternate,
-                                      color: Theme.of(context).primaryColor,
-                                      size: 34,
-                                    ),
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    fontSize: screenSize.height(28),
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "sans-serif-condensed",
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            width: MediaQuery.of(context).size.width,
-                            child: images.isNotEmpty
-                                ? Stack(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Container(
-                                            padding: screenSize.all(8),
-                                            child: CarouselSlider(
-                                              items: images
-                                                  .map<Widget>((image) => image)
-                                                  .toList(),
-                                              options: CarouselOptions(
-                                                autoPlay: images.length > 1,
-                                                enlargeCenterPage: true,
-                                                aspectRatio:
-                                                    screenSize.aspectRatio(2),
-                                                onPageChanged: (index, reason) {
-                                                  if (context.mounted) {
-                                                    setState(() {
-                                                      _currentImage = index;
-                                                    });
-                                                  }
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                          if (images.length > 1)
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: List.generate(
-                                                images.length,
-                                                (index) => AnimatedContainer(
-                                                  duration: const Duration(
-                                                    milliseconds: 400,
-                                                  ),
-                                                  width: _currentImage == index
-                                                      ? 16
-                                                      : 8,
-                                                  height: _currentImage == index
-                                                      ? 6
-                                                      : 8,
-                                                  margin: screenSize.symmetric(
-                                                    vertical: 10,
-                                                    horizontal: 3,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      15,
-                                                    ),
-                                                    color: _currentImage ==
-                                                            index
-                                                        ? const Color.fromRGBO(
-                                                            0,
-                                                            0,
-                                                            0,
-                                                            0.9,
-                                                          )
-                                                        : const Color.fromRGBO(
-                                                            0,
-                                                            0,
-                                                            0,
-                                                            0.4,
-                                                          ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                      Positioned(
-                                        right: 25,
-                                        bottom: 10,
-                                        child: GestureDetector(
-                                          behavior: HitTestBehavior.translucent,
-                                          onTap: () {
-                                            final List<Widget> imageWidgets =
-                                                List.generate(
-                                              images.length,
-                                              (index) => GestureDetector(
-                                                behavior:
-                                                    HitTestBehavior.translucent,
-                                                onTap: () {
-                                                  setState(
-                                                    () => deletedImages
-                                                        .add(images[index]),
-                                                  );
+                              ),
+                              GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () async {
+                                  final FilePickerResult? result =
+                                      await FilePicker.platform.pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: ["png", "jpg"],
+                                    allowMultiple: true,
+                                  );
 
-                                                  setState(
-                                                    () =>
-                                                        images.removeAt(index),
-                                                  );
+                                  final List<Image> compImages = [];
+                                  final List<File> compFiles = [];
 
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Container(
-                                                  height:
-                                                      screenSize.height(100),
-                                                  width: 150,
-                                                  padding: screenSize.all(8),
-                                                  margin: screenSize.all(8),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      20,
-                                                    ),
-                                                    color: Colors.grey[200],
-                                                  ),
-                                                  child: images[index],
-                                                ),
-                                              ),
-                                            );
+                                  for (final String? path in result!.paths) {
+                                    final File file = File(path!);
+                                    final List<String> splits =
+                                        file.absolute.path.split("/");
 
-                                            showDialog(
-                                              context: context,
-                                              builder: (_) => PopScope(
-                                                onPopInvoked: (_) async {
-                                                  setState(() {});
-                                                },
-                                                child: RoundedAlertDialog(
-                                                  title:
-                                                      "Select the Images to Delete",
-                                                  widgets: [
-                                                    Column(
-                                                      children: imageWidgets,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: Icon(
-                                            Icons.delete,
-                                            size: 30,
-                                            color: Colors.grey[700],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Center(
-                                    child: Text(
-                                      "No Images Added\nAdd One",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: screenSize.height(20),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                    final XFile? compFile =
+                                        await FlutterImageCompress
+                                            .compressAndGetFile(
+                                      file.absolute.path,
+                                      "${splits.getRange(0, splits.length - 1).join("/")}/Compressed${Timestamp.now().toDate()}.jpeg",
+                                    );
+                                    compFiles.add(File(compFile!.path));
+                                    compImages
+                                        .add(Image.file(File(compFile.path)));
+                                  }
+
+                                  images.addAll(compImages);
+                                  imageFiles.addAll(compFiles);
+
+                                  if (context.mounted) {
+                                    setState(() {
+                                      _currentImage = 0;
+                                    });
+                                  }
+                                },
+                                child: Padding(
+                                  padding: screenSize.all(8),
+                                  child: Icon(
+                                    Icons.add_photo_alternate,
+                                    color: Theme.of(context).primaryColor,
+                                    size: 34,
                                   ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Divider(thickness: 2, height: 12),
-                    Flexible(
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: screenSize.symmetric(horizontal: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              ...variations.map(
-                                (variation) => Padding(
-                                  padding: screenSize.symmetric(vertical: 2),
-                                  child: _buildVariation(context, variation),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: screenSize.symmetric(horizontal: 8),
-                      child: AlertButton(
-                        title: "Add Variation",
-                        onPressed: () {
-                          if (context.mounted) {
-                            setState(() {
-                              variations.add(
-                                Variation(
-                                  name: "",
-                                  options: [
-                                    Option(label: "Label"),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.width,
+                          child: images.isNotEmpty
+                              ? Stack(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Container(
+                                          padding: screenSize.all(8),
+                                          child: CarouselSlider(
+                                            items: images
+                                                .map<Widget>((image) => image)
+                                                .toList(),
+                                            options: CarouselOptions(
+                                              autoPlay: images.length > 1,
+                                              enlargeCenterPage: true,
+                                              aspectRatio:
+                                                  screenSize.aspectRatio(2),
+                                              onPageChanged: (index, reason) {
+                                                if (context.mounted) {
+                                                  setState(() {
+                                                    _currentImage = index;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        if (images.length > 1)
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: List.generate(
+                                              images.length,
+                                              (index) => AnimatedContainer(
+                                                duration: const Duration(
+                                                  milliseconds: 400,
+                                                ),
+                                                width: _currentImage == index
+                                                    ? 16
+                                                    : 8,
+                                                height: _currentImage == index
+                                                    ? 6
+                                                    : 8,
+                                                margin: screenSize.symmetric(
+                                                  vertical: 10,
+                                                  horizontal: 3,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    15,
+                                                  ),
+                                                  color: _currentImage == index
+                                                      ? const Color.fromRGBO(
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0.9,
+                                                        )
+                                                      : const Color.fromRGBO(
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0.4,
+                                                        ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                    Positioned(
+                                      right: 25,
+                                      bottom: 10,
+                                      child: GestureDetector(
+                                        behavior: HitTestBehavior.translucent,
+                                        onTap: () {
+                                          final List<Widget> imageWidgets =
+                                              List.generate(
+                                            images.length,
+                                            (index) => GestureDetector(
+                                              behavior:
+                                                  HitTestBehavior.translucent,
+                                              onTap: () {
+                                                setState(
+                                                  () => deletedImages
+                                                      .add(images[index]),
+                                                );
+
+                                                setState(
+                                                  () => images.removeAt(index),
+                                                );
+
+                                                Navigator.pop(context);
+                                              },
+                                              child: Container(
+                                                height: screenSize.height(100),
+                                                width: 150,
+                                                padding: screenSize.all(8),
+                                                margin: screenSize.all(8),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    20,
+                                                  ),
+                                                  color: Colors.grey[200],
+                                                ),
+                                                child: images[index],
+                                              ),
+                                            ),
+                                          );
+
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) => PopScope(
+                                              onPopInvoked: (_) async {
+                                                setState(() {});
+                                              },
+                                              child: RoundedAlertDialog(
+                                                title:
+                                                    "Select the Images to Delete",
+                                                widgets: [
+                                                  Column(
+                                                    children: imageWidgets,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Icon(
+                                          Icons.delete,
+                                          size: 30,
+                                          color: Colors.grey[700],
+                                        ),
+                                      ),
+                                    ),
                                   ],
+                                )
+                              : Center(
+                                  child: Text(
+                                    "No Images Added\nAdd One",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: screenSize.height(20),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
-                              );
-                            });
-                          }
-                        },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(thickness: 2, height: 12),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: screenSize.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ...variations.map(
+                              (variation) => Padding(
+                                padding: screenSize.symmetric(vertical: 2),
+                                child: _buildVariation(context, variation),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    Padding(
-                      padding: screenSize.fromLTRB(18, 20, 32, 0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Featured",
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontSize: screenSize.height(22),
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.2,
+                  ),
+                  Padding(
+                    padding: screenSize.symmetric(horizontal: 8),
+                    child: AlertButton(
+                      title: "Add Variation",
+                      onPressed: () {
+                        if (context.mounted) {
+                          setState(() {
+                            variations.add(
+                              Variation(
+                                name: "",
+                                options: [
+                                  Option(label: "Label"),
+                                ],
                               ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 80,
-                            child: CupertinoSwitch(
-                              value: featured,
-                              onChanged: (value) {
-                                setState(() {
-                                  featured = value;
-                                });
-                              },
-                              activeColor: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
+                            );
+                          });
+                        }
+                      },
                     ),
-                    Padding(
-                      padding: screenSize.fromLTRB(18, 0, 18, 0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "MRP",
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontSize: screenSize.height(22),
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.2,
-                              ),
+                  ),
+                  Padding(
+                    padding: screenSize.fromLTRB(18, 20, 32, 0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Featured",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: screenSize.height(22),
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.2,
                             ),
                           ),
-                          SizedBox(
-                            width: 80,
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              controller: mrpController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                prefixText: "$CURRENCY ",
-                                hintText: "MRP",
-                                hintStyle: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimary
-                                      .withOpacity(0.7),
-                                  fontSize: screenSize.height(20),
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: -0.4,
-                                ),
-                              ),
-                              onChanged: (value) {
-                                if (context.mounted) {
-                                  setState(() => mrp = value);
-                                }
-                              },
-                              cursorColor: Colors.grey,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        SizedBox(
+                          width: 80,
+                          child: CupertinoSwitch(
+                            value: featured,
+                            onChanged: (value) {
+                              setState(() {
+                                featured = value;
+                              });
+                            },
+                            activeColor: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: screenSize.fromLTRB(18, 0, 18, 0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "MRP",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: screenSize.height(22),
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 80,
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            controller: mrpController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              prefixText: "$CURRENCY ",
+                              hintText: "MRP",
+                              hintStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimary
+                                    .withOpacity(0.7),
                                 fontSize: screenSize.height(20),
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: -0.4,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: screenSize.fromLTRB(18, 0, 18, 20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Actual Price",
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontSize: screenSize.height(22),
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.2,
-                              ),
+                            onChanged: (value) {
+                              if (context.mounted) {
+                                setState(() => mrp = value);
+                              }
+                            },
+                            cursorColor: Colors.grey,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: screenSize.height(20),
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.4,
                             ),
                           ),
-                          SizedBox(
-                            width: 80,
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              controller: priceController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                prefixText: "$CURRENCY ",
-                                hintText: "Price",
-                                hintStyle: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimary
-                                      .withOpacity(0.7),
-                                  fontSize: screenSize.height(20),
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: -0.4,
-                                ),
-                              ),
-                              cursorColor: Colors.grey,
-                              onChanged: (value) {
-                                if (context.mounted) {
-                                  setState(() => price = value);
-                                }
-                              },
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: screenSize.fromLTRB(18, 0, 18, 20),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Actual Price",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: screenSize.height(22),
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 80,
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            controller: priceController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              prefixText: "$CURRENCY ",
+                              hintText: "Price",
+                              hintStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimary
+                                    .withOpacity(0.7),
                                 fontSize: screenSize.height(20),
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: -0.4,
                               ),
                             ),
+                            cursorColor: Colors.grey,
+                            onChanged: (value) {
+                              if (context.mounted) {
+                                setState(() => price = value);
+                              }
+                            },
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: screenSize.height(20),
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.4,
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -648,7 +646,7 @@ class _AddProductPageState extends State<AddProductPage> {
           );
     } else {
       return () async {
-        setState(() => disablePost = true);
+        setState(() => posting = true);
 
         final List<String> urls = args.product != null
             ? args.product!.images
