@@ -3,9 +3,9 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../add_product/export.dart';
+import './widgets/product_list.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
-import 'widgets/product_list.dart';
 
 // ignore: must_be_immutable
 class ProducPage extends StatefulWidget {

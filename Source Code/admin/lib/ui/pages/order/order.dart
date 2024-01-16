@@ -5,9 +5,9 @@ import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import './widgets/order.dart';
 import '/config/constant.dart';
 import '/ui/widgets/custom_app_bar.dart';
-import 'widgets/order.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
