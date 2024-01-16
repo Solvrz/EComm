@@ -20,7 +20,7 @@ const String SERVER = "ecomm-qle6y82s.b4a.run";
 const String KEY_TESTING = "";
 const String KEY_PRODUCTION = "";
 
-final FirebaseFirestore database = FirebaseFirestore.instance;
+final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 Bag bag = Bag();
 Wishlist wishlist = Wishlist();

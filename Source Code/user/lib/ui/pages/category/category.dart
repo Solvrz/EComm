@@ -61,7 +61,7 @@ class _CategoryPageState extends State<CategoryPage> {
           ],
         ),
         body: FutureBuilder<QuerySnapshot>(
-          future: database
+          future: firestore
               .collection("categories")
               .where("uId", isEqualTo: args.uId)
               .get(),

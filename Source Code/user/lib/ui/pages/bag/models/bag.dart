@@ -128,7 +128,7 @@ class Bag {
 
       for (final BagItem? item in items) {
         if (item != null) {
-          final QuerySnapshot products = await database
+          final QuerySnapshot products = await firestore
               .collection("products")
               .where("uId", isEqualTo: item.product.uId)
               .get();

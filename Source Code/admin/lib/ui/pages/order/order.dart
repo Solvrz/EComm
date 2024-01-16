@@ -33,7 +33,7 @@ class _OrderPageState extends State<OrderPage> {
           body: Column(
             children: [
               StreamBuilder(
-                stream: database
+                stream: firestore
                     .collection("orders")
                     .orderBy("time", descending: true)
                     .snapshots(),
@@ -172,7 +172,7 @@ class _OrderPageState extends State<OrderPage> {
                 flex: 6,
                 child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: () => database
+                  onTap: () => firestore
                       .collection("orders")
                       .doc(id)
                       .update({"status": !order["status"]}),

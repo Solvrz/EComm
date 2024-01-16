@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../product/product.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/ui/pages/product/product.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product;

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-import '../../payment/payment.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/ui/pages/payment/payment.dart';
 import '/ui/widgets/information_sheet.dart';
 
 class CheckoutSheet extends StatefulWidget {
@@ -531,7 +531,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
     );
     await preferences.setStringList("orders", pastOrders);
 
-    await database.collection("orders").add({
+    await firestore.collection("orders").add({
       "name": selectedInfo!["name"],
       "phone": selectedInfo!["phone"],
       "address": selectedInfo!["address"],

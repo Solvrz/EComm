@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: screenSize.height(265),
                       child: StreamBuilder(
-                        stream: database
+                        stream: firestore
                             .collection("orders")
                             .orderBy("time", descending: true)
                             .snapshots(),
@@ -320,7 +320,7 @@ Widget _buildItem(
               flex: 6,
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () => database
+                onTap: () => firestore
                     .collection("orders")
                     .doc(id)
                     .update({"status": !order["status"]}),

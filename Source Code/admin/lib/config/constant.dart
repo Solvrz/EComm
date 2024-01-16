@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,10 @@ const String CONTACT = "91 99999 99999";
 const STORAGE =
     'https://firebasestorage.googleapis.com/v0/b/ecomm-37.appspot.com/o/';
 
-final FirebaseFirestore database = FirebaseFirestore.instance;
+final FirebaseFirestore firestore = FirebaseFirestore.instance;
 final FirebaseMessaging messaging = FirebaseMessaging.instance;
 final FirebaseStorage storage = FirebaseStorage.instance;
+final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.instance;
 
 Map<dynamic, dynamic>? selectedInfo;
 late List<Map<dynamic, dynamic>> addresses;

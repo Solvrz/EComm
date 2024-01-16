@@ -830,7 +830,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   .toList(),
             });
 
-            query = await database
+            query = await firestore
                 .collection("products")
                 .where(
                   "uId",
@@ -867,7 +867,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   .toList(),
             });
 
-            await database.collection("products").add({
+            await firestore.collection("products").add({
               "uId":
                   "$categoryId/${args.tabsData[args.currentTab]["uId"]}/${maxId + 1}",
               "imgs": urls,

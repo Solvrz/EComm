@@ -19,13 +19,13 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // TODO: Create a User ID and Pass on Firebase Auth
+  // TODO: Create the same User ID and Pass on Firebase Auth
   await FirebaseAuth.instance.signInWithEmailAndPassword(
     email: "admin-ecomm@gmail.com",
     password: "EComm37",
   );
 
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  await crashlytics.setCrashlyticsCollectionEnabled(false);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   await messaging.setAutoInitEnabled(true);

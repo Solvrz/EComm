@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../add_product/add_product.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/ui/pages/add_product/add_product.dart';
 import 'product_card.dart';
 
 class ProductList extends StatefulWidget {

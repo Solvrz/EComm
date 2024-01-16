@@ -267,7 +267,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     if (query != "")
                       StreamBuilder<QuerySnapshot>(
-                        stream: database.collection("products").snapshots(),
+                        stream: firestore.collection("products").snapshots(),
                         builder: (context, future) {
                           if (future.hasData) {
                             final List<QueryDocumentSnapshot> docs =
@@ -453,7 +453,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(height: 8),
                             FutureBuilder<QuerySnapshot>(
-                              future: database
+                              future: firestore
                                   .collection("products")
                                   .where("featured", isEqualTo: true)
                                   .limit(10)

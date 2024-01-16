@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../add_product/add_product.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/ui/pages/add_product/add_product.dart';
 import '/ui/widgets/alert_button.dart';
 import '/ui/widgets/rounded_alert_dialog.dart';
 
@@ -68,7 +68,7 @@ class _ProductCardState extends State<ProductCard> {
                         .delete(),
                   );
 
-                  final QuerySnapshot category = await database
+                  final QuerySnapshot category = await firestore
                       .collection("categories")
                       .where(
                         "uId",
@@ -91,7 +91,7 @@ class _ProductCardState extends State<ProductCard> {
 
                   await product.docs.first.reference.delete();
 
-                  final QuerySnapshot query = await database
+                  final QuerySnapshot query = await firestore
                       .collection("products")
                       .where("uId", isEqualTo: widget.product.uId)
                       .get();
