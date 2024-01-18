@@ -54,17 +54,17 @@ class _ProductCardState extends State<ProductCard> {
                       onTap: () {
                         if (context.mounted) {
                           setState(
-                            () => wishlist.containsProduct(widget.product)
-                                ? wishlist.removeProduct(widget.product)
-                                : wishlist.addProduct(widget.product),
+                            () => WISHLIST.containsProduct(widget.product)
+                                ? WISHLIST.removeProduct(widget.product)
+                                : WISHLIST.addProduct(widget.product),
                           );
                         }
                       },
                       child: Icon(
-                        wishlist.containsProduct(widget.product)
+                        WISHLIST.containsProduct(widget.product)
                             ? Icons.favorite
                             : Icons.favorite_outline,
-                        color: wishlist.containsProduct(widget.product)
+                        color: WISHLIST.containsProduct(widget.product)
                             ? Theme.of(context).primaryColor
                             : Theme.of(context).colorScheme.onPrimary,
                       ),

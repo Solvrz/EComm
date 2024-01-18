@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../category/export.dart';
-import '../category/widgets/product_list.dart';
-import '../product/export.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/tools/extensions.dart';
+import '/ui/pages/category/category.dart';
+import '/ui/pages/category/widgets/product_list.dart';
+import '/ui/pages/product/export.dart';
 import '/ui/widgets/information_sheet.dart';
 import '/ui/widgets/marquee.dart';
 
@@ -132,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                         left: 11,
                         top: 7,
                         child: Text(
-                          bag.products.length.toString(),
+                          BAG.products.length.toString(),
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
@@ -267,7 +268,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     if (query != "")
                       StreamBuilder<QuerySnapshot>(
-                        stream: firestore.collection("products").snapshots(),
+                        stream: FIRESTORE.collection("products").snapshots(),
                         builder: (context, future) {
                           if (future.hasData) {
                             final List<QueryDocumentSnapshot> docs =
@@ -350,69 +351,95 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: screenSize.height(14),
                                 ),
-                                SizedBox(
-                                  height: screenSize.height(125),
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: categories.length,
-                                    itemBuilder: (context, index) {
-                                      final Map<String, dynamic> data =
-                                          categories[index];
-                                      return GestureDetector(
-                                        onTap: () {
-                                          FocusScope.of(context).unfocus();
+                                FutureBuilder<QuerySnapshot>(
+                                  future: FIRESTORE
+                                      .collection("categories")
+                                      .orderBy("uId")
+                                      .get(),
+                                  builder: (context, future) {
+                                    if (future.hasData) {
+                                      final List<QueryDocumentSnapshot>
+                                          categories = future.data!.docs;
 
-                                          Navigator.pushNamed(
-                                            context,
-                                            "/category",
-                                            arguments: CategoryArguments(
-                                              data,
-                                              data["uId"],
-                                            ),
-                                          );
-                                        },
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              4,
-                                          margin: screenSize.only(right: 12),
-                                          padding: screenSize.all(8),
-                                          decoration: BoxDecoration(
-                                            color: data["color"],
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Image.asset(
-                                                data["image"],
-                                                height: screenSize.height(50),
-                                                width: 50,
-                                              ),
-                                              const SizedBox(height: 8),
-                                              Text(
-                                                data["name"],
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      "sans-serif-condensed",
-                                                  fontSize:
-                                                      screenSize.height(16),
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onPrimary,
-                                                  fontWeight: FontWeight.w600,
+                                      return SizedBox(
+                                        height: screenSize.height(125),
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: categories.length,
+                                          itemBuilder: (context, index) {
+                                            final QueryDocumentSnapshot
+                                                category = categories[index];
+
+                                            return GestureDetector(
+                                              onTap: () {
+                                                FocusScope.of(context)
+                                                    .unfocus();
+
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  "/category",
+                                                  arguments: CategoryArguments(
+                                                    category.get("title"),
+                                                    category.reference,
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    4,
+                                                margin:
+                                                    screenSize.only(right: 12),
+                                                padding: screenSize.all(8),
+                                                decoration: BoxDecoration(
+                                                  color: Color(
+                                                    "0xff${category.get("color")}"
+                                                        .toInt(),
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Image.network(
+                                                      category.get("image"),
+                                                      height:
+                                                          screenSize.height(50),
+                                                      width: 50,
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    Text(
+                                                      category.get("title"),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            "sans-serif-condensed",
+                                                        fontSize: screenSize
+                                                            .height(16),
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            );
+                                          },
                                         ),
                                       );
-                                    },
-                                  ),
+                                    } else {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
                             ),
@@ -453,7 +480,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(height: 8),
                             FutureBuilder<QuerySnapshot>(
-                              future: firestore
+                              future: FIRESTORE
                                   .collection("products")
                                   .where("featured", isEqualTo: true)
                                   .limit(10)

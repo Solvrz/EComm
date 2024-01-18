@@ -93,7 +93,7 @@ class _ProductPageState extends State<ProductPage> {
                                   : Colors.grey.shade600,
                             ),
                             child: Text(
-                              widget.tabsData[index]["name"]
+                              widget.tabsData[index]["title"]
                                   .split("\\n")
                                   .join("\n"),
                               textAlign: TextAlign.center,

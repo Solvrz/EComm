@@ -25,11 +25,11 @@ void main() async {
     password: "EComm37",
   );
 
-  await crashlytics.setCrashlyticsCollectionEnabled(false);
+  await CRASHLYTICS.setCrashlyticsCollectionEnabled(false);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-  await messaging.setAutoInitEnabled(true);
-  await messaging.subscribeToTopic("orders");
+  await MESSAGING.setAutoInitEnabled(true);
+  await MESSAGING.subscribeToTopic("orders");
   FirebaseMessaging.onBackgroundMessage(backgroundMsg);
 
   runApp(const ECommerceAdmin());

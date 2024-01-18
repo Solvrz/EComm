@@ -15,6 +15,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
 import '/models/variation.dart';
+import '/tools/extensions.dart';
 import '/ui/widgets/alert_button.dart';
 import '/ui/widgets/custom_app_bar.dart';
 import '/ui/widgets/rounded_alert_dialog.dart';
@@ -633,7 +634,7 @@ class _AddProductPageState extends State<AddProductPage> {
             ),
           );
     }
-    if (double.parse(price) > double.parse(mrp)) {
+    if (price.toDouble() > mrp.toDouble()) {
       return () => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               elevation: 10,
@@ -673,10 +674,10 @@ class _AddProductPageState extends State<AddProductPage> {
               ),
             );
 
-            final TaskSnapshot task = await storage
+            final TaskSnapshot task = await STORAGE
                 .ref()
                 .child(
-                  "Products/${args.title}/${args.tabsData[args.currentTab]["name"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.jpeg",
+                  "Products/${args.title}/${args.tabsData[args.currentTab]["title"].split("\\n").join(" ")}/file-${Timestamp.now().toDate()}.jpeg",
                 )
                 .putFile(file);
 
@@ -717,32 +718,15 @@ class _AddProductPageState extends State<AddProductPage> {
               (element) => element == url,
             );
 
-            await storage
+            await STORAGE
                 .ref()
                 .child(
                   url
-                      .replaceAll(
-                        RegExp(STORAGE),
-                        '',
-                      )
-                      .replaceAll(
-                        RegExp('%2F'),
-                        '/',
-                      )
-                      .replaceAll(
-                        RegExp(
-                          r'(\?alt).*',
-                        ),
-                        '',
-                      )
-                      .replaceAll(
-                        RegExp('%20'),
-                        ' ',
-                      )
-                      .replaceAll(
-                        RegExp('%3A'),
-                        ':',
-                      ),
+                      .replaceAll(RegExp(STORAGE_URL), '')
+                      .replaceAll(RegExp('%2F'), '/')
+                      .replaceAll(RegExp(r'(\?alt).*'), '')
+                      .replaceAll(RegExp('%20'), ' ')
+                      .replaceAll(RegExp('%3A'), ':'),
                 )
                 .delete();
           }
@@ -795,17 +779,16 @@ class _AddProductPageState extends State<AddProductPage> {
           int maxId = 0;
 
           query.docs.forEach((element) {
-            final int currId = int.parse(
-              (element.data()! as Map)["uId"].split("/").last,
-            );
+            final int currId =
+                (element.data()! as Map)["uId"].split("/").last.toInt();
 
             if (currId > maxId) {
               maxId = currId;
             }
           });
 
-          final double doubleMrp = double.parse(mrp);
-          final double doublePrice = double.parse(price);
+          final double doubleMrp = mrp.toDouble();
+          final double doublePrice = price.toDouble();
 
           if (args.product != null) {
             QuerySnapshot query = await args.tabs[args.currentTab]
@@ -830,7 +813,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   .toList(),
             });
 
-            query = await firestore
+            query = await FIRESTORE
                 .collection("products")
                 .where(
                   "uId",
@@ -867,7 +850,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   .toList(),
             });
 
-            await firestore.collection("products").add({
+            await FIRESTORE.collection("products").add({
               "uId":
                   "$categoryId/${args.tabsData[args.currentTab]["uId"]}/${maxId + 1}",
               "imgs": urls,

@@ -257,8 +257,8 @@ class _AddProductSheetState extends State<AddProductSheet> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          if (bag.getQuantity(widget.product) > 1) {
-                            bag.decreaseQuantity(widget.product);
+                          if (BAG.getQuantity(widget.product) > 1) {
+                            BAG.decreaseQuantity(widget.product);
                           }
                         });
                       },
@@ -279,7 +279,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                     ),
                     const SizedBox(width: 18),
                     Text(
-                      bag.getQuantity(widget.product).toString(),
+                      BAG.getQuantity(widget.product).toString(),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -289,7 +289,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                     GestureDetector(
                       onTap: () {
                         setState(
-                          () => bag.increaseQuantity(widget.product),
+                          () => BAG.increaseQuantity(widget.product),
                         );
                       },
                       child: Container(

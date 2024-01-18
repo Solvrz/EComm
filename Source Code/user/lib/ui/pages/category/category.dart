@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import './product.dart';
-import './request.dart';
 import '/config/constant.dart';
 import '/ui/widgets/custom_app_bar.dart';
 
@@ -14,7 +13,6 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  late String title;
   dynamic screen;
 
   @override
@@ -22,13 +20,11 @@ class _CategoryPageState extends State<CategoryPage> {
     final CategoryArguments args =
         ModalRoute.of(context)!.settings.arguments! as CategoryArguments;
 
-    title = args.data["name"].split("\n").join(" ");
-
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(
           context: context,
-          title: title,
+          title: args.title,
           trailing: [
             GestureDetector(
               onTap: () async {
@@ -48,7 +44,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       left: 11,
                       top: 7,
                       child: Text(
-                        bag.products.length.toString(),
+                        BAG.products.length.toString(),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
@@ -61,48 +57,20 @@ class _CategoryPageState extends State<CategoryPage> {
           ],
         ),
         body: FutureBuilder<QuerySnapshot>(
-          future: firestore
-              .collection("categories")
-              .where("uId", isEqualTo: args.uId)
-              .get(),
-          builder: (context, future) {
-            if (future.hasData) {
-              return FutureBuilder<QuerySnapshot>(
-                future: future.data!.docs.first.reference
-                    .collection("tabs")
-                    .orderBy("uId")
-                    .get(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final dynamic screen = args.data["type"] == "product"
-                        ? ProductPage(
-                            parent: this,
-                            title: title,
-                            tabsData: snapshot.data!.docs
-                                .map<Map<dynamic, dynamic>>(
-                                  (e) => e.data()! as Map,
-                                )
-                                .toList(),
-                            tabs: snapshot.data!.docs
-                                .map<DocumentReference>((e) => e.reference)
-                                .toList(),
-                          )
-                        : RequestPage(
-                            title: title,
-                            tabsData: snapshot.data!.docs
-                                .map<Map<dynamic, dynamic>>(
-                                  (e) => e.data()! as Map,
-                                )
-                                .toList(),
-                          );
-
-                    return Column(children: [Expanded(child: screen)]);
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
+          future: args.reference.collection("tabs").orderBy("uId").get(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ProductPage(
+                parent: this,
+                title: args.title,
+                tabsData: snapshot.data!.docs
+                    .map<Map<dynamic, dynamic>>(
+                      (e) => e.data()! as Map,
+                    )
+                    .toList(),
+                tabs: snapshot.data!.docs
+                    .map<DocumentReference>((e) => e.reference)
+                    .toList(),
               );
             } else {
               return const Center(
@@ -117,8 +85,8 @@ class _CategoryPageState extends State<CategoryPage> {
 }
 
 class CategoryArguments {
-  final Map<String, dynamic> data;
-  final int uId;
+  final String title;
+  final DocumentReference reference;
 
-  CategoryArguments(this.data, this.uId);
+  CategoryArguments(this.title, this.reference);
 }

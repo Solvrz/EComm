@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_constructors_over_static_methods
 
-import '../models/variation.dart';
+import '/models/variation.dart';
 
 class Product {
   String uId;

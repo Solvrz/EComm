@@ -7,6 +7,7 @@ import './image_viewer.dart';
 import './widgets/variation_button.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/tools/extensions.dart';
 import '/ui/widgets/custom_app_bar.dart';
 import '/ui/widgets/marquee.dart';
 
@@ -65,7 +66,7 @@ class _ProductPageState extends State<ProductPage> {
                       left: 11,
                       top: 7,
                       child: Text(
-                        bag.products.length.toString(),
+                        BAG.products.length.toString(),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
@@ -293,23 +294,23 @@ class _ProductPageState extends State<ProductPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        wishlist.containsProduct(product)
-                            ? wishlist.removeProduct(product)
-                            : wishlist.addProduct(product);
+                        WISHLIST.containsProduct(product)
+                            ? WISHLIST.removeProduct(product)
+                            : WISHLIST.addProduct(product);
 
                         setState(() {});
                       },
                       child: Container(
                         padding: screenSize.all(12),
                         decoration: BoxDecoration(
-                          color: wishlist.containsProduct(product)
+                          color: WISHLIST.containsProduct(product)
                               ? Theme.of(context).primaryColor.withOpacity(0.9)
                               : Theme.of(context).highlightColor,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.favorite_outline,
-                          color: wishlist.containsProduct(product)
+                          color: WISHLIST.containsProduct(product)
                               ? Theme.of(context)
                                   .colorScheme
                                   .onSecondary
@@ -328,12 +329,12 @@ class _ProductPageState extends State<ProductPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        color: bag.containsProduct(product)
+                        color: BAG.containsProduct(product)
                             ? Colors.grey[600]
                             : Theme.of(context).primaryColor.withOpacity(0.9),
                         padding: screenSize.symmetric(vertical: 16),
                         child: Text(
-                          bag.containsProduct(product)
+                          BAG.containsProduct(product)
                               ? "IN BAG"
                               : "ADD TO BAG",
                           style: TextStyle(
@@ -343,8 +344,8 @@ class _ProductPageState extends State<ProductPage> {
                           ),
                         ),
                         onPressed: () async {
-                          if (!bag.containsProduct(product)) {
-                            bag.addProduct(product);
+                          if (!BAG.containsProduct(product)) {
+                            BAG.addProduct(product);
 
                             await showModalBottomSheet(
                               backgroundColor: Colors.transparent,

@@ -4,6 +4,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/tools/extensions.dart';
 import '/ui/widgets/marquee.dart';
 
 class InfoWidget extends StatelessWidget {

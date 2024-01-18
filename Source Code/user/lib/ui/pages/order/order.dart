@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import './widgets/info_widget.dart';
 import '/config/constant.dart';
+import '/tools/extensions.dart';
 import '/ui/widgets/custom_app_bar.dart';
 
 class OrderPage extends StatelessWidget {

@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
 import '/models/variation.dart';
+import '/tools/extensions.dart';
 
 class BagItem {
   Product product;
@@ -128,7 +129,7 @@ class Bag {
 
       for (final BagItem? item in items) {
         if (item != null) {
-          final QuerySnapshot products = await firestore
+          final QuerySnapshot products = await FIRESTORE
               .collection("products")
               .where("uId", isEqualTo: item.product.uId)
               .get();
@@ -137,7 +138,7 @@ class Bag {
             _changeLog.add(
               "The product '${item.product.name}' has been removed from the store",
             );
-            wishlist.removeProduct(item.product);
+            WISHLIST.removeProduct(item.product);
             items.removeAt(
               items.indexOf(item),
             );

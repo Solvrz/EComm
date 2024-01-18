@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../add_product/export.dart';
 import './widgets/product_list.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/ui/pages/add_product/export.dart';
 
 // ignore: must_be_immutable
 class ProducPage extends StatefulWidget {
@@ -102,7 +102,7 @@ class _ProducPageState extends State<ProducPage> {
                                   : Colors.grey[600],
                             ),
                             child: Text(
-                              widget.tabsData[index]["name"]
+                              widget.tabsData[index]["title"]
                                   .split("\\n")
                                   .join("\n"),
                               textAlign: TextAlign.center,

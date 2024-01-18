@@ -4,8 +4,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../home/export.dart';
 import '/config/constant.dart';
+import '/ui/pages/home/export.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -33,8 +33,8 @@ class _SplashPageState extends State<SplashPage>
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      wishlist.load();
-      bag.load();
+      WISHLIST.load();
+      BAG.load();
 
       addresses = (preferences.getStringList("info") ?? [])
           .map<Map<dynamic, dynamic>>(

@@ -45,7 +45,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     ),
                   );
 
-                  if (args.success) bag.clear();
+                  if (args.success) BAG.clear();
                 },
               );
             });

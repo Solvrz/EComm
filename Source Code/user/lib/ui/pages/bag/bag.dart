@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../product/export.dart';
 import './widgets/checkout_sheet.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/tools/extensions.dart';
+import '/ui/pages/product/export.dart';
 import '/ui/widgets/custom_app_bar.dart';
 import '/ui/widgets/information_sheet.dart';
 import '/ui/widgets/marquee.dart';
@@ -29,7 +30,7 @@ class _BagPageState extends State<BagPage> {
   Widget build(BuildContext context) {
     double price = 0;
 
-    for (final bagItem in bag.products) {
+    for (final bagItem in BAG.products) {
       price += bagItem.product.price.toDouble() * bagItem.quantity;
     }
 
@@ -99,7 +100,7 @@ class _BagPageState extends State<BagPage> {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      "(${bag.products.length} items)",
+                      "(${BAG.products.length} items)",
                       style: TextStyle(
                         fontSize: screenSize.height(16),
                         fontWeight: FontWeight.bold,
@@ -117,7 +118,7 @@ class _BagPageState extends State<BagPage> {
                   borderRadius: BorderRadius.circular(25),
                 ),
                 padding: screenSize.symmetric(horizontal: 18, vertical: 12),
-                onPressed: bag.hasProducts
+                onPressed: BAG.hasProducts
                     ? () async {
                         selectedInfo == null
                             ? await showModalBottomSheet(
@@ -167,7 +168,7 @@ class _BagPageState extends State<BagPage> {
         ),
         body: Column(
           children: [
-            if (bag.changeLog.isNotEmpty)
+            if (BAG.changeLog.isNotEmpty)
               GestureDetector(
                 onTap: () async {
                   await showDialog(
@@ -176,7 +177,7 @@ class _BagPageState extends State<BagPage> {
                       onPopInvoked: (_) async {
                         if (context.mounted) {
                           setState(
-                            () => bag.changeLog.clear(),
+                            () => BAG.changeLog.clear(),
                           );
                         }
                       },
@@ -188,12 +189,12 @@ class _BagPageState extends State<BagPage> {
                             width: 300,
                             child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: bag.changeLog.length,
+                              itemCount: BAG.changeLog.length,
                               itemBuilder: (context, index) {
                                 return Column(
                                   children: [
                                     Text(
-                                      bag.changeLog[index],
+                                      BAG.changeLog[index],
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Theme.of(context)
@@ -251,14 +252,14 @@ class _BagPageState extends State<BagPage> {
                 ),
               ),
             Expanded(
-              child: bag.products.isNotEmpty
+              child: BAG.products.isNotEmpty
                   ? Padding(
                       padding:
                           screenSize.symmetric(horizontal: 12, vertical: 24),
                       child: AnimatedList(
                         shrinkWrap: true,
                         key: _listKey,
-                        initialItemCount: bag.products.length,
+                        initialItemCount: BAG.products.length,
                         itemBuilder: (context, index, animation) =>
                             _buildItem(context, index, animation),
                       ),
@@ -285,12 +286,12 @@ class _BagPageState extends State<BagPage> {
     int index,
     Animation<double> animation,
   ) {
-    final Product product = bag.products[index].product;
+    final Product product = BAG.products[index].product;
 
     return SizeTransition(
       sizeFactor: animation,
       child: Slidable(
-        key: ObjectKey(bag.products[index]),
+        key: ObjectKey(BAG.products[index]),
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
           extentRatio: 0.25,
@@ -300,7 +301,7 @@ class _BagPageState extends State<BagPage> {
               child: GestureDetector(
                 onTap: () {
                   Timer(const Duration(milliseconds: 200), () {
-                    bag.removeProduct(product);
+                    BAG.removeProduct(product);
                     if (context.mounted) setState(() {});
                   });
 
@@ -333,7 +334,7 @@ class _BagPageState extends State<BagPage> {
             await Navigator.pushNamed(
               context,
               "/product",
-              arguments: ProductArguments(bag.products[index].product),
+              arguments: ProductArguments(BAG.products[index].product),
             );
             if (context.mounted) setState(() {});
           },
@@ -477,7 +478,7 @@ class _BagPageState extends State<BagPage> {
                     children: [
                       GestureDetector(
                         onTap: () async {
-                          bag.increaseQuantity(product);
+                          BAG.increaseQuantity(product);
                           if (context.mounted) setState(() {});
                         },
                         child: Padding(
@@ -490,7 +491,7 @@ class _BagPageState extends State<BagPage> {
                         ),
                       ),
                       Text(
-                        bag.getQuantity(product).toString(),
+                        BAG.getQuantity(product).toString(),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.background,
                           fontSize: screenSize.height(18),
@@ -499,12 +500,12 @@ class _BagPageState extends State<BagPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          if (bag.getQuantity(product) > 1) {
-                            bag.decreaseQuantity(product);
+                          if (BAG.getQuantity(product) > 1) {
+                            BAG.decreaseQuantity(product);
                             setState(() {});
                           } else {
                             Timer(const Duration(milliseconds: 200), () {
-                              bag.removeProduct(product);
+                              BAG.removeProduct(product);
                               if (context.mounted) setState(() {});
                             });
 

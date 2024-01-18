@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../home/export.dart';
+import '/ui/pages/home/export.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

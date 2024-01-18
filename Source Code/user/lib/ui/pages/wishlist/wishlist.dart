@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../product/export.dart';
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/ui/pages/product/export.dart';
 import '/ui/widgets/custom_app_bar.dart';
 import '/ui/widgets/marquee.dart';
 
@@ -31,14 +31,14 @@ class _WishlistPageState extends State<WishlistPage> {
         body: Column(
           children: [
             Expanded(
-              child: wishlist.products.isNotEmpty
+              child: WISHLIST.products.isNotEmpty
                   ? Padding(
                       padding:
                           screenSize.symmetric(horizontal: 12, vertical: 24),
                       child: AnimatedList(
                         shrinkWrap: true,
                         key: _listKey,
-                        initialItemCount: wishlist.products.length,
+                        initialItemCount: WISHLIST.products.length,
                         itemBuilder: (context, index, animation) =>
                             _buildItem(context, index, animation),
                       ),
@@ -65,12 +65,12 @@ class _WishlistPageState extends State<WishlistPage> {
     int index,
     Animation<double> animation,
   ) {
-    final Product product = wishlist.products[index];
+    final Product product = WISHLIST.products[index];
 
     return SizeTransition(
       sizeFactor: animation,
       child: Slidable(
-        key: ObjectKey(wishlist.products[index]),
+        key: ObjectKey(WISHLIST.products[index]),
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
           extentRatio: 0.25,
@@ -80,7 +80,7 @@ class _WishlistPageState extends State<WishlistPage> {
               child: GestureDetector(
                 onTap: () {
                   Timer(const Duration(milliseconds: 200), () {
-                    wishlist.removeProduct(product);
+                    WISHLIST.removeProduct(product);
                     if (context.mounted) setState(() {});
                   });
 
@@ -112,7 +112,7 @@ class _WishlistPageState extends State<WishlistPage> {
           onTap: () => Navigator.pushNamed(
             context,
             "/product",
-            arguments: ProductArguments(wishlist.products[index]),
+            arguments: ProductArguments(WISHLIST.products[index]),
           ),
           child: Container(
             margin: screenSize.symmetric(vertical: 8),

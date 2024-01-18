@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-import '../category/export.dart';
-import '../order/widgets/order.dart';
 import '/config/constant.dart';
+import '/tools/extensions.dart';
+import '/ui/pages/category/export.dart';
+import '/ui/pages/order/widgets/order.dart';
 
 bool hasShown = false;
 
@@ -21,6 +23,13 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
+    _initNotifs();
+  }
+
+  Future<void> _initNotifs() async {
+    await FirebaseMessaging.instance
+        .requestPermission(provisional: true, criticalAlert: true);
+
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       "high_importance_channel",
       "High Importance Notifications",
@@ -30,13 +39,13 @@ class _HomePageState extends State<HomePage> {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
 
-    flutterLocalNotificationsPlugin.initialize(
+    await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
       ),
     );
 
-    flutterLocalNotificationsPlugin
+    await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
@@ -124,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: screenSize.height(265),
                       child: StreamBuilder(
-                        stream: firestore
+                        stream: FIRESTORE
                             .collection("orders")
                             .orderBy("time", descending: true)
                             .snapshots(),
@@ -225,61 +234,81 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  GridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: screenSize.height(12),
-                    childAspectRatio: screenSize.aspectRatio(1.2),
-                    children: List.generate(
-                      categories.length,
-                      (index) {
-                        final Map<String, dynamic> data = categories[index];
-                        return GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              "/category",
-                              arguments: CategoryArguments(
-                                data,
-                                data["uId"],
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width / 4,
-                            padding: screenSize.all(8),
-                            decoration: BoxDecoration(
-                              color: data["color"],
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  data["image"],
-                                  height: screenSize.height(65),
-                                  width: screenSize.height(65),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  data["name"],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: "sans-serif-condensed",
-                                    fontSize: screenSize.height(18),
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                    fontWeight: FontWeight.w600,
+                  FutureBuilder<QuerySnapshot>(
+                    future:
+                        FIRESTORE.collection("categories").orderBy("uId").get(),
+                    builder: (context, future) {
+                      if (future.hasData) {
+                        final List<QueryDocumentSnapshot> categories =
+                            future.data!.docs;
+
+                        return GridView.count(
+                          shrinkWrap: true,
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: screenSize.height(12),
+                          childAspectRatio: screenSize.aspectRatio(1.2),
+                          children: List.generate(
+                            categories.length,
+                            (index) {
+                              final QueryDocumentSnapshot category =
+                                  categories[index];
+
+                              return GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    "/category",
+                                    arguments: CategoryArguments(
+                                      category.get("title"),
+                                      category.reference,
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width / 4,
+                                  padding: screenSize.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Color(
+                                      "0xff${category.get("color")}".toInt(),
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.network(
+                                        category.get("image"),
+                                        height: screenSize.height(65),
+                                        width: screenSize.height(65),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        category.get("title"),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: "sans-serif-condensed",
+                                          fontSize: screenSize.height(18),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
                         );
-                      },
-                    ),
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
@@ -320,7 +349,7 @@ Widget _buildItem(
               flex: 6,
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () => firestore
+                onTap: () => FIRESTORE
                     .collection("orders")
                     .doc(id)
                     .update({"status": !order["status"]}),

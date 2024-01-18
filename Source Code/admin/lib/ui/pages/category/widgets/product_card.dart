@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/tools/extensions.dart';
 import '/ui/pages/add_product/add_product.dart';
 import '/ui/widgets/alert_button.dart';
 import '/ui/widgets/rounded_alert_dialog.dart';
@@ -13,7 +16,11 @@ class ProductCard extends StatefulWidget {
   final Product product;
   final AddProductArguments args;
 
-  const ProductCard({super.key, required this.product, required this.args});
+  const ProductCard({
+    super.key,
+    required this.product,
+    required this.args,
+  });
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -36,10 +43,10 @@ class _ProductCardState extends State<ProductCard> {
         );
         if (context.mounted) setState(() {});
       },
-      onLongPress: () {
-        showDialog(
+      onLongPress: () async {
+        await showDialog(
           context: context,
-          builder: (_) => RoundedAlertDialog(
+          builder: (context) => RoundedAlertDialog(
             title: "Do you want to delete this Product?",
             buttonsList: [
               AlertButton(
@@ -51,51 +58,51 @@ class _ProductCardState extends State<ProductCard> {
                   Navigator.pop(context);
                   final List<String> uIds = widget.product.uId.split("/");
 
-                  widget.product.images.forEach(
-                    (element) => storage
-                        .ref()
-                        .child(
-                          element
-                              .replaceAll(
-                                RegExp(STORAGE),
-                                '',
-                              )
-                              .replaceAll(RegExp('%2F'), '/')
-                              .replaceAll(RegExp(r'(\?alt).*'), '')
-                              .replaceAll(RegExp('%20'), ' ')
-                              .replaceAll(RegExp('%3A'), ':'),
+                  try {
+                    widget.product.images.forEach(
+                      (element) => STORAGE
+                          .ref()
+                          .child(
+                            element
+                                .replaceAll(RegExp(STORAGE_URL), '')
+                                .replaceAll(RegExp('%2F'), '/')
+                                .replaceAll(RegExp(r'(\?alt).*'), '')
+                                .replaceAll(RegExp('%20'), ' ')
+                                .replaceAll(RegExp('%3A'), ':'),
+                          )
+                          .delete(),
+                    );
+
+                    final QuerySnapshot category = await FIRESTORE
+                        .collection("categories")
+                        .where(
+                          "uId",
+                          isEqualTo: uIds[0].toInt(),
                         )
-                        .delete(),
-                  );
+                        .get();
 
-                  final QuerySnapshot category = await firestore
-                      .collection("categories")
-                      .where(
-                        "uId",
-                        isEqualTo: int.parse(uIds[0]),
-                      )
-                      .get();
+                    final QuerySnapshot tab = await category
+                        .docs.first.reference
+                        .collection("tabs")
+                        .where("uId", isEqualTo: uIds[1].toInt())
+                        .get();
 
-                  final QuerySnapshot tab = await category.docs.first.reference
-                      .collection("tabs")
-                      .where(
-                        "uId",
-                        isEqualTo: int.parse(uIds[1]),
-                      )
-                      .get();
+                    final QuerySnapshot product = await tab.docs.first.reference
+                        .collection("products")
+                        .where("uId", isEqualTo: widget.product.uId)
+                        .get();
 
-                  final QuerySnapshot product = await tab.docs.first.reference
-                      .collection("products")
-                      .where("uId", isEqualTo: widget.product.uId)
-                      .get();
+                    await product.docs.first.reference.delete();
 
-                  await product.docs.first.reference.delete();
-
-                  final QuerySnapshot query = await firestore
-                      .collection("products")
-                      .where("uId", isEqualTo: widget.product.uId)
-                      .get();
-                  await query.docs.first.reference.delete();
+                    final QuerySnapshot query = await FIRESTORE
+                        .collection("products")
+                        .where("uId", isEqualTo: widget.product.uId)
+                        .get();
+                    await query.docs.first.reference.delete();
+                  } catch (e, s) {
+                    log(e.toString());
+                    log(s.toString());
+                  }
                 },
                 title: "Yes",
               ),

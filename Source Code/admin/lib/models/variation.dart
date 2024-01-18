@@ -4,6 +4,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '/tools/extensions.dart';
+
 class Variation {
   late String _name;
   late List<Option> _options;
@@ -59,11 +61,8 @@ class Option {
 
   Option({required String label, dynamic color}) {
     _label = label;
-    _color = color != null && color is String
-        ? Color(
-            int.parse("0xff$color"),
-          )
-        : color;
+    _color =
+        color != null && color is String ? Color("0xff$color".toInt()) : color;
   }
 
   Map<dynamic, dynamic> toJson() {

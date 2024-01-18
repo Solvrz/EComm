@@ -8,6 +8,7 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '/config/constant.dart';
 import '/models/product.dart';
+import '/tools/extensions.dart';
 import '/ui/pages/payment/payment.dart';
 import '/ui/widgets/information_sheet.dart';
 
@@ -489,7 +490,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
           "payment_mode": paymentMethod == paymentMethods.first
               ? "Pay On Delivery"
               : "Prepaid",
-          "product_list": bag.products
+          "product_list": BAG.products
               .map<String>((bagItem) {
                 final Product product = bagItem.product;
                 final String variationText = product.selected!.isNotEmpty
@@ -524,14 +525,14 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
         "payment_mode": paymentMethod == paymentMethods.first
             ? "Pay On Delivery"
             : "Prepaid",
-        "products": bag.products.map((e) {
+        "products": BAG.products.map((e) {
           return {"product": e.product.toJson(), "quantity": e.quantity};
         }).toList(),
       }),
     );
     await preferences.setStringList("orders", pastOrders);
 
-    await firestore.collection("orders").add({
+    await FIRESTORE.collection("orders").add({
       "name": selectedInfo!["name"],
       "phone": selectedInfo!["phone"],
       "address": selectedInfo!["address"],
@@ -542,7 +543,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
       "price": widget.price.toString(),
       "payment_mode":
           paymentMethod == paymentMethods.first ? "Pay On Delivery" : "Prepaid",
-      "products": bag.products.map((e) {
+      "products": BAG.products.map((e) {
         return {"product": e.product.toJson(), "quantity": e.quantity};
       }).toList(),
     });
