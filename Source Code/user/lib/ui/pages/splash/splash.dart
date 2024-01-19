@@ -79,8 +79,8 @@ class _SplashPageState extends State<SplashPage>
           width: double.infinity,
           height: double.infinity,
           color: holeSize.value > 1.5
-              ? Theme.of(context).colorScheme.background
-              : const Color(0xfff23558),
+              ? theme.colorScheme.background
+              : theme.colorScheme.primary,
         ),
         if (holeSize.value < 1.5)
           Center(

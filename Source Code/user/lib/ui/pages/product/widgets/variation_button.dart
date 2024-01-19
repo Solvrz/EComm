@@ -41,7 +41,7 @@ class _VariationButtonState extends State<VariationButton> {
             child: Text(
               widget.variation.name,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: screenSize.height(22),
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.2,
@@ -90,8 +90,7 @@ class _VariationButtonState extends State<VariationButton> {
                                   style: TextStyle(
                                     fontSize: screenSize.height(13),
                                     fontWeight: FontWeight.w600,
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                   ),
                                 )
                               : null,
@@ -103,10 +102,10 @@ class _VariationButtonState extends State<VariationButton> {
                       style: widget.selected == index
                           ? TextStyle(
                               fontSize: screenSize.height(12),
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                             )
                           : TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontSize: 0,
                             ),
                       child: Text(widget.variation.options[index].label),
@@ -144,7 +143,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          color: Theme.of(context).colorScheme.background,
+          color: theme.colorScheme.background,
         ),
         padding: screenSize.all(24),
         child: Column(
@@ -171,7 +170,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                       child: CachedNetworkImage(
                         imageUrl: widget.product.images[0],
                         placeholder: (context, url) => Shimmer.fromColors(
-                          baseColor: Theme.of(context).highlightColor,
+                          baseColor: theme.highlightColor,
                           highlightColor: Colors.grey[100]!,
                           child: Container(color: Colors.grey),
                         ),
@@ -202,7 +201,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                           widget.product.name,
                           maxLines: 2,
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: theme.colorScheme.onPrimary,
                             fontSize: 22,
                             fontWeight: FontWeight.w500,
                             letterSpacing: -0.4,
@@ -214,7 +213,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                           Text(
                             "$CURRENCY ${widget.product.price}",
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               fontFamily: "sans-serif-condensed",
@@ -224,10 +223,8 @@ class _AddProductSheetState extends State<AddProductSheet> {
                           Text(
                             "$CURRENCY ${widget.product.mrp}",
                             style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimary
-                                  .withOpacity(0.7),
+                              color:
+                                  theme.colorScheme.onPrimary.withOpacity(0.7),
                               decoration: TextDecoration.lineThrough,
                               fontSize: 18,
                               fontWeight: FontWeight.w800,
@@ -266,14 +263,11 @@ class _AddProductSheetState extends State<AddProductSheet> {
                         padding: screenSize.all(6),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).highlightColor,
+                          color: theme.highlightColor,
                         ),
                         child: Icon(
                           Icons.remove,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onPrimary
-                              .withOpacity(0.5),
+                          color: theme.colorScheme.onPrimary.withOpacity(0.5),
                         ),
                       ),
                     ),
@@ -296,14 +290,11 @@ class _AddProductSheetState extends State<AddProductSheet> {
                         padding: screenSize.all(6),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).highlightColor,
+                          color: theme.highlightColor,
                         ),
                         child: Icon(
                           Icons.add,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onPrimary
-                              .withOpacity(0.5),
+                          color: theme.colorScheme.onPrimary.withOpacity(0.5),
                         ),
                       ),
                     ),
@@ -322,7 +313,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                       padding:
                           screenSize.symmetric(vertical: 18, horizontal: 24),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).highlightColor,
+                        color: theme.highlightColor,
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Center(
@@ -332,10 +323,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.2,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimary
-                                .withOpacity(0.8),
+                            color: theme.colorScheme.onPrimary.withOpacity(0.8),
                           ),
                         ),
                       ),
@@ -353,7 +341,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                       padding:
                           screenSize.symmetric(vertical: 18, horizontal: 24),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.9),
+                        color: theme.primaryColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Center(
@@ -363,7 +351,7 @@ class _AddProductSheetState extends State<AddProductSheet> {
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.2,
-                            color: Theme.of(context).colorScheme.onSecondary,
+                            color: theme.colorScheme.onSecondary,
                           ),
                         ),
                       ),

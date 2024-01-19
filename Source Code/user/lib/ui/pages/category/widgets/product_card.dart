@@ -65,8 +65,8 @@ class _ProductCardState extends State<ProductCard> {
                             ? Icons.favorite
                             : Icons.favorite_outline,
                         color: WISHLIST.containsProduct(widget.product)
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).colorScheme.onPrimary,
+                            ? theme.primaryColor
+                            : theme.colorScheme.onPrimary,
                       ),
                     ),
                   ),
@@ -97,7 +97,7 @@ class _ProductCardState extends State<ProductCard> {
                                 ),
                                 placeholder: (context, url) =>
                                     Shimmer.fromColors(
-                                  baseColor: Theme.of(context).highlightColor,
+                                  baseColor: theme.highlightColor,
                                   highlightColor: Colors.grey[100]!,
                                   child: Container(color: Colors.grey),
                                 ),
@@ -124,7 +124,7 @@ class _ProductCardState extends State<ProductCard> {
                 Text(
                   "$CURRENCY ${widget.product.price}",
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                     fontSize: screenSize.height(20),
                     fontWeight: FontWeight.bold,
                     fontFamily: "sans-serif-condensed",
@@ -137,10 +137,7 @@ class _ProductCardState extends State<ProductCard> {
                         .replaceAll("", "\u{200B}"),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onPrimary
-                          .withOpacity(0.7),
+                      color: theme.colorScheme.onPrimary.withOpacity(0.7),
                       decoration: TextDecoration.lineThrough,
                       fontSize: screenSize.height(18),
                       fontWeight: FontWeight.w800,
@@ -157,7 +154,7 @@ class _ProductCardState extends State<ProductCard> {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   fontSize: screenSize.height(20),
                   letterSpacing: 0.3,
                   fontWeight: FontWeight.w800,

@@ -96,11 +96,11 @@ class _WishlistPageState extends State<WishlistPage> {
                   height: MediaQuery.of(context).size.height / 6,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: Theme.of(context).primaryColor,
+                    color: theme.primaryColor,
                   ),
                   child: Icon(
                     Icons.delete,
-                    color: Theme.of(context).colorScheme.onSecondary,
+                    color: theme.colorScheme.onSecondary,
                     size: 32,
                   ),
                 ),
@@ -119,7 +119,7 @@ class _WishlistPageState extends State<WishlistPage> {
             height: MediaQuery.of(context).size.height / 6,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
-              color: Theme.of(context).highlightColor,
+              color: theme.highlightColor,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -135,7 +135,7 @@ class _WishlistPageState extends State<WishlistPage> {
                             child: CachedNetworkImage(
                               imageUrl: product.images[0],
                               placeholder: (context, url) => Shimmer.fromColors(
-                                baseColor: Theme.of(context).highlightColor,
+                                baseColor: theme.highlightColor,
                                 highlightColor: Colors.grey[100]!,
                                 child: Container(color: Colors.grey),
                               ),
@@ -155,8 +155,7 @@ class _WishlistPageState extends State<WishlistPage> {
                                 child: Text(
                                   product.name,
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                     fontSize: screenSize.height(22),
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: -0.4,
@@ -168,9 +167,7 @@ class _WishlistPageState extends State<WishlistPage> {
                                   Text(
                                     "$CURRENCY ${product.price}",
                                     style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
+                                      color: theme.colorScheme.onPrimary,
                                       fontSize: screenSize.height(21),
                                       fontWeight: FontWeight.bold,
                                       fontFamily: "sans-serif-condensed",
@@ -183,9 +180,7 @@ class _WishlistPageState extends State<WishlistPage> {
                                           .replaceAll("", "\u{200B}"),
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary
+                                        color: theme.colorScheme.onPrimary
                                             .withOpacity(0.7),
                                         decoration: TextDecoration.lineThrough,
                                         fontSize: screenSize.height(18),

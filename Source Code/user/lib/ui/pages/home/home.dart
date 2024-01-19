@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                     "Deliver To",
                     style: TextStyle(
                       fontSize: screenSize.height(18),
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: theme.colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0.2,
                       fontFamily: "sans-serif-condensed",
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Icon(
                       Icons.location_on_outlined,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: theme.colorScheme.onPrimary,
                       size: 20,
                     ),
                     const SizedBox(width: 2),
@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 18,
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: theme.colorScheme.onPrimary,
                             letterSpacing: 0.2,
                             fontWeight: FontWeight.bold,
                             fontFamily: "sans-serif-condensed",
@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                         child: Text(
                           BAG.products.length.toString(),
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: theme.colorScheme.onPrimary,
                           ),
                         ),
                       ),
@@ -156,10 +156,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: Container(
                     padding: screenSize.symmetric(vertical: 4, horizontal: 24),
-                    color: Theme.of(context)
-                        .colorScheme
-                        .background
-                        .withOpacity(0.8),
+                    color: theme.colorScheme.background.withOpacity(0.8),
                     height: screenSize.height(75),
                     width: MediaQuery.of(context).size.width,
                     child: Center(
@@ -169,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                           Icon(
                             Icons.call,
                             size: screenSize.height(52),
-                            color: Theme.of(context).primaryColor,
+                            color: theme.primaryColor,
                           ),
                           const SizedBox(width: 15),
                           Column(
@@ -177,8 +174,7 @@ class _HomePageState extends State<HomePage> {
                               Text(
                                 "Call or Whatsapp",
                                 style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
+                                  color: theme.colorScheme.onPrimary,
                                   fontSize: screenSize.height(20),
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -188,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                                 style: TextStyle(
                                   fontSize: screenSize.height(20),
                                   fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor,
+                                  color: theme.primaryColor,
                                 ),
                               ),
                             ],
@@ -216,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                       height: screenSize.height(50),
                       padding: screenSize.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).highlightColor,
+                        color: theme.highlightColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
@@ -344,8 +340,7 @@ class _HomePageState extends State<HomePage> {
                                     fontSize: screenSize.height(30),
                                     letterSpacing: 0.2,
                                     fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                   ),
                                 ),
                                 SizedBox(
@@ -420,8 +415,7 @@ class _HomePageState extends State<HomePage> {
                                                             "sans-serif-condensed",
                                                         fontSize: screenSize
                                                             .height(16),
-                                                        color: Theme.of(context)
-                                                            .colorScheme
+                                                        color: theme.colorScheme
                                                             .onPrimary,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -470,9 +464,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "Featured Products",
                               style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimary
+                                color: theme.colorScheme.onPrimary
                                     .withOpacity(0.8),
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
@@ -519,9 +511,8 @@ class _HomePageState extends State<HomePage> {
                                                   fontSize:
                                                       screenSize.height(28),
                                                   fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onSecondary
+                                                  color: theme
+                                                      .colorScheme.onSecondary
                                                       .withOpacity(0.8),
                                                 ),
                                               ),
@@ -563,7 +554,7 @@ class _HomePageState extends State<HomePage> {
         height: screenSize.height(110),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.background,
+          color: theme.colorScheme.background,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -577,7 +568,7 @@ class _HomePageState extends State<HomePage> {
                       CachedNetworkImage(
                         imageUrl: product.images[0],
                         placeholder: (context, url) => Shimmer.fromColors(
-                          baseColor: Theme.of(context).highlightColor,
+                          baseColor: theme.highlightColor,
                           highlightColor: Colors.grey[100]!,
                           child: Container(color: Colors.grey),
                         ),
@@ -599,7 +590,7 @@ class _HomePageState extends State<HomePage> {
                             child: Text(
                               product.name,
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
+                                color: theme.colorScheme.onPrimary,
                                 fontSize: screenSize.height(22),
                                 fontWeight: FontWeight.w500,
                                 letterSpacing: -0.4,
@@ -611,8 +602,7 @@ class _HomePageState extends State<HomePage> {
                               Text(
                                 "$CURRENCY ${product.price}",
                                 style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
+                                  color: theme.colorScheme.onPrimary,
                                   fontSize: screenSize.height(21),
                                   fontWeight: FontWeight.bold,
                                   fontFamily: "sans-serif-condensed",
@@ -625,9 +615,7 @@ class _HomePageState extends State<HomePage> {
                                       .replaceAll("", "\u{200B}"),
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary
+                                    color: theme.colorScheme.onPrimary
                                         .withOpacity(0.7),
                                     decoration: TextDecoration.lineThrough,
                                     fontSize: screenSize.height(18),

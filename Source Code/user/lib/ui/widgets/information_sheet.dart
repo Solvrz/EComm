@@ -45,7 +45,7 @@ class _InformationSheetState extends State<InformationSheet> {
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
-            color: Theme.of(context).colorScheme.background,
+            color: theme.colorScheme.background,
           ),
           padding: screenSize.all(16),
           child: Column(
@@ -57,7 +57,7 @@ class _InformationSheetState extends State<InformationSheet> {
                     child: Text(
                       "Delivery Information",
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: theme.colorScheme.onPrimary,
                         fontSize: screenSize.height(24),
                         fontWeight: FontWeight.bold,
                       ),
@@ -75,7 +75,7 @@ class _InformationSheetState extends State<InformationSheet> {
                         padding: screenSize.all(8),
                         child: Icon(
                           Icons.close,
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -110,9 +110,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                     Icons.home_outlined,
                                     size: 28,
                                     color: isSelected
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary
+                                        ? theme.colorScheme.onPrimary
                                         : Colors.grey[600],
                                   ),
                                   trailing: SizedBox(
@@ -183,9 +181,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                     "${address["name"].toString().capitalize()}, ${address["phone"]}",
                                     style: TextStyle(
                                       color: isSelected
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary
+                                          ? theme.colorScheme.onPrimary
                                           : Colors.grey[600],
                                       fontWeight: FontWeight.bold,
                                       fontSize: screenSize.height(20),
@@ -197,9 +193,7 @@ class _InformationSheetState extends State<InformationSheet> {
                                     child: Text(
                                       address["address"],
                                       style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
+                                        color: theme.colorScheme.onPrimary,
                                         letterSpacing: 0.2,
                                       ),
                                     ),
@@ -215,8 +209,7 @@ class _InformationSheetState extends State<InformationSheet> {
                               child: Text(
                                 "No Information Added",
                                 style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
+                                  color: theme.colorScheme.onPrimary,
                                   fontSize: screenSize.height(20),
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -239,7 +232,7 @@ class _InformationSheetState extends State<InformationSheet> {
                       child: Container(
                         height: 40,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
+                          color: theme.primaryColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
@@ -248,7 +241,7 @@ class _InformationSheetState extends State<InformationSheet> {
                             style: TextStyle(
                               fontSize: screenSize.height(18),
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.background,
+                              color: theme.colorScheme.background,
                             ),
                           ),
                         ),
@@ -342,7 +335,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          color: Theme.of(context).colorScheme.background,
+          color: theme.colorScheme.background,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -358,14 +351,14 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                     padding: screenSize.fromLTRB(0, 8, 8, 8),
                     child: Icon(
                       Icons.arrow_back_ios,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: theme.colorScheme.onPrimary,
                     ),
                   ),
                 ),
                 Text(
                   "${widget.edit ? "Edit" : "Add"} Information",
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                     fontSize: screenSize.height(24),
                     fontWeight: FontWeight.bold,
                   ),
@@ -385,7 +378,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                   Text(
                     data["title"],
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: theme.colorScheme.onPrimary,
                       fontSize: screenSize.height(16),
                       fontWeight: FontWeight.bold,
                     ),
@@ -402,7 +395,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                     minLines: 1,
                     maxLines: data["maxLines"] ?? 3,
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: theme.colorScheme.onPrimary,
                       fontSize: screenSize.height(16),
                       fontWeight: FontWeight.w500,
                     ),
@@ -412,7 +405,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                       data["errorMessage"],
                       style: TextStyle(
                         fontSize: screenSize.height(15),
-                        color: Theme.of(context).primaryColor,
+                        color: theme.primaryColor,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -479,7 +472,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
+                  color: theme.primaryColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
@@ -488,7 +481,7 @@ class _AddInformationSheetState extends State<AddInformationSheet> {
                     style: TextStyle(
                       fontSize: screenSize.height(18),
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.background,
+                      color: theme.colorScheme.background,
                     ),
                   ),
                 ),

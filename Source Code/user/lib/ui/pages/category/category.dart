@@ -46,7 +46,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       child: Text(
                         BAG.products.length.toString(),
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                     ),

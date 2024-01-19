@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '/config/constant.dart';
 import '/ui/pages/home/export.dart';
 
 class SplashPage extends StatefulWidget {
@@ -55,7 +56,7 @@ class _SplashPageState extends State<SplashPage>
           width: double.infinity,
           height: double.infinity,
           color: holeSize.value > 1.5
-              ? Theme.of(context).colorScheme.background
+              ? theme.colorScheme.background
               : const Color(0xfff23558),
         ),
         if (holeSize.value < 1.5)

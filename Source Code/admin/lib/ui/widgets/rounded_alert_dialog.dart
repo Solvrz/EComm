@@ -36,7 +36,7 @@ class RoundedAlertDialog extends StatelessWidget {
               title,
               textAlign: centerTitle ? TextAlign.center : TextAlign.left,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: titleSize,
                 fontWeight: FontWeight.bold,
               ),
@@ -50,7 +50,7 @@ class RoundedAlertDialog extends StatelessWidget {
               description,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: descriptionSize,
               ),
             ),

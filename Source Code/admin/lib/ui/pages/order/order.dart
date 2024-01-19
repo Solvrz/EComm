@@ -72,8 +72,7 @@ class _OrderPageState extends State<OrderPage> {
                                   "Undelivered Orders",
                                   style: TextStyle(
                                     fontSize: screenSize.height(24),
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -93,8 +92,7 @@ class _OrderPageState extends State<OrderPage> {
                                   "Delivered Orders",
                                   style: TextStyle(
                                     fontSize: screenSize.height(24),
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -182,12 +180,12 @@ class _OrderPageState extends State<OrderPage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
                       color: !order["status"]
-                          ? Theme.of(context).primaryColor
+                          ? theme.primaryColor
                           : Colors.greenAccent,
                     ),
                     child: Icon(
                       !order["status"] ? Icons.local_shipping : Icons.home,
-                      color: Theme.of(context).colorScheme.onSecondary,
+                      color: theme.colorScheme.onSecondary,
                       size: 32,
                     ),
                   ),
@@ -215,7 +213,7 @@ class _OrderPageState extends State<OrderPage> {
                             Text(
                               "Tap for More Details",
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
+                                color: theme.colorScheme.onPrimary,
                                 fontSize: screenSize.height(18),
                                 fontWeight: FontWeight.w500,
                               ),

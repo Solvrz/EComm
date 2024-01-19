@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import '/config/constant.dart';
 import '/ui/widgets/custom_app_bar.dart';
 
 // ignore: must_be_immutable
@@ -43,7 +44,7 @@ class _ImagePageState extends State<ImagePage> {
           context: context,
           title: widget.title,
           color: Colors.grey[900],
-          textColor: Theme.of(context).colorScheme.background,
+          textColor: theme.colorScheme.background,
         ),
         body: Stack(
           children: [
@@ -84,7 +85,7 @@ class _ImagePageState extends State<ImagePage> {
                 child: Icon(
                   Icons.arrow_left,
                   size: 30,
-                  color: Theme.of(context).colorScheme.background,
+                  color: theme.colorScheme.background,
                 ),
               ),
             if (widget.currentIndex < widget.images.length - 1)
@@ -95,7 +96,7 @@ class _ImagePageState extends State<ImagePage> {
                 child: Icon(
                   Icons.arrow_right,
                   size: 30,
-                  color: Theme.of(context).colorScheme.background,
+                  color: theme.colorScheme.background,
                 ),
               ),
           ],

@@ -44,6 +44,8 @@ class ECommerceAdmin extends StatelessWidget {
       theme: ECommAdminTheme.of(context),
       builder: (context, widget) {
         screenSize = ScreenSize(context: context);
+        theme = ECommAdminTheme.of(context);
+
         return widget!;
       },
       title: "EComm (Admin)",

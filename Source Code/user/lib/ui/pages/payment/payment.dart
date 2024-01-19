@@ -86,7 +86,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           : "Payment Failed",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                     fontSize: screenSize.height(24),
                     fontWeight: FontWeight.bold,
                   ),
@@ -97,7 +97,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     args.msg,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: theme.colorScheme.onPrimary,
                       fontSize: screenSize.height(20),
                       fontWeight: FontWeight.w400,
                     ),

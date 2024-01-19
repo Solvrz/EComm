@@ -70,7 +70,7 @@ class OrderPage extends StatelessWidget {
                                     margin: screenSize.symmetric(vertical: 8),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      color: Theme.of(context).highlightColor,
+                                      color: theme.highlightColor,
                                     ),
                                     child: Padding(
                                       padding: screenSize.all(16),
@@ -85,9 +85,8 @@ class OrderPage extends StatelessWidget {
                                                 Text(
                                                   "Tap for More Details",
                                                   style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onPrimary,
+                                                    color: theme
+                                                        .colorScheme.onPrimary,
                                                     fontSize:
                                                         screenSize.height(18),
                                                     fontFamily:

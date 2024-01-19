@@ -32,7 +32,7 @@ class InfoWidget extends StatelessWidget {
             Text(
               "Name: ",
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: screenSize.height(20),
                 fontWeight: FontWeight.bold,
               ),
@@ -46,7 +46,7 @@ class InfoWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: screenSize.height(18),
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -56,7 +56,7 @@ class InfoWidget extends StatelessWidget {
                 Text(
                   "Date: ",
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                     fontSize: screenSize.height(20),
                     fontWeight: FontWeight.bold,
                   ),
@@ -66,7 +66,7 @@ class InfoWidget extends StatelessWidget {
                       .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                     fontSize: screenSize.height(18),
                     fontWeight: FontWeight.w500,
                   ),
@@ -81,7 +81,7 @@ class InfoWidget extends StatelessWidget {
             Text(
               "Phone: ",
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: screenSize.height(20),
                 fontWeight: FontWeight.bold,
               ),
@@ -91,7 +91,7 @@ class InfoWidget extends StatelessWidget {
                 "${order['phone']}",
                 style: TextStyle(
                   fontSize: screenSize.height(18),
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -101,7 +101,7 @@ class InfoWidget extends StatelessWidget {
                 Text(
                   "Time: ",
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                     fontSize: screenSize.height(20),
                     fontWeight: FontWeight.bold,
                   ),
@@ -111,7 +111,7 @@ class InfoWidget extends StatelessWidget {
                       .replaceAll("", "\u{200B}"),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                     fontSize: screenSize.height(18),
                     fontWeight: FontWeight.w500,
                   ),
@@ -126,7 +126,7 @@ class InfoWidget extends StatelessWidget {
               Text(
                 "Email: ",
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   fontSize: screenSize.height(20),
                   fontWeight: FontWeight.bold,
                 ),
@@ -134,7 +134,7 @@ class InfoWidget extends StatelessWidget {
               Text(
                 "${order['email']}",
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   fontSize: screenSize.height(18),
                   fontWeight: FontWeight.w500,
                 ),
@@ -147,7 +147,7 @@ class InfoWidget extends StatelessWidget {
               Text(
                 "Address: ",
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   fontSize: screenSize.height(20),
                   fontWeight: FontWeight.bold,
                 ),
@@ -159,7 +159,7 @@ class InfoWidget extends StatelessWidget {
                   overflow: shortAddress ? null : TextOverflow.ellipsis,
                   maxLines: shortAddress ? 3 : 1,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                     fontSize: screenSize.height(18),
                     fontWeight: FontWeight.w500,
                   ),
@@ -173,7 +173,7 @@ class InfoWidget extends StatelessWidget {
               Text(
                 "Payment Mode: ",
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   fontSize: screenSize.height(20),
                   fontWeight: FontWeight.bold,
                 ),
@@ -182,7 +182,7 @@ class InfoWidget extends StatelessWidget {
                 "${order['payment_mode']}".replaceAll("", "\u{200B}"),
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   fontSize: screenSize.height(18),
                   fontWeight: FontWeight.w500,
                 ),
@@ -196,7 +196,7 @@ class InfoWidget extends StatelessWidget {
             Text(
               "Total Price: ",
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: screenSize.height(20),
                 fontWeight: FontWeight.bold,
               ),
@@ -205,7 +205,7 @@ class InfoWidget extends StatelessWidget {
               "$CURRENCY ${order['price']}".replaceAll("", "\u{200B}"),
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: screenSize.height(18),
                 fontWeight: FontWeight.w500,
               ),
@@ -217,7 +217,7 @@ class InfoWidget extends StatelessWidget {
             Text(
               "Total Items: ",
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: screenSize.height(20),
                 fontWeight: FontWeight.bold,
               ),
@@ -226,7 +226,7 @@ class InfoWidget extends StatelessWidget {
               "${order["products"].length} items".replaceAll("", "\u{200B}"),
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: screenSize.height(18),
                 fontWeight: FontWeight.w500,
               ),
@@ -253,7 +253,7 @@ class OrderSheet extends StatelessWidget {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          color: Theme.of(context).colorScheme.background,
+          color: theme.colorScheme.background,
         ),
         padding: screenSize.all(16),
         child: Column(
@@ -262,7 +262,7 @@ class OrderSheet extends StatelessWidget {
             Text(
               "Order Summary",
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: screenSize.height(32),
                 fontWeight: FontWeight.bold,
               ),
@@ -338,9 +338,8 @@ class OrderSheet extends StatelessWidget {
                                           Text(
                                             "$CURRENCY ${product.price}",
                                             style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
+                                              color:
+                                                  theme.colorScheme.onPrimary,
                                               fontSize: screenSize.height(20),
                                               fontWeight: FontWeight.bold,
                                               fontFamily:
@@ -351,9 +350,7 @@ class OrderSheet extends StatelessWidget {
                                           Text(
                                             "$CURRENCY ${product.mrp}",
                                             style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary
+                                              color: theme.colorScheme.onPrimary
                                                   .withOpacity(0.7),
                                               decoration:
                                                   TextDecoration.lineThrough,
@@ -399,9 +396,8 @@ class OrderSheet extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w600,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onPrimary,
+                                                  color: theme
+                                                      .colorScheme.onPrimary,
                                                 ),
                                               )
                                             : null,
@@ -423,7 +419,7 @@ class OrderSheet extends StatelessWidget {
             Text(
               "Delivery Information:",
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.onPrimary,
                 fontSize: screenSize.height(26),
                 fontWeight: FontWeight.bold,
               ),

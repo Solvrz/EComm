@@ -117,7 +117,7 @@ class _AddProductPageState extends State<AddProductPage> {
                     Icons.arrow_back_ios,
                     color: posting
                         ? Colors.grey[200]
-                        : Theme.of(context).colorScheme.onPrimary,
+                        : theme.colorScheme.onPrimary,
                     size: 30,
                   ),
                 ),
@@ -137,9 +137,8 @@ class _AddProductPageState extends State<AddProductPage> {
                         child: Text(
                           "Post",
                           style: TextStyle(
-                            color: posting
-                                ? Colors.grey[200]
-                                : Theme.of(context).primaryColor,
+                            color:
+                                posting ? Colors.grey[200] : theme.primaryColor,
                             fontSize: screenSize.height(20),
                             fontWeight: FontWeight.bold,
                           ),
@@ -181,9 +180,7 @@ class _AddProductPageState extends State<AddProductPage> {
                                     errorBorder: InputBorder.none,
                                     hintText: "Product Name",
                                     hintStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary
+                                      color: theme.colorScheme.onPrimary
                                           .withOpacity(0.7),
                                       fontSize: screenSize.height(28),
                                       fontWeight: FontWeight.w600,
@@ -196,8 +193,7 @@ class _AddProductPageState extends State<AddProductPage> {
                                     }
                                   },
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                     fontSize: screenSize.height(28),
                                     fontWeight: FontWeight.w600,
                                     fontFamily: "sans-serif-condensed",
@@ -246,7 +242,7 @@ class _AddProductPageState extends State<AddProductPage> {
                                   padding: screenSize.all(8),
                                   child: Icon(
                                     Icons.add_photo_alternate,
-                                    color: Theme.of(context).primaryColor,
+                                    color: theme.primaryColor,
                                     size: 34,
                                   ),
                                 ),
@@ -456,7 +452,7 @@ class _AddProductPageState extends State<AddProductPage> {
                           child: Text(
                             "Featured",
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontSize: screenSize.height(22),
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.2,
@@ -472,7 +468,7 @@ class _AddProductPageState extends State<AddProductPage> {
                                 featured = value;
                               });
                             },
-                            activeColor: Theme.of(context).primaryColor,
+                            activeColor: theme.primaryColor,
                           ),
                         ),
                       ],
@@ -486,7 +482,7 @@ class _AddProductPageState extends State<AddProductPage> {
                           child: Text(
                             "MRP",
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontSize: screenSize.height(22),
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.2,
@@ -507,9 +503,7 @@ class _AddProductPageState extends State<AddProductPage> {
                               prefixText: "$CURRENCY ",
                               hintText: "MRP",
                               hintStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimary
+                                color: theme.colorScheme.onPrimary
                                     .withOpacity(0.7),
                                 fontSize: screenSize.height(20),
                                 fontWeight: FontWeight.w600,
@@ -523,7 +517,7 @@ class _AddProductPageState extends State<AddProductPage> {
                             },
                             cursorColor: Colors.grey,
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontSize: screenSize.height(20),
                               fontWeight: FontWeight.w600,
                               letterSpacing: -0.4,
@@ -541,7 +535,7 @@ class _AddProductPageState extends State<AddProductPage> {
                           child: Text(
                             "Actual Price",
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontSize: screenSize.height(22),
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.2,
@@ -562,9 +556,7 @@ class _AddProductPageState extends State<AddProductPage> {
                               prefixText: "$CURRENCY ",
                               hintText: "Price",
                               hintStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimary
+                                color: theme.colorScheme.onPrimary
                                     .withOpacity(0.7),
                                 fontSize: screenSize.height(20),
                                 fontWeight: FontWeight.w600,
@@ -578,7 +570,7 @@ class _AddProductPageState extends State<AddProductPage> {
                               }
                             },
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontSize: screenSize.height(20),
                               fontWeight: FontWeight.w600,
                               letterSpacing: -0.4,
@@ -602,7 +594,7 @@ class _AddProductPageState extends State<AddProductPage> {
       return () => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               elevation: 10,
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: theme.primaryColor,
               content: const Text(
                 "Name can't be Empty",
                 textAlign: TextAlign.center,
@@ -614,7 +606,7 @@ class _AddProductPageState extends State<AddProductPage> {
       return () => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               elevation: 10,
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: theme.primaryColor,
               content: const Text(
                 "Actual Price can't be Empty",
                 textAlign: TextAlign.center,
@@ -626,7 +618,7 @@ class _AddProductPageState extends State<AddProductPage> {
       return () => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               elevation: 10,
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: theme.primaryColor,
               content: const Text(
                 "MRP can't be Empty",
                 textAlign: TextAlign.center,
@@ -638,7 +630,7 @@ class _AddProductPageState extends State<AddProductPage> {
       return () => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               elevation: 10,
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: theme.primaryColor,
               content: const Text(
                 "Actual Price can't be more than MRP",
                 textAlign: TextAlign.center,
@@ -666,7 +658,7 @@ class _AddProductPageState extends State<AddProductPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 elevation: 10,
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: theme.primaryColor,
                 content: Text(
                   "Uploading Image (${i + 1}/${imageFiles.length})",
                   textAlign: TextAlign.center,
@@ -697,7 +689,7 @@ class _AddProductPageState extends State<AddProductPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   elevation: 10,
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: theme.primaryColor,
                   content: Text(
                     "Deleting Image (${i + 1}/${deletedImages.length})",
                     textAlign: TextAlign.center,
@@ -739,7 +731,7 @@ class _AddProductPageState extends State<AddProductPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 elevation: 10,
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: theme.primaryColor,
                 content: const Text(
                   "Deleted Images",
                   textAlign: TextAlign.center,
@@ -760,7 +752,7 @@ class _AddProductPageState extends State<AddProductPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   elevation: 10,
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: theme.primaryColor,
                   content: const Text(
                     "Uploaded Images",
                     textAlign: TextAlign.center,
@@ -871,7 +863,7 @@ class _AddProductPageState extends State<AddProductPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 elevation: 10,
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: theme.primaryColor,
                 content: Text(
                   args.product != null
                       ? "Product Updated Successfully"
@@ -894,7 +886,7 @@ class _AddProductPageState extends State<AddProductPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 elevation: 10,
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: theme.primaryColor,
                 content: const Text(
                   "Sorry, The product couldn't be added",
                   textAlign: TextAlign.center,
@@ -932,11 +924,11 @@ class _AddProductPageState extends State<AddProductPage> {
                 height: MediaQuery.of(context).size.height / 6,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
-                  color: Theme.of(context).primaryColor,
+                  color: theme.primaryColor,
                 ),
                 child: Icon(
                   Icons.delete,
-                  color: Theme.of(context).colorScheme.onSecondary,
+                  color: theme.colorScheme.onSecondary,
                   size: 32,
                 ),
               ),
@@ -958,17 +950,14 @@ class _AddProductPageState extends State<AddProductPage> {
                   border: InputBorder.none,
                   hintText: "Name",
                   hintStyle: TextStyle(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onPrimary
-                        .withOpacity(0.7),
+                    color: theme.colorScheme.onPrimary.withOpacity(0.7),
                     fontSize: screenSize.height(22),
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.2,
                   ),
                 ),
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   fontSize: screenSize.height(22),
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.2,
@@ -1036,9 +1025,7 @@ class _AddProductPageState extends State<AddProductPage> {
                                                 BorderRadius.circular(50),
                                             color: notTrans
                                                 ? color
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .background,
+                                                : theme.colorScheme.background,
                                             boxShadow: notTrans
                                                 ? [
                                                     BoxShadow(
@@ -1180,9 +1167,7 @@ class _AddProductPageState extends State<AddProductPage> {
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary,
+                                          color: theme.colorScheme.onPrimary,
                                         ),
                                       )
                                     : null,

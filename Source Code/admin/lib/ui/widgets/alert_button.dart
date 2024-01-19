@@ -23,7 +23,7 @@ class AlertButton extends StatelessWidget {
     return MaterialButton(
       highlightColor: Colors.transparent,
       padding: screenSize.symmetric(vertical: 12),
-      color: backgroundColor ?? Theme.of(context).primaryColor,
+      color: backgroundColor ?? theme.primaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius ?? BorderRadius.circular(8),
       ),
@@ -31,7 +31,7 @@ class AlertButton extends StatelessWidget {
       child: Text(
         title,
         style: TextStyle(
-          color: Theme.of(context).colorScheme.background,
+          color: theme.colorScheme.background,
           fontSize: titleSize,
           fontWeight: FontWeight.bold,
         ),

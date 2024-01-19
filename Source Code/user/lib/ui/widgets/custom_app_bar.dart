@@ -29,7 +29,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      backgroundColor: color ?? Theme.of(context).colorScheme.background,
+      backgroundColor: color ?? theme.colorScheme.background,
       elevation: elevation,
       toolbarHeight: 65,
       title: Text(

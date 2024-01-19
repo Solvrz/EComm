@@ -68,7 +68,7 @@ class _ProductPageState extends State<ProductPage> {
                       child: Text(
                         BAG.products.length.toString(),
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -93,7 +93,7 @@ class _ProductPageState extends State<ProductPage> {
                       child: Text(
                         product.name,
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                           fontSize: 28,
                           fontWeight: FontWeight.w600,
                           fontFamily: "sans-serif-condensed",
@@ -132,9 +132,8 @@ class _ProductPageState extends State<ProductPage> {
                                               imageUrl: image.toString(),
                                               placeholder: (context, url) =>
                                                   Shimmer.fromColors(
-                                                baseColor: Theme.of(context)
-                                                    .colorScheme
-                                                    .secondary,
+                                                baseColor:
+                                                    theme.colorScheme.secondary,
                                                 highlightColor:
                                                     Colors.grey[100]!,
                                                 child: Container(
@@ -219,8 +218,7 @@ class _ProductPageState extends State<ProductPage> {
                                 child: Text(
                                   "Price",
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                     fontSize: screenSize.height(22),
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.2,
@@ -230,8 +228,7 @@ class _ProductPageState extends State<ProductPage> {
                               Text(
                                 "$CURRENCY ${product.price}",
                                 style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
+                                  color: theme.colorScheme.onPrimary,
                                   fontSize: screenSize.height(22),
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: -0.4,
@@ -251,8 +248,7 @@ class _ProductPageState extends State<ProductPage> {
                                 child: Text(
                                   "MRP",
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                     fontSize: screenSize.height(22),
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.2,
@@ -262,8 +258,7 @@ class _ProductPageState extends State<ProductPage> {
                               Text(
                                 "$CURRENCY ${product.mrp}",
                                 style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
+                                  color: theme.colorScheme.onPrimary,
                                   decoration: TextDecoration.lineThrough,
                                   fontSize: screenSize.height(22),
                                   fontWeight: FontWeight.w600,
@@ -304,21 +299,15 @@ class _ProductPageState extends State<ProductPage> {
                         padding: screenSize.all(12),
                         decoration: BoxDecoration(
                           color: WISHLIST.containsProduct(product)
-                              ? Theme.of(context).primaryColor.withOpacity(0.9)
-                              : Theme.of(context).highlightColor,
+                              ? theme.primaryColor.withOpacity(0.9)
+                              : theme.highlightColor,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.favorite_outline,
                           color: WISHLIST.containsProduct(product)
-                              ? Theme.of(context)
-                                  .colorScheme
-                                  .onSecondary
-                                  .withOpacity(0.8)
-                              : Theme.of(context)
-                                  .colorScheme
-                                  .onPrimary
-                                  .withOpacity(0.3),
+                              ? theme.colorScheme.onSecondary.withOpacity(0.8)
+                              : theme.colorScheme.onPrimary.withOpacity(0.3),
                           size: 28,
                         ),
                       ),
@@ -331,7 +320,7 @@ class _ProductPageState extends State<ProductPage> {
                         ),
                         color: BAG.containsProduct(product)
                             ? Colors.grey[600]
-                            : Theme.of(context).primaryColor.withOpacity(0.9),
+                            : theme.primaryColor.withOpacity(0.9),
                         padding: screenSize.symmetric(vertical: 16),
                         child: Text(
                           BAG.containsProduct(product)
@@ -339,7 +328,7 @@ class _ProductPageState extends State<ProductPage> {
                               : "ADD TO BAG",
                           style: TextStyle(
                             fontSize: screenSize.height(20),
-                            color: Theme.of(context).colorScheme.background,
+                            color: theme.colorScheme.background,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

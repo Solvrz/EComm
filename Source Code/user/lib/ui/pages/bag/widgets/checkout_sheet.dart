@@ -150,7 +150,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          color: Theme.of(context).colorScheme.background,
+          color: theme.colorScheme.background,
         ),
         padding: screenSize.only(top: 8),
         child: Column(
@@ -167,14 +167,14 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                     padding: screenSize.all(16),
                     child: Icon(
                       Icons.close,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: theme.colorScheme.onPrimary,
                     ),
                   ),
                 ),
                 Text(
                   "Check Out",
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                     fontSize: screenSize.height(24),
                     fontWeight: FontWeight.bold,
                   ),
@@ -194,7 +194,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           Text(
                             "Name: ",
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontSize: screenSize.height(20),
                               fontWeight: FontWeight.bold,
                             ),
@@ -203,7 +203,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             selectedInfo!["name"].toString().capitalize(),
                             style: TextStyle(
                               fontSize: screenSize.height(18),
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -226,10 +226,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         child: Icon(
                           Icons.edit,
                           size: screenSize.height(25),
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onPrimary
-                              .withOpacity(0.8),
+                          color: theme.colorScheme.onPrimary.withOpacity(0.8),
                         ),
                       ),
                     ],
@@ -239,7 +236,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       Text(
                         "Phone: ",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                           fontSize: screenSize.height(20),
                           fontWeight: FontWeight.bold,
                         ),
@@ -248,7 +245,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                         "${selectedInfo!["phone"]}",
                         style: TextStyle(
                           fontSize: screenSize.height(18),
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -259,7 +256,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       Text(
                         "Email: ",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                           fontSize: screenSize.height(20),
                           fontWeight: FontWeight.bold,
                         ),
@@ -267,7 +264,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       Text(
                         "${selectedInfo!["email"]}",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                           fontSize: screenSize.height(18),
                           fontWeight: FontWeight.w500,
                         ),
@@ -279,7 +276,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       Text(
                         "Address: ",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                           fontSize: screenSize.height(20),
                           fontWeight: FontWeight.bold,
                         ),
@@ -290,7 +287,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                               .replaceAll("", "\u{200B}"),
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: theme.colorScheme.onPrimary,
                             fontSize: screenSize.height(18),
                             fontWeight: FontWeight.w500,
                           ),
@@ -306,7 +303,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                       Text(
                         "Payment Methods",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                           fontSize: screenSize.height(22),
                           fontWeight: FontWeight.bold,
                         ),
@@ -320,8 +317,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                 title: Text(
                                   value,
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                     fontSize: screenSize.height(18),
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -347,7 +343,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                             child: Text(
                               "Total:",
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
+                                color: theme.colorScheme.onPrimary,
                                 fontSize: screenSize.height(24),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -356,7 +352,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                           Text(
                             "$CURRENCY ",
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -365,7 +361,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                                 ? widget.price.toString()
                                 : widget.price.toStringAsFixed(2),
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                               fontSize: screenSize.height(24),
                               fontWeight: FontWeight.bold,
                             ),
@@ -454,7 +450,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 padding: screenSize.symmetric(vertical: 12, horizontal: 36),
-                color: Theme.of(context).primaryColor,
+                color: theme.primaryColor,
                 child: Text(
                   paymentMethod == paymentMethods.first
                       ? "Proceed To Buy"
@@ -462,7 +458,7 @@ class _CheckoutSheetState extends State<CheckoutSheet> {
                   style: TextStyle(
                     fontSize: screenSize.height(24),
                     fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onSecondary,
+                    color: theme.colorScheme.onSecondary,
                   ),
                 ),
               ),

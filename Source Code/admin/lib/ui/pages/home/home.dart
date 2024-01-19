@@ -107,10 +107,7 @@ class _HomePageState extends State<HomePage> {
                             fontSize: screenSize.height(28),
                             letterSpacing: 0.2,
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimary
-                                .withOpacity(0.8),
+                            color: theme.colorScheme.onPrimary.withOpacity(0.8),
                           ),
                         ),
                         GestureDetector(
@@ -144,9 +141,9 @@ class _HomePageState extends State<HomePage> {
                               final List<String> orderIds = [];
 
                               future.data!.docs.forEach((element) {
-                                if (!(element.data() as Map)["status"]) {
+                                if (!element.data()["status"]) {
                                   orders.add(
-                                    element.data() as Map,
+                                    element.data(),
                                   );
                                   orderIds.add(element.id);
                                 }
@@ -163,9 +160,7 @@ class _HomePageState extends State<HomePage> {
                                         style: TextStyle(
                                           fontSize: screenSize.height(28),
                                           fontWeight: FontWeight.bold,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSecondary
+                                          color: theme.colorScheme.onSecondary
                                               .withOpacity(0.8),
                                         ),
                                       ),
@@ -199,9 +194,7 @@ class _HomePageState extends State<HomePage> {
                                   style: TextStyle(
                                     fontSize: screenSize.height(28),
                                     fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondary
+                                    color: theme.colorScheme.onSecondary
                                         .withOpacity(0.8),
                                   ),
                                 ),
@@ -230,7 +223,7 @@ class _HomePageState extends State<HomePage> {
                       fontSize: screenSize.height(32),
                       letterSpacing: 0.2,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: theme.colorScheme.onPrimary,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -290,9 +283,7 @@ class _HomePageState extends State<HomePage> {
                                         style: TextStyle(
                                           fontFamily: "sans-serif-condensed",
                                           fontSize: screenSize.height(18),
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary,
+                                          color: theme.colorScheme.onPrimary,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -359,12 +350,12 @@ Widget _buildItem(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: !order["status"]
-                        ? Theme.of(context).primaryColor
+                        ? theme.primaryColor
                         : Colors.greenAccent,
                   ),
                   child: Icon(
                     !order["status"] ? Icons.local_shipping : Icons.home,
-                    color: Theme.of(context).colorScheme.onSecondary,
+                    color: theme.colorScheme.onSecondary,
                     size: 32,
                   ),
                 ),

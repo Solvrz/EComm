@@ -33,6 +33,8 @@ class EComm extends StatelessWidget {
       theme: ECommTheme.of(context),
       builder: (context, widget) {
         screenSize = ScreenSize(context: context);
+        theme = ECommTheme.of(context);
+
         return widget!;
       },
       title: "EComm",

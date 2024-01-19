@@ -20,7 +20,7 @@ class ProducPage extends StatefulWidget {
         elevation: 10,
         child: Icon(
           Icons.add,
-          color: Theme.of(context).colorScheme.primary,
+          color: theme.colorScheme.primary,
           size: 30,
         ),
         onPressed: () async {
@@ -56,7 +56,7 @@ class _ProducPageState extends State<ProducPage> {
           padding: screenSize.symmetric(vertical: 6),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: theme.colorScheme.background,
             border: Border.symmetric(
               horizontal: BorderSide(color: Colors.grey[400]!),
             ),
@@ -98,7 +98,7 @@ class _ProducPageState extends State<ProducPage> {
                                   ? FontWeight.w600
                                   : FontWeight.normal,
                               color: index == widget._currentTab
-                                  ? Theme.of(context).colorScheme.onPrimary
+                                  ? theme.colorScheme.onPrimary
                                   : Colors.grey[600],
                             ),
                             child: Text(

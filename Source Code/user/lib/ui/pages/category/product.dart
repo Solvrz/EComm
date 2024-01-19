@@ -49,7 +49,7 @@ class _ProductPageState extends State<ProductPage> {
           padding: screenSize.fromLTRB(0, 6, 2, 6),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: theme.colorScheme.background,
             border: Border.symmetric(
               horizontal: BorderSide(color: Colors.grey.shade400),
             ),
@@ -89,7 +89,7 @@ class _ProductPageState extends State<ProductPage> {
                                   ? FontWeight.w600
                                   : FontWeight.normal,
                               color: index == widget._currentTab
-                                  ? Theme.of(context).colorScheme.onPrimary
+                                  ? theme.colorScheme.onPrimary
                                   : Colors.grey.shade600,
                             ),
                             child: Text(

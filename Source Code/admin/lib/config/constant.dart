@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 import '/services/screen_size.dart';
 
 late ScreenSize screenSize;
+late ThemeData theme;
 
 // TODO: Change These
 const String CURRENCY = "₹";

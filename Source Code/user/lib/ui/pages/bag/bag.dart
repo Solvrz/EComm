@@ -57,7 +57,7 @@ class _BagPageState extends State<BagPage> {
                 padding: screenSize.all(18),
                 child: Icon(
                   Icons.favorite_border,
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: theme.colorScheme.onPrimary,
                   size: 28,
                 ),
               ),
@@ -67,7 +67,7 @@ class _BagPageState extends State<BagPage> {
         bottomNavigationBar: Container(
           padding: screenSize.symmetric(horizontal: 24),
           decoration: BoxDecoration(
-            color: Theme.of(context).highlightColor,
+            color: theme.highlightColor,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(25),
               topRight: Radius.circular(25),
@@ -83,7 +83,7 @@ class _BagPageState extends State<BagPage> {
                     Text(
                       "$CURRENCY ",
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: theme.colorScheme.onPrimary,
                         fontSize: screenSize.height(16),
                       ),
                     ),
@@ -95,7 +95,7 @@ class _BagPageState extends State<BagPage> {
                         fontSize: screenSize.height(34),
                         fontWeight: FontWeight.bold,
                         letterSpacing: -2,
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: theme.colorScheme.onPrimary,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -111,9 +111,8 @@ class _BagPageState extends State<BagPage> {
                 ),
               ),
               MaterialButton(
-                color: Theme.of(context).primaryColor,
-                disabledColor:
-                    Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
+                color: theme.primaryColor,
+                disabledColor: theme.colorScheme.onPrimary.withOpacity(0.5),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
@@ -149,7 +148,7 @@ class _BagPageState extends State<BagPage> {
                   children: [
                     Icon(
                       Icons.check_circle_outline,
-                      color: Theme.of(context).highlightColor,
+                      color: theme.highlightColor,
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -157,7 +156,7 @@ class _BagPageState extends State<BagPage> {
                       style: TextStyle(
                         fontSize: screenSize.height(16),
                         fontWeight: FontWeight.w600,
-                        color: Theme.of(context).highlightColor,
+                        color: theme.highlightColor,
                       ),
                     ),
                   ],
@@ -197,9 +196,7 @@ class _BagPageState extends State<BagPage> {
                                       BAG.changeLog[index],
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
+                                        color: theme.colorScheme.onPrimary,
                                         fontSize: screenSize.height(16),
                                         fontWeight: FontWeight.w600,
                                         fontFamily: "sans-serif-condensed",
@@ -234,7 +231,7 @@ class _BagPageState extends State<BagPage> {
                       Text(
                         "Alerts for items in your bag",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: theme.colorScheme.onPrimary,
                           fontSize: screenSize.height(20),
                           fontWeight: FontWeight.w600,
                           fontFamily: "sans-serif-condensed",
@@ -317,11 +314,11 @@ class _BagPageState extends State<BagPage> {
                   height: MediaQuery.of(context).size.height / 6,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: Theme.of(context).primaryColor,
+                    color: theme.primaryColor,
                   ),
                   child: Icon(
                     Icons.delete,
-                    color: Theme.of(context).colorScheme.onSecondary,
+                    color: theme.colorScheme.onSecondary,
                     size: 32,
                   ),
                 ),
@@ -343,7 +340,7 @@ class _BagPageState extends State<BagPage> {
             height: screenSize.height(125),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Theme.of(context).highlightColor,
+              color: theme.highlightColor,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -359,7 +356,7 @@ class _BagPageState extends State<BagPage> {
                             child: CachedNetworkImage(
                               imageUrl: product.images[0],
                               placeholder: (context, url) => Shimmer.fromColors(
-                                baseColor: Theme.of(context).highlightColor,
+                                baseColor: theme.highlightColor,
                                 highlightColor: Colors.grey[100]!,
                                 child: Container(color: Colors.grey),
                               ),
@@ -382,8 +379,7 @@ class _BagPageState extends State<BagPage> {
                                 child: Text(
                                   product.name,
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                     fontSize: screenSize.height(22),
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: -0.4,
@@ -395,9 +391,7 @@ class _BagPageState extends State<BagPage> {
                                   Text(
                                     "$CURRENCY ${product.price}",
                                     style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
+                                      color: theme.colorScheme.onPrimary,
                                       fontSize: screenSize.height(21),
                                       fontWeight: FontWeight.bold,
                                       fontFamily: "sans-serif-condensed",
@@ -410,9 +404,7 @@ class _BagPageState extends State<BagPage> {
                                           .replaceAll("", "\u{200B}"),
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary
+                                        color: theme.colorScheme.onPrimary
                                             .withOpacity(0.7),
                                         decoration: TextDecoration.lineThrough,
                                         fontSize: screenSize.height(18),
@@ -447,30 +439,28 @@ class _BagPageState extends State<BagPage> {
                           backgroundColor:
                               product.selected!.values.toList()[index].color ??
                                   Colors.grey[400],
-                          child: product.selected!.values
-                                      .toList()[index]
-                                      .color ==
-                                  null
-                              ? Text(
-                                  product.selected!.values
-                                      .toList()[index]
-                                      .label[0]
-                                      .toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: screenSize.height(13),
-                                    fontWeight: FontWeight.w600,
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                  ),
-                                )
-                              : null,
+                          child:
+                              product.selected!.values.toList()[index].color ==
+                                      null
+                                  ? Text(
+                                      product.selected!.values
+                                          .toList()[index]
+                                          .label[0]
+                                          .toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: screenSize.height(13),
+                                        fontWeight: FontWeight.w600,
+                                        color: theme.colorScheme.onPrimary,
+                                      ),
+                                    )
+                                  : null,
                         ),
                       ),
                     ),
                   ),
                 Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: theme.colorScheme.onPrimary,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
@@ -485,7 +475,7 @@ class _BagPageState extends State<BagPage> {
                           padding: screenSize.all(10),
                           child: Icon(
                             Icons.add,
-                            color: Theme.of(context).colorScheme.background,
+                            color: theme.colorScheme.background,
                             size: 20,
                           ),
                         ),
@@ -493,7 +483,7 @@ class _BagPageState extends State<BagPage> {
                       Text(
                         BAG.getQuantity(product).toString(),
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.background,
+                          color: theme.colorScheme.background,
                           fontSize: screenSize.height(18),
                           fontWeight: FontWeight.w500,
                         ),
@@ -521,7 +511,7 @@ class _BagPageState extends State<BagPage> {
                           padding: screenSize.all(10),
                           child: Icon(
                             Icons.remove,
-                            color: Theme.of(context).colorScheme.background,
+                            color: theme.colorScheme.background,
                             size: 20,
                           ),
                         ),
